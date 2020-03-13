@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Pikachu Volleyball.js</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="assets/IDI_PIKAICON-0.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="assets/IDI_PIKAICON-0_16x16.png"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/5.9.3/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/5.9.3/firebase-firestore.js"></script>
+    <!-- initialize the SDK after all desired features are loaded -->
+    <script defer src="/__/firebase/init.js"></script>
+  </head>
+  <body>
+    <div id="canvas_here"></div>
+    <button type="button" id="createBtn">create</button>
+    <button type="button" id="hangupBtn">hang up</button>
+    <input type="text" id="room-id" />
+    <button type="button" id="joinBtn">join</button>
+    <div id="currentRoom"></div>
+    <input type="text" id="messageBox" />
+    <button type="button" id="sendBtn">send</button>
+    <button type="button" id="togglePlayerNumberBtn">
+      toggle player number
+    </button>
+    <div id="chatMessages" style="white-space: pre-line">
+      Chat messages below
+    </div>
+    <script src="data_channel.js"></script>
+  </body>
+</html>

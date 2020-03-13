@@ -4,8 +4,9 @@ const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  mode: 'production',
-  entry: { main: './src/main.js' },
+  mode: 'development',
+  devtool: 'inline-source-map',
+  entry: { main: './src/main_online.js' },
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist')
@@ -17,7 +18,7 @@ module.exports = {
       { from: 'src/style.css' }
     ]),
     new HtmlWebpackPlugin({
-      template: './src/index.html',
+      template: './src/index_online.html',
       hash: true
     })
   ]
