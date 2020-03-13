@@ -19,6 +19,7 @@ export class MyKeyboard extends PikaKeyboard {
     this.xDirectionPrev = 0;
     this.yDirectionPrev = 0;
     this.powerHitPrev = 0;
+    this.roundCounter = -1;
   }
 
   /**
@@ -31,7 +32,10 @@ export class MyKeyboard extends PikaKeyboard {
    * @param {number} roundCounter
    */
   updatePropertiesAndSendToPeer(roundCounter) {
-    super.updateProperties();
+    if (roundCounter > this.roundCounter) {
+      this.roundCounter = roundCounter;
+      super.updateProperties();
+    }
     channel.sendToPeer(
       roundCounter,
       this.xDirection,
