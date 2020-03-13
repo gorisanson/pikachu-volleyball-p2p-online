@@ -9,6 +9,10 @@
  */
 
 'use strict;';
+import seedrandom from 'seedrandom';
+import { forRand } from './rand.js';
+
+forRand.rng = seedrandom.alea('hello');
 
 export const channel = {
   sendToPeer: sendToPeer,

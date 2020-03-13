@@ -1,4 +1,8 @@
 'use strict';
+export const forRand = {
+  rng: null
+};
+
 /**
  * Return random integer in [0, 32767]
  *
@@ -10,6 +14,8 @@
  *
  * @return {number} random integer
  */
+
 export function rand() {
-  return Math.floor(32768 * Math.random());
+  return Math.floor(32768 * forRand.rng());
+  // return Math.floor(32768 * Math.random());
 }
