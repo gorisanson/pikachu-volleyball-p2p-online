@@ -37,14 +37,7 @@ let peerConnection = null;
 let roomId = null;
 let dataChannel = null;
 const time = {
-  string: null,
-  arr1: null,
-  arr2: null,
-  arr4: null,
-  arr7: null,
-  arr8: null,
-  arr16: null,
-  arr32: null
+  string: null
 };
 
 function init() {
@@ -281,12 +274,19 @@ function sendToPeer(roundCounter, xDirection, yDirection, powerHit) {
 }
 
 function recieveMessage(event) {
-  if (typeof event.data === 'string') {
-    console.log(event.data);
+  const data = event.data;
+  if (typeof data === 'string') {
+    if (data === '*str rcvd.*') {
+      document.querySelector('#chatMessages').textContent += ` (ping: ${String(
+        Date.now() - time.string
+      )} ms)`;
+      return;
+    }
+    document.querySelector('#chatMessages').textContent += '\nrcvd: ' + data;
+    dataChannel.send('*str rcvd.*');
     return;
   }
-  const buffer = event.data;
-  const dataView = new DataView(buffer);
+  const dataView = new DataView(data);
   const peerRoundCounterModulo = dataView.getUint8(0);
   const xDirection = dataView.getInt8(1);
   const yDirection = dataView.getInt8(2);
@@ -306,17 +306,20 @@ function recieveMessage(event) {
 }
 
 function notifyOpen(event) {
+  time.string = Date.now();
   dataChannel.send('hello');
   dataChannel.binaryType = 'arraybuffer';
   console.log('data channel opened!');
   document.querySelector('#chatMessages').textContent +=
     '\n' + 'data channel opened!';
   document.querySelector('#sendBtn').addEventListener('click', event => {
-    const message = document.querySelector('#messageBox').value;
-    document.querySelector('#chatMessages').textContent +=
-      '\nsended:' + message;
+    const messageBox = document.querySelector('#messageBox');
+    const message = messageBox.value;
+    messageBox.value = '';
     time.string = Date.now();
     dataChannel.send(message);
+    document.querySelector('#chatMessages').textContent +=
+      '\nsent : ' + message;
   });
 }
 
