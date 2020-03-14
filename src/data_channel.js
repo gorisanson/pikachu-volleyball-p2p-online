@@ -12,6 +12,7 @@
 import seedrandom from 'seedrandom';
 import { forRand } from './rand.js';
 
+// TODO: seed randomly
 forRand.rng = seedrandom.alea('hello');
 
 export const channel = {
