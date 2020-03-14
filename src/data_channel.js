@@ -37,8 +37,11 @@ let peerConnection = null;
 let roomId = null;
 let dataChannel = null;
 const time = {
-  string: null
+  string: undefined,
+  ping: undefined
 };
+
+const pingArray = [];
 
 function init() {
   document.querySelector('#hangupBtn').addEventListener('click', hangUp);
@@ -285,33 +288,42 @@ function recieveMessage(event) {
     document.querySelector('#chatMessages').textContent += '\nrcvd: ' + data;
     dataChannel.send('*str rcvd.*');
     return;
-  }
-  const dataView = new DataView(data);
-  const peerRoundCounterModulo = dataView.getUint8(0);
-  const xDirection = dataView.getInt8(1);
-  const yDirection = dataView.getInt8(2);
-  const powerHit = dataView.getInt8(3);
-  channel.peerInputQueue.push([
-    peerRoundCounterModulo,
-    xDirection,
-    yDirection,
-    powerHit
-  ]);
+  } else if (data instanceof ArrayBuffer && data.byteLength === 4) {
+    const dataView = new DataView(data);
+    if (dataView.getInt32(0, true) === -1) {
+      dataView.setInt32(0, -2, true);
+      dataChannel.send(data);
+      console.log('respond to ping');
+      return;
+    } else if (dataView.getInt32(0, true) === -2) {
+      pingArray.push(Date.now() - time.ping);
+    }
 
-  if (channel.callbackWhenReceivePeerInput !== null) {
-    const round = channel.callbackWhenReceivePeerInput;
-    channel.callbackWhenReceivePeerInput = null;
-    round();
+    const peerRoundCounterModulo = dataView.getUint8(0);
+    const xDirection = dataView.getInt8(1);
+    const yDirection = dataView.getInt8(2);
+    const powerHit = dataView.getInt8(3);
+    channel.peerInputQueue.push([
+      peerRoundCounterModulo,
+      xDirection,
+      yDirection,
+      powerHit
+    ]);
+
+    if (channel.callbackWhenReceivePeerInput !== null) {
+      const round = channel.callbackWhenReceivePeerInput;
+      channel.callbackWhenReceivePeerInput = null;
+      round();
+    }
   }
 }
 
 function notifyOpen(event) {
-  time.string = Date.now();
-  dataChannel.send('hello');
   dataChannel.binaryType = 'arraybuffer';
   console.log('data channel opened!');
   document.querySelector('#chatMessages').textContent +=
     '\n' + 'data channel opened!';
+
   document.querySelector('#sendBtn').addEventListener('click', event => {
     const messageBox = document.querySelector('#messageBox');
     const message = messageBox.value;
@@ -321,6 +333,28 @@ function notifyOpen(event) {
     document.querySelector('#chatMessages').textContent +=
       '\nsent : ' + message;
   });
+
+  document.querySelector('#chatMessages').textContent += 'start ping test...';
+  const buffer = new ArrayBuffer(4);
+  const view = new DataView(buffer);
+  view.setInt32(0, -1, true);
+  let n = 0;
+  const intervalID = setInterval(() => {
+    time.ping = Date.now();
+    dataChannel.send(buffer);
+    n++;
+    if (n === 5) {
+      window.clearInterval(intervalID);
+      const sum = pingArray.reduce((acc, val) => acc + val, 0);
+      const avg = sum / pingArray.length;
+      console.log(`ping avg: ${avg} ms, ping list: ${pingArray}`);
+      document.querySelector(
+        '#chatMessages'
+      ).textContent += `\nping avg: ${avg} ms`;
+    }
+  }, 1000);
+  // time.string = Date.now();
+  // dataChannel.send('hello');
 }
 
 window.addEventListener('unload', hangUp);
