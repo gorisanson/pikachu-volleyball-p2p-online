@@ -2,6 +2,7 @@
 
 import { PikaKeyboard } from './pika_keyboard';
 import { channel } from './data_channel.js';
+import { mod } from './mod.js';
 
 export class MyKeyboard extends PikaKeyboard {
   /**
@@ -19,40 +20,47 @@ export class MyKeyboard extends PikaKeyboard {
     this.xDirectionPrev = 0;
     this.yDirectionPrev = 0;
     this.powerHitPrev = 0;
-    this.roundCounter = -1;
+    this._syncCounter = mod(-1, 256);
+  }
+
+  get syncCounter() {
+    return this._syncCounter;
+  }
+
+  set syncCounter(counter) {
+    this._syncCounter = mod(counter, 256);
   }
 
   /**
-   * should do nothing since it is called offline round function
-   */
-  updateProperties() {}
-
-  /**
    *
-   * @param {number} roundCounter
+   * @param {number} syncCounter
    */
-  updatePropertiesAndSendToPeer(roundCounter) {
-    if (roundCounter > this.roundCounter) {
-      this.roundCounter = roundCounter;
-      super.updateProperties();
+  getInputIfNeededAndSendToPeer(syncCounter) {
+    if (syncCounter === mod(this.syncCounter + 1, 256)) {
+      this.syncCounter = syncCounter;
+      super.getInput();
     }
     channel.sendToPeer(
-      roundCounter,
+      syncCounter,
       this.xDirection,
       this.yDirection,
       this.powerHit
     );
   }
 
-  updatePrevProperties() {
+  storeAsPrevInput() {
     this.xDirectionPrev = this.xDirection;
     this.yDirectionPrev = this.yDirection;
     this.powerHitPrev = this.powerHit;
   }
 
-  resendPrevProperties(roundCounterPrev) {
+  /**
+   *
+   * @param {number} syncCounter
+   */
+  resendPrevInput(syncCounter) {
     channel.sendToPeer(
-      roundCounterPrev,
+      mod(syncCounter - 1, 256),
       this.xDirectionPrev,
       this.yDirectionPrev,
       this.powerHitPrev
@@ -71,14 +79,10 @@ export class PeerKeyboard {
   }
 
   /**
-   * should do nothing since it is called offline round function
+   * @param {number} syncCounter
+   * @return {boolean} get input from peer succeed?
    */
-  updateProperties() {}
-
-  /**
-   * @return {boolean} update properties succeeded?
-   */
-  updatePropertiesFromPeerInput(roundCounter) {
+  getInput(syncCounter) {
     const peerInputQueue = channel.peerInputQueue;
     if (peerInputQueue.length === 0) {
       return false;
@@ -86,8 +90,8 @@ export class PeerKeyboard {
     let input;
     while (true) {
       input = peerInputQueue.shift();
-      const peerRoundCounterModulo = input[0];
-      if (peerRoundCounterModulo === roundCounter % 255) {
+      const peerRoundCounter = input[0];
+      if (peerRoundCounter === syncCounter) {
         break;
       }
       if (peerInputQueue.length === 0) {

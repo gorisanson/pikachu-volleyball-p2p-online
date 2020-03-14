@@ -16,6 +16,8 @@ import { forRand } from './rand.js';
 forRand.rng = seedrandom.alea('hello');
 
 export const channel = {
+  isOpen: false,
+  amICreatedRoom: false,
   sendToPeer: sendToPeer,
 
   /** @type {number[][]} Array of number[] where number[0]: xDirection, number[1]: yDirection, number[2]: powerHit */
@@ -51,6 +53,7 @@ function init() {
 }
 
 async function createRoom() {
+  channel.amICreatedRoom = true;
   document.querySelector('#createBtn').disabled = true;
   document.querySelector('#joinBtn').disabled = true;
   // eslint-disable-next-line no-undef
@@ -74,6 +77,7 @@ async function createRoom() {
   console.log('dataChannel created', dataChannel);
   dataChannel.addEventListener('open', notifyOpen);
   dataChannel.addEventListener('message', recieveMessage);
+  dataChannel.addEventListener('close', whenClosed);
 
   const offer = await peerConnection.createOffer();
   await peerConnection.setLocalDescription(offer);
@@ -268,8 +272,7 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
 function sendToPeer(roundCounter, xDirection, yDirection, powerHit) {
   const buffer = new ArrayBuffer(4);
   const dataView = new DataView(buffer);
-  const roundCounterModulo = ((roundCounter % 255) + 255) % 255; // since prevRoundCounter can be -1 at the start;
-  dataView.setUint8(0, roundCounterModulo);
+  dataView.setUint8(0, roundCounter);
   dataView.setInt8(1, xDirection);
   dataView.setInt8(2, yDirection);
   dataView.setInt8(3, powerHit);
@@ -335,7 +338,7 @@ function notifyOpen(event) {
       '\nsent : ' + message;
   });
 
-  document.querySelector('#chatMessages').textContent += 'start ping test...';
+  document.querySelector('#chatMessages').textContent += '\nstart ping test';
   const buffer = new ArrayBuffer(4);
   const view = new DataView(buffer);
   view.setInt32(0, -1, true);
@@ -343,6 +346,7 @@ function notifyOpen(event) {
   const intervalID = setInterval(() => {
     time.ping = Date.now();
     dataChannel.send(buffer);
+    document.querySelector('#chatMessages').textContent += '.';
     n++;
     if (n === 5) {
       window.clearInterval(intervalID);
@@ -352,12 +356,18 @@ function notifyOpen(event) {
       document.querySelector(
         '#chatMessages'
       ).textContent += `\nping avg: ${avg} ms`;
+      channel.isOpen = true;
     }
   }, 1000);
   // time.string = Date.now();
   // dataChannel.send('hello');
 }
 
-window.addEventListener('unload', hangUp);
+function whenClosed(event) {
+  console.log('data channel closed');
+  channel.isOpen = false;
+}
+
+window.addEventListener('unload', closeAndCleaning);
 
 init();
