@@ -58,12 +58,7 @@ async function createRoom() {
   document.querySelector('#joinBtn').disabled = true;
   // eslint-disable-next-line no-undef
   const db = firebase.firestore();
-  const justForGetRoomRef = {
-    pika: {
-      pika: 'volleyball'
-    }
-  };
-  const roomRef = await db.collection('rooms').add(justForGetRoomRef);
+  const roomRef = await db.collection('rooms').doc();
 
   console.log('Create PeerConnection with configuration: ', configuration);
   peerConnection = new RTCPeerConnection(configuration);
@@ -92,7 +87,7 @@ async function createRoom() {
       sdp: offer.sdp
     }
   };
-  roomRef.update(roomWithOffer);
+  roomRef.set(roomWithOffer);
   console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
   document.querySelector('#chatMessages').textContent += '\n' + 'offer sent';
 
