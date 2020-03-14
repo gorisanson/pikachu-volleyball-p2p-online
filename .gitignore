@@ -2,3 +2,5 @@ resource/
 
 dist/
 node_modules/
+
+.firebase/
