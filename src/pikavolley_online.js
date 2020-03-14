@@ -22,7 +22,7 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     this.roundCounter = 0;
     this.noInputFrameTotal.menu = 0;
     this.noInputFrameTotal = {
-      menu: 99999999
+      menu: Infinity
     };
   }
 
