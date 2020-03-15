@@ -15,6 +15,11 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     this.physics.player1.isComputer = false;
     this.physics.player2.isComputer = false;
 
+    // @ts-ignore
+    this.keyboardArray[0].unsubscribe();
+    // @ts-ignore
+    this.keyboardArray[1].unsubscribe();
+
     this.myKeyboard = new MyKeyboard( // for player2
       'ArrowLeft',
       'ArrowRight',
@@ -45,6 +50,7 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
    */
   set amIPlayer2(bool) {
     this._amIPlayer2 = bool;
+    channel.amIPlayer2 = bool;
     if (this._amIPlayer2 === true) {
       // @ts-ignore
       this.keyboardArray = [this.peerKeyboard, this.myKeyboard];

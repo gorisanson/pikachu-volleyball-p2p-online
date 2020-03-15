@@ -16,22 +16,73 @@ html {
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
-canvas {
-  display: block;
+
+#canvas-here {
   margin-left: auto;
   margin-right: auto;
+}
+
+#canvas-here,
+canvas {
+  position: relative;
+  display: block;
   width: var(--side-length);
   height: calc(var(--side-length) * var(--inverse-aspect-ratio));
 }
+
 @media only screen and (min-aspect-ratio: 432/304) {
+  #canvas-here,
   canvas {
     width: calc(96vh * var(--aspect-ratio));
     height: 96vh;
   }
 }
 @media only screen and (max-aspect-ratio: 432/304) {
+  #canvas-here,
   canvas {
     width: 96vw;
     height: calc(96vw * var(--inverse-aspect-ratio));
+  }
+}
+
+.chat-box {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  color: white;
+  background-color: transparent;
+  font-size: 20px;
+}
+
+#player1-chat-box {
+  right: 70%;
+}
+#player2-chat-box {
+  left: 70%;
+}
+
+.chat-box {
+  z-index: -1;
+  visibility: hidden;
+  opacity: 0;
+  animation-name: fade-inout;
+  animation-duration: 5s;
+}
+@keyframes fade-inout {
+  0% {
+    visibility: visible;
+    z-index: 10;
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    visibility: hidden;
+    z-index: 10;
+    opacity: 0;
   }
 }

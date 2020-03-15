@@ -27,19 +27,22 @@
     <script defer src="/__/firebase/init.js"></script>
   </head>
   <body>
-    <div id="canvas-here"></div>
-    <button type="button" id="create-btn">create</button>
-    <button type="button" id="hangup-btn">hang up</button>
-    <input type="text" id="room-id" />
-    <button type="button" id="join-btn">join</button>
+    <div id="canvas-here">
+      <div id="player1-chat-box" class="chat-box"></div>
+      <div id="player2-chat-box" class="chat-box"></div>
+    </div>
+    <div>
+      <input type="text" id="message-box" />
+      <button type="button" id="send-btn">send</button>
+    </div>
+    <div>
+      <button type="button" id="create-btn">create</button>
+      <input type="text" id="room-id" />
+      <button type="button" id="join-btn">join</button>
+    </div>
     <div id="current-room"></div>
-    <input type="text" id="message-box" />
-    <button type="button" id="send-btn">send</button>
-    <button type="button" id="toggle-player-number-btn">
-      toggle player number
-    </button>
     <div id="chat-messages" style="white-space: pre-line">
-      Chat messages below
+      connection log below
     </div>
   </body>
 </html>

@@ -14,6 +14,8 @@ import { forRand } from './rand.js';
 
 // TODO: seed randomly
 forRand.rng = seedrandom.alea('hello');
+const player1ChatRng = seedrandom.alea('player1');
+const player2ChatRng = seedrandom.alea('player2');
 
 export const channel = {
   isOpen: false,
@@ -23,7 +25,28 @@ export const channel = {
   /** @type {number[][]} Array of number[] where number[0]: xDirection, number[1]: yDirection, number[2]: powerHit */
   peerInputQueue: [],
 
-  callbackWhenReceivePeerInput: null
+  callbackWhenReceivePeerInput: null,
+
+  amIPlayer2: null // received from pikavolley_online
+};
+
+const messageManager = {
+  pendingMessage: '',
+  resendIntervalID: null,
+  _counter: 0,
+  _peerCounter: 9,
+  get counter() {
+    return this._counter;
+  },
+  set counter(n) {
+    this._counter = n % 10;
+  },
+  get peerCounter() {
+    return this._peerCounter;
+  },
+  set peerCounter(n) {
+    this._peerCounter = n % 10;
+  }
 };
 
 // DEfault configuration - Change these if you have a different STUN or TURN server.
@@ -46,16 +69,22 @@ const time = {
 
 const pingArray = [];
 
+const cavasHereElm = document.querySelector('#canvas-here');
+let player1ChatBox = document.querySelector('#player1-chat-box');
+let player2ChatBox = document.querySelector('#player2-chat-box');
+const sendBtn = document.querySelector('#send-btn');
+
 function init() {
-  document.querySelector('#hangup-btn').addEventListener('click', hangUp);
   document.querySelector('#create-btn').addEventListener('click', createRoom);
   document.querySelector('#join-btn').addEventListener('click', joinRoom);
+  sendBtn.disabled = true;
 }
 
 async function createRoom() {
   channel.amICreatedRoom = true;
   document.querySelector('#create-btn').disabled = true;
   document.querySelector('#join-btn').disabled = true;
+  document.querySelector('#room-id').disabled = true;
   // eslint-disable-next-line no-undef
   const db = firebase.firestore();
   const roomRef = await db.collection('rooms').doc();
@@ -114,6 +143,7 @@ async function createRoom() {
 function joinRoom() {
   document.querySelector('#create-btn').disabled = true;
   document.querySelector('#join-btn').disabled = true;
+  document.querySelector('#room-id').disabled = true;
   roomId = document.querySelector('#room-id').value;
   console.log('Join room: ', roomId);
   document.querySelector(
@@ -163,17 +193,6 @@ async function joinRoomById(roomId) {
       '\n' + 'answer sent';
     console.log('joined room!');
   }
-}
-
-async function hangUp(e) {
-  document.querySelector('#join-btn').disabled = true;
-  document.querySelector('#create-btn').disabled = true;
-  document.querySelector('#hangup-btn').disabled = true;
-  document.querySelector('#current-room').innerText = '';
-
-  closeAndCleaning();
-
-  // document.location.reload(true);
 }
 
 async function closeAndCleaning(e) {
@@ -281,44 +300,77 @@ function sendToPeer(roundCounter, xDirection, yDirection, powerHit) {
   dataChannel.send(buffer);
 }
 
+function sendMessageToPeer(message) {
+  messageManager.pendingMessage = message;
+  const messageToPeer = message + String(messageManager.counter);
+  dataChannel.send(messageToPeer);
+  messageManager.resendIntervalID = setInterval(
+    () => dataChannel.send(messageToPeer),
+    1000
+  );
+}
+
 function recieveMessage(event) {
   const data = event.data;
   if (typeof data === 'string') {
-    if (data === '*str rcvd.*') {
-      document.querySelector('#chat-messages').textContent += ` (ping: ${String(
-        Date.now() - time.string
-      )} ms)`;
-      return;
+    const peerCounter = Number(data.slice(-1));
+    if (peerCounter === messageManager.peerCounter) {
+      // if peer resned prevMessage since peer did not recieve this confirm arraybuffer with length 1
+      const buffer = new ArrayBuffer(1);
+      const dataView = new DataView(buffer);
+      dataView.setInt8(0, peerCounter);
+      dataChannel.send(buffer);
+      console.log(
+        'arraybuffer with length 1 for string receive confirm resent'
+      );
+    } else if (peerCounter === (messageManager.peerCounter + 1) % 10) {
+      // if peer send new message
+      const message = data.slice(0, -1);
+      wirtePeerMessage(message);
+      messageManager.peerCounter++;
+      const buffer = new ArrayBuffer(1);
+      const dataView = new DataView(buffer);
+      dataView.setInt8(0, peerCounter);
+      dataChannel.send(buffer);
     }
-    document.querySelector('#chat-messages').textContent += '\nrcvd: ' + data;
-    dataChannel.send('*str rcvd.*');
     return;
-  } else if (data instanceof ArrayBuffer && data.byteLength === 4) {
-    const dataView = new DataView(data);
-    if (dataView.getInt32(0, true) === -1) {
-      dataView.setInt32(0, -2, true);
-      dataChannel.send(data);
-      console.log('respond to ping');
-      return;
-    } else if (dataView.getInt32(0, true) === -2) {
-      pingArray.push(Date.now() - time.ping);
-    }
+  } else if (data instanceof ArrayBuffer) {
+    if (data.byteLength === 1) {
+      const dataView = new DataView(data);
+      const counter = dataView.getInt8(0);
+      if (counter === messageManager.counter) {
+        messageManager.counter++;
+        clearInterval(messageManager.resendIntervalID);
+        wirteMyMessage(messageManager.pendingMessage);
+        sendBtn.disabled = false;
+      }
+    } else if (data.byteLength === 4) {
+      const dataView = new DataView(data);
+      if (dataView.getInt32(0, true) === -1) {
+        dataView.setInt32(0, -2, true);
+        dataChannel.send(data);
+        console.log('respond to ping');
+        return;
+      } else if (dataView.getInt32(0, true) === -2) {
+        pingArray.push(Date.now() - time.ping);
+      }
 
-    const peerRoundCounterModulo = dataView.getUint8(0);
-    const xDirection = dataView.getInt8(1);
-    const yDirection = dataView.getInt8(2);
-    const powerHit = dataView.getInt8(3);
-    channel.peerInputQueue.push([
-      peerRoundCounterModulo,
-      xDirection,
-      yDirection,
-      powerHit
-    ]);
+      const peerRoundCounterModulo = dataView.getUint8(0);
+      const xDirection = dataView.getInt8(1);
+      const yDirection = dataView.getInt8(2);
+      const powerHit = dataView.getInt8(3);
+      channel.peerInputQueue.push([
+        peerRoundCounterModulo,
+        xDirection,
+        yDirection,
+        powerHit
+      ]);
 
-    if (channel.callbackWhenReceivePeerInput !== null) {
-      const round = channel.callbackWhenReceivePeerInput;
-      channel.callbackWhenReceivePeerInput = null;
-      round();
+      if (channel.callbackWhenReceivePeerInput !== null) {
+        const round = channel.callbackWhenReceivePeerInput;
+        channel.callbackWhenReceivePeerInput = null;
+        round();
+      }
     }
   }
 }
@@ -328,15 +380,17 @@ function notifyOpen(event) {
   console.log('data channel opened!');
   document.querySelector('#chat-messages').textContent +=
     '\n' + 'data channel opened!';
-
-  document.querySelector('#send-btn').addEventListener('click', event => {
+  sendBtn.disabled = false;
+  sendBtn.addEventListener('click', event => {
+    sendBtn.disabled = true;
     const messageBox = document.querySelector('#message-box');
     const message = messageBox.value;
+    if (message === '') {
+      sendBtn.disabled = false;
+      return;
+    }
     messageBox.value = '';
-    time.string = Date.now();
-    dataChannel.send(message);
-    document.querySelector('#chat-messages').textContent +=
-      '\nsent : ' + message;
+    sendMessageToPeer(message);
   });
 
   document.querySelector('#chat-messages').textContent += '\nstart ping test';
@@ -367,6 +421,52 @@ function notifyOpen(event) {
 function whenClosed(event) {
   console.log('data channel closed');
   channel.isOpen = false;
+}
+
+function writeMessageTo(message, whichPlayer) {
+  if (whichPlayer === 1) {
+    const newChatBox = player1ChatBox.cloneNode();
+    newChatBox.textContent = message;
+    newChatBox.style.top = `${20 + 30 * player1ChatRng()}%`;
+    newChatBox.style.right = `${55 + 25 * player1ChatRng()}%`;
+    cavasHereElm.replaceChild(newChatBox, player1ChatBox);
+    player1ChatBox = newChatBox;
+  } else if (whichPlayer === 2) {
+    const newChatBox = player2ChatBox.cloneNode();
+    newChatBox.textContent = message;
+    newChatBox.style.top = `${20 + 30 * player2ChatRng()}%`;
+    newChatBox.style.left = `${55 + 25 * player2ChatRng()}%`;
+    cavasHereElm.replaceChild(newChatBox, player2ChatBox);
+    player2ChatBox = newChatBox;
+  }
+}
+
+function wirteMyMessage(message) {
+  if (channel.amIPlayer2 === null) {
+    if (channel.amICreatedRoom) {
+      writeMessageTo(message, 1);
+    } else {
+      writeMessageTo(message, 2);
+    }
+  } else if (channel.amIPlayer2 === false) {
+    writeMessageTo(message, 1);
+  } else if (channel.amIPlayer2 === true) {
+    writeMessageTo(message, 2);
+  }
+}
+
+function wirtePeerMessage(message) {
+  if (channel.amIPlayer2 === null) {
+    if (channel.amICreatedRoom) {
+      writeMessageTo(message, 2);
+    } else {
+      writeMessageTo(message, 1);
+    }
+  } else if (channel.amIPlayer2 === false) {
+    writeMessageTo(message, 2);
+  } else if (channel.amIPlayer2 === true) {
+    writeMessageTo(message, 1);
+  }
 }
 
 window.addEventListener('unload', closeAndCleaning);

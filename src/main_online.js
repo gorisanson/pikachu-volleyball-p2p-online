@@ -35,13 +35,6 @@ loader.load(setup);
 
 function setup() {
   const pikaVolley = new PikachuVolleyballOnline(stage, loader.resources);
-  document
-    .querySelector('#toggle-player-number-btn')
-    .addEventListener('click', event => {
-      pikaVolley.amIPlayer2 = !pikaVolley.amIPlayer2;
-      console.log(`toggled to amIPlayer2: ${pikaVolley.amIPlayer2}`);
-    });
-
   start(pikaVolley);
 }
 
