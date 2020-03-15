@@ -8,7 +8,7 @@ module.exports = {
   devServer: {
     contentBase: './dist'
   },
-  entry: { main: './src/main.js' },
+  entry: { main: './src/main_online.js' },
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist')
@@ -19,7 +19,7 @@ module.exports = {
       { from: 'src/style.css' }
     ]),
     new HtmlWebpackPlugin({
-      template: './src/index.html',
+      template: './src/index_online.html',
       hash: true
     })
   ]
