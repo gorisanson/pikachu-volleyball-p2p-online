@@ -47,15 +47,15 @@ const time = {
 const pingArray = [];
 
 function init() {
-  document.querySelector('#hangupBtn').addEventListener('click', hangUp);
-  document.querySelector('#createBtn').addEventListener('click', createRoom);
-  document.querySelector('#joinBtn').addEventListener('click', joinRoom);
+  document.querySelector('#hangup-btn').addEventListener('click', hangUp);
+  document.querySelector('#create-btn').addEventListener('click', createRoom);
+  document.querySelector('#join-btn').addEventListener('click', joinRoom);
 }
 
 async function createRoom() {
   channel.amICreatedRoom = true;
-  document.querySelector('#createBtn').disabled = true;
-  document.querySelector('#joinBtn').disabled = true;
+  document.querySelector('#create-btn').disabled = true;
+  document.querySelector('#join-btn').disabled = true;
   // eslint-disable-next-line no-undef
   const db = firebase.firestore();
   const roomRef = await db.collection('rooms').doc();
@@ -90,13 +90,13 @@ async function createRoom() {
   };
   roomRef.set(roomWithOffer);
   console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
-  document.querySelector('#chatMessages').textContent += '\n' + 'offer sent';
+  document.querySelector('#chat-messages').textContent += '\n' + 'offer sent';
 
   roomRef.onSnapshot(async snapshot => {
     console.log('Got updated room:', snapshot.data());
     const data = snapshot.data();
     if (!peerConnection.currentRemoteDescription && data.answer) {
-      document.querySelector('#chatMessages').textContent +=
+      document.querySelector('#chat-messages').textContent +=
         '\n' + 'answer received ';
       console.log('Set remote description: ', data.answer);
       const answer = data.answer;
@@ -106,18 +106,18 @@ async function createRoom() {
 
   roomId = roomRef.id;
   document.querySelector(
-    '#currentRoom'
+    '#current-room'
   ).innerText = `Current room is ${roomId} - You are the caller!`;
   console.log('created room!');
 }
 
 function joinRoom() {
-  document.querySelector('#createBtn').disabled = true;
-  document.querySelector('#joinBtn').disabled = true;
+  document.querySelector('#create-btn').disabled = true;
+  document.querySelector('#join-btn').disabled = true;
   roomId = document.querySelector('#room-id').value;
   console.log('Join room: ', roomId);
   document.querySelector(
-    '#currentRoom'
+    '#current-room'
   ).innerText = `Current room is ${roomId} - You are the callee!`;
   joinRoomById(roomId);
 }
@@ -146,7 +146,7 @@ async function joinRoomById(roomId) {
     const offer = roomSnapshot.data().offer;
     await peerConnection.setRemoteDescription(offer);
     console.log('Set remote description: ', offer);
-    document.querySelector('#chatMessages').textContent +=
+    document.querySelector('#chat-messages').textContent +=
       '\n' + 'offer received';
     const answer = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
@@ -159,16 +159,17 @@ async function joinRoomById(roomId) {
       }
     };
     await roomRef.update(roomWithAnswer);
-    document.querySelector('#chatMessages').textContent += '\n' + 'answer sent';
+    document.querySelector('#chat-messages').textContent +=
+      '\n' + 'answer sent';
     console.log('joined room!');
   }
 }
 
 async function hangUp(e) {
-  document.querySelector('#joinBtn').disabled = true;
-  document.querySelector('#createBtn').disabled = true;
-  document.querySelector('#hangupBtn').disabled = true;
-  document.querySelector('#currentRoom').innerText = '';
+  document.querySelector('#join-btn').disabled = true;
+  document.querySelector('#create-btn').disabled = true;
+  document.querySelector('#hangup-btn').disabled = true;
+  document.querySelector('#current-room').innerText = '';
 
   closeAndCleaning();
 
@@ -209,19 +210,19 @@ function registerPeerConnectionListeners() {
     console.log(
       `ICE gathering state changed: ${peerConnection.iceGatheringState}`
     );
-    document.querySelector('#chatMessages').textContent +=
+    document.querySelector('#chat-messages').textContent +=
       '\n' + `ICE gathering state changed: ${peerConnection.iceGatheringState}`;
   });
 
   peerConnection.addEventListener('connectionstatechange', () => {
     console.log(`Connection state change: ${peerConnection.connectionState}`);
-    document.querySelector('#chatMessages').textContent +=
+    document.querySelector('#chat-messages').textContent +=
       '\n' + `Connection state change: ${peerConnection.connectionState}`;
   });
 
   peerConnection.addEventListener('signalingstatechange', () => {
     console.log(`Signaling state change: ${peerConnection.signalingState}`);
-    document.querySelector('#chatMessages').textContent +=
+    document.querySelector('#chat-messages').textContent +=
       '\n' + `Signaling state change: ${peerConnection.signalingState}`;
   });
 
@@ -229,7 +230,7 @@ function registerPeerConnectionListeners() {
     console.log(
       `ICE connection state change: ${peerConnection.iceConnectionState}`
     );
-    document.querySelector('#chatMessages').textContent +=
+    document.querySelector('#chat-messages').textContent +=
       '\n' +
       `ICE connection state change: ${peerConnection.iceConnectionState}`;
   });
@@ -238,7 +239,7 @@ function registerPeerConnectionListeners() {
     dataChannel = event.channel;
 
     console.log('data channel received!');
-    document.querySelector('#chatMessages').textContent +=
+    document.querySelector('#chat-messages').textContent +=
       '\n' + 'data channel received!';
     dataChannel.addEventListener('open', notifyOpen);
     dataChannel.addEventListener('message', recieveMessage);
@@ -284,12 +285,12 @@ function recieveMessage(event) {
   const data = event.data;
   if (typeof data === 'string') {
     if (data === '*str rcvd.*') {
-      document.querySelector('#chatMessages').textContent += ` (ping: ${String(
+      document.querySelector('#chat-messages').textContent += ` (ping: ${String(
         Date.now() - time.string
       )} ms)`;
       return;
     }
-    document.querySelector('#chatMessages').textContent += '\nrcvd: ' + data;
+    document.querySelector('#chat-messages').textContent += '\nrcvd: ' + data;
     dataChannel.send('*str rcvd.*');
     return;
   } else if (data instanceof ArrayBuffer && data.byteLength === 4) {
@@ -325,20 +326,20 @@ function recieveMessage(event) {
 function notifyOpen(event) {
   dataChannel.binaryType = 'arraybuffer';
   console.log('data channel opened!');
-  document.querySelector('#chatMessages').textContent +=
+  document.querySelector('#chat-messages').textContent +=
     '\n' + 'data channel opened!';
 
-  document.querySelector('#sendBtn').addEventListener('click', event => {
-    const messageBox = document.querySelector('#messageBox');
+  document.querySelector('#send-btn').addEventListener('click', event => {
+    const messageBox = document.querySelector('#message-box');
     const message = messageBox.value;
     messageBox.value = '';
     time.string = Date.now();
     dataChannel.send(message);
-    document.querySelector('#chatMessages').textContent +=
+    document.querySelector('#chat-messages').textContent +=
       '\nsent : ' + message;
   });
 
-  document.querySelector('#chatMessages').textContent += '\nstart ping test';
+  document.querySelector('#chat-messages').textContent += '\nstart ping test';
   const buffer = new ArrayBuffer(4);
   const view = new DataView(buffer);
   view.setInt32(0, -1, true);
@@ -346,7 +347,7 @@ function notifyOpen(event) {
   const intervalID = setInterval(() => {
     time.ping = Date.now();
     dataChannel.send(buffer);
-    document.querySelector('#chatMessages').textContent += '.';
+    document.querySelector('#chat-messages').textContent += '.';
     n++;
     if (n === 5) {
       window.clearInterval(intervalID);
@@ -354,7 +355,7 @@ function notifyOpen(event) {
       const avg = sum / pingArray.length;
       console.log(`ping avg: ${avg} ms, ping list: ${pingArray}`);
       document.querySelector(
-        '#chatMessages'
+        '#chat-messages'
       ).textContent += `\nping avg: ${avg} ms`;
       channel.isOpen = true;
     }

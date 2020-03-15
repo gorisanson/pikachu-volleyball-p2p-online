@@ -20,7 +20,7 @@ const stage = new PIXI.Container();
 const ticker = new PIXI.Ticker();
 const loader = new PIXI.Loader();
 
-document.querySelector('#canvas_here').appendChild(renderer.view);
+document.querySelector('#canvas-here').appendChild(renderer.view);
 
 ticker.add(() => {
   renderer.render(stage);
@@ -36,7 +36,7 @@ loader.load(setup);
 function setup() {
   const pikaVolley = new PikachuVolleyballOnline(stage, loader.resources);
   document
-    .querySelector('#togglePlayerNumberBtn')
+    .querySelector('#toggle-player-number-btn')
     .addEventListener('click', event => {
       pikaVolley.amIPlayer2 = !pikaVolley.amIPlayer2;
       console.log(`toggled to amIPlayer2: ${pikaVolley.amIPlayer2}`);
