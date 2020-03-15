@@ -90,6 +90,23 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
       return;
     }
 
+    // Sync game frame and user input with peer
+    //
+    // This must be before the slow-mo effect.
+    // Otherwise, frame sync could be broken,
+    // for example, if peer use other tap on the browser
+    // so peer's game pause while my game goes on slow-mo.
+    // This broken frame sync results into different game state between two peers.
+    this.myKeyboard.getInputIfNeededAndSendToPeer(this.syncCounter);
+    const succeed = this.peerKeyboard.getInput(this.syncCounter);
+    if (!succeed) {
+      this.myKeyboard.resendPrevInput(this.syncCounter);
+      channel.callbackWhenReceivePeerInput = this.gameLoop.bind(this);
+      return;
+    }
+    this.myKeyboard.storeAsPrevInput();
+
+    // slow-mo effect
     if (this.slowMotionFramesLeft > 0) {
       this.slowMotionNumOfSkippedFrames++;
       if (
@@ -103,14 +120,6 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
       this.slowMotionNumOfSkippedFrames = 0;
     }
 
-    this.myKeyboard.getInputIfNeededAndSendToPeer(this.syncCounter);
-    const succeed = this.peerKeyboard.getInput(this.syncCounter);
-    if (!succeed) {
-      this.myKeyboard.resendPrevInput(this.syncCounter);
-      channel.callbackWhenReceivePeerInput = this.gameLoop.bind(this);
-      return;
-    }
-    this.myKeyboard.storeAsPrevInput();
     this.physics.player1.isComputer = false;
     this.physics.player2.isComputer = false;
     this.syncCounter++;
