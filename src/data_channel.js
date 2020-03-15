@@ -73,11 +73,32 @@ const cavasHereElm = document.querySelector('#canvas-here');
 let player1ChatBox = document.querySelector('#player1-chat-box');
 let player2ChatBox = document.querySelector('#player2-chat-box');
 const sendBtn = document.querySelector('#send-btn');
+const chatInputWithButton = document.querySelector('#chat-input-with-button');
+const chatOpenBtn = document.querySelector('#chat-open-btn');
+const messageBox = document.querySelector('#message-box');
 
 function init() {
   document.querySelector('#create-btn').addEventListener('click', createRoom);
   document.querySelector('#join-btn').addEventListener('click', joinRoom);
   sendBtn.disabled = true;
+  window.addEventListener('keydown', chatInputBoxOpen, false);
+  chatOpenBtn.addEventListener('click', chatOpenClicked);
+}
+
+function chatOpenClicked(evnet) {
+  chatOpenBtn.style.display = 'none';
+  chatInputWithButton.style.display = 'block';
+  messageBox.focus({ preventScroll: true });
+}
+
+function chatInputBoxOpen(event) {
+  if (event.shiftKey && event.key === 'Enter') {
+    chatOpenBtn.click();
+    event.preventDefault();
+  } else if (event.key === 'Enter' && messageBox === document.activeElement) {
+    sendBtn.click();
+    event.preventDefault();
+  }
 }
 
 async function createRoom() {
@@ -383,6 +404,8 @@ function notifyOpen(event) {
   sendBtn.disabled = false;
   sendBtn.addEventListener('click', event => {
     sendBtn.disabled = true;
+    chatOpenBtn.style.display = 'block';
+    chatInputWithButton.style.display = 'none';
     const messageBox = document.querySelector('#message-box');
     const message = messageBox.value;
     if (message === '') {

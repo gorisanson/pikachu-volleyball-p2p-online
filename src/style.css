@@ -30,21 +30,6 @@ canvas {
   height: calc(var(--side-length) * var(--inverse-aspect-ratio));
 }
 
-@media only screen and (min-aspect-ratio: 432/304) {
-  #canvas-here,
-  canvas {
-    width: calc(96vh * var(--aspect-ratio));
-    height: 96vh;
-  }
-}
-@media only screen and (max-aspect-ratio: 432/304) {
-  #canvas-here,
-  canvas {
-    width: 96vw;
-    height: calc(96vw * var(--inverse-aspect-ratio));
-  }
-}
-
 .chat-box {
   position: absolute;
   top: 50%;
@@ -84,5 +69,74 @@ canvas {
     visibility: hidden;
     z-index: 10;
     opacity: 0;
+  }
+}
+
+#dev-here {
+  margin-left: auto;
+  margin-right: auto;
+  width: var(--side-length);
+}
+#chat-input-here {
+  position: relative;
+  display: block;
+  height: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  width: var(--side-length);
+}
+#chat-input-with-button {
+  position: absolute;
+  display: none;
+  width: var(--side-length);
+  height: 100%;
+  z-index: 1;
+}
+#message-box,
+#send-btn {
+  height: 100%;
+}
+#message-box {
+  width: calc(var(--side-length) - 70px);
+}
+#send-btn {
+  width: 60px;
+}
+#chat-open-btn {
+  position: ablsolute;
+  display: block;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+}
+
+@media only screen and (min-aspect-ratio: 432/304) {
+  #canvas-here,
+  canvas {
+    width: calc(96vh * var(--aspect-ratio));
+    height: 96vh;
+  }
+  #chat-input-here,
+  #chat-input-width-button,
+  #dev-here {
+    width: calc(96vh * var(--aspect-ratio));
+  }
+  #message-box {
+    width: calc(95vh * var(--aspect-ratio) - 70px);
+  }
+}
+@media only screen and (max-aspect-ratio: 432/304) {
+  #canvas-here,
+  canvas {
+    width: 96vw;
+    height: calc(96vw * var(--inverse-aspect-ratio));
+  }
+  #chat-input-here,
+  #chat-input-width-button,
+  #dev-here {
+    width: 96vw;
+  }
+  #message-box {
+    width: calc(95vw - 70px);
   }
 }

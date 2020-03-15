@@ -31,18 +31,23 @@
       <div id="player1-chat-box" class="chat-box"></div>
       <div id="player2-chat-box" class="chat-box"></div>
     </div>
-    <div>
-      <input type="text" id="message-box" />
-      <button type="button" id="send-btn">send</button>
+    <div id="chat-input-here">
+      <div id="chat-input-with-button">
+        <input type="text" id="message-box" />
+        <button type="button" id="send-btn">send</button>
+      </div>
+      <button id="chat-open-btn">Chat (Shift + Enter)</button>
     </div>
-    <div>
-      <button type="button" id="create-btn">create</button>
-      <input type="text" id="room-id" />
-      <button type="button" id="join-btn">join</button>
-    </div>
-    <div id="current-room"></div>
-    <div id="chat-messages" style="white-space: pre-line">
-      connection log below
+    <div id="dev-here">
+      <div>
+        <button type="button" id="create-btn">create</button>
+        <input type="text" id="room-id" />
+        <button type="button" id="join-btn">join</button>
+      </div>
+      <div id="current-room"></div>
+      <div id="chat-messages" style="white-space: pre-line">
+        connection log below
+      </div>
     </div>
   </body>
 </html>
