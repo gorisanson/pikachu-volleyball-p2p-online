@@ -303,7 +303,7 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
     snapshot.docChanges().forEach(async change => {
       if (change.type === 'added') {
         const data = change.doc.data();
-        await peerConnection.addIceCandidate(new RTCIceCandidate(data));
+        await peerConnection.addIceCandidate(data);
         console.log(`Got new remote ICE candidate: ${JSON.stringify(data)}`);
       }
     });
