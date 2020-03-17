@@ -176,7 +176,7 @@ function joinRoom() {
   document.querySelector('#create-btn').disabled = true;
   document.querySelector('#join-btn').disabled = true;
   document.querySelector('#room-id').disabled = true;
-  roomId = document.querySelector('#room-id').value;
+  roomId = document.querySelector('#room-id').value.trim();
   console.log('Join room: ', roomId);
   document.querySelector(
     '#current-room'
