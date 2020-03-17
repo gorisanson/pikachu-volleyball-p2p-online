@@ -83,6 +83,17 @@ function init() {
   sendBtn.disabled = true;
   window.addEventListener('keydown', chatInputBoxOpen, false);
   chatOpenBtn.addEventListener('click', chatOpenClicked);
+  // eslint-disable-next-line no-undef
+  const db = firebase.firestore();
+  db.collection('rooms').onSnapshot(snapshot => {
+    snapshot.docChanges().forEach(change => {
+      if (change.type === 'added') {
+        document.querySelector(
+          '#chat-messages'
+        ).textContent += `\n${change.doc.id}`;
+      }
+    });
+  });
 }
 
 function chatOpenClicked(evnet) {
