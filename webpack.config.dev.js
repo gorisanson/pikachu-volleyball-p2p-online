@@ -11,7 +11,7 @@ module.exports = {
   entry: {
     main: './src/resources/js/main.js',
     ko: './src/resources/js/ko.js',
-    online: './src/index_online.html'
+    online: './src/online/resources/js/main_online.js'
   },
   output: {
     filename: '[name].bundle.js',
@@ -41,8 +41,8 @@ module.exports = {
       chunksSortMode: 'manual'
     }),
     new HtmlWebpackPlugin({
-      template: './src/index_online.html',
-      filename: 'index_online.html',
+      template: 'src/online/en/index.html',
+      filename: 'online/en/index.html',
       hash: true,
       chunks: ['runtime', 'online'],
       chunksSortMode: 'manual'

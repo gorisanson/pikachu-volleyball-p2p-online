@@ -2,7 +2,7 @@
 import * as PIXI from 'pixi.js';
 import 'pixi-sound';
 import { PikachuVolleyballOnline } from './pikavolley_online.js';
-import { RESOURCE_PATH } from './resource_path.js';
+import { ASSETS_PATH } from '../../../resources/js/assets_path.js';
 
 const settings = PIXI.settings;
 settings.RESOLUTION = window.devicePixelRatio;
@@ -27,9 +27,9 @@ ticker.add(() => {
 }, PIXI.UPDATE_PRIORITY.LOW);
 ticker.start();
 
-loader.add(RESOURCE_PATH.SPRITE_SHEET);
-for (const prop in RESOURCE_PATH.SOUNDS) {
-  loader.add(RESOURCE_PATH.SOUNDS[prop]);
+loader.add(ASSETS_PATH.SPRITE_SHEET);
+for (const prop in ASSETS_PATH.SOUNDS) {
+  loader.add(ASSETS_PATH.SOUNDS[prop]);
 }
 loader.load(setup);
 
