@@ -6,9 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   mode: 'production',
   entry: {
-    main: './src/resources/js/main.js',
-    ko: './src/resources/js/ko.js',
-    online: './src/online/resources/js/main_online.js'
+    main: './src/resources/js/main_online.js'
   },
   output: {
     filename: '[name].bundle.js',
@@ -29,20 +27,6 @@ module.exports = {
       filename: 'en/index.html',
       hash: true,
       chunks: ['runtime', 'main'],
-      chunksSortMode: 'manual'
-    }),
-    new HtmlWebpackPlugin({
-      template: 'src/ko/index.html',
-      filename: 'ko/index.html',
-      hash: true,
-      chunks: ['runtime', 'ko', 'main'],
-      chunksSortMode: 'manual'
-    }),
-    new HtmlWebpackPlugin({
-      template: 'src/online/en/index.html',
-      filename: 'online/en/index.html',
-      hash: true,
-      chunks: ['runtime', 'online'],
       chunksSortMode: 'manual'
     })
   ]

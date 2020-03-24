@@ -1,6 +1,6 @@
 // TODO:
 
-import { PikaKeyboard } from '../../../resources/js/keyboard.js';
+import { PikaKeyboard } from './offline_version_js/keyboard.js';
 import { channel } from './data_channel.js';
 import { mod } from './mod.js';
 

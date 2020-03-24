@@ -2,7 +2,7 @@
 import * as PIXI from 'pixi.js';
 import 'pixi-sound';
 import { PikachuVolleyballOnline } from './pikavolley_online.js';
-import { ASSETS_PATH } from '../../../resources/js/assets_path.js';
+import { ASSETS_PATH } from './offline_version_js/assets_path.js';
 
 const settings = PIXI.settings;
 settings.RESOLUTION = window.devicePixelRatio;

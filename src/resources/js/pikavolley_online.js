@@ -1,5 +1,5 @@
 'ues strics';
-import { PikachuVolleyball } from '../../../resources/js/pikavolley.js';
+import { PikachuVolleyball } from './offline_version_js/pikavolley.js';
 import { MyKeyboard, PeerKeyboard } from './pika_keyboard_online.js';
 import { channel } from './data_channel';
 import { mod } from './mod.js';

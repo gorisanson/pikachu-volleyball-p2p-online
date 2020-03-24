@@ -10,7 +10,7 @@
 
 'use strict;';
 import seedrandom from 'seedrandom';
-import { forRand } from '../../../resources/js/rand.js';
+import { forRand } from './offline_version_js/rand.js';
 
 // TODO: seed randomly
 forRand.rng = seedrandom.alea('hello');
