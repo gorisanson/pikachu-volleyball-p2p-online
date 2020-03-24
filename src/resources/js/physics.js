@@ -1,9 +1,21 @@
 /*
- *  X width: 432 = 0x1B0
- *  Y width: 304 = 0x130
+ * The Model part in the MVC pattern
  *
- *  X position coord: [0, 432], right-direction increasing
- *  Y position coord: [0, 304], down-direction increasing
+ * It is the core module which acts as a physics engine.
+ * This physics engine calculates the movements of the ball and the players (Pikachus).
+ *
+ * It is gained by reverse engineering the original game.
+ * The address of each function in the original machine code is specified at the comment above each function.
+ * ex) FUN_00403dd0 means the original function at the address 00403dd0.
+ *
+ *
+ * ** Some useful infos below **
+ *
+ *  Ground width: 432 = 0x1B0
+ *  Ground height: 304 = 0x130
+ *
+ *  X position coordinate: [0, 432], right-direction increasing
+ *  Y position coordinate: [0, 304], down-direction increasing
  *
  *  Ball radius: 20 = 0x14
  *  Ball diameter: 40 = 0x28
@@ -13,20 +25,38 @@
  *  Player width: 64 = 0x40
  *  Player height: 64 = 0x40
  *
- *  Game speed:
- *    slow: 1 frame per 33ms = 30.303030...Hz
- *    medium: 1 frame per 40ms = 25Hz
- *    fast: 1 frame per 50ms = 20Hz
  */
 'use strict';
 import { rand } from './rand.js';
 
+/** @constant @type {number} ground width */
+const GROUND_WIDTH = 432;
+/** @constant @type {number} ground half-width, it is also the net pillar x coordinate */
+const GROUND_HALF_WIDTH = GROUND_WIDTH / 2;
+/** @constant @type {number} player (Pikachu) length: width = height = 64 */
+const PLAYER_LENGTH = 64;
+/** @constant @type {number} player half length */
+const PLAYER_HALF_LENGTH = PLAYER_LENGTH / 2;
+/** @constant @type {number} player's y coordinate when they are touching ground */
+const PLAYER_TOUCHING_GROUND_Y_COORD = 244;
+/** @constant @type {number} ball's radius */
+const BALL_RADIUS = 20;
+/** @constant @type {number} ball's y coordinate when it is touching ground */
+const BALL_TOUCHING_GROUND_Y_COORD = 252;
+/** @constant @type {number} net pillar's half width (this value is on this physics engine only, not on the sprite pixel size) */
+const NET_PILLAR_HALF_WIDTH = 25;
+/** @constant @type {number} net pillar top's top side y coordinate */
+const NET_PILLAR_TOP_TOP_Y_COORD = 176;
+/** @constant @type {number} net pillar top's bottom side y coordinate (this value is on this physics engine only) */
+const NET_PILLAR_TOP_BOTTOM_Y_COORD = 192;
+
 /**
- * It's for to limit the looping number of the infinite loops in the original assembly code.
- * This constant is not in the original assembly code.
+ * It's for to limit the looping number of the infinite loops.
+ * This constant is not in the original machine code. (The original machine code does not limit the looping number.)
+ *
  * In the original ball x coord range setting (ball x coord in [20, 432]), the infinite loops in
  * {@link caculate_expected_landing_point_x_for} function and {@link expectedLandingPointXWhenPowerHit} function seems to be always terminated soon.
- * But if the ball x coord range is edited, for example, to [20, 432 - 20] for symmetry,
+ * But if the ball x coord range is edited, for example, to [20, 432 - 20] for left-right symmetry,
  * it is observed that the infinite loop in {@link expectedLandingPointXWhenPowerHit} does not terminate.
  * So for safety, this infinite loop limit is included for the infinite loops mentioned above.
  * @constant @type {number}
@@ -115,10 +145,9 @@ class Player {
      */
     this.computerWhereToStandBy = 0; // 0xDC
 
-    // TODO: stereo sound
     /**
      * This property is not in the player pointers of the original source code.
-     * But for sound effect (especially for stereo sound(it is TODO, not implemented)),
+     * But for sound effect (especially for stereo sound),
      * it is convinient way to give sound property to a Player.
      * The original name is stereo sound.
      * @type {Object.<string, boolean>}
@@ -137,10 +166,10 @@ class Player {
     /** @type {number} x coord */
     this.x = 36; // 0xA8 // initialized to 36 (player1) or 396 (player2)
     if (this.isPlayer2) {
-      this.x = 396;
+      this.x = GROUND_WIDTH - 36;
     }
     /** @type {number} y coord */
-    this.y = 244; // 0xAC   // initialized to 244
+    this.y = PLAYER_TOUCHING_GROUND_Y_COORD; // 0xAC   // initialized to 244
     /** @type {number} y direction velocity */
     this.yVelocity = 0; // 0xB0  // initialized to 0
     /** @type {boolean} */
@@ -213,10 +242,9 @@ class Ball {
     this.previousY = 0; // 0x60
     this.previousPreviousY = 0; // 0x64
 
-    // TODO: stereo sound
     /**
      * this property is not in the ball pointer of the original source code.
-     * But for sound effect (especially for stereo sound(it is TODO, not implemented)),
+     * But for sound effect (especially for stereo sound),
      * it is convinient way to give sound property to a Ball.
      * The original name is stereo sound.
      */
@@ -234,7 +262,7 @@ class Ball {
     /** @type {number} x coord */
     this.x = 56; // 0x30    // initialized to 56 or 376
     if (isPlayer2Serve === true) {
-      this.x = 376;
+      this.x = GROUND_WIDTH - 56;
     }
     /** @type {number} y coord */
     this.y = 0; // 0x34   // initialized to 0
@@ -341,9 +369,9 @@ function physicsEngine(player1, player2, ball, userInputArray) {
  */
 function isCollisionBetweenBallAndPlayerHappened(ball, playerX, playerY) {
   let diff = ball.x - playerX;
-  if (Math.abs(diff) < 33) {
+  if (Math.abs(diff) <= PLAYER_HALF_LENGTH) {
     diff = ball.y - playerY;
-    if (Math.abs(diff) < 33) {
+    if (Math.abs(diff) <= PLAYER_HALF_LENGTH) {
       return true;
     }
   }
@@ -376,15 +404,16 @@ function processCollisionBetweenBallAndWorldAndSetBallPosition(ball) {
   /*
     If the center of ball would get out of left world bound or right world bound, bounce back.
     
-    In this if statement, "futureBallX > 432" should be changed to "futureBallX > (432 - 20)"
-    or, "futureBallX < 20" should be changed to "futureBallX < 0".
-    Maybe the former one is more proper when seeing pikachu player's x-direction boundary.
+    In this if statement, when considering left-right symmetry,
+    "futureBallX > GROUND_WIDTH" should be changed to "futureBallX > (GROUND_WIDTH - BALL_RADIUS)",
+    or "futureBallX < BALL_RADIUS" should be changed to "futureBallX < 0".
+    Maybe the former one is more proper when seeing Pikachu player's x-direction boundary.
     Is this a mistake of the author of the original game?
-    Or, is it set to this value to resolve inifite loop problem? (See comments on the constant INFINITE_LOOP_LIMIT.)
-    If apply (futureBallX > (432 - 20)), and if the maximum number of loop is not limited,
+    Or, was it set to this value to resolve inifite loop problem? (See comments on the constant INFINITE_LOOP_LIMIT.)
+    If apply (futureBallX > (GROUND_WIDTH - BALL_RADIUS)), and if the maximum number of loop is not limited,
     it is observed that inifinite loop in the function expectedLandingPointXWhenPowerHit does not terminate.
   */
-  if (futureBallX < 20 || futureBallX > 432) {
+  if (futureBallX < BALL_RADIUS || futureBallX > GROUND_WIDTH) {
     ball.xVelocity = -ball.xVelocity;
   }
 
@@ -395,13 +424,16 @@ function processCollisionBetweenBallAndWorldAndSetBallPosition(ball) {
   }
 
   // If ball touches net
-  if (Math.abs(ball.x - 216) < 25 && ball.y > 176) {
-    if (ball.y < 193) {
+  if (
+    Math.abs(ball.x - GROUND_HALF_WIDTH) < NET_PILLAR_HALF_WIDTH &&
+    ball.y > NET_PILLAR_TOP_TOP_Y_COORD
+  ) {
+    if (ball.y <= NET_PILLAR_TOP_BOTTOM_Y_COORD) {
       if (ball.yVelocity > 0) {
         ball.yVelocity = -ball.yVelocity;
       }
     } else {
-      if (ball.x < 216) {
+      if (ball.x < GROUND_HALF_WIDTH) {
         ball.xVelocity = -Math.abs(ball.xVelocity);
       } else {
         ball.xVelocity = Math.abs(ball.xVelocity);
@@ -411,7 +443,7 @@ function processCollisionBetweenBallAndWorldAndSetBallPosition(ball) {
 
   futureBallY = ball.y + ball.yVelocity;
   // if ball would touch ground
-  if (futureBallY > 252) {
+  if (futureBallY > BALL_TOUCHING_GROUND_Y_COORD) {
     // FUN_00408470 omitted
     // the function omitted above receives 100 * (ball.x - 216),
     // i.e. horizontal displacement from net maybe for stereo sound?
@@ -421,9 +453,9 @@ function processCollisionBetweenBallAndWorldAndSetBallPosition(ball) {
 
     ball.yVelocity = -ball.yVelocity;
     ball.punchEffectX = ball.x;
-    ball.y = 252;
-    ball.punchEffectRadius = 20;
-    ball.punchEffectY = 272;
+    ball.y = BALL_TOUCHING_GROUND_Y_COORD;
+    ball.punchEffectRadius = BALL_RADIUS;
+    ball.punchEffectY = BALL_TOUCHING_GROUND_Y_COORD + BALL_RADIUS;
     return true;
   }
   ball.y = futureBallY;
@@ -485,17 +517,17 @@ function processPlayerMovementAndSetPlayerPosition(
   // process player's x-direction world boundary
   if (player.isPlayer2 === false) {
     // if player is player1
-    if (futurePlayerX < 32) {
-      player.x = 32;
-    } else if (futurePlayerX > 216 - 32) {
-      player.x = 216 - 32;
+    if (futurePlayerX < PLAYER_HALF_LENGTH) {
+      player.x = PLAYER_HALF_LENGTH;
+    } else if (futurePlayerX > GROUND_HALF_WIDTH - PLAYER_HALF_LENGTH) {
+      player.x = GROUND_HALF_WIDTH - PLAYER_HALF_LENGTH;
     }
   } else {
     // if player is player2
-    if (futurePlayerX < 216 + 32) {
-      player.x = 216 + 32;
-    } else if (futurePlayerX > 432 - 32) {
-      player.x = 432 - 32;
+    if (futurePlayerX < GROUND_HALF_WIDTH + PLAYER_HALF_LENGTH) {
+      player.x = GROUND_HALF_WIDTH + PLAYER_HALF_LENGTH;
+    } else if (futurePlayerX > GROUND_WIDTH - PLAYER_HALF_LENGTH) {
+      player.x = GROUND_WIDTH - PLAYER_HALF_LENGTH;
     }
   }
 
@@ -503,7 +535,7 @@ function processPlayerMovementAndSetPlayerPosition(
   if (
     player.state < 3 &&
     userInput.yDirection === -1 && // up-direction input
-    player.y === 244 // player is touching on the ground
+    player.y === PLAYER_TOUCHING_GROUND_Y_COORD // player is touching on the ground
   ) {
     player.yVelocity = -16;
     player.state = 1;
@@ -517,12 +549,12 @@ function processPlayerMovementAndSetPlayerPosition(
   // gravity
   const futurePlayerY = player.y + player.yVelocity;
   player.y = futurePlayerY;
-  if (futurePlayerY < 244) {
+  if (futurePlayerY < PLAYER_TOUCHING_GROUND_Y_COORD) {
     player.yVelocity += 1;
-  } else if (futurePlayerY > 244) {
+  } else if (futurePlayerY > PLAYER_TOUCHING_GROUND_Y_COORD) {
     // if player is landing..
     player.yVelocity = 0;
-    player.y = 244;
+    player.y = PLAYER_TOUCHING_GROUND_Y_COORD;
     player.frameNumber = 0;
     if (player.state === 3) {
       // if player is diving..
@@ -662,7 +694,7 @@ function processCollisionBetweenBallAndPlayer(
 
   // player is jumping and power hitting
   if (playerState === 2) {
-    if (ball.x < 216) {
+    if (ball.x < GROUND_HALF_WIDTH) {
       ball.xVelocity = (Math.abs(userInput.xDirection) + 1) * 10;
     } else {
       ball.xVelocity = -(Math.abs(userInput.xDirection) + 1) * 10;
@@ -671,7 +703,7 @@ function processCollisionBetweenBallAndPlayer(
     ball.punchEffectY = ball.y;
 
     ball.yVelocity = Math.abs(ball.yVelocity) * userInput.yDirection * 2;
-    ball.punchEffectRadius = 20;
+    ball.punchEffectRadius = BALL_RADIUS;
     // maybe-stereo-sound function FUN_00408470 (0x90) ommited:
     // refer a detailed comment above about this function
     // maybe-soundcode function (ballpointer + 0x24 + 0x10) ommited:
@@ -702,7 +734,7 @@ function caculate_expected_landing_point_x_for(ball) {
     loopCounter++;
 
     const futureCopyBallX = copyBall.xVelocity + copyBall.x;
-    if (futureCopyBallX < 20 || futureCopyBallX > 432) {
+    if (futureCopyBallX < BALL_RADIUS || futureCopyBallX > GROUND_WIDTH) {
       copyBall.xVelocity = -copyBall.xVelocity;
     }
     if (copyBall.y + copyBall.yVelocity < 0) {
@@ -710,14 +742,17 @@ function caculate_expected_landing_point_x_for(ball) {
     }
 
     // If copy ball touches net
-    if (Math.abs(copyBall.x - 216) < 25 && copyBall.y > 176) {
-      // It maybe should be 193 as in FUN_00402dc0, is it the original game author's mistake?
-      if (copyBall.y < 192) {
+    if (
+      Math.abs(copyBall.x - GROUND_HALF_WIDTH) < NET_PILLAR_HALF_WIDTH &&
+      copyBall.y > NET_PILLAR_TOP_TOP_Y_COORD
+    ) {
+      // It maybe should be <= NET_PILLAR_TOP_BOTTOM_Y_COORD as in FUN_00402dc0, is it the original game author's mistake?
+      if (copyBall.y < NET_PILLAR_TOP_BOTTOM_Y_COORD) {
         if (copyBall.yVelocity > 0) {
           copyBall.yVelocity = -copyBall.yVelocity;
         }
       } else {
-        if (copyBall.x < 216) {
+        if (copyBall.x < GROUND_HALF_WIDTH) {
           copyBall.xVelocity = -Math.abs(copyBall.xVelocity);
         } else {
           copyBall.xVelocity = Math.abs(copyBall.xVelocity);
@@ -727,7 +762,10 @@ function caculate_expected_landing_point_x_for(ball) {
 
     copyBall.y = copyBall.y + copyBall.yVelocity;
     // if copyBall would touch ground
-    if (copyBall.y > 252 || loopCounter >= INFINITE_LOOP_LIMIT) {
+    if (
+      copyBall.y > BALL_TOUCHING_GROUND_Y_COORD ||
+      loopCounter >= INFINITE_LOOP_LIMIT
+    ) {
       break;
     }
     copyBall.x = copyBall.x + copyBall.xVelocity;
@@ -759,14 +797,15 @@ function letComputerDecideUserInput(player, ball, theOtherPlayer, userInput) {
     Math.abs(ball.x - player.x) > 100 &&
     Math.abs(ball.xVelocity) < player.computerBoldness + 5
   ) {
-    const leftBoundary = Number(player.isPlayer2) * 216;
+    const leftBoundary = Number(player.isPlayer2) * GROUND_HALF_WIDTH;
     if (
       (ball.expectedLandingPointX <= leftBoundary ||
-        ball.expectedLandingPointX >= Number(player.isPlayer2) * 432 + 216) &&
+        ball.expectedLandingPointX >=
+          Number(player.isPlayer2) * GROUND_WIDTH + GROUND_HALF_WIDTH) &&
       player.computerWhereToStandBy === 0
     ) {
       // If conditions above met, the computer estimates the proper location to stay as the middle point of their side
-      virtualExpectedLandingPointX = leftBoundary + 216 / 2;
+      virtualExpectedLandingPointX = leftBoundary + GROUND_HALF_WIDTH / 2;
     }
   }
 
@@ -786,7 +825,7 @@ function letComputerDecideUserInput(player, ball, theOtherPlayer, userInput) {
   if (player.state === 0) {
     if (
       Math.abs(ball.xVelocity) < player.computerBoldness + 3 &&
-      Math.abs(ball.x - player.x) < 32 &&
+      Math.abs(ball.x - player.x) < PLAYER_HALF_LENGTH &&
       ball.y > -36 &&
       ball.y < 10 * player.computerBoldness + 84 &&
       ball.yVelocity > 0
@@ -794,12 +833,13 @@ function letComputerDecideUserInput(player, ball, theOtherPlayer, userInput) {
       userInput.yDirection = -1;
     }
 
-    const leftBoundary = Number(player.isPlayer2) * 216;
-    const rightBoundary = (Number(player.isPlayer2) + 1) * 216;
+    const leftBoundary = Number(player.isPlayer2) * GROUND_HALF_WIDTH;
+    const rightBoundary = (Number(player.isPlayer2) + 1) * GROUND_HALF_WIDTH;
     if (
       ball.expectedLandingPointX > leftBoundary &&
       ball.expectedLandingPointX < rightBoundary &&
-      Math.abs(ball.x - player.x) > player.computerBoldness * 5 + 64 &&
+      Math.abs(ball.x - player.x) >
+        player.computerBoldness * 5 + PLAYER_LENGTH &&
       ball.x > leftBoundary &&
       ball.x < rightBoundary &&
       ball.y > 174
@@ -861,9 +901,11 @@ function decideWhetherInputPowerHit(player, ball, theOtherPlayer, userInput) {
           ball
         );
         if (
-          (expectedLandingPointX <= Number(player.isPlayer2) * 216 ||
-            expectedLandingPointX >= Number(player.isPlayer2) * 432 + 216) &&
-          Math.abs(expectedLandingPointX - theOtherPlayer.x) > 64
+          (expectedLandingPointX <=
+            Number(player.isPlayer2) * GROUND_HALF_WIDTH ||
+            expectedLandingPointX >=
+              Number(player.isPlayer2) * GROUND_WIDTH + GROUND_HALF_WIDTH) &&
+          Math.abs(expectedLandingPointX - theOtherPlayer.x) > PLAYER_LENGTH
         ) {
           userInput.xDirection = xDirection;
           userInput.yDirection = yDirection;
@@ -880,9 +922,11 @@ function decideWhetherInputPowerHit(player, ball, theOtherPlayer, userInput) {
           ball
         );
         if (
-          (expectedLandingPointX <= Number(player.isPlayer2) * 216 ||
-            expectedLandingPointX >= Number(player.isPlayer2) * 432 + 216) &&
-          Math.abs(expectedLandingPointX - theOtherPlayer.x) > 64
+          (expectedLandingPointX <=
+            Number(player.isPlayer2) * GROUND_HALF_WIDTH ||
+            expectedLandingPointX >=
+              Number(player.isPlayer2) * GROUND_WIDTH + GROUND_HALF_WIDTH) &&
+          Math.abs(expectedLandingPointX - theOtherPlayer.x) > PLAYER_LENGTH
         ) {
           userInput.xDirection = xDirection;
           userInput.yDirection = yDirection;
@@ -915,7 +959,7 @@ function expectedLandingPointXWhenPowerHit(
     xVelocity: ball.xVelocity,
     yVelocity: ball.yVelocity
   };
-  if (copyBall.x < 216) {
+  if (copyBall.x < GROUND_HALF_WIDTH) {
     copyBall.xVelocity = (Math.abs(userInputXDirection) + 1) * 10;
   } else {
     copyBall.xVelocity = -(Math.abs(userInputXDirection) + 1) * 10;
@@ -927,13 +971,16 @@ function expectedLandingPointXWhenPowerHit(
     loopCounter++;
 
     const futureCopyBallX = copyBall.x + copyBall.xVelocity;
-    if (futureCopyBallX < 20 || futureCopyBallX > 432) {
+    if (futureCopyBallX < BALL_RADIUS || futureCopyBallX > GROUND_WIDTH) {
       copyBall.xVelocity = -copyBall.xVelocity;
     }
     if (copyBall.y + copyBall.yVelocity < 0) {
       copyBall.yVelocity = 1;
     }
-    if (Math.abs(copyBall.x - 216) < 25 && copyBall.y > 176) {
+    if (
+      Math.abs(copyBall.x - GROUND_HALF_WIDTH) < NET_PILLAR_HALF_WIDTH &&
+      copyBall.y > NET_PILLAR_TOP_TOP_Y_COORD
+    ) {
       /*
         The code below maybe is intended to make computer do mistakes.
         The player controlled by computer occasionally power hit ball that is bounced back by the net pillar,
@@ -945,12 +992,12 @@ function expectedLandingPointXWhenPowerHit(
       /*
       An alternative code for making the computer not do those mistakes is as below.
 
-      if (copyBall.y < 193) {
+      if (copyBall.y <= NET_PILLAR_TOP_BOTTOM_Y_COORD) {
         if (copyBall.yVelocity > 0) {
           copyBall.yVelocity = -copyBall.yVelocity;
         }
       } else {
-        if (copyBall.x < 216) {
+        if (copyBall.x < GROUND_HALF_WIDTH) {
           copyBall.xVelocity = -Math.abs(copyBall.xVelocity);
         } else {
           copyBall.xVelocity = Math.abs(copyBall.xVelocity);
@@ -959,7 +1006,10 @@ function expectedLandingPointXWhenPowerHit(
       */
     }
     copyBall.y = copyBall.y + copyBall.yVelocity;
-    if (copyBall.y > 252 || loopCounter >= INFINITE_LOOP_LIMIT) {
+    if (
+      copyBall.y > BALL_TOUCHING_GROUND_Y_COORD ||
+      loopCounter >= INFINITE_LOOP_LIMIT
+    ) {
       return copyBall.x;
     }
     copyBall.x = copyBall.x + copyBall.xVelocity;

@@ -1,10 +1,17 @@
+/*
+ * The View part in the MVC pattern
+ *
+ * Some codes in this module are gaind by reverse engineering the original machine code.
+ * The codes gain by reverse engineering are commented by the refered funcion address in the machine code.
+ * ex) FUN_00405d50 means the function at the address 00405d50 in the machine code.
+ */
 'use strict';
 import { Container, Sprite, AnimatedSprite, Graphics } from 'pixi.js';
-import { Cloud, Wave, cloudAndWaveEngine } from './pika_cloud_and_wave.js';
-import { RESOURCE_PATH } from './resource_path.js';
+import { Cloud, Wave, cloudAndWaveEngine } from './cloud_and_wave.js';
+import { ASSETS_PATH } from './assets_path.js';
 
-const SPRITE_SHEET = RESOURCE_PATH.SPRITE_SHEET;
-const TEXURES = RESOURCE_PATH.TEXTURES;
+const SPRITE_SHEET = ASSETS_PATH.SPRITE_SHEET;
+const TEXURES = ASSETS_PATH.TEXTURES;
 
 /** @constant @type {number} number of clouds to be rendered */
 const NUM_OF_CLOUDS = 10;
@@ -438,7 +445,7 @@ export class GameView {
     }
   }
 
-  /** @typedef {import("./pika_physics").PikaPhysics} PikaPhysics */
+  /** @typedef {import("./physics").PikaPhysics} PikaPhysics */
   /**
    * Draw players and ball in the given physics object
    * @param {PikaPhysics} physics PikaPhysics object to draw

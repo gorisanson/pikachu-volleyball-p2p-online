@@ -1,8 +1,11 @@
+/*
+ * The Controller part in MVC pattern
+ */
 'ues strics';
-import { PikaKeyboard } from './pika_keyboard.js';
-import { PikaPhysics } from './pika_physics.js';
-import { PikaAudio } from './pika_audio.js';
-import { MenuView, GameView, FadeInOut, IntroView } from './pika_view.js';
+import { PikaPhysics } from './physics.js';
+import { MenuView, GameView, FadeInOut, IntroView } from './view.js';
+import { PikaKeyboard } from './keyboard.js';
+import { PikaAudio } from './audio.js';
 
 /** @typedef GameState @type {function():void} */
 
@@ -61,8 +64,8 @@ export class PikachuVolleyball {
 
     /** @type {number[]} [0] for player 1 score, [1] for player 2 score */
     this.scores = [0, 0];
-    /** @type {number} goal score: if one of the players reach this score, game ends */
-    this.goalScore = 15;
+    /** @type {number} winning score: if either one of the players reaches this score, game ends */
+    this.winningScore = 15;
 
     /** @type {boolean} Is the game ended? */
     this.gameEnded = false;
@@ -81,7 +84,7 @@ export class PikachuVolleyball {
       startOfNewGame: 71,
       afterEndOfRound: 5,
       beforeStartOfNextRound: 30,
-      gameEnd: 211
+      gameEnd: Infinity // this value should be about 211 to act like the original game.
     };
 
     /** @type {number} counter for frames while there is no input from keyboard */
@@ -90,6 +93,15 @@ export class PikachuVolleyball {
     this.noInputFrameTotal = {
       menu: 225
     };
+
+    /** @type {boolean} true: paused, false: not paused */
+    this.paused = false;
+
+    /** @type {boolean} true: stereo, false: mono */
+    this.isStereoSound = true;
+
+    /** @type {boolean} true: practice mode on, false: practice mode off */
+    this._isPracticeMode = false;
 
     /**
      * The game state which is being rendered now
@@ -103,6 +115,9 @@ export class PikachuVolleyball {
    * This function should be called at regular intervals ( interval = (1 / FPS) second )
    */
   gameLoop() {
+    if (this.paused === true) {
+      return;
+    }
     if (this.slowMotionFramesLeft > 0) {
       this.slowMotionNumOfSkippedFrames++;
       if (
@@ -348,13 +363,14 @@ export class PikachuVolleyball {
 
     if (
       isBallTouchingGround &&
+      this._isPracticeMode === false &&
       this.roundEnded === false &&
       this.gameEnded === false
     ) {
       if (this.physics.ball.punchEffectX < 216) {
         this.isPlayer2Serve = true;
         this.scores[1] += 1;
-        if (this.scores[1] >= this.goalScore) {
+        if (this.scores[1] >= this.winningScore) {
           this.gameEnded = true;
           this.physics.player1.isWinner = false;
           this.physics.player2.isWinner = true;
@@ -364,7 +380,7 @@ export class PikachuVolleyball {
       } else {
         this.isPlayer2Serve = false;
         this.scores[0] += 1;
-        if (this.scores[0] >= this.goalScore) {
+        if (this.scores[0] >= this.winningScore) {
           this.gameEnded = true;
           this.physics.player1.isWinner = true;
           this.physics.player2.isWinner = false;
@@ -441,30 +457,67 @@ export class PikachuVolleyball {
     for (let i = 0; i < 2; i++) {
       const player = this.physics[`player${i + 1}`];
       const sound = player.sound;
-      // const pan = 0;
+      let leftOrCenterOrRight = 0;
+      if (this.isStereoSound) {
+        leftOrCenterOrRight = i === 0 ? -1 : 1;
+      }
       if (sound.pipikachu === true) {
-        audio.sounds.pipikachu.play();
+        audio.sounds.pipikachu.play(leftOrCenterOrRight);
         sound.pipikachu = false;
       }
       if (sound.pika === true) {
-        audio.sounds.pika.play();
+        audio.sounds.pika.play(leftOrCenterOrRight);
         sound.pika = false;
       }
       if (sound.chu === true) {
-        audio.sounds.chu.play();
+        audio.sounds.chu.play(leftOrCenterOrRight);
         sound.chu = false;
       }
     }
     const ball = this.physics.ball;
     const sound = ball.sound;
-    // const pan = 0;
+    let leftOrCenterOrRight = 0;
+    if (this.isStereoSound) {
+      if (ball.punchEffectX < 216) {
+        leftOrCenterOrRight = -1;
+      } else if (ball.punchEffectX > 216) {
+        leftOrCenterOrRight = 1;
+      }
+    }
     if (sound.powerHit === true) {
-      audio.sounds.powerHit.play();
+      audio.sounds.powerHit.play(leftOrCenterOrRight);
       sound.powerHit = false;
     }
     if (sound.ballTouchesGround === true) {
-      audio.sounds.ballTouchesGround.play();
+      audio.sounds.ballTouchesGround.play(leftOrCenterOrRight);
       sound.ballTouchesGround = false;
     }
+  }
+
+  /**
+   * Called if restart button clicked
+   */
+  restart() {
+    this.frameCounter = 0;
+    this.noInputFrameCounter = 0;
+    this.slowMotionFramesLeft = 0;
+    this.slowMotionNumOfSkippedFrames = 0;
+    this.view.menu.visible = false;
+    this.view.game.visible = false;
+    this.state = this.intro;
+  }
+
+  /** @return {boolean} */
+  get isPracticeMode() {
+    return this._isPracticeMode;
+  }
+
+  /**
+   * @param {boolean} bool true: turn on practice mode, false: turn off practice mode
+   */
+  set isPracticeMode(bool) {
+    this._isPracticeMode = bool;
+    this.view.game.scoreBoards[0].visible = !bool;
+    this.view.game.scoreBoards[1].visible = !bool;
   }
 }

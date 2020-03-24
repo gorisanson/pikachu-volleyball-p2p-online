@@ -1,5 +1,8 @@
+/*
+ * This module takes charge of the user input via keyboard
+ */
 'use strict';
-import { PikaUserInput } from './pika_physics.js';
+import { PikaUserInput } from './physics.js';
 
 /**
  * Class representing a keyboard used to contorl a player
