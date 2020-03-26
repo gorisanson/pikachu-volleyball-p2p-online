@@ -1,5 +1,5 @@
-/*
- * This module takes charge of the UI (menu bar, buttons, etc.) of the web page
+/**
+ * Manages event listeners relevant to the UI (menu bar, buttons, etc.) of the web page
  */
 'use strict';
 /** @typedef {import('./pikavolley.js').PikachuVolleyball} PikachuVolleyball */
@@ -54,15 +54,6 @@ export function setUpUI(pikaVolley, ticker) {
       event.preventDefault();
     }
   });
-
-  const gameDropdownBtn = document.getElementById('game-dropdown-btn');
-  const optionsDropdownBtn = document.getElementById('options-dropdown-btn');
-  // @ts-ignore
-  gameDropdownBtn.disabled = true;
-  // @ts-ignore
-  optionsDropdownBtn.disabled = true;
-
-  pauseResumeManager.pause(pikaVolley, PauseResumePrecedence.messageBox);
 }
 
 /**

@@ -1,5 +1,6 @@
-/*
+/**
  * This is the main script which executes the game.
+ * General explanations for the all source code files of the game are following.
  *
  ********************************************************************************************************************
  * This web version of the Pikachu Volleyball is made by
@@ -51,25 +52,74 @@ const loader = new PIXI.Loader();
 
 renderer.view.setAttribute('id', 'game-canvas');
 document.getElementById('game-canvas-container').appendChild(renderer.view);
-
-ticker.add(() => {
-  renderer.render(stage);
-}, PIXI.UPDATE_PRIORITY.LOW);
-ticker.start();
+renderer.render(stage); // To make the initial canvas painting stable in the Firefox browser.
 
 loader.add(ASSETS_PATH.SPRITE_SHEET);
 for (const prop in ASSETS_PATH.SOUNDS) {
   loader.add(ASSETS_PATH.SOUNDS[prop]);
 }
-loader.load(setup);
 
+setUpInitialUI();
+
+/**
+ * Set up the initial UI.
+ */
+function setUpInitialUI() {
+  const loadingBox = document.getElementById('loading-box');
+  const progressBar = document.getElementById('progress-bar');
+  loader.on('progress', () => {
+    progressBar.style.width = `${loader.progress}%`;
+  });
+  loader.on('complete', () => {
+    if (!loadingBox.classList.contains('hidden')) {
+      loadingBox.classList.add('hidden');
+    }
+  });
+
+  const aboutBox = document.getElementById('about-box');
+  const aboutBtn = document.getElementById('about-btn');
+  const closeAboutBtn = document.getElementById('close-about-btn');
+  const gameDropdownBtn = document.getElementById('game-dropdown-btn');
+  const optionsDropdownBtn = document.getElementById('options-dropdown-btn');
+  // @ts-ignore
+  gameDropdownBtn.disabled = true;
+  // @ts-ignore
+  optionsDropdownBtn.disabled = true;
+  const closeAboutBox = () => {
+    if (!aboutBox.classList.contains('hidden')) {
+      aboutBox.classList.add('hidden');
+      // @ts-ignore
+      gameDropdownBtn.disabled = false;
+      // @ts-ignore
+      optionsDropdownBtn.disabled = false;
+    }
+    loader.load(setup); // setup is called after loader finishes loading
+    loadingBox.classList.remove('hidden');
+    aboutBtn.removeEventListener('click', closeAboutBox);
+    closeAboutBtn.removeEventListener('click', closeAboutBox);
+  };
+  aboutBtn.addEventListener('click', closeAboutBox);
+  closeAboutBtn.addEventListener('click', closeAboutBox);
+}
+
+/**
+ * Set up the game and the full UI, and start the game.
+ */
 function setup() {
   const pikaVolley = new PikachuVolleyball(stage, loader.resources);
   setUpUI(pikaVolley, ticker);
   start(pikaVolley);
 }
 
+/**
+ * Start the game.
+ * @param {PikachuVolleyball} pikaVolley
+ */
 function start(pikaVolley) {
   ticker.maxFPS = pikaVolley.normalFPS;
-  ticker.add(delta => pikaVolley.gameLoop(delta));
+  ticker.add(() => {
+    pikaVolley.gameLoop();
+    renderer.render(stage);
+  });
+  ticker.start();
 }
