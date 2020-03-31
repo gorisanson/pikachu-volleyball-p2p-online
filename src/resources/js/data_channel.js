@@ -406,7 +406,7 @@ function recieveMessage(event) {
         wirteMyMessage(messageManager.pendingMessage);
         sendBtn.disabled = false;
       }
-    } else if (data.byteLength % 4 === 0 && data.byteLength / 4 <= 4) {
+    } else if (data.byteLength % 4 === 0 && data.byteLength / 4 <= 11) {
       const dataView = new DataView(data);
 
       // TODO: clean ping test to arraybuffer with length 1?

@@ -114,6 +114,7 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
       channel.callbackWhenReceivePeerInput = this.gameLoopFromGettingPeerInput.bind(
         this
       );
+      // TODO: resend....
       return;
     }
     const succeedTest = this.myOnlineKeyboard.getInput(this.syncCounter);
@@ -141,7 +142,7 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     this.physics.player2.isComputer = false;
     this.state();
 
-    if (this.peerOnlineKeyboard.inputQueue.length > 1) {
+    if (this.peerOnlineKeyboard.inputQueue.length > 0) {
       if (this.myOnlineKeyboard.inputQueue.length > 0) {
         this.gameLoopFromGettingPeerInput();
         console.log('hehe');

@@ -39,7 +39,7 @@ export class MyKeyboard extends PikaKeyboard {
    * @param {number} syncCounter
    */
   getInputIfNeededAndSendToPeer(syncCounter) {
-    if (isInModRange(this.syncCounter, syncCounter, syncCounter, 256)) {
+    if (isInModRange(this.syncCounter, syncCounter, syncCounter + 10, 256)) {
       super.getInput();
       const userInputWithSync = new PikaUserInputWithSync(
         this.syncCounter,
@@ -76,9 +76,6 @@ export class OnlineKeyboard {
   getInput(syncCounter) {
     if (this.inputQueue.length === 0) {
       return false;
-    }
-    if (this.inputQueue.length !== 1) {
-      console.log('haha', this.inputQueue.length);
     }
     if (this.inputQueue[0].syncCounter !== syncCounter) {
       console.log(this.inputQueue[0].syncCounter);
