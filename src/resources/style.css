@@ -1,9 +1,31 @@
 :root {
-  --side-length: 96vmin;
   /* Pikachu Volleyball's original width: 432px, original height: 304px */
   --aspect-ratio: calc(432 / 304);
   --inverse-aspect-ratio: calc(304 / 432);
+  --canvas-width: 96vmin;
+  --canvas-height: calc(96vmin * var(--inverse-aspect-ratio));
   --font-size: 18px;
+  --btn-width: calc(5 * var(--font-size));
+  --btn-height: calc(3 * var(--font-size));
+}
+/* size of iPad screen is 768px x 1024px in portrait mode */
+@media only screen and (min-width: 768px) and (min-height: 768px) {
+  :root {
+    --font-size: 22px;
+    --btn-width: calc(6 * var(--font-size));
+  }
+}
+@media only screen and (min-aspect-ratio: 432/304) {
+  :root {
+    --canvas-height: calc(96vh - var(--btn-height) - 10px);
+    --canvas-width: calc(var(--canvas-height) * var(--aspect-ratio));
+  }
+}
+@media only screen and (max-aspect-ratio: 432/304) {
+  :root {
+    --canvas-width: 96vw;
+    --canvas-height: calc(96vw * var(--inverse-aspect-ratio));
+  }
 }
 html {
   box-sizing: border-box;
@@ -13,7 +35,7 @@ html {
 *:after {
   box-sizing: inherit;
 }
-body {
+* {
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -26,8 +48,8 @@ body {
 canvas {
   position: relative;
   display: block;
-  width: var(--side-length);
-  height: calc(var(--side-length) * var(--inverse-aspect-ratio));
+  width: var(--canvas-width);
+  height: var(--canvas-height);
 }
 
 .chat-box {
@@ -75,7 +97,7 @@ canvas {
 #dev-here {
   margin-left: auto;
   margin-right: auto;
-  width: var(--side-length);
+  width: var(--canvas-width);
 }
 #chat-input-here {
   position: relative;
@@ -83,12 +105,12 @@ canvas {
   height: 30px;
   margin-left: auto;
   margin-right: auto;
-  width: var(--side-length);
+  width: var(--canvas-width);
 }
 #chat-input-with-button {
   position: absolute;
   display: none;
-  width: var(--side-length);
+  width: var(--canvas-width);
   height: 100%;
   z-index: 1;
 }
@@ -96,12 +118,7 @@ canvas {
 #send-btn {
   height: 100%;
 }
-#message-box {
-  width: calc(var(--side-length) - 70px);
-}
-#send-btn {
-  width: 60px;
-}
+
 #chat-open-btn {
   position: ablsolute;
   display: block;
@@ -110,33 +127,14 @@ canvas {
   text-align: center;
 }
 
-@media only screen and (min-aspect-ratio: 432/304) {
-  #canvas-here,
-  canvas {
-    width: calc(96vh * var(--aspect-ratio));
-    height: 96vh;
-  }
-  #chat-input-here,
-  #chat-input-width-button,
-  #dev-here {
-    width: calc(96vh * var(--aspect-ratio));
-  }
-  #message-box {
-    width: calc(95vh * var(--aspect-ratio) - 70px);
-  }
+#chat-input-here,
+#chat-input-with-button,
+#dev-here {
+  width: var(--canvas-width);
 }
-@media only screen and (max-aspect-ratio: 432/304) {
-  #canvas-here,
-  canvas {
-    width: 96vw;
-    height: calc(96vw * var(--inverse-aspect-ratio));
-  }
-  #chat-input-here,
-  #chat-input-width-button,
-  #dev-here {
-    width: 96vw;
-  }
-  #message-box {
-    width: calc(95vw - 70px);
-  }
+#send-btn {
+  width: 5 * var(--font-size);
+}
+#message-box {
+  width: calc(var(--canvas-width) / 1.5 - 5 * var(--font-size));
 }
