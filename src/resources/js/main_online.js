@@ -22,11 +22,7 @@ const loader = new PIXI.Loader();
 
 document.querySelector('#canvas-here').appendChild(renderer.view);
 
-ticker.add(() => {
-  renderer.render(stage);
-}, PIXI.UPDATE_PRIORITY.LOW);
-ticker.start();
-
+renderer.render(stage); // To make the initial canvas painting stable in the Firefox browser.
 loader.add(ASSETS_PATH.SPRITE_SHEET);
 for (const prop in ASSETS_PATH.SOUNDS) {
   loader.add(ASSETS_PATH.SOUNDS[prop]);
@@ -40,5 +36,9 @@ function setup() {
 
 function start(pikaVolley) {
   ticker.maxFPS = pikaVolley.normalFPS;
-  ticker.add(delta => pikaVolley.gameLoop(delta));
+  ticker.add(() => {
+    pikaVolley.gameLoop();
+    renderer.render(stage);
+  });
+  ticker.start();
 }
