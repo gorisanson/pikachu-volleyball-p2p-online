@@ -1,6 +1,6 @@
 'ues strics';
 import { PikachuVolleyball } from './offline_version_js/pikavolley.js';
-import { MyKeyboard, PeerKeyboard } from './pika_keyboard_online.js';
+import { MyKeyboard, OnlineKeyboard } from './pika_keyboard_online.js';
 import { channel } from './data_channel';
 import { mod } from './mod.js';
 
@@ -27,10 +27,11 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
       'ArrowDown',
       'Enter'
     );
-    this.peerKeyboard = new PeerKeyboard();
+    this.myOnlineKeyboard = new OnlineKeyboard(this.myKeyboard.inputQueue);
+    this.peerOnlineKeyboard = new OnlineKeyboard(channel.peerInputQueue);
 
     this._amIPlayer2 = false;
-    this.keyboardArray = [this.myKeyboard, this.peerKeyboard];
+    this.keyboardArray = [this.myOnlineKeyboard, this.peerOnlineKeyboard];
     this._syncCounter = 0;
     this.noInputFrameTotal.menu = 0;
     this.noInputFrameTotal = {
@@ -53,10 +54,10 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     channel.amIPlayer2 = bool;
     if (this._amIPlayer2 === true) {
       // @ts-ignore
-      this.keyboardArray = [this.peerKeyboard, this.myKeyboard];
+      this.keyboardArray = [this.peerOnlineKeyboard, this.myOnlineKeyboard];
     } else {
       // @ts-ignore
-      this.keyboardArray = [this.myKeyboard, this.peerKeyboard];
+      this.keyboardArray = [this.myOnlineKeyboard, this.peerOnlineKeyboard];
     }
   }
 
@@ -104,13 +105,23 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     // so peer's game pause while my game goes on slow-mo.
     // This broken frame sync results into different game state between two peers.
     this.myKeyboard.getInputIfNeededAndSendToPeer(this.syncCounter);
-    const succeed = this.peerKeyboard.getInput(this.syncCounter);
+    this.gameLoopFromGettingPeerInput();
+  }
+
+  gameLoopFromGettingPeerInput() {
+    const succeed = this.peerOnlineKeyboard.getInput(this.syncCounter);
     if (!succeed) {
-      this.myKeyboard.resendPrevInput(this.syncCounter);
-      channel.callbackWhenReceivePeerInput = this.gameLoop.bind(this);
+      channel.callbackWhenReceivePeerInput = this.gameLoopFromGettingPeerInput.bind(
+        this
+      );
       return;
     }
-    this.myKeyboard.storeAsPrevInput();
+    const succeedTest = this.myOnlineKeyboard.getInput(this.syncCounter);
+    if (!succeedTest) {
+      console.log('Something is wrong.....');
+      return;
+    }
+    this.syncCounter++;
 
     // slow-mo effect
     if (this.slowMotionFramesLeft > 0) {
@@ -128,7 +139,16 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
 
     this.physics.player1.isComputer = false;
     this.physics.player2.isComputer = false;
-    this.syncCounter++;
     this.state();
+
+    if (this.peerOnlineKeyboard.inputQueue.length > 1) {
+      if (this.myOnlineKeyboard.inputQueue.length > 0) {
+        this.gameLoopFromGettingPeerInput();
+        console.log('hehe');
+      } else {
+        this.gameLoop();
+        console.log('hehe2');
+      }
+    }
   }
 }

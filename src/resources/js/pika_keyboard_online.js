@@ -1,8 +1,9 @@
 // TODO:
 
 import { PikaKeyboard } from './offline_version_js/keyboard.js';
+import { PikaUserInput } from './offline_version_js/physics.js';
 import { channel } from './data_channel.js';
-import { mod } from './mod.js';
+import { mod, isInModRange } from './mod.js';
 
 export class MyKeyboard extends PikaKeyboard {
   /**
@@ -20,7 +21,9 @@ export class MyKeyboard extends PikaKeyboard {
     this.xDirectionPrev = 0;
     this.yDirectionPrev = 0;
     this.powerHitPrev = 0;
-    this._syncCounter = mod(-1, 256);
+    this._syncCounter = 0;
+    /** @type {PikaUserInputWithSync[]} */
+    this.inputQueue = [];
   }
 
   get syncCounter() {
@@ -36,46 +39,34 @@ export class MyKeyboard extends PikaKeyboard {
    * @param {number} syncCounter
    */
   getInputIfNeededAndSendToPeer(syncCounter) {
-    if (syncCounter === mod(this.syncCounter + 1, 256)) {
-      this.syncCounter = syncCounter;
+    if (isInModRange(this.syncCounter, syncCounter, syncCounter, 256)) {
       super.getInput();
+      const userInputWithSync = new PikaUserInputWithSync(
+        this.syncCounter,
+        this.xDirection,
+        this.yDirection,
+        this.powerHit
+      );
+      this.inputQueue.push(userInputWithSync);
+      this.syncCounter++;
     }
-    channel.sendToPeer(
-      syncCounter,
-      this.xDirection,
-      this.yDirection,
-      this.powerHit
-    );
-  }
-
-  storeAsPrevInput() {
-    this.xDirectionPrev = this.xDirection;
-    this.yDirectionPrev = this.yDirection;
-    this.powerHitPrev = this.powerHit;
-  }
-
-  /**
-   *
-   * @param {number} syncCounter
-   */
-  resendPrevInput(syncCounter) {
-    channel.sendToPeer(
-      mod(syncCounter - 1, 256),
-      this.xDirectionPrev,
-      this.yDirectionPrev,
-      this.powerHitPrev
-    );
+    channel.sendToPeer(this.inputQueue);
   }
 }
 
 /**
- * Class representing the webRTC peer's keyboard
+ * Class representing the online keyboard receiveing input from input queue
  */
-export class PeerKeyboard {
-  constructor() {
+export class OnlineKeyboard {
+  /**
+   *
+   * @param {PikaUserInputWithSync[]} inputQueue
+   */
+  constructor(inputQueue) {
     this.xDirection = 0;
     this.yDirection = 0;
     this.powerHit = 0;
+    this.inputQueue = inputQueue;
   }
 
   /**
@@ -83,24 +74,31 @@ export class PeerKeyboard {
    * @return {boolean} get input from peer succeed?
    */
   getInput(syncCounter) {
-    const peerInputQueue = channel.peerInputQueue;
-    if (peerInputQueue.length === 0) {
+    if (this.inputQueue.length === 0) {
       return false;
     }
-    let input;
-    while (true) {
-      input = peerInputQueue.shift();
-      const peerRoundCounter = input[0];
-      if (peerRoundCounter === syncCounter) {
-        break;
-      }
-      if (peerInputQueue.length === 0) {
-        return false;
-      }
+    if (this.inputQueue.length !== 1) {
+      console.log('haha', this.inputQueue.length);
     }
-    this.xDirection = input[1];
-    this.yDirection = input[2];
-    this.powerHit = input[3];
+    if (this.inputQueue[0].syncCounter !== syncCounter) {
+      console.log(this.inputQueue[0].syncCounter);
+      console.log('intended', syncCounter);
+      return false;
+    }
+    const input = this.inputQueue.shift();
+    this.xDirection = input.xDirection;
+    this.yDirection = input.yDirection;
+    this.powerHit = input.powerHit;
     return true;
+  }
+}
+
+export class PikaUserInputWithSync extends PikaUserInput {
+  constructor(syncCounter, xDirection, yDirection, powerHit) {
+    super();
+    this.syncCounter = syncCounter;
+    this.xDirection = xDirection;
+    this.yDirection = yDirection;
+    this.powerHit = powerHit;
   }
 }

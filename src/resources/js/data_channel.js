@@ -11,6 +11,8 @@
 'use strict;';
 import seedrandom from 'seedrandom';
 import { forRand } from './offline_version_js/rand.js';
+import { PikaUserInputWithSync } from './pika_keyboard_online.js';
+import { mod, isInModRange } from './mod.js';
 
 // TODO: seed randomly
 forRand.rng = seedrandom.alea('hello');
@@ -22,8 +24,18 @@ export const channel = {
   amICreatedRoom: false,
   sendToPeer: sendToPeer,
 
-  /** @type {number[][]} Array of number[] where number[0]: xDirection, number[1]: yDirection, number[2]: powerHit */
+  /** @type {PikaUserInputWithSync[]} */
   peerInputQueue: [],
+  _peerInputQueueSyncCounter: 0,
+  get peerInputQueueSyncCounter() {
+    return this._peerInputQueueSyncCounter;
+  },
+  set peerInputQueueSyncCounter(counter) {
+    this._peerInputQueueSyncCounter = mod(
+      this._peerInputQueueSyncCounter + 1,
+      256
+    );
+  },
 
   callbackWhenReceivePeerInput: null,
 
@@ -326,16 +338,29 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
   });
 }
 
-function sendToPeer(roundCounter, xDirection, yDirection, powerHit) {
-  const buffer = new ArrayBuffer(4);
+function sendToPeer(inputs) {
+  const buffer = new ArrayBuffer(4 * inputs.length);
   const dataView = new DataView(buffer);
-  dataView.setUint8(0, roundCounter);
-  dataView.setInt8(1, xDirection);
-  dataView.setInt8(2, yDirection);
-  dataView.setInt8(3, powerHit);
-
+  for (let i = 0; i < inputs.length; i++) {
+    const input = inputs[i];
+    dataView.setUint8(4 * i + 0, input.syncCounter);
+    dataView.setUint8(4 * i + 1, input.xDirection);
+    dataView.setUint8(4 * i + 2, input.yDirection);
+    dataView.setUint8(4 * i + 3, input.powerHit);
+  }
   dataChannel.send(buffer);
 }
+
+// function sendToPeer2(roundCounter, xDirection, yDirection, powerHit) {
+//   const buffer = new ArrayBuffer(4);
+//   const dataView = new DataView(buffer);
+//   dataView.setUint8(0, roundCounter);
+//   dataView.setInt8(1, xDirection);
+//   dataView.setInt8(2, yDirection);
+//   dataView.setInt8(3, powerHit);
+
+//   dataChannel.send(buffer);
+// }
 
 function sendMessageToPeer(message) {
   messageManager.pendingMessage = message;
@@ -381,8 +406,10 @@ function recieveMessage(event) {
         wirteMyMessage(messageManager.pendingMessage);
         sendBtn.disabled = false;
       }
-    } else if (data.byteLength === 4) {
+    } else if (data.byteLength % 4 === 0 && data.byteLength / 4 <= 4) {
       const dataView = new DataView(data);
+
+      // TODO: clean ping test to arraybuffer with length 1?
       if (dataView.getInt32(0, true) === -1) {
         dataView.setInt32(0, -2, true);
         dataChannel.send(data);
@@ -392,21 +419,38 @@ function recieveMessage(event) {
         pingArray.push(Date.now() - time.ping);
       }
 
-      const peerRoundCounterModulo = dataView.getUint8(0);
-      const xDirection = dataView.getInt8(1);
-      const yDirection = dataView.getInt8(2);
-      const powerHit = dataView.getInt8(3);
-      channel.peerInputQueue.push([
-        peerRoundCounterModulo,
-        xDirection,
-        yDirection,
-        powerHit
-      ]);
+      for (let i = 0; i < data.byteLength / 4; i++) {
+        const syncCounter = dataView.getUint8(i * 4 + 0);
+        // isInModeRange in the below if statement is to prevent overflow of the queue by a corrupted peer code
+        if (
+          syncCounter === channel.peerInputQueueSyncCounter &&
+          (channel.peerInputQueue.length === 0 ||
+            isInModRange(
+              syncCounter,
+              channel.peerInputQueue[0].syncCounter,
+              channel.peerInputQueue[0].syncCounter + 10,
+              256
+            ))
+        ) {
+          const xDirection = dataView.getInt8(i * 4 + 1);
+          const yDirection = dataView.getInt8(i * 4 + 2);
+          const powerHit = dataView.getInt8(i * 4 + 3);
+          const peerInputWithSync = new PikaUserInputWithSync(
+            syncCounter,
+            xDirection,
+            yDirection,
+            powerHit
+          );
+          channel.peerInputQueue.push(peerInputWithSync);
+          channel.peerInputQueueSyncCounter++;
+        }
+      }
 
       if (channel.callbackWhenReceivePeerInput !== null) {
-        const round = channel.callbackWhenReceivePeerInput;
+        const callback = channel.callbackWhenReceivePeerInput;
         channel.callbackWhenReceivePeerInput = null;
-        round();
+        callback();
+        console.log('callback!');
       }
     }
   }
