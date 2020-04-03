@@ -1,5 +1,5 @@
 {
-  "name": "pikachu-volleyball-js",
+  "name": "pikachu-volleyball-online",
   "version": "0.0.1",
   "description": "Pikachu Volleyball implemented into JavaScript by reverse engineering the original game",
   "private": true,
