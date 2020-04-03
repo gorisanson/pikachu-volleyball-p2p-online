@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 // @ts-nocheck
 /*
  * references
@@ -13,6 +12,7 @@ import seedrandom from 'seedrandom';
 import { forRand } from './offline_version_js/rand.js';
 import { PikaUserInputWithSync } from './pika_keyboard_online.js';
 import { mod, isInModRange } from './mod.js';
+import { enableMessageBtns } from './ui_online.js';
 
 // TODO: seed randomly
 forRand.rng = seedrandom.alea('hello');
@@ -22,7 +22,6 @@ const player2ChatRng = seedrandom.alea('player2');
 export const channel = {
   isOpen: false,
   amICreatedRoom: false,
-  sendToPeer: sendToPeer,
 
   /** @type {PikaUserInputWithSync[]} */
   peerInputQueue: [],
@@ -71,7 +70,6 @@ const configuration = {
       urls: ['stun:stun.stunprotocol.org']
     }
   ]
-  // iceCandidatePoolSize: 10
 };
 
 let peerConnection = null;
@@ -84,56 +82,16 @@ const time = {
 
 const pingArray = [];
 
-const canvasContainer = document.querySelector('#game-canvas-container');
-let player1ChatBox = document.querySelector('#player1-chat-box');
-let player2ChatBox = document.querySelector('#player2-chat-box');
-const sendBtn = document.querySelector('#send-btn');
-const chatInputWithButton = document.querySelector('#chat-input-with-button');
-const chatOpenBtn = document.querySelector('#chat-open-btn');
-const messageBox = document.querySelector('#message-box');
+const joinRoomID = document.getElementById('join-room-id');
+const canvasContainer = document.getElementById('game-canvas-container');
+let player1ChatBox = document.getElementById('player1-chat-box');
+let player2ChatBox = document.getElementById('player2-chat-box');
+const connectionLog = document.getElementById('connection-log');
+const flexContainer = document.getElementById('flex-container');
+const beforeConnection = document.getElementById('before-connection');
 
-function init() {
-  document.querySelector('#create-btn').addEventListener('click', createRoom);
-  document.querySelector('#join-btn').addEventListener('click', joinRoom);
-  sendBtn.disabled = true;
-  window.addEventListener('keydown', chatInputBoxOpen, false);
-  chatOpenBtn.addEventListener('click', chatOpenClicked);
-  // eslint-disable-next-line no-undef
-  const db = firebase.firestore();
-  db.collection('rooms').onSnapshot(snapshot => {
-    snapshot.docChanges().forEach(change => {
-      if (change.type === 'added') {
-        document.querySelector(
-          '#chat-messages'
-        ).textContent += `\n${change.doc.id}`;
-      }
-    });
-  });
-}
-
-function chatOpenClicked(evnet) {
-  chatOpenBtn.classList.remove('show');
-  if (!chatInputWithButton.classList.contains('show')) {
-    chatInputWithButton.classList.add('show');
-  }
-  messageBox.focus({ preventScroll: true });
-}
-
-function chatInputBoxOpen(event) {
-  if (event.shiftKey && event.key === 'Enter') {
-    chatOpenBtn.click();
-    event.preventDefault();
-  } else if (event.key === 'Enter' && messageBox === document.activeElement) {
-    sendBtn.click();
-    event.preventDefault();
-  }
-}
-
-async function createRoom() {
+export async function createRoom() {
   channel.amICreatedRoom = true;
-  document.querySelector('#create-btn').disabled = true;
-  document.querySelector('#join-btn').disabled = true;
-  document.querySelector('#room-id').disabled = true;
   // eslint-disable-next-line no-undef
   const db = firebase.firestore();
   const roomRef = await db.collection('rooms').doc();
@@ -168,14 +126,13 @@ async function createRoom() {
   };
   roomRef.set(roomWithOffer);
   console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
-  document.querySelector('#chat-messages').textContent += '\n' + 'offer sent';
+  connectionLog.textContent += 'offer sent\n';
 
   roomRef.onSnapshot(async snapshot => {
     console.log('Got updated room:', snapshot.data());
     const data = snapshot.data();
     if (!peerConnection.currentRemoteDescription && data.answer) {
-      document.querySelector('#chat-messages').textContent +=
-        '\n' + 'answer received ';
+      connectionLog.textContent += 'answer received\n';
       console.log('Set remote description: ', data.answer);
       const answer = data.answer;
       await peerConnection.setRemoteDescription(answer);
@@ -183,21 +140,14 @@ async function createRoom() {
   });
 
   roomId = roomRef.id;
-  document.querySelector(
-    '#current-room'
-  ).innerText = `Current room is ${roomId} - You are the caller!`;
+  document.getElementById('current-room-id').textContent = roomId;
   console.log('created room!');
 }
 
-function joinRoom() {
-  document.querySelector('#create-btn').disabled = true;
-  document.querySelector('#join-btn').disabled = true;
-  document.querySelector('#room-id').disabled = true;
-  roomId = document.querySelector('#room-id').value.trim();
+export function joinRoom() {
+  roomId = joinRoomID.value.trim();
   console.log('Join room: ', roomId);
-  document.querySelector(
-    '#current-room'
-  ).innerText = `Current room is ${roomId} - You are the callee!`;
+  document.getElementById('current-room-id').textContent = roomId;
   joinRoomById(roomId);
 }
 
@@ -225,8 +175,7 @@ async function joinRoomById(roomId) {
     const offer = roomSnapshot.data().offer;
     await peerConnection.setRemoteDescription(offer);
     console.log('Set remote description: ', offer);
-    document.querySelector('#chat-messages').textContent +=
-      '\n' + 'offer received';
+    connectionLog.textContent += 'offer received\n';
     const answer = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
     console.log('set local description:', answer);
@@ -238,13 +187,12 @@ async function joinRoomById(roomId) {
       }
     };
     await roomRef.update(roomWithAnswer);
-    document.querySelector('#chat-messages').textContent +=
-      '\n' + 'answer sent';
+    connectionLog.textContent += 'answer sent\n';
     console.log('joined room!');
   }
 }
 
-async function closeAndCleaning(e) {
+export async function closeAndCleaning() {
   if (dataChannel) {
     dataChannel.close();
   }
@@ -280,37 +228,31 @@ function registerPeerConnectionListeners() {
     console.log(
       `ICE gathering state changed: ${peerConnection.iceGatheringState}`
     );
-    document.querySelector('#chat-messages').textContent +=
-      '\n' + `ICE gathering state changed: ${peerConnection.iceGatheringState}`;
+    connectionLog.textContent += `ICE gathering state changed: ${peerConnection.iceGatheringState}\n`;
   });
 
   peerConnection.addEventListener('connectionstatechange', () => {
     console.log(`Connection state change: ${peerConnection.connectionState}`);
-    document.querySelector('#chat-messages').textContent +=
-      '\n' + `Connection state change: ${peerConnection.connectionState}`;
+    connectionLog.textContent += `Connection state change: ${peerConnection.connectionState}\n`;
   });
 
   peerConnection.addEventListener('signalingstatechange', () => {
     console.log(`Signaling state change: ${peerConnection.signalingState}`);
-    document.querySelector('#chat-messages').textContent +=
-      '\n' + `Signaling state change: ${peerConnection.signalingState}`;
+    connectionLog.textContent += `Signaling state change: ${peerConnection.signalingState}\n`;
   });
 
   peerConnection.addEventListener('iceconnectionstatechange ', () => {
     console.log(
       `ICE connection state change: ${peerConnection.iceConnectionState}`
     );
-    document.querySelector('#chat-messages').textContent +=
-      '\n' +
-      `ICE connection state change: ${peerConnection.iceConnectionState}`;
+    connectionLog.textContent += `ICE connection state change: ${peerConnection.iceConnectionState}\n`;
   });
 
   peerConnection.addEventListener('datachannel', event => {
     dataChannel = event.channel;
 
     console.log('data channel received!');
-    document.querySelector('#chat-messages').textContent +=
-      '\n' + 'data channel received!';
+    connectionLog.textContent += 'data channel received!\n';
     dataChannel.addEventListener('open', notifyOpen);
     dataChannel.addEventListener('message', recieveMessage);
   });
@@ -340,7 +282,7 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
   });
 }
 
-function sendToPeer(inputs) {
+export function sendToPeer(inputs) {
   const buffer = new ArrayBuffer(4 * inputs.length);
   const dataView = new DataView(buffer);
   for (let i = 0; i < inputs.length; i++) {
@@ -353,18 +295,7 @@ function sendToPeer(inputs) {
   dataChannel.send(buffer);
 }
 
-// function sendToPeer2(roundCounter, xDirection, yDirection, powerHit) {
-//   const buffer = new ArrayBuffer(4);
-//   const dataView = new DataView(buffer);
-//   dataView.setUint8(0, roundCounter);
-//   dataView.setInt8(1, xDirection);
-//   dataView.setInt8(2, yDirection);
-//   dataView.setInt8(3, powerHit);
-
-//   dataChannel.send(buffer);
-// }
-
-function sendMessageToPeer(message) {
+export function sendMessageToPeer(message) {
   messageManager.pendingMessage = message;
   const messageToPeer = message + String(messageManager.counter);
   dataChannel.send(messageToPeer);
@@ -406,7 +337,7 @@ function recieveMessage(event) {
         messageManager.counter++;
         clearInterval(messageManager.resendIntervalID);
         wirteMyMessage(messageManager.pendingMessage);
-        sendBtn.disabled = false;
+        enableMessageBtns();
       }
     } else if (data.byteLength % 4 === 0 && data.byteLength / 4 <= 11) {
       const dataView = new DataView(data);
@@ -458,29 +389,13 @@ function recieveMessage(event) {
   }
 }
 
-function notifyOpen(event) {
+function notifyOpen() {
   dataChannel.binaryType = 'arraybuffer';
   console.log('data channel opened!');
-  document.querySelector('#chat-messages').textContent +=
-    '\n' + 'data channel opened!';
-  sendBtn.disabled = false;
-  sendBtn.addEventListener('click', event => {
-    sendBtn.disabled = true;
-    if (!chatOpenBtn.classList.contains('show')) {
-      chatOpenBtn.classList.add('show');
-    }
-    chatInputWithButton.classList.remove('show');
-    const messageBox = document.querySelector('#message-box');
-    const message = messageBox.value;
-    if (message === '') {
-      sendBtn.disabled = false;
-      return;
-    }
-    messageBox.value = '';
-    sendMessageToPeer(message);
-  });
+  connectionLog.textContent += 'data channel opened!\n';
+  enableMessageBtns();
 
-  document.querySelector('#chat-messages').textContent += '\nstart ping test';
+  connectionLog.textContent += 'start ping test\n';
   const buffer = new ArrayBuffer(4);
   const view = new DataView(buffer);
   view.setInt32(0, -1, true);
@@ -488,24 +403,26 @@ function notifyOpen(event) {
   const intervalID = setInterval(() => {
     time.ping = Date.now();
     dataChannel.send(buffer);
-    document.querySelector('#chat-messages').textContent += '.';
+    connectionLog.textContent += '.';
     n++;
     if (n === 5) {
       window.clearInterval(intervalID);
       const sum = pingArray.reduce((acc, val) => acc + val, 0);
       const avg = sum / pingArray.length;
       console.log(`ping avg: ${avg} ms, ping list: ${pingArray}`);
-      document.querySelector(
-        '#chat-messages'
-      ).textContent += `\nping avg: ${avg} ms`;
+      connectionLog.textContent += `ping avg: ${avg} ms\n`;
       channel.isOpen = true;
+      if (!beforeConnection.classList.contains('hidden')) {
+        beforeConnection.classList.add('hidden');
+      }
+      flexContainer.classList.remove('hidden');
     }
   }, 1000);
   // time.string = Date.now();
   // dataChannel.send('hello');
 }
 
-function whenClosed(event) {
+function whenClosed() {
   console.log('data channel closed');
   channel.isOpen = false;
 }
@@ -555,7 +472,3 @@ function wirtePeerMessage(message) {
     writeMessageTo(message, 1);
   }
 }
-
-window.addEventListener('unload', closeAndCleaning);
-
-init();

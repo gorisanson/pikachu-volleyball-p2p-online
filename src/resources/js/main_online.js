@@ -2,7 +2,11 @@
 import * as PIXI from 'pixi.js';
 import 'pixi-sound';
 import { PikachuVolleyballOnline } from './pikavolley_online.js';
+import { setUpUI } from './ui_online.js';
 import { ASSETS_PATH } from './offline_version_js/assets_path.js';
+
+const TEXTURES = ASSETS_PATH.TEXTURES;
+TEXTURES.WITH_COMPUTER = TEXTURES.WITH_FRIEND;
 
 const settings = PIXI.settings;
 settings.RESOLUTION = window.devicePixelRatio;
@@ -31,6 +35,7 @@ for (const prop in ASSETS_PATH.SOUNDS) {
   loader.add(ASSETS_PATH.SOUNDS[prop]);
 }
 loader.load(setup);
+setUpUI();
 
 function setup() {
   const pikaVolley = new PikachuVolleyballOnline(stage, loader.resources);
