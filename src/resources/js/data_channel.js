@@ -8,11 +8,17 @@
  */
 
 'use strict;';
+
+import * as firebase from 'firebase/app';
+import 'firebase/firestore';
+import { firebaseConfig } from './firebase_config.js';
 import seedrandom from 'seedrandom';
 import { forRand } from './offline_version_js/rand.js';
 import { PikaUserInputWithSync } from './pika_keyboard_online.js';
 import { mod, isInModRange } from './mod.js';
 import { enableMessageBtns } from './ui_online.js';
+
+firebase.initializeApp(firebaseConfig);
 
 // TODO: seed randomly
 forRand.rng = seedrandom.alea('hello');
