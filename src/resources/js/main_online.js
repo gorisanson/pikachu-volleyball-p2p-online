@@ -20,7 +20,7 @@ const stage = new PIXI.Container();
 const ticker = new PIXI.Ticker();
 const loader = new PIXI.Loader();
 
-document.querySelector('#canvas-here').appendChild(renderer.view);
+document.querySelector('#game-canvas-container').appendChild(renderer.view);
 ticker.add(() => {
   renderer.render(stage);
 }, PIXI.UPDATE_PRIORITY.LOW);

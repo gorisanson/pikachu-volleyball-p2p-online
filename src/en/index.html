@@ -27,16 +27,18 @@
     <script src="/__/firebase/init.js"></script>
   </head>
   <body>
-    <div id="canvas-here">
-      <div id="player1-chat-box" class="chat-box"></div>
-      <div id="player2-chat-box" class="chat-box"></div>
-    </div>
-    <div id="chat-input-here">
-      <div id="chat-input-with-button">
-        <input type="text" id="message-box" />
-        <button type="button" id="send-btn">send (Enter)</button>
+    <div id="flex-container">
+      <div id="game-canvas-container">
+        <div id="player1-chat-box" class="chat-box"></div>
+        <div id="player2-chat-box" class="chat-box"></div>
       </div>
-      <button id="chat-open-btn">Chat (Shift + Enter)</button>
+      <div id="chat-input-here">
+        <div id="chat-input-with-button">
+          <input type="text" id="message-box" />
+          <button type="button" id="send-btn">send (Enter)</button>
+        </div>
+        <button id="chat-open-btn" class="show">Chat (Shift + Enter)</button>
+      </div>
     </div>
     <div id="dev-here">
       <div>

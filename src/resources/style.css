@@ -5,8 +5,8 @@
   --canvas-width: 96vmin;
   --canvas-height: calc(96vmin * var(--inverse-aspect-ratio));
   --font-size: 18px;
-  --btn-width: calc(5 * var(--font-size));
-  --btn-height: calc(3 * var(--font-size));
+  --btn-width: calc(3 * var(--font-size));
+  --btn-height: calc(1.5 * var(--font-size));
 }
 /* size of iPad screen is 768px x 1024px in portrait mode */
 @media only screen and (min-width: 768px) and (min-height: 768px) {
@@ -38,13 +38,23 @@ html {
 * {
   font-family: Arial, Helvetica, sans-serif;
 }
-
-#canvas-here {
+#flex-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: start;
+  align-items: flex-start;
+  width: var(--canvas-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+#game-canvas-container {
   margin-left: auto;
   margin-right: auto;
 }
 
-#canvas-here,
+#game-canvas-container,
 canvas {
   position: relative;
   display: block;
@@ -102,7 +112,7 @@ canvas {
 #chat-input-here {
   position: relative;
   display: block;
-  height: 30px;
+  height: var(--btn-height);
   margin-left: auto;
   margin-right: auto;
   width: var(--canvas-width);
@@ -113,28 +123,34 @@ canvas {
   width: var(--canvas-width);
   height: 100%;
   z-index: 1;
+  grid-template-columns: auto var(--btn-width);
+}
+#chat-input-with-button.show {
+  display: grid;
 }
 #message-box,
 #send-btn {
+  width: 100%;
   height: 100%;
 }
-
+#message-box {
+  grid-column-start: 1;
+}
+#send-btn {
+  grid-column-start: 2;
+}
 #chat-open-btn {
-  position: ablsolute;
-  display: block;
+  position: absolute;
+  display: none;
   height: 100%;
   width: 100%;
   text-align: center;
 }
-
+#chat-open-btn.show {
+  display: block;
+}
 #chat-input-here,
 #chat-input-with-button,
 #dev-here {
   width: var(--canvas-width);
-}
-#send-btn {
-  width: 5 * var(--font-size);
-}
-#message-box {
-  width: calc(var(--canvas-width) / 1.5 - 5 * var(--font-size));
 }

@@ -84,7 +84,7 @@ const time = {
 
 const pingArray = [];
 
-const cavasHereElm = document.querySelector('#canvas-here');
+const canvasContainer = document.querySelector('#game-canvas-container');
 let player1ChatBox = document.querySelector('#player1-chat-box');
 let player2ChatBox = document.querySelector('#player2-chat-box');
 const sendBtn = document.querySelector('#send-btn');
@@ -112,8 +112,10 @@ function init() {
 }
 
 function chatOpenClicked(evnet) {
-  chatOpenBtn.style.display = 'none';
-  chatInputWithButton.style.display = 'block';
+  chatOpenBtn.classList.remove('show');
+  if (!chatInputWithButton.classList.contains('show')) {
+    chatInputWithButton.classList.add('show');
+  }
   messageBox.focus({ preventScroll: true });
 }
 
@@ -464,8 +466,10 @@ function notifyOpen(event) {
   sendBtn.disabled = false;
   sendBtn.addEventListener('click', event => {
     sendBtn.disabled = true;
-    chatOpenBtn.style.display = 'block';
-    chatInputWithButton.style.display = 'none';
+    if (!chatOpenBtn.classList.contains('show')) {
+      chatOpenBtn.classList.add('show');
+    }
+    chatInputWithButton.classList.remove('show');
     const messageBox = document.querySelector('#message-box');
     const message = messageBox.value;
     if (message === '') {
@@ -512,14 +516,14 @@ function writeMessageTo(message, whichPlayer) {
     newChatBox.textContent = message;
     newChatBox.style.top = `${20 + 30 * player1ChatRng()}%`;
     newChatBox.style.right = `${55 + 25 * player1ChatRng()}%`;
-    cavasHereElm.replaceChild(newChatBox, player1ChatBox);
+    canvasContainer.replaceChild(newChatBox, player1ChatBox);
     player1ChatBox = newChatBox;
   } else if (whichPlayer === 2) {
     const newChatBox = player2ChatBox.cloneNode();
     newChatBox.textContent = message;
     newChatBox.style.top = `${20 + 30 * player2ChatRng()}%`;
     newChatBox.style.left = `${55 + 25 * player2ChatRng()}%`;
-    cavasHereElm.replaceChild(newChatBox, player2ChatBox);
+    canvasContainer.replaceChild(newChatBox, player2ChatBox);
     player2ChatBox = newChatBox;
   }
 }
