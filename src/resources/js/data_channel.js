@@ -37,10 +37,7 @@ export const channel = {
     return this._peerInputQueueSyncCounter;
   },
   set peerInputQueueSyncCounter(counter) {
-    this._peerInputQueueSyncCounter = mod(
-      this._peerInputQueueSyncCounter + 1,
-      256
-    );
+    this._peerInputQueueSyncCounter = mod(counter, 256);
   },
 
   callbackWhenReceivePeerInput: null,
