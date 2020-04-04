@@ -104,7 +104,7 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     // for example, if peer use other tap on the browser
     // so peer's game pause while my game goes on slow-mo.
     // This broken frame sync results into different game state between two peers.
-    this.myKeyboard.getInputIfNeededAndSendToPeer(this.syncCounter);
+    this.myKeyboard.getInputIfNeededAndSendToPeer();
     this.gameLoopFromGettingPeerInput();
   }
 
@@ -142,8 +142,8 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     this.physics.player2.isComputer = false;
     this.state();
 
-    if (this.peerOnlineKeyboard.inputQueue.length > 0) {
-      if (this.myOnlineKeyboard.inputQueue.length > 0) {
+    if (this.peerOnlineKeyboard.inputQueue.length > 1) {
+      if (this.myOnlineKeyboard.inputQueue.length > 1) {
         this.gameLoopFromGettingPeerInput();
         console.log('hehe');
       } else {

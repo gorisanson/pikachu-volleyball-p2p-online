@@ -36,10 +36,18 @@ export class MyKeyboard extends PikaKeyboard {
 
   /**
    *
-   * @param {number} syncCounter
+   *
    */
-  getInputIfNeededAndSendToPeer(syncCounter) {
-    if (isInModRange(this.syncCounter, syncCounter, syncCounter + 10, 256)) {
+  getInputIfNeededAndSendToPeer() {
+    if (
+      this.inputQueue.length === 0 ||
+      isInModRange(
+        this.syncCounter,
+        this.inputQueue[0].syncCounter,
+        this.inputQueue[0].syncCounter + 10,
+        256
+      )
+    ) {
       super.getInput();
       const userInputWithSync = new PikaUserInputWithSync(
         this.syncCounter,
@@ -77,12 +85,20 @@ export class OnlineKeyboard {
     if (this.inputQueue.length === 0) {
       return false;
     }
-    if (this.inputQueue[0].syncCounter !== syncCounter) {
-      console.log(this.inputQueue[0].syncCounter);
-      console.log('intended', syncCounter);
+    // Keep the previous input at the head of queue so that
+    // the previous input can be resended if lost.
+    let input;
+    if (this.inputQueue[0].syncCounter === syncCounter) {
+      input = this.inputQueue[0];
+    } else if (
+      this.inputQueue.length > 1 &&
+      this.inputQueue[1].syncCounter === syncCounter
+    ) {
+      input = this.inputQueue[1];
+      this.inputQueue.shift();
+    } else {
       return false;
     }
-    const input = this.inputQueue.shift();
     this.xDirection = input.xDirection;
     this.yDirection = input.yDirection;
     this.powerHit = input.powerHit;
