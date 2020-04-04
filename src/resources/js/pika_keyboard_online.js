@@ -43,6 +43,16 @@ export class MyKeyboard {
     this._syncCounter = mod(counter, 256);
   }
 
+  subscribe() {
+    this.keyboard1.subscribe();
+    this.keyboard2.subscribe();
+  }
+
+  unsubscribe() {
+    this.keyboard1.unsubscribe();
+    this.keyboard2.unsubscribe();
+  }
+
   /**
    *
    *

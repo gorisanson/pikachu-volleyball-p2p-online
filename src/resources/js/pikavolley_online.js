@@ -7,6 +7,18 @@ import { mod } from './mod.js';
 /** @typedef GameState @type {function():void} */
 
 // TODO: remove unnecessary "@ts-ignore"'s
+export const myKeyboard = new MyKeyboard(
+  'd',
+  'g',
+  'r',
+  'f',
+  'z',
+  'ArrowLeft',
+  'ArrowRight',
+  'ArrowUp',
+  'ArrowDown',
+  'Enter'
+);
 
 // @ts-ignore
 export class PikachuVolleyballOnline extends PikachuVolleyball {
@@ -20,18 +32,7 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     // @ts-ignore
     this.keyboardArray[1].unsubscribe();
 
-    this.myKeyboard = new MyKeyboard(
-      'd',
-      'g',
-      'r',
-      'f',
-      'z',
-      'ArrowLeft',
-      'ArrowRight',
-      'ArrowUp',
-      'ArrowDown',
-      'Enter'
-    );
+    this.myKeyboard = myKeyboard;
     this.myOnlineKeyboard = new OnlineKeyboard(this.myKeyboard.inputQueue);
     this.peerOnlineKeyboard = new OnlineKeyboard(channel.peerInputQueue);
 

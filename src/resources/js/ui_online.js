@@ -4,6 +4,7 @@ import {
   sendMessageToPeer,
   closeAndCleaning
 } from './data_channel.js';
+import { myKeyboard } from './pikavolley_online.js';
 
 const createBtn = document.getElementById('create-btn');
 const joinBtn = document.getElementById('join-btn');
@@ -73,9 +74,11 @@ function chatOpenBtnClicked() {
   }
   chatInputWithButton.classList.remove('hidden');
   messageBox.focus({ preventScroll: true });
+  myKeyboard.unsubscribe();
 }
 
 function sendBtnClicked() {
+  myKeyboard.subscribe();
   // @ts-ignore
   disableMessageBtns();
   chatOpenBtn.classList.remove('hidden');
