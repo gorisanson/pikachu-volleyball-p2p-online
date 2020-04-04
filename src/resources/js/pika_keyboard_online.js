@@ -5,7 +5,7 @@ import { PikaUserInput } from './offline_version_js/physics.js';
 import { sendToPeer } from './data_channel.js';
 import { mod, isInModRange } from './mod.js';
 
-export class MyKeyboard extends PikaKeyboard {
+export class MyKeyboard {
   /**
    * Create a keyboard used for game controller
    * left, right, up, down, powerHit: KeyboardEvent.key value for each
@@ -16,11 +16,20 @@ export class MyKeyboard extends PikaKeyboard {
    * @param {string} down KeyboardEvent.key value of the key to use for down
    * @param {string} powerHit KeyboardEvent.key value of the key to use for power hit or selection
    */
-  constructor(left, right, up, down, powerHit) {
-    super(left, right, up, down, powerHit);
-    this.xDirectionPrev = 0;
-    this.yDirectionPrev = 0;
-    this.powerHitPrev = 0;
+  constructor(
+    left,
+    right,
+    up,
+    down,
+    powerHit,
+    left2,
+    right2,
+    up2,
+    down2,
+    powerHit2
+  ) {
+    this.keyboard1 = new PikaKeyboard(left, right, up, down, powerHit);
+    this.keyboard2 = new PikaKeyboard(left2, right2, up2, down2, powerHit2);
     this._syncCounter = 0;
     /** @type {PikaUserInputWithSync[]} */
     this.inputQueue = [];
@@ -48,12 +57,25 @@ export class MyKeyboard extends PikaKeyboard {
         256
       )
     ) {
-      super.getInput();
+      this.keyboard1.getInput();
+      this.keyboard2.getInput();
+      const xDirection =
+        this.keyboard1.xDirection !== 0
+          ? this.keyboard1.xDirection
+          : this.keyboard2.xDirection;
+      const yDirection =
+        this.keyboard1.yDirection !== 0
+          ? this.keyboard1.yDirection
+          : this.keyboard2.yDirection;
+      const powerHit =
+        this.keyboard1.powerHit !== 0
+          ? this.keyboard1.powerHit
+          : this.keyboard2.powerHit;
       const userInputWithSync = new PikaUserInputWithSync(
         this.syncCounter,
-        this.xDirection,
-        this.yDirection,
-        this.powerHit
+        xDirection,
+        yDirection,
+        powerHit
       );
       this.inputQueue.push(userInputWithSync);
       this.syncCounter++;

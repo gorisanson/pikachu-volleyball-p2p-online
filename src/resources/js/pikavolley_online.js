@@ -20,7 +20,12 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     // @ts-ignore
     this.keyboardArray[1].unsubscribe();
 
-    this.myKeyboard = new MyKeyboard( // for player2
+    this.myKeyboard = new MyKeyboard(
+      'd',
+      'g',
+      'r',
+      'f',
+      'z',
       'ArrowLeft',
       'ArrowRight',
       'ArrowUp',
