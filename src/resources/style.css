@@ -5,8 +5,8 @@
   --canvas-width: 96vmin;
   --canvas-height: calc(96vmin * var(--inverse-aspect-ratio));
   --font-size: 18px;
-  --btn-width: calc(3 * var(--font-size));
-  --btn-height: calc(1.5 * var(--font-size));
+  --btn-width: calc(4 * var(--font-size));
+  --btn-height: calc(2 * var(--font-size));
 }
 /* size of iPad screen is 768px x 1024px in portrait mode */
 @media only screen and (min-width: 768px) and (min-height: 768px) {

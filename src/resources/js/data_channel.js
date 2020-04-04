@@ -23,8 +23,8 @@ firebase.initializeApp(firebaseConfig);
 
 // TODO: seed randomly
 forRand.rng = seedrandom.alea('hello');
-const player1ChatRng = seedrandom.alea('player1');
-const player2ChatRng = seedrandom.alea('player2');
+let player1ChatRng = null;
+let player2ChatRng = null;
 
 export const channel = {
   isOpen: false,
@@ -93,7 +93,6 @@ const joinRoomID = document.getElementById('join-room-id');
 const canvasContainer = document.getElementById('game-canvas-container');
 let player1ChatBox = document.getElementById('player1-chat-box');
 let player2ChatBox = document.getElementById('player2-chat-box');
-const connectionLog = document.getElementById('connection-log');
 const flexContainer = document.getElementById('flex-container');
 const beforeConnection = document.getElementById('before-connection');
 
@@ -123,6 +122,17 @@ export async function createRoom() {
   dataChannel.addEventListener('message', recieveMessage);
   dataChannel.addEventListener('close', whenClosed);
 
+  roomRef.onSnapshot(async snapshot => {
+    console.log('Got updated room:', snapshot.data());
+    const data = snapshot.data();
+    if (!peerConnection.currentRemoteDescription && data.answer) {
+      printLog('answer received');
+      console.log('Set remote description: ', data.answer);
+      const answer = data.answer;
+      await peerConnection.setRemoteDescription(answer);
+    }
+  });
+
   const offer = await peerConnection.createOffer();
   await peerConnection.setLocalDescription(offer);
   console.log('Created offer and set local description:', offer);
@@ -134,18 +144,7 @@ export async function createRoom() {
   };
   roomRef.set(roomWithOffer);
   console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
-  connectionLog.textContent += 'offer sent\n';
-
-  roomRef.onSnapshot(async snapshot => {
-    console.log('Got updated room:', snapshot.data());
-    const data = snapshot.data();
-    if (!peerConnection.currentRemoteDescription && data.answer) {
-      connectionLog.textContent += 'answer received\n';
-      console.log('Set remote description: ', data.answer);
-      const answer = data.answer;
-      await peerConnection.setRemoteDescription(answer);
-    }
-  });
+  printLog('offer sent');
 
   document.getElementById('current-room-id').textContent = `${roomId.slice(
     0,
@@ -159,6 +158,11 @@ export function joinRoom() {
     .trim()
     .split('-')
     .join('');
+  if (roomId.length !== 20) {
+    printLog(
+      'The room ID is not in correct form. Please check the correct room ID.'
+    );
+  }
   console.log('Join room: ', roomId);
   document.getElementById('current-room-id').textContent = `${roomId.slice(
     0,
@@ -191,7 +195,7 @@ async function joinRoomById(roomId) {
     const offer = roomSnapshot.data().offer;
     await peerConnection.setRemoteDescription(offer);
     console.log('Set remote description: ', offer);
-    connectionLog.textContent += 'offer received\n';
+    printLog('offer received');
     const answer = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
     console.log('set local description:', answer);
@@ -203,7 +207,7 @@ async function joinRoomById(roomId) {
       }
     };
     await roomRef.update(roomWithAnswer);
-    connectionLog.textContent += 'answer sent\n';
+    printLog('answer sent');
     console.log('joined room!');
   }
 }
@@ -244,33 +248,38 @@ function registerPeerConnectionListeners() {
     console.log(
       `ICE gathering state changed: ${peerConnection.iceGatheringState}`
     );
-    connectionLog.textContent += `ICE gathering state changed: ${peerConnection.iceGatheringState}\n`;
+    printLog(
+      `ICE gathering state changed: ${peerConnection.iceGatheringState}`
+    );
   });
 
   peerConnection.addEventListener('connectionstatechange', () => {
     console.log(`Connection state change: ${peerConnection.connectionState}`);
-    connectionLog.textContent += `Connection state change: ${peerConnection.connectionState}\n`;
+    printLog(`Connection state change: ${peerConnection.connectionState}`);
   });
 
   peerConnection.addEventListener('signalingstatechange', () => {
     console.log(`Signaling state change: ${peerConnection.signalingState}`);
-    connectionLog.textContent += `Signaling state change: ${peerConnection.signalingState}\n`;
+    printLog(`Signaling state change: ${peerConnection.signalingState}`);
   });
 
   peerConnection.addEventListener('iceconnectionstatechange ', () => {
     console.log(
       `ICE connection state change: ${peerConnection.iceConnectionState}`
     );
-    connectionLog.textContent += `ICE connection state change: ${peerConnection.iceConnectionState}\n`;
+    printLog(
+      `ICE connection state change: ${peerConnection.iceConnectionState}`
+    );
   });
 
   peerConnection.addEventListener('datachannel', event => {
     dataChannel = event.channel;
 
     console.log('data channel received!');
-    connectionLog.textContent += 'data channel received!\n';
+    printLog('data channel received!');
     dataChannel.addEventListener('open', notifyOpen);
     dataChannel.addEventListener('message', recieveMessage);
+    dataChannel.addEventListener('close', whenClosed);
   });
 }
 
@@ -408,10 +417,14 @@ function recieveMessage(event) {
 function notifyOpen() {
   dataChannel.binaryType = 'arraybuffer';
   console.log('data channel opened!');
-  connectionLog.textContent += 'data channel opened!\n';
+  printLog('data channel opened!');
+
+  forRand.rng = seedrandom.alea(roomId.slice(10));
+  player1ChatRng = seedrandom.alea(roomId.slice(10, 15));
+  player2ChatRng = seedrandom.alea(roomId.slice(15));
   enableMessageBtns();
 
-  connectionLog.textContent += 'start ping test\n';
+  printLog('start ping test');
   const buffer = new ArrayBuffer(4);
   const view = new DataView(buffer);
   view.setInt32(0, -1, true);
@@ -419,14 +432,14 @@ function notifyOpen() {
   const intervalID = setInterval(() => {
     time.ping = Date.now();
     dataChannel.send(buffer);
-    connectionLog.textContent += '.';
+    printLog('.');
     n++;
     if (n === 5) {
       window.clearInterval(intervalID);
       const sum = pingArray.reduce((acc, val) => acc + val, 0);
       const avg = sum / pingArray.length;
       console.log(`ping avg: ${avg} ms, ping list: ${pingArray}`);
-      connectionLog.textContent += `ping avg: ${avg} ms\n`;
+      printLog(`ping avg: ${avg} ms`);
       channel.isOpen = true;
       if (!beforeConnection.classList.contains('hidden')) {
         beforeConnection.classList.add('hidden');
@@ -434,8 +447,6 @@ function notifyOpen() {
       flexContainer.classList.remove('hidden');
     }
   }, 1000);
-  // time.string = Date.now();
-  // dataChannel.send('hello');
 }
 
 function whenClosed() {
@@ -487,4 +498,10 @@ function wirtePeerMessage(message) {
   } else if (channel.amIPlayer2 === true) {
     writeMessageTo(message, 1);
   }
+}
+
+function printLog(log) {
+  const connectionLog = document.getElementById('connection-log');
+  connectionLog.textContent += `${log}\n`;
+  connectionLog.scrollIntoView();
 }
