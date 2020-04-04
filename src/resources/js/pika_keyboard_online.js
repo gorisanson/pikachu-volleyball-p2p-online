@@ -8,13 +8,18 @@ import { mod, isInModRange } from './mod.js';
 export class MyKeyboard {
   /**
    * Create a keyboard used for game controller
-   * left, right, up, down, powerHit: KeyboardEvent.key value for each
-   * Refer {@link https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values}
-   * @param {string} left KeyboardEvent.key value of the key to use for left
-   * @param {string} right KeyboardEvent.key value of the key to use for right
-   * @param {string} up KeyboardEvent.key value of the key to use for up
-   * @param {string} down KeyboardEvent.key value of the key to use for down
-   * @param {string} powerHit KeyboardEvent.key value of the key to use for power hit or selection
+   * left, right, up, down, powerHit: KeyboardEvent.code value for each
+   * Refer {@link https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code/code_values}
+   * @param {string} left KeyboardEvent.code value of the key to use for left
+   * @param {string} right KeyboardEvent.code value of the key to use for right
+   * @param {string} up KeyboardEvent.code value of the key to use for up
+   * @param {string} down KeyboardEvent.code value of the key to use for down
+   * @param {string} powerHit KeyboardEvent.code value of the key to use for power hit or selection
+   * @param {string} left2 KeyboardEvent.code value of the key to use for left
+   * @param {string} right2 KeyboardEvent.code value of the key to use for right
+   * @param {string} up2 KeyboardEvent.code value of the key to use for up
+   * @param {string} down2 KeyboardEvent.code value of the key to use for down
+   * @param {string} powerHit2 KeyboardEvent.code value of the key to use for power hit or selection
    */
   constructor(
     left,

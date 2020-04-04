@@ -8,11 +8,11 @@ import { mod } from './mod.js';
 
 // TODO: remove unnecessary "@ts-ignore"'s
 export const myKeyboard = new MyKeyboard(
-  'd',
-  'g',
-  'r',
-  'f',
-  'z',
+  'KeyD',
+  'KeyG',
+  'KeyR',
+  'KeyF',
+  'KeyZ',
   'ArrowLeft',
   'ArrowRight',
   'ArrowUp',
