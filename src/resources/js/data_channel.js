@@ -21,8 +21,7 @@ import { generatePushID } from './generate_pushid.js';
 
 firebase.initializeApp(firebaseConfig);
 
-// TODO: seed randomly
-forRand.rng = seedrandom.alea('hello');
+forRand.rng = seedrandom.alea('hello'); // This is needed for initialize the clouds, it is changed later on "notifyOpen" function
 let player1ChatRng = null;
 let player2ChatRng = null;
 
