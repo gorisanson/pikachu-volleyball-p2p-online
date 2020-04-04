@@ -17,6 +17,7 @@ import { forRand } from './offline_version_js/rand.js';
 import { PikaUserInputWithSync } from './pika_keyboard_online.js';
 import { mod, isInModRange } from './mod.js';
 import { enableMessageBtns } from './ui_online.js';
+import { generatePushID } from './generate_pushid.js';
 
 firebase.initializeApp(firebaseConfig);
 
@@ -98,9 +99,10 @@ const beforeConnection = document.getElementById('before-connection');
 
 export async function createRoom() {
   channel.amICreatedRoom = true;
-  // eslint-disable-next-line no-undef
+  roomId = generatePushID();
+
   const db = firebase.firestore();
-  const roomRef = await db.collection('rooms').doc();
+  const roomRef = await db.collection('rooms').doc(roomId);
 
   console.log('Create PeerConnection with configuration: ', configuration);
   peerConnection = new RTCPeerConnection(configuration);
@@ -145,15 +147,23 @@ export async function createRoom() {
     }
   });
 
-  roomId = roomRef.id;
-  document.getElementById('current-room-id').textContent = roomId;
+  document.getElementById('current-room-id').textContent = `${roomId.slice(
+    0,
+    5
+  )}-${roomId.slice(5, 10)}-${roomId.slice(10, 15)}-${roomId.slice(15)}`;
   console.log('created room!');
 }
 
 export function joinRoom() {
-  roomId = joinRoomID.value.trim();
+  roomId = joinRoomID.value
+    .trim()
+    .split('-')
+    .join('');
   console.log('Join room: ', roomId);
-  document.getElementById('current-room-id').textContent = roomId;
+  document.getElementById('current-room-id').textContent = `${roomId.slice(
+    0,
+    5
+  )}-${roomId.slice(5, 10)}-${roomId.slice(10, 15)}-${roomId.slice(15)}`;
   joinRoomById(roomId);
 }
 
