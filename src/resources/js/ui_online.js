@@ -37,11 +37,13 @@ export function setUpUI() {
   chatOpenBtn.addEventListener('click', chatOpenBtnClicked);
   sendBtn.addEventListener('click', sendBtnClicked);
   window.addEventListener('keydown', event => {
-    if (event.shiftKey && event.key === 'Enter') {
-      chatOpenBtn.click();
-      event.preventDefault();
-    } else if (event.key === 'Enter' && messageBox === document.activeElement) {
-      sendBtn.click();
+    if (event.key === 'Escape') {
+      if (!chatOpenBtn.classList.contains('hidden')) {
+        chatOpenBtn.click();
+        // @ts-ignore
+      } else {
+        sendBtn.click();
+      }
       event.preventDefault();
     }
   });
