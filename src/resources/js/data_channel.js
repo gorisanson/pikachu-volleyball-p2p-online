@@ -44,6 +44,7 @@ export const channel = {
 
   callbackWhenReceivePeerInput: null,
 
+  // TODO: refactor this.... it is used on chat.js....
   amIPlayer2: null // received from pikavolley_online
 };
 
