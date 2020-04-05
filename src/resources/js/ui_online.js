@@ -1,4 +1,5 @@
 import {
+  channel,
   createRoom,
   joinRoom,
   sendMessageToPeer,
@@ -56,6 +57,15 @@ export function setUpUI() {
   });
 
   window.addEventListener('unload', closeAndCleaning);
+
+  window.addEventListener('beforeunload', function(e) {
+    if (channel.isOpen) {
+      // Cancel the event
+      e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+      // Chrome requires returnValue to be set
+      e.returnValue = '';
+    }
+  });
 
   disableMessageBtns();
 }
