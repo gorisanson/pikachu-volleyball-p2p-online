@@ -70,6 +70,10 @@ export function setUpUI() {
   disableMessageBtns();
 }
 
+export function noticeDisconnected() {
+  document.getElementById('notice-disconnected').classList.remove('hidden');
+}
+
 export function enableMessageBtns() {
   // @ts-ignore
   messageBox.disabled = false;

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /*
  * references
  * https://github.com/webrtc/FirebaseRTC
@@ -13,17 +12,21 @@ import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import { firebaseConfig } from './firebase_config.js';
 import seedrandom from 'seedrandom';
-import { forRand } from './offline_version_js/rand.js';
+import { setCustomRng } from './offline_version_js/rand.js';
 import { PikaUserInputWithSync } from './pika_keyboard_online.js';
 import { mod, isInModRange } from './mod.js';
-import { enableMessageBtns } from './ui_online.js';
+import { noticeDisconnected, enableMessageBtns } from './ui_online.js';
 import { generatePushID } from './generate_pushid.js';
+import {
+  setChatRngs,
+  displayMyChatMessage,
+  displayPeerChatMessage
+} from './chat.js';
 
 firebase.initializeApp(firebaseConfig);
 
-forRand.rng = seedrandom.alea('hello'); // This is needed for initialize the clouds, it is changed later on "notifyOpen" function
-let player1ChatRng = null;
-let player2ChatRng = null;
+// This is needed for initialize the clouds, it is custom rng is reset later on "notifyOpen" function
+setCustomRng(seedrandom.alea('hello'));
 
 export const channel = {
   isOpen: false,
@@ -87,9 +90,7 @@ const pingArray = [];
 
 const currentRoomID = document.getElementById('current-room-id');
 const joinRoomID = document.getElementById('join-room-id');
-const canvasContainer = document.getElementById('game-canvas-container');
-let player1ChatBox = document.getElementById('player1-chat-box');
-let player2ChatBox = document.getElementById('player2-chat-box');
+
 const flexContainer = document.getElementById('flex-container');
 const beforeConnection = document.getElementById('before-connection');
 
@@ -117,7 +118,7 @@ export async function createRoom() {
   console.log('dataChannel created', dataChannel);
   dataChannel.addEventListener('open', notifyOpen);
   dataChannel.addEventListener('message', recieveFromPeer);
-  dataChannel.addEventListener('close', whenClosed);
+  dataChannel.addEventListener('close', dataChannelClosed);
 
   roomRef.onSnapshot(async snapshot => {
     console.log('Got updated room:', snapshot.data());
@@ -151,6 +152,7 @@ export async function createRoom() {
 }
 
 export function joinRoom() {
+  // @ts-ignore
   roomId = joinRoomID.value
     .trim()
     .split('-')
@@ -257,7 +259,8 @@ function registerPeerConnectionListeners() {
       peerConnection.connectionState === 'disconnected' ||
       peerConnection.connectionState === 'closed'
     ) {
-      document.getElementById('notice-disconnected').classList.remove('hidden');
+      channel.isOpen = false;
+      noticeDisconnected();
     }
   });
 
@@ -282,7 +285,7 @@ function registerPeerConnectionListeners() {
     printLog('data channel received!');
     dataChannel.addEventListener('open', notifyOpen);
     dataChannel.addEventListener('message', recieveFromPeer);
-    dataChannel.addEventListener('close', whenClosed);
+    dataChannel.addEventListener('close', dataChannelClosed);
   });
 }
 
@@ -351,7 +354,7 @@ function recieveFromPeer(event) {
     } else if (peerCounter === (messageManager.peerCounter + 1) % 10) {
       // if peer send new message
       const message = data.slice(0, -1);
-      wirtePeerMessage(message);
+      displayPeerChatMessage(message);
       messageManager.peerCounter++;
       const buffer = new ArrayBuffer(1);
       const dataView = new DataView(buffer);
@@ -366,7 +369,7 @@ function recieveFromPeer(event) {
       if (counter === messageManager.counter) {
         messageManager.counter++;
         clearInterval(messageManager.resendIntervalID);
-        wirteMyMessage(messageManager.pendingMessage);
+        displayMyChatMessage(messageManager.pendingMessage);
         enableMessageBtns();
       }
     } else if (data.byteLength % 4 === 0 && data.byteLength / 4 <= 11) {
@@ -424,9 +427,13 @@ function notifyOpen() {
   console.log('data channel opened!');
   printLog('data channel opened!');
 
-  forRand.rng = seedrandom.alea(roomId.slice(10));
-  player1ChatRng = seedrandom.alea(roomId.slice(10, 15));
-  player2ChatRng = seedrandom.alea(roomId.slice(15));
+  const customRng = seedrandom.alea(roomId.slice(10));
+  setCustomRng(customRng);
+
+  const rngForPlayer1Chat = seedrandom.alea(roomId.slice(10, 15));
+  const rngForPlayer2Chat = seedrandom.alea(roomId.slice(15));
+  setChatRngs(rngForPlayer1Chat, rngForPlayer2Chat);
+
   enableMessageBtns();
 
   printLog('start ping test');
@@ -454,55 +461,10 @@ function notifyOpen() {
   }, 1000);
 }
 
-function whenClosed() {
+function dataChannelClosed() {
   console.log('data channel closed');
   channel.isOpen = false;
-}
-
-function writeMessageTo(message, whichPlayer) {
-  if (whichPlayer === 1) {
-    const newChatBox = player1ChatBox.cloneNode();
-    newChatBox.textContent = message;
-    newChatBox.style.top = `${20 + 30 * player1ChatRng()}%`;
-    newChatBox.style.right = `${55 + 25 * player1ChatRng()}%`;
-    canvasContainer.replaceChild(newChatBox, player1ChatBox);
-    player1ChatBox = newChatBox;
-  } else if (whichPlayer === 2) {
-    const newChatBox = player2ChatBox.cloneNode();
-    newChatBox.textContent = message;
-    newChatBox.style.top = `${20 + 30 * player2ChatRng()}%`;
-    newChatBox.style.left = `${55 + 25 * player2ChatRng()}%`;
-    canvasContainer.replaceChild(newChatBox, player2ChatBox);
-    player2ChatBox = newChatBox;
-  }
-}
-
-function wirteMyMessage(message) {
-  if (channel.amIPlayer2 === null) {
-    if (channel.amICreatedRoom) {
-      writeMessageTo(message, 1);
-    } else {
-      writeMessageTo(message, 2);
-    }
-  } else if (channel.amIPlayer2 === false) {
-    writeMessageTo(message, 1);
-  } else if (channel.amIPlayer2 === true) {
-    writeMessageTo(message, 2);
-  }
-}
-
-function wirtePeerMessage(message) {
-  if (channel.amIPlayer2 === null) {
-    if (channel.amICreatedRoom) {
-      writeMessageTo(message, 2);
-    } else {
-      writeMessageTo(message, 1);
-    }
-  } else if (channel.amIPlayer2 === false) {
-    writeMessageTo(message, 2);
-  } else if (channel.amIPlayer2 === true) {
-    writeMessageTo(message, 1);
-  }
+  noticeDisconnected();
 }
 
 function printLog(log) {
