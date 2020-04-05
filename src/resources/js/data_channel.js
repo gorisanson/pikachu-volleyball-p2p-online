@@ -85,6 +85,7 @@ const time = {
 
 const pingArray = [];
 
+const currentRoomID = document.getElementById('current-room-id');
 const joinRoomID = document.getElementById('join-room-id');
 const canvasContainer = document.getElementById('game-canvas-container');
 let player1ChatBox = document.getElementById('player1-chat-box');
@@ -142,10 +143,10 @@ export async function createRoom() {
   console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
   printLog('offer sent');
 
-  document.getElementById('current-room-id').textContent = `${roomId.slice(
-    0,
-    5
-  )}-${roomId.slice(5, 10)}-${roomId.slice(10, 15)}-${roomId.slice(15)}`;
+  currentRoomID.textContent = `${roomId.slice(0, 5)}-${roomId.slice(
+    5,
+    10
+  )}-${roomId.slice(10, 15)}-${roomId.slice(15)}`;
   console.log('created room!');
 }
 
@@ -160,10 +161,10 @@ export function joinRoom() {
     );
   }
   console.log('Join room: ', roomId);
-  document.getElementById('current-room-id').textContent = `${roomId.slice(
-    0,
-    5
-  )}-${roomId.slice(5, 10)}-${roomId.slice(10, 15)}-${roomId.slice(15)}`;
+  currentRoomID.textContent = `${roomId.slice(0, 5)}-${roomId.slice(
+    5,
+    10
+  )}-${roomId.slice(10, 15)}-${roomId.slice(15)}`;
   joinRoomById(roomId);
 }
 
@@ -252,6 +253,12 @@ function registerPeerConnectionListeners() {
   peerConnection.addEventListener('connectionstatechange', () => {
     console.log(`Connection state change: ${peerConnection.connectionState}`);
     printLog(`Connection state change: ${peerConnection.connectionState}`);
+    if (
+      peerConnection.connectionState === 'disconnected' ||
+      peerConnection.connectionState === 'closed'
+    ) {
+      document.getElementById('notice-disconnected').classList.remove('hidden');
+    }
   });
 
   peerConnection.addEventListener('signalingstatechange', () => {

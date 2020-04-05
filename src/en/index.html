@@ -4,10 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Pikachu Volleyball Online</title>
+    <title>Pikachu Volleyball Peer-to-Peer Online</title>
     <meta
       name="description"
-      content="Play the game Pikachu Volleyball online"
+      content="Play the game Pikachu Volleyball online with peer-to-peer connection"
     />
     <meta name="author" content="Lee, Kyutae" />
 
@@ -22,7 +22,7 @@
   <body>
     <div id="before-connection">
       <div id="about-box-head">
-        <h1>Pikachu Volleyball Online</h1>
+        <h1>Pikachu Volleyball Peer-to-Peer Online</h1>
         <p class="languages">
           &check; English |
           <a href="../ko/" target="_self">Korean(한국어)</a>
@@ -33,7 +33,7 @@
             href="https://gorisanson.github.io/pikachu-volleyball/en/"
             target="_blank"
             rel="noopener"
-            >offline version here</a
+            >the offline web version here</a
           >.
         </p>
         <p class="original-by">
@@ -44,7 +44,8 @@
           1997 (C) <span class="no-wrap">Satoshi Takenouchi</span>
         </p>
         <p class="reverse-engineered-by">
-          Reverse engineered & developed into online version by
+          The original game was reverse engineered and implemented into this
+          Peer-to-Peer Online version by<br />
           <span class="no-wrap"
             ><a
               href="https://github.com/gorisanson"
@@ -55,10 +56,10 @@
           >
         </p>
         <p class="release-date">
-          Release Date: 2020-04-03
+          Release Date: 2020-04-05
         </p>
         <!-- <p class="last-updated">
-              Last Updated: 2020-03-31
+              Last Updated: 2020-04-05
             </p> -->
       </div>
       <div id="about-box-content">
@@ -147,6 +148,12 @@
       <div id="game-canvas-container">
         <div id="player1-chat-box" class="chat-box"></div>
         <div id="player2-chat-box" class="chat-box"></div>
+        <div class="fade-in-box notice hidden" id="notice-disconnected">
+          <p>
+            Disconnected from the peer.
+          </p>
+          <button id="notice-disconnected-ok-btn" class="btn-in-box">OK</button>
+        </div>
       </div>
       <div id="chat-input-here">
         <div id="chat-input-with-button" class="hidden">

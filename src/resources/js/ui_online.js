@@ -13,6 +13,9 @@ const sendBtn = document.getElementById('send-btn');
 const chatInputWithButton = document.getElementById('chat-input-with-button');
 const chatOpenBtn = document.getElementById('chat-open-btn');
 const messageBox = document.getElementById('message-box');
+const noticeDisconnectedOKBtn = document.getElementById(
+  'notice-disconnected-ok-btn'
+);
 
 export function setUpUI() {
   createBtn.addEventListener('click', () => {
@@ -47,6 +50,11 @@ export function setUpUI() {
       event.preventDefault();
     }
   });
+
+  noticeDisconnectedOKBtn.addEventListener('click', () => {
+    location.reload();
+  });
+
   window.addEventListener('unload', closeAndCleaning);
 
   disableMessageBtns();

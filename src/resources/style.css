@@ -167,7 +167,6 @@ canvas {
   width: var(--canvas-width);
 }
 #create-btn,
-#created-room-id-container,
 #join-room-id,
 #join-btn {
   font-size: calc(0.8 * var(--font-size));
@@ -178,6 +177,7 @@ canvas {
 #create-btn {
   grid-column-start: 1;
 }
+#created-room-id-container,
 #join-room-id {
   font-size: var(--font-size);
 }
@@ -237,4 +237,51 @@ span.thick {
 span.margin-left-right {
   margin-left: 10px;
   margin-right: 10px;
+}
+.fade-in-box {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  top: 0;
+  left: 0;
+  width: var(--canvas-width);
+  height: var(--canvas-height);
+  font-size: var(--font-size);
+  padding-left: var(--font-size);
+  padding-right: var(--font-size);
+  text-align: center;
+  z-index: 10;
+  visibility: visible;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.8);
+  animation-name: fade-in;
+  animation-duration: 1s;
+}
+.fade-in-box.hidden {
+  display: none;
+}
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+button.btn-in-box {
+  display: block;
+  height: calc(2 * var(--font-size));
+  width: calc(5 * var(--font-size));
+  border: none;
+  margin: 0 auto;
+  padding: 0;
+  background-color: rgb(50, 50, 50);
+  color: white;
+  font-size: var(--font-size);
+  text-align: center;
+  text-decoration: none;
+  border-radius: 10px;
 }
