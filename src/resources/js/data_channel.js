@@ -116,7 +116,7 @@ export async function createRoom() {
 
   console.log('dataChannel created', dataChannel);
   dataChannel.addEventListener('open', notifyOpen);
-  dataChannel.addEventListener('message', recieveMessage);
+  dataChannel.addEventListener('message', recieveFromPeer);
   dataChannel.addEventListener('close', whenClosed);
 
   roomRef.onSnapshot(async snapshot => {
@@ -281,7 +281,7 @@ function registerPeerConnectionListeners() {
     console.log('data channel received!');
     printLog('data channel received!');
     dataChannel.addEventListener('open', notifyOpen);
-    dataChannel.addEventListener('message', recieveMessage);
+    dataChannel.addEventListener('message', recieveFromPeer);
     dataChannel.addEventListener('close', whenClosed);
   });
 }
@@ -335,7 +335,7 @@ export function sendToPeer(inputsOrMessage) {
   }
 }
 
-function recieveMessage(event) {
+function recieveFromPeer(event) {
   const data = event.data;
   if (typeof data === 'string') {
     const peerCounter = Number(data.slice(-1));
