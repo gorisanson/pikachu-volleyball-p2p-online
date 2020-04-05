@@ -310,27 +310,29 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
   });
 }
 
-export function sendToPeer(inputs) {
-  const buffer = new ArrayBuffer(4 * inputs.length);
-  const dataView = new DataView(buffer);
-  for (let i = 0; i < inputs.length; i++) {
-    const input = inputs[i];
-    dataView.setUint8(4 * i + 0, input.syncCounter);
-    dataView.setUint8(4 * i + 1, input.xDirection);
-    dataView.setUint8(4 * i + 2, input.yDirection);
-    dataView.setUint8(4 * i + 3, input.powerHit);
+export function sendToPeer(inputsOrMessage) {
+  if (typeof inputsOrMessage === 'string') {
+    const message = inputsOrMessage;
+    messageManager.pendingMessage = message;
+    const messageToPeer = message + String(messageManager.counter);
+    dataChannel.send(messageToPeer);
+    messageManager.resendIntervalID = setInterval(
+      () => dataChannel.send(messageToPeer),
+      1000
+    );
+  } else if (Array.isArray(inputsOrMessage)) {
+    const inputs = inputsOrMessage;
+    const buffer = new ArrayBuffer(4 * inputs.length);
+    const dataView = new DataView(buffer);
+    for (let i = 0; i < inputs.length; i++) {
+      const input = inputs[i];
+      dataView.setUint8(4 * i + 0, input.syncCounter);
+      dataView.setUint8(4 * i + 1, input.xDirection);
+      dataView.setUint8(4 * i + 2, input.yDirection);
+      dataView.setUint8(4 * i + 3, input.powerHit);
+    }
+    dataChannel.send(buffer);
   }
-  dataChannel.send(buffer);
-}
-
-export function sendMessageToPeer(message) {
-  messageManager.pendingMessage = message;
-  const messageToPeer = message + String(messageManager.counter);
-  dataChannel.send(messageToPeer);
-  messageManager.resendIntervalID = setInterval(
-    () => dataChannel.send(messageToPeer),
-    1000
-  );
 }
 
 function recieveMessage(event) {

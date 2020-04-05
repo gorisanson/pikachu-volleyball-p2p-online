@@ -2,7 +2,7 @@ import {
   channel,
   createRoom,
   joinRoom,
-  sendMessageToPeer,
+  sendToPeer,
   closeAndCleaning
 } from './data_channel.js';
 import { myKeyboard } from './pikavolley_online.js';
@@ -114,5 +114,5 @@ function sendBtnClicked() {
   }
   // @ts-ignore
   messageBox.value = '';
-  sendMessageToPeer(message);
+  sendToPeer(message);
 }
