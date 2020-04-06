@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gorisanson/pikachu-volleyball-js.git"
+    "url": "git+https://github.com/gorisanson/pikachu-volleyball-online.git"
   },
   "keywords": [
     "game"
@@ -18,9 +18,9 @@
   "author": "Lee, Kyutae",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/gorisanson/pikachu-volleyball-js/issues"
+    "url": "https://github.com/gorisanson/pikachu-volleyball-online/issues"
   },
-  "homepage": "https://github.com/gorisanson/pikachu-volleyball-js#readme",
+  "homepage": "https://github.com/gorisanson/pikachu-volleyball-online#readme",
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.1.1",
