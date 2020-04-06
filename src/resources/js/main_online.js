@@ -4,6 +4,7 @@ import 'pixi-sound';
 import { PikachuVolleyballOnline } from './pikavolley_online.js';
 import { setUpUI } from './ui_online.js';
 import { ASSETS_PATH } from './offline_version_js/assets_path.js';
+import { channel } from './data_channel.js';
 
 const TEXTURES = ASSETS_PATH.TEXTURES;
 TEXTURES.WITH_COMPUTER = TEXTURES.WITH_FRIEND;
@@ -34,8 +35,28 @@ loader.add(ASSETS_PATH.SPRITE_SHEET);
 for (const prop in ASSETS_PATH.SOUNDS) {
   loader.add(ASSETS_PATH.SOUNDS[prop]);
 }
-loader.load(setup);
+setUpForLoader();
 setUpUI();
+
+/**
+ * Set up for the asset loading.
+ */
+function setUpForLoader() {
+  const loadingBox = document.getElementById('loading-box');
+  const progressBar = document.getElementById('progress-bar');
+  loader.on('progress', () => {
+    progressBar.style.width = `${loader.progress}%`;
+  });
+  loader.on('complete', () => {
+    if (!loadingBox.classList.contains('hidden')) {
+      loadingBox.classList.add('hidden');
+    }
+  });
+  channel.callbackAfterDataChannelOpened = () => {
+    loadingBox.classList.remove('hidden');
+    loader.load(setup);
+  };
+}
 
 function setup() {
   const pikaVolley = new PikachuVolleyballOnline(stage, loader.resources);

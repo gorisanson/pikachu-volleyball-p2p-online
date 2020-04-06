@@ -260,9 +260,6 @@ span.margin-left-right {
   animation-name: fade-in;
   animation-duration: 1s;
 }
-.fade-in-box.hidden {
-  display: none;
-}
 @keyframes fade-in {
   0% {
     opacity: 0;
@@ -270,6 +267,29 @@ span.margin-left-right {
   100% {
     opacity: 1;
   }
+}
+.fade-in-box.hidden {
+  display: none;
+}
+.fade-in-box.loading {
+  background-color: transparent;
+  color: white;
+  animation-duration: 0.5s;
+}
+#progress-bar-border {
+  position: relative;
+  border: solid;
+  border-color: white;
+  height: var(--btn-height);
+  width: calc(var(--canvas-width) / 2);
+}
+#progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /*width: width is set on style property of progress-bar element;*/
+  height: 100%;
+  background-color: white;
 }
 button.btn-in-box {
   display: block;

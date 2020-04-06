@@ -152,6 +152,14 @@
       <div id="game-canvas-container">
         <div id="player1-chat-box" class="chat-box"></div>
         <div id="player2-chat-box" class="chat-box"></div>
+        <div class="fade-in-box loading hidden" id="loading-box">
+          <div>
+            <p>게임 스프라이트/사운드 로드 중...</p>
+            <div id="progress-bar-border">
+              <div id="progress-bar" style="width:0%;"></div>
+            </div>
+          </div>
+        </div>
         <div class="fade-in-box notice hidden" id="notice-disconnected">
           <p>
             상대방과의 연결이 끊어졌습니다.

@@ -42,6 +42,7 @@ export const channel = {
     this._peerInputQueueSyncCounter = mod(counter, 256);
   },
 
+  callbackAfterDataChannelOpened: null,
   callbackWhenReceivePeerInput: null,
 
   // TODO: refactor this.... it is used on chat.js....
@@ -458,6 +459,7 @@ function notifyOpen() {
         beforeConnection.classList.add('hidden');
       }
       flexContainer.classList.remove('hidden');
+      channel.callbackAfterDataChannelOpened();
     }
   }, 1000);
 }
