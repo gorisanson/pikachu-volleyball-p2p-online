@@ -20,7 +20,7 @@ import { generatePushID } from './generate_pushid.js';
 import {
   setChatRngs,
   displayMyChatMessage,
-  displayPeerChatMessage
+  displayPeerChatMessage,
 } from './chat.js';
 
 firebase.initializeApp(firebaseConfig);
@@ -46,7 +46,7 @@ export const channel = {
   callbackWhenReceivePeerInput: null,
 
   // TODO: refactor this.... it is used on chat.js....
-  amIPlayer2: null // received from pikavolley_online
+  amIPlayer2: null, // received from pikavolley_online
 };
 
 const messageManager = {
@@ -65,19 +65,19 @@ const messageManager = {
   },
   set peerCounter(n) {
     this._peerCounter = n % 10;
-  }
+  },
 };
 
 // DEfault configuration - Change these if you have a different STUN or TURN server.
 const configuration = {
   iceServers: [
     {
-      urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302']
+      urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],
     },
     {
-      urls: ['stun:stun.stunprotocol.org']
-    }
-  ]
+      urls: ['stun:stun.stunprotocol.org'],
+    },
+  ],
 };
 
 let peerConnection = null;
@@ -85,7 +85,7 @@ let roomId = null;
 let dataChannel = null;
 const time = {
   string: undefined,
-  ping: undefined
+  ping: undefined,
 };
 
 const pingArray = [];
@@ -122,7 +122,7 @@ export async function createRoom() {
   dataChannel.addEventListener('message', recieveFromPeer);
   dataChannel.addEventListener('close', dataChannelClosed);
 
-  roomRef.onSnapshot(async snapshot => {
+  roomRef.onSnapshot(async (snapshot) => {
     console.log('Got updated room:', snapshot.data());
     const data = snapshot.data();
     if (!peerConnection.currentRemoteDescription && data.answer) {
@@ -139,8 +139,8 @@ export async function createRoom() {
   const roomWithOffer = {
     offer: {
       type: offer.type,
-      sdp: offer.sdp
-    }
+      sdp: offer.sdp,
+    },
   };
   roomRef.set(roomWithOffer);
   console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
@@ -155,10 +155,7 @@ export async function createRoom() {
 
 export function joinRoom() {
   // @ts-ignore
-  roomId = joinRoomID.value
-    .trim()
-    .split('-')
-    .join('');
+  roomId = joinRoomID.value.trim().split('-').join('');
   if (roomId.length !== 20) {
     printLog(
       'The room ID is not in correct form. Please check the correct room ID.'
@@ -204,8 +201,8 @@ async function joinRoomById(roomId) {
     const roomWithAnswer = {
       answer: {
         type: answer.type,
-        sdp: answer.sdp
-      }
+        sdp: answer.sdp,
+      },
     };
     await roomRef.update(roomWithAnswer);
     printLog('answer sent');
@@ -280,7 +277,7 @@ function registerPeerConnectionListeners() {
     );
   });
 
-  peerConnection.addEventListener('datachannel', event => {
+  peerConnection.addEventListener('datachannel', (event) => {
     dataChannel = event.channel;
 
     console.log('data channel received!');
@@ -294,7 +291,7 @@ function registerPeerConnectionListeners() {
 function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
   const candidatesCollection = roomRef.collection(localName);
 
-  peerConnection.addEventListener('icecandidate', event => {
+  peerConnection.addEventListener('icecandidate', (event) => {
     if (!event.candidate) {
       console.log('Got final candidate!');
       return;
@@ -304,8 +301,8 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
     console.log('Got candidate: ', event.candidate);
   });
 
-  roomRef.collection(remoteName).onSnapshot(snapshot => {
-    snapshot.docChanges().forEach(async change => {
+  roomRef.collection(remoteName).onSnapshot((snapshot) => {
+    snapshot.docChanges().forEach(async (change) => {
       if (change.type === 'added') {
         const data = change.doc.data();
         await peerConnection.addIceCandidate(data);

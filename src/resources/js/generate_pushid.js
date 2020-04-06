@@ -15,7 +15,7 @@
  *    latter ones will sort after the former ones.  We do this by using the previous random bits
  *    but "incrementing" them by 1 (only in the case of a timestamp collision).
  */
-export const generatePushID = (function() {
+export const generatePushID = (function () {
   // Modeled after base32 web-safe chars, but ordered by ASCII.
   const PUSH_CHARS = '23456789abcdefghijkmnpqrstuvwxyz';
 
@@ -28,7 +28,7 @@ export const generatePushID = (function() {
   // "incremented" by one.
   const lastRandChars = [];
 
-  return function() {
+  return function () {
     let now = Date.now();
     const duplicateTime = now === lastPushTime;
     lastPushTime = now;

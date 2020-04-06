@@ -6,30 +6,30 @@ module.exports = {
   mode: 'development',
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: './dist'
+    contentBase: './dist',
   },
   entry: {
     main: './src/resources/js/main_online.js',
-    ko: './src/ko/ko.js'
+    ko: './src/ko/ko.js',
   },
   output: {
     filename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'dist'),
   },
   optimization: {
     runtimeChunk: { name: 'runtime' }, // this is for code-sharing between "main.js and "ko.js"
     splitChunks: {
-      chunks: 'all'
-    }
+      chunks: 'all',
+    },
   },
   plugins: [
     new CopyPlugin([
       {
         context: 'src/',
-        from: 'resources/assets/**/*.+(json|png|mp3|wav)'
+        from: 'resources/assets/**/*.+(json|png|mp3|wav)',
       },
       { from: 'src/resources/style.css', to: 'resources/style.css' },
-      { from: 'src/index.html', to: 'index.html' }
+      { from: 'src/index.html', to: 'index.html' },
     ]),
     new HtmlWebpackPlugin({
       template: 'src/en/index.html',
@@ -38,8 +38,8 @@ module.exports = {
       chunksSortMode: 'manual',
       minify: {
         collapseWhitespace: true,
-        removeComments: true
-      }
+        removeComments: true,
+      },
     }),
     new HtmlWebpackPlugin({
       template: 'src/ko/index.html',
@@ -48,8 +48,8 @@ module.exports = {
       chunksSortMode: 'manual',
       minify: {
         collapseWhitespace: true,
-        removeComments: true
-      }
-    })
-  ]
+        removeComments: true,
+      },
+    }),
+  ],
 };

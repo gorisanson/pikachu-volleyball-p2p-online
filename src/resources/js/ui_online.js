@@ -3,7 +3,7 @@ import {
   createRoom,
   joinRoom,
   sendToPeer,
-  closeAndCleaning
+  closeAndCleaning,
 } from './data_channel.js';
 import { myKeyboard } from './pikavolley_online.js';
 
@@ -40,7 +40,7 @@ export function setUpUI() {
   });
   chatOpenBtn.addEventListener('click', chatOpenBtnClicked);
   sendBtn.addEventListener('click', sendBtnClicked);
-  window.addEventListener('keydown', event => {
+  window.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
       if (!chatOpenBtn.classList.contains('hidden')) {
         chatOpenBtn.click();
@@ -58,7 +58,7 @@ export function setUpUI() {
 
   window.addEventListener('unload', closeAndCleaning);
 
-  window.addEventListener('beforeunload', function(e) {
+  window.addEventListener('beforeunload', function (e) {
     if (channel.isOpen) {
       // Cancel the event
       e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
