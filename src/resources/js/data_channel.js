@@ -153,20 +153,22 @@ export async function createRoom() {
   console.log('created room!');
 }
 
-export function joinRoom() {
+export async function joinRoom() {
   // @ts-ignore
   roomId = joinRoomID.value.trim().split('-').join('');
   if (roomId.length !== 20) {
     printLog(
       'The room ID is not in correct form. Please check the correct room ID.'
     );
+    return false;
   }
   console.log('Join room: ', roomId);
   currentRoomID.textContent = `${roomId.slice(0, 5)}-${roomId.slice(
     5,
     10
   )}-${roomId.slice(10, 15)}-${roomId.slice(15)}`;
-  joinRoomById(roomId);
+
+  return await joinRoomById(roomId);
 }
 
 async function joinRoomById(roomId) {
@@ -175,39 +177,45 @@ async function joinRoomById(roomId) {
   const roomRef = db.collection('rooms').doc(`${roomId}`);
   const roomSnapshot = await roomRef.get();
   console.log('Got room:', roomSnapshot.exists);
-
-  if (roomSnapshot.exists) {
-    console.log('Create PeerConnection with configuration: ', configuration);
-    peerConnection = new RTCPeerConnection(configuration);
-    registerPeerConnectionListeners();
-
-    // Code for collecting ICE candidates below
-    collectIceCandidates(
-      roomRef,
-      peerConnection,
-      'calleeCandidates',
-      'callerCandidates'
+  if (!roomSnapshot.exists) {
+    printLog(
+      'There is no room mathing the ID. Please check the entered room ID.'
     );
-
-    // Code for creating SDP answer below
-    const offer = roomSnapshot.data().offer;
-    await peerConnection.setRemoteDescription(offer);
-    console.log('Set remote description: ', offer);
-    printLog('offer received');
-    const answer = await peerConnection.createAnswer();
-    await peerConnection.setLocalDescription(answer);
-    console.log('set local description:', answer);
-
-    const roomWithAnswer = {
-      answer: {
-        type: answer.type,
-        sdp: answer.sdp,
-      },
-    };
-    await roomRef.update(roomWithAnswer);
-    printLog('answer sent');
-    console.log('joined room!');
+    return false;
   }
+
+  console.log('Create PeerConnection with configuration: ', configuration);
+  peerConnection = new RTCPeerConnection(configuration);
+  registerPeerConnectionListeners();
+
+  // Code for collecting ICE candidates below
+  collectIceCandidates(
+    roomRef,
+    peerConnection,
+    'calleeCandidates',
+    'callerCandidates'
+  );
+
+  // Code for creating SDP answer below
+  const offer = roomSnapshot.data().offer;
+  await peerConnection.setRemoteDescription(offer);
+  console.log('Set remote description: ', offer);
+  printLog('Offer received');
+  const answer = await peerConnection.createAnswer();
+  await peerConnection.setLocalDescription(answer);
+  console.log('set local description:', answer);
+
+  const roomWithAnswer = {
+    answer: {
+      type: answer.type,
+      sdp: answer.sdp,
+    },
+  };
+  await roomRef.update(roomWithAnswer);
+  printLog('Answer sent');
+  console.log('joined room!');
+
+  return true;
 }
 
 export async function closeAndCleaning() {

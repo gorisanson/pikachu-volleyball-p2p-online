@@ -36,7 +36,16 @@ export function setUpUI() {
     joinBtn.disabled = true;
     // @ts-ignore
     joinRoomID.disabled = true;
-    joinRoom();
+    joinRoom().then((joined) => {
+      if (!joined) {
+        // @ts-ignore
+        createBtn.disabled = false;
+        // @ts-ignore
+        joinBtn.disabled = false;
+        // @ts-ignore
+        joinRoomID.disabled = false;
+      }
+    });
   });
   chatOpenBtn.addEventListener('click', chatOpenBtnClicked);
   sendBtn.addEventListener('click', sendBtnClicked);
