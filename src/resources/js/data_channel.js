@@ -203,31 +203,6 @@ export async function joinRoom() {
   return true;
 }
 
-export function sendToPeer(inputsOrMessage) {
-  if (typeof inputsOrMessage === 'string') {
-    const message = inputsOrMessage;
-    messageManager.pendingMessage = message;
-    const messageToPeer = message + String(messageManager.counter);
-    dataChannel.send(messageToPeer);
-    messageManager.resendIntervalID = setInterval(
-      () => dataChannel.send(messageToPeer),
-      1000
-    );
-  } else if (Array.isArray(inputsOrMessage)) {
-    const inputs = inputsOrMessage;
-    const buffer = new ArrayBuffer(4 * inputs.length);
-    const dataView = new DataView(buffer);
-    for (let i = 0; i < inputs.length; i++) {
-      const input = inputs[i];
-      dataView.setUint8(4 * i + 0, input.syncCounter);
-      dataView.setUint8(4 * i + 1, input.xDirection);
-      dataView.setUint8(4 * i + 2, input.yDirection);
-      dataView.setUint8(4 * i + 3, input.powerHit);
-    }
-    dataChannel.send(buffer);
-  }
-}
-
 export async function closeAndCleaning() {
   if (dataChannel) {
     dataChannel.close();
@@ -259,75 +234,29 @@ export async function closeAndCleaning() {
   console.log('Did close and Cleaning!');
 }
 
-function registerPeerConnectionListeners(peerConnection) {
-  peerConnection.addEventListener('icegatheringstatechange', () => {
-    console.log(
-      `ICE gathering state changed: ${peerConnection.iceGatheringState}`
+export function sendToPeer(inputsOrMessage) {
+  if (typeof inputsOrMessage === 'string') {
+    const message = inputsOrMessage;
+    messageManager.pendingMessage = message;
+    const messageToPeer = message + String(messageManager.counter);
+    dataChannel.send(messageToPeer);
+    messageManager.resendIntervalID = setInterval(
+      () => dataChannel.send(messageToPeer),
+      1000
     );
-    printLog(
-      `ICE gathering state changed: ${peerConnection.iceGatheringState}`
-    );
-  });
-
-  peerConnection.addEventListener('connectionstatechange', () => {
-    console.log(`Connection state change: ${peerConnection.connectionState}`);
-    printLog(`Connection state change: ${peerConnection.connectionState}`);
-    if (
-      peerConnection.connectionState === 'disconnected' ||
-      peerConnection.connectionState === 'closed'
-    ) {
-      channel.isOpen = false;
-      noticeDisconnected();
+  } else if (Array.isArray(inputsOrMessage)) {
+    const inputs = inputsOrMessage;
+    const buffer = new ArrayBuffer(4 * inputs.length);
+    const dataView = new DataView(buffer);
+    for (let i = 0; i < inputs.length; i++) {
+      const input = inputs[i];
+      dataView.setUint8(4 * i + 0, input.syncCounter);
+      dataView.setUint8(4 * i + 1, input.xDirection);
+      dataView.setUint8(4 * i + 2, input.yDirection);
+      dataView.setUint8(4 * i + 3, input.powerHit);
     }
-  });
-
-  peerConnection.addEventListener('signalingstatechange', () => {
-    console.log(`Signaling state change: ${peerConnection.signalingState}`);
-    printLog(`Signaling state change: ${peerConnection.signalingState}`);
-  });
-
-  peerConnection.addEventListener('iceconnectionstatechange ', () => {
-    console.log(
-      `ICE connection state change: ${peerConnection.iceConnectionState}`
-    );
-    printLog(
-      `ICE connection state change: ${peerConnection.iceConnectionState}`
-    );
-  });
-
-  peerConnection.addEventListener('datachannel', (event) => {
-    dataChannel = event.channel;
-
-    console.log('data channel received!');
-    printLog('data channel received!');
-    dataChannel.addEventListener('open', dataChannelOpened);
-    dataChannel.addEventListener('message', recieveFromPeer);
-    dataChannel.addEventListener('close', dataChannelClosed);
-  });
-}
-
-function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
-  const candidatesCollection = roomRef.collection(localName);
-
-  peerConnection.addEventListener('icecandidate', (event) => {
-    if (!event.candidate) {
-      console.log('Got final candidate!');
-      return;
-    }
-    const json = event.candidate.toJSON();
-    candidatesCollection.add(json);
-    console.log('Got candidate: ', event.candidate);
-  });
-
-  roomRef.collection(remoteName).onSnapshot((snapshot) => {
-    snapshot.docChanges().forEach(async (change) => {
-      if (change.type === 'added') {
-        const data = change.doc.data();
-        await peerConnection.addIceCandidate(data);
-        console.log(`Got new remote ICE candidate: ${JSON.stringify(data)}`);
-      }
-    });
-  });
+    dataChannel.send(buffer);
+  }
 }
 
 function recieveFromPeer(event) {
@@ -467,4 +396,75 @@ function printLog(log) {
   const connectionLog = document.getElementById('connection-log');
   connectionLog.textContent += `${log}\n`;
   connectionLog.scrollIntoView();
+}
+
+function registerPeerConnectionListeners(peerConnection) {
+  peerConnection.addEventListener('icegatheringstatechange', () => {
+    console.log(
+      `ICE gathering state changed: ${peerConnection.iceGatheringState}`
+    );
+    printLog(
+      `ICE gathering state changed: ${peerConnection.iceGatheringState}`
+    );
+  });
+
+  peerConnection.addEventListener('connectionstatechange', () => {
+    console.log(`Connection state change: ${peerConnection.connectionState}`);
+    printLog(`Connection state change: ${peerConnection.connectionState}`);
+    if (
+      peerConnection.connectionState === 'disconnected' ||
+      peerConnection.connectionState === 'closed'
+    ) {
+      channel.isOpen = false;
+      noticeDisconnected();
+    }
+  });
+
+  peerConnection.addEventListener('signalingstatechange', () => {
+    console.log(`Signaling state change: ${peerConnection.signalingState}`);
+    printLog(`Signaling state change: ${peerConnection.signalingState}`);
+  });
+
+  peerConnection.addEventListener('iceconnectionstatechange ', () => {
+    console.log(
+      `ICE connection state change: ${peerConnection.iceConnectionState}`
+    );
+    printLog(
+      `ICE connection state change: ${peerConnection.iceConnectionState}`
+    );
+  });
+
+  peerConnection.addEventListener('datachannel', (event) => {
+    dataChannel = event.channel;
+
+    console.log('data channel received!');
+    printLog('data channel received!');
+    dataChannel.addEventListener('open', dataChannelOpened);
+    dataChannel.addEventListener('message', recieveFromPeer);
+    dataChannel.addEventListener('close', dataChannelClosed);
+  });
+}
+
+function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
+  const candidatesCollection = roomRef.collection(localName);
+
+  peerConnection.addEventListener('icecandidate', (event) => {
+    if (!event.candidate) {
+      console.log('Got final candidate!');
+      return;
+    }
+    const json = event.candidate.toJSON();
+    candidatesCollection.add(json);
+    console.log('Got candidate: ', event.candidate);
+  });
+
+  roomRef.collection(remoteName).onSnapshot((snapshot) => {
+    snapshot.docChanges().forEach(async (change) => {
+      if (change.type === 'added') {
+        const data = change.doc.data();
+        await peerConnection.addIceCandidate(data);
+        console.log(`Got new remote ICE candidate: ${JSON.stringify(data)}`);
+      }
+    });
+  });
 }
