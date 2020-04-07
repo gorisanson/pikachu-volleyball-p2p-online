@@ -31,9 +31,6 @@ import {
 
 firebase.initializeApp(firebaseConfig);
 
-// This is needed for initialize the clouds, it is custom rng is reset later on "dataChannelOpened" function
-setCustomRng(seedrandom.alea('hello'));
-
 export const channel = {
   isOpen: false,
   amICreatedRoom: false,
