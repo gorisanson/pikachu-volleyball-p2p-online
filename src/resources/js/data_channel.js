@@ -87,10 +87,8 @@ let peerConnection = null;
 let dataChannel = null;
 let roomId = null;
 
-const time = {
-  string: undefined,
-  ping: undefined,
-};
+let pingReceivedNumber = 0;
+const pingSentTimeArray = new Array(5);
 const pingArray = [];
 
 export async function createRoom() {
@@ -347,9 +345,9 @@ function receiveChatMessageFromPeer(chatMessage) {
 
 function startGameAfterPingTest() {
   printLog('start ping test');
-  const buffer = new ArrayBuffer(4);
+  const buffer = new ArrayBuffer(2);
   const view = new DataView(buffer);
-  view.setInt32(0, -1, true);
+  view.setInt16(0, -1, true);
   let n = 0;
   const intervalID = setInterval(() => {
     if (n === 5) {
@@ -366,39 +364,43 @@ function startGameAfterPingTest() {
       }, 5000);
       return;
     }
-    time.ping = Date.now();
+    pingSentTimeArray[n] = Date.now();
     dataChannel.send(buffer);
     printLog('.');
     n++;
   }, 1000);
 }
 
+function respondToPingTest(data) {
+  const dataView = new DataView(data);
+  // TODO: clean ping test to arraybuffer with length 1?
+  if (dataView.getInt16(0, true) === -1) {
+    const buffer = new ArrayBuffer(2);
+    const view = new DataView(buffer);
+    view.setInt16(0, -2, true);
+    console.log('respond to ping');
+    dataChannel.send(buffer);
+  } else if (dataView.getInt16(0, true) === -2) {
+    pingArray.push(Date.now() - pingSentTimeArray[pingReceivedNumber]);
+    pingReceivedNumber++;
+  }
+}
+
 function recieveFromPeer(event) {
   const data = event.data;
   if (data instanceof ArrayBuffer) {
-    if (data.byteLength === 1) {
-      receiveChatMessageAckFromPeer(data);
-    } else if (data.byteLength % 4 === 0 && data.byteLength / 4 <= 11) {
-      const dataView = new DataView(data);
-
-      // TODO: clean ping test to arraybuffer with length 1?
-      if (dataView.getInt32(0, true) === -1) {
-        dataView.setInt32(0, -2, true);
-        dataChannel.send(data);
-        console.log('respond to ping');
-        return;
-      } else if (dataView.getInt32(0, true) === -2) {
-        pingArray.push(Date.now() - time.ping);
-      }
-
+    if (data.byteLength % 4 === 0 && data.byteLength / 4 <= 11) {
       receiveInputQueueFromPeer(data);
-
       if (channel.callbackWhenReceivePeerInput !== null) {
         const callback = channel.callbackWhenReceivePeerInput;
         channel.callbackWhenReceivePeerInput = null;
         callback();
         console.log('callback!');
       }
+    } else if (data.byteLength === 1) {
+      receiveChatMessageAckFromPeer(data);
+    } else if (data.byteLength === 2) {
+      respondToPingTest(data);
     }
   } else if (typeof data === 'string') {
     receiveChatMessageFromPeer(data);
