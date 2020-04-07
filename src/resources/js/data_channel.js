@@ -27,7 +27,7 @@ import {
   setChatRngs,
   displayMyChatMessage,
   displayPeerChatMessage,
-} from './chat.js';
+} from './chat_display.js';
 
 firebase.initializeApp(firebaseConfig);
 
@@ -52,22 +52,22 @@ export const channel = {
   amIPlayer2: null, // received from pikavolley_online
 };
 
-const messageManager = {
-  pendingMessage: '',
+const chatManager = {
+  pendingChatMessage: '',
   resendIntervalID: null,
-  _counter: 0,
-  _peerCounter: 9,
-  get counter() {
-    return this._counter;
+  _syncCounter: 0,
+  _peerSyncCounter: 9,
+  get syncCounter() {
+    return this._syncCounter;
   },
-  set counter(n) {
-    this._counter = n % 10;
+  set syncCounter(n) {
+    this._syncCounter = n % 10;
   },
-  get peerCounter() {
-    return this._peerCounter;
+  get peerSyncCounter() {
+    return this._peerSyncCounter;
   },
-  set peerCounter(n) {
-    this._peerCounter = n % 10;
+  set peerSyncCounter(n) {
+    this._peerSyncCounter = n % 10;
   },
 };
 
@@ -234,65 +234,150 @@ export async function closeAndCleaning() {
   console.log('Did close and Cleaning!');
 }
 
-export function sendToPeer(inputsOrMessage) {
-  if (typeof inputsOrMessage === 'string') {
-    const message = inputsOrMessage;
-    messageManager.pendingMessage = message;
-    const messageToPeer = message + String(messageManager.counter);
-    dataChannel.send(messageToPeer);
-    messageManager.resendIntervalID = setInterval(
-      () => dataChannel.send(messageToPeer),
-      1000
-    );
-  } else if (Array.isArray(inputsOrMessage)) {
-    const inputs = inputsOrMessage;
-    const buffer = new ArrayBuffer(4 * inputs.length);
-    const dataView = new DataView(buffer);
-    for (let i = 0; i < inputs.length; i++) {
-      const input = inputs[i];
-      dataView.setUint8(4 * i + 0, input.syncCounter);
-      dataView.setUint8(4 * i + 1, input.xDirection);
-      dataView.setUint8(4 * i + 2, input.yDirection);
-      dataView.setUint8(4 * i + 3, input.powerHit);
-    }
-    dataChannel.send(buffer);
+/**
+ * Send my input queue to the peer
+ * @param {PikaUserInputWithSync[]} inputQueue
+ */
+export function sendInputQueueToPeer(inputQueue) {
+  const buffer = new ArrayBuffer(4 * inputQueue.length);
+  const dataView = new DataView(buffer);
+  for (let i = 0; i < inputQueue.length; i++) {
+    const input = inputQueue[i];
+    dataView.setUint8(4 * i + 0, input.syncCounter);
+    dataView.setUint8(4 * i + 1, input.xDirection);
+    dataView.setUint8(4 * i + 2, input.yDirection);
+    dataView.setUint8(4 * i + 3, input.powerHit);
   }
+  dataChannel.send(buffer);
+}
+
+/**
+ * Receive peer's input queue from the peer
+ * @param {ArrayBuffer} data
+ */
+function receiveInputQueueFromPeer(data) {
+  const dataView = new DataView(data);
+
+  for (let i = 0; i < data.byteLength / 4; i++) {
+    const syncCounter = dataView.getUint8(i * 4 + 0);
+    // isInModeRange in the below if statement is
+    // to prevent overflow of the queue by a corrupted peer code
+    if (
+      syncCounter === channel.peerInputQueueSyncCounter &&
+      (channel.peerInputQueue.length === 0 ||
+        isInModRange(
+          syncCounter,
+          channel.peerInputQueue[0].syncCounter,
+          channel.peerInputQueue[0].syncCounter + 10,
+          256
+        ))
+    ) {
+      const xDirection = dataView.getInt8(i * 4 + 1);
+      const yDirection = dataView.getInt8(i * 4 + 2);
+      const powerHit = dataView.getInt8(i * 4 + 3);
+      const peerInputWithSync = new PikaUserInputWithSync(
+        syncCounter,
+        xDirection,
+        yDirection,
+        powerHit
+      );
+      channel.peerInputQueue.push(peerInputWithSync);
+      channel.peerInputQueueSyncCounter++;
+    }
+  }
+}
+
+/**
+ * Send chat message to the peer
+ * @param {string} chatMessage
+ */
+export function sendChatMessageToPeer(chatMessage) {
+  chatManager.pendingChatMessage = chatMessage;
+  // append syncCounter at the end of chat message;
+  const chatMessageToPeer = chatMessage + String(chatManager.syncCounter);
+  dataChannel.send(chatMessageToPeer);
+  chatManager.resendIntervalID = setInterval(
+    () => dataChannel.send(chatMessageToPeer),
+    1000
+  );
+  return;
+}
+
+/**
+ * Receive chat message ACK(acknowledgment) array buffer from peer.
+ * @param {ArrayBuffer} data array buffer with length 1
+ */
+function receiveChatMessageAckFromPeer(data) {
+  const dataView = new DataView(data);
+  const syncCounter = dataView.getInt8(0);
+  if (syncCounter === chatManager.syncCounter) {
+    chatManager.syncCounter++;
+    clearInterval(chatManager.resendIntervalID);
+    displayMyChatMessage(chatManager.pendingChatMessage);
+    enableMessageBtns();
+  }
+}
+
+/**
+ * Receive chat meesage from the peer
+ * @param {string} chatMessage
+ */
+function receiveChatMessageFromPeer(chatMessage) {
+  // Read syncCounter at the end of chat message
+  const peerSyncCounter = Number(chatMessage.slice(-1));
+  if (peerSyncCounter === chatManager.peerSyncCounter) {
+    // if peer resend prevMessage since peer did not recieve
+    // the message ACK(acknowledgment) array buffer with length 1
+    console.log('arraybuffer with length 1 for chat message ACK resent');
+  } else if (peerSyncCounter === (chatManager.peerSyncCounter + 1) % 10) {
+    // if peer send new message
+    chatManager.peerSyncCounter++;
+    displayPeerChatMessage(chatMessage.slice(0, -1));
+  } else {
+    console.log('invalid chat message received.');
+    return;
+  }
+
+  // Send the message ACK array buffer with length 1.
+  const buffer = new ArrayBuffer(1);
+  const dataView = new DataView(buffer);
+  dataView.setInt8(0, peerSyncCounter);
+  dataChannel.send(buffer);
+}
+
+function startGameAfterPingTest() {
+  printLog('start ping test');
+  const buffer = new ArrayBuffer(4);
+  const view = new DataView(buffer);
+  view.setInt32(0, -1, true);
+  let n = 0;
+  const intervalID = setInterval(() => {
+    if (n === 5) {
+      window.clearInterval(intervalID);
+      const sum = pingArray.reduce((acc, val) => acc + val, 0);
+      const avg = sum / pingArray.length;
+      console.log(`average ping: ${avg} ms, ping list: ${pingArray}`);
+      printLog(`Average ping: ${avg} ms`);
+      printLog(`The game will start in 5 seconds.`);
+      setTimeout(() => {
+        channel.isOpen = true;
+        channel.callbackAfterDataChannelOpened();
+        showGameCanvas();
+      }, 5000);
+      return;
+    }
+    time.ping = Date.now();
+    dataChannel.send(buffer);
+    printLog('.');
+    n++;
+  }, 1000);
 }
 
 function recieveFromPeer(event) {
   const data = event.data;
-  if (typeof data === 'string') {
-    const peerCounter = Number(data.slice(-1));
-    if (peerCounter === messageManager.peerCounter) {
-      // if peer resned prevMessage since peer did not recieve this confirm arraybuffer with length 1
-      const buffer = new ArrayBuffer(1);
-      const dataView = new DataView(buffer);
-      dataView.setInt8(0, peerCounter);
-      dataChannel.send(buffer);
-      console.log(
-        'arraybuffer with length 1 for string receive confirm resent'
-      );
-    } else if (peerCounter === (messageManager.peerCounter + 1) % 10) {
-      // if peer send new message
-      const message = data.slice(0, -1);
-      displayPeerChatMessage(message);
-      messageManager.peerCounter++;
-      const buffer = new ArrayBuffer(1);
-      const dataView = new DataView(buffer);
-      dataView.setInt8(0, peerCounter);
-      dataChannel.send(buffer);
-    }
-    return;
-  } else if (data instanceof ArrayBuffer) {
+  if (data instanceof ArrayBuffer) {
     if (data.byteLength === 1) {
-      const dataView = new DataView(data);
-      const counter = dataView.getInt8(0);
-      if (counter === messageManager.counter) {
-        messageManager.counter++;
-        clearInterval(messageManager.resendIntervalID);
-        displayMyChatMessage(messageManager.pendingMessage);
-        enableMessageBtns();
-      }
+      receiveChatMessageAckFromPeer(data);
     } else if (data.byteLength % 4 === 0 && data.byteLength / 4 <= 11) {
       const dataView = new DataView(data);
 
@@ -306,32 +391,7 @@ function recieveFromPeer(event) {
         pingArray.push(Date.now() - time.ping);
       }
 
-      for (let i = 0; i < data.byteLength / 4; i++) {
-        const syncCounter = dataView.getUint8(i * 4 + 0);
-        // isInModeRange in the below if statement is to prevent overflow of the queue by a corrupted peer code
-        if (
-          syncCounter === channel.peerInputQueueSyncCounter &&
-          (channel.peerInputQueue.length === 0 ||
-            isInModRange(
-              syncCounter,
-              channel.peerInputQueue[0].syncCounter,
-              channel.peerInputQueue[0].syncCounter + 10,
-              256
-            ))
-        ) {
-          const xDirection = dataView.getInt8(i * 4 + 1);
-          const yDirection = dataView.getInt8(i * 4 + 2);
-          const powerHit = dataView.getInt8(i * 4 + 3);
-          const peerInputWithSync = new PikaUserInputWithSync(
-            syncCounter,
-            xDirection,
-            yDirection,
-            powerHit
-          );
-          channel.peerInputQueue.push(peerInputWithSync);
-          channel.peerInputQueueSyncCounter++;
-        }
-      }
+      receiveInputQueueFromPeer(data);
 
       if (channel.callbackWhenReceivePeerInput !== null) {
         const callback = channel.callbackWhenReceivePeerInput;
@@ -340,6 +400,8 @@ function recieveFromPeer(event) {
         console.log('callback!');
       }
     }
+  } else if (typeof data === 'string') {
+    receiveChatMessageFromPeer(data);
   }
 }
 
@@ -359,28 +421,7 @@ function dataChannelOpened() {
   setChatRngs(rngForPlayer1Chat, rngForPlayer2Chat);
 
   enableMessageBtns();
-
-  printLog('start ping test');
-  const buffer = new ArrayBuffer(4);
-  const view = new DataView(buffer);
-  view.setInt32(0, -1, true);
-  let n = 0;
-  const intervalID = setInterval(() => {
-    time.ping = Date.now();
-    dataChannel.send(buffer);
-    printLog('.');
-    n++;
-    if (n === 5) {
-      window.clearInterval(intervalID);
-      const sum = pingArray.reduce((acc, val) => acc + val, 0);
-      const avg = sum / pingArray.length;
-      console.log(`ping avg: ${avg} ms, ping list: ${pingArray}`);
-      printLog(`ping avg: ${avg} ms`);
-      channel.isOpen = true;
-      channel.callbackAfterDataChannelOpened();
-      showGameCanvas();
-    }
-  }, 1000);
+  startGameAfterPingTest();
 }
 
 /**

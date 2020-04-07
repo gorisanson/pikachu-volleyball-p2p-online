@@ -2,7 +2,7 @@
 
 import { PikaKeyboard } from './offline_version_js/keyboard.js';
 import { PikaUserInput } from './offline_version_js/physics.js';
-import { sendToPeer } from './data_channel.js';
+import { sendInputQueueToPeer } from './data_channel.js';
 import { mod, isInModRange } from './mod.js';
 
 export class MyKeyboard {
@@ -95,7 +95,7 @@ export class MyKeyboard {
       this.inputQueue.push(userInputWithSync);
       this.syncCounter++;
     }
-    sendToPeer(this.inputQueue);
+    sendInputQueueToPeer(this.inputQueue);
   }
 }
 

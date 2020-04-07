@@ -2,7 +2,7 @@ import {
   channel,
   createRoom,
   joinRoom,
-  sendToPeer,
+  sendChatMessageToPeer,
   closeAndCleaning,
 } from './data_channel.js';
 import { myKeyboard } from './pikavolley_online.js';
@@ -157,5 +157,5 @@ function sendBtnClicked() {
   }
   // @ts-ignore
   chatInput.value = '';
-  sendToPeer(message);
+  sendChatMessageToPeer(message);
 }
