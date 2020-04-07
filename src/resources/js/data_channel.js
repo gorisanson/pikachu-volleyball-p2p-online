@@ -115,9 +115,9 @@ export async function createRoom() {
     'calleeCandidates'
   );
 
-  dataChannel = peerConnection.createDataChannel('chat_channel');
+  console.log('Create DataChannel', dataChannel);
+  dataChannel = peerConnection.createDataChannel('pikavolley_p2p_channel');
 
-  console.log('dataChannel created', dataChannel);
   dataChannel.addEventListener('open', notifyOpen);
   dataChannel.addEventListener('message', recieveFromPeer);
   dataChannel.addEventListener('close', dataChannelClosed);
@@ -126,7 +126,7 @@ export async function createRoom() {
     console.log('Got updated room:', snapshot.data());
     const data = snapshot.data();
     if (!peerConnection.currentRemoteDescription && data.answer) {
-      printLog('answer received');
+      printLog('Answer received');
       console.log('Set remote description: ', data.answer);
       const answer = data.answer;
       await peerConnection.setRemoteDescription(answer);
@@ -144,13 +144,12 @@ export async function createRoom() {
   };
   roomRef.set(roomWithOffer);
   console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
-  printLog('offer sent');
+  printLog('Offer sent');
 
   currentRoomID.textContent = `${roomId.slice(0, 5)}-${roomId.slice(
     5,
     10
   )}-${roomId.slice(10, 15)}-${roomId.slice(15)}`;
-  console.log('created room!');
 }
 
 export async function joinRoom() {
@@ -158,7 +157,7 @@ export async function joinRoom() {
   roomId = joinRoomID.value.trim().split('-').join('');
   if (roomId.length !== 20) {
     printLog(
-      'The room ID is not in correct form. Please check the correct room ID.'
+      'The room ID is not in correct form. Please check the entered room ID.'
     );
     return false;
   }
