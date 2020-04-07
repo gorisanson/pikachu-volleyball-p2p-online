@@ -5,6 +5,7 @@ import { PikachuVolleyballOnline } from './pikavolley_online.js';
 import { setUpUI } from './ui_online.js';
 import { ASSETS_PATH } from './offline_version_js/assets_path.js';
 import { channel } from './data_channel.js';
+import { myKeyboard } from './pikavolley_online.js';
 
 const TEXTURES = ASSETS_PATH.TEXTURES;
 TEXTURES.WITH_COMPUTER = TEXTURES.WITH_FRIEND;
@@ -53,6 +54,7 @@ function setUpForLoader() {
     }
   });
   channel.callbackAfterDataChannelOpened = () => {
+    myKeyboard.subscribe();
     loadingBox.classList.remove('hidden');
     loader.load(setup);
   };

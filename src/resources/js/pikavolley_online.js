@@ -19,6 +19,7 @@ export const myKeyboard = new MyKeyboard(
   'ArrowDown',
   'Enter'
 );
+myKeyboard.unsubscribe();
 
 // @ts-ignore
 export class PikachuVolleyballOnline extends PikachuVolleyball {
