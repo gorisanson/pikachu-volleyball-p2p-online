@@ -15,7 +15,13 @@ import seedrandom from 'seedrandom';
 import { setCustomRng } from './offline_version_js/rand.js';
 import { PikaUserInputWithSync } from './pika_keyboard_online.js';
 import { mod, isInModRange } from './mod.js';
-import { noticeDisconnected, enableMessageBtns } from './ui_online.js';
+import {
+  printCurrentRoomID,
+  getJoinRoomID,
+  noticeDisconnected,
+  enableMessageBtns,
+  showGameCanvas,
+} from './ui_online.js';
 import { generatePushID } from './generate_pushid.js';
 import {
   setChatRngs,
@@ -25,7 +31,7 @@ import {
 
 firebase.initializeApp(firebaseConfig);
 
-// This is needed for initialize the clouds, it is custom rng is reset later on "notifyOpen" function
+// This is needed for initialize the clouds, it is custom rng is reset later on "dataChannelOpened" function
 setCustomRng(seedrandom.alea('hello'));
 
 export const channel = {
@@ -81,44 +87,37 @@ const configuration = {
 };
 
 let peerConnection = null;
-let roomId = null;
 let dataChannel = null;
+let roomId = null;
+
 const time = {
   string: undefined,
   ping: undefined,
 };
-
 const pingArray = [];
-
-const currentRoomID = document.getElementById('current-room-id');
-const joinRoomID = document.getElementById('join-room-id');
-
-const flexContainer = document.getElementById('flex-container');
-const beforeConnection = document.getElementById('before-connection');
 
 export async function createRoom() {
   channel.amICreatedRoom = true;
   roomId = generatePushID();
 
   const db = firebase.firestore();
-  const roomRef = await db.collection('rooms').doc(roomId);
+  const roomRef = db.collection('rooms').doc(roomId);
 
   console.log('Create PeerConnection with configuration: ', configuration);
   peerConnection = new RTCPeerConnection(configuration);
-
-  registerPeerConnectionListeners();
+  registerPeerConnectionListeners(peerConnection);
 
   collectIceCandidates(
     roomRef,
     peerConnection,
-    'callerCandidates',
-    'calleeCandidates'
+    'offerorCandidates',
+    'answererCandidates'
   );
 
   console.log('Create DataChannel', dataChannel);
   dataChannel = peerConnection.createDataChannel('pikavolley_p2p_channel');
 
-  dataChannel.addEventListener('open', notifyOpen);
+  dataChannel.addEventListener('open', dataChannelOpened);
   dataChannel.addEventListener('message', recieveFromPeer);
   dataChannel.addEventListener('close', dataChannelClosed);
 
@@ -146,15 +145,12 @@ export async function createRoom() {
   console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
   printLog('Offer sent');
 
-  currentRoomID.textContent = `${roomId.slice(0, 5)}-${roomId.slice(
-    5,
-    10
-  )}-${roomId.slice(10, 15)}-${roomId.slice(15)}`;
+  printCurrentRoomID(roomId);
 }
 
 export async function joinRoom() {
   // @ts-ignore
-  roomId = joinRoomID.value.trim().split('-').join('');
+  roomId = getJoinRoomID();
   if (roomId.length !== 20) {
     printLog(
       'The room ID is not in correct form. Please check the entered room ID.'
@@ -162,15 +158,8 @@ export async function joinRoom() {
     return false;
   }
   console.log('Join room: ', roomId);
-  currentRoomID.textContent = `${roomId.slice(0, 5)}-${roomId.slice(
-    5,
-    10
-  )}-${roomId.slice(10, 15)}-${roomId.slice(15)}`;
+  printCurrentRoomID(roomId);
 
-  return await joinRoomById(roomId);
-}
-
-async function joinRoomById(roomId) {
   // eslint-disable-next-line no-undef
   const db = firebase.firestore();
   const roomRef = db.collection('rooms').doc(`${roomId}`);
@@ -185,14 +174,14 @@ async function joinRoomById(roomId) {
 
   console.log('Create PeerConnection with configuration: ', configuration);
   peerConnection = new RTCPeerConnection(configuration);
-  registerPeerConnectionListeners();
+  registerPeerConnectionListeners(peerConnection);
 
   // Code for collecting ICE candidates below
   collectIceCandidates(
     roomRef,
     peerConnection,
-    'calleeCandidates',
-    'callerCandidates'
+    'answererCandidates',
+    'offerorCandidates'
   );
 
   // Code for creating SDP answer below
@@ -217,6 +206,31 @@ async function joinRoomById(roomId) {
   return true;
 }
 
+export function sendToPeer(inputsOrMessage) {
+  if (typeof inputsOrMessage === 'string') {
+    const message = inputsOrMessage;
+    messageManager.pendingMessage = message;
+    const messageToPeer = message + String(messageManager.counter);
+    dataChannel.send(messageToPeer);
+    messageManager.resendIntervalID = setInterval(
+      () => dataChannel.send(messageToPeer),
+      1000
+    );
+  } else if (Array.isArray(inputsOrMessage)) {
+    const inputs = inputsOrMessage;
+    const buffer = new ArrayBuffer(4 * inputs.length);
+    const dataView = new DataView(buffer);
+    for (let i = 0; i < inputs.length; i++) {
+      const input = inputs[i];
+      dataView.setUint8(4 * i + 0, input.syncCounter);
+      dataView.setUint8(4 * i + 1, input.xDirection);
+      dataView.setUint8(4 * i + 2, input.yDirection);
+      dataView.setUint8(4 * i + 3, input.powerHit);
+    }
+    dataChannel.send(buffer);
+  }
+}
+
 export async function closeAndCleaning() {
   if (dataChannel) {
     dataChannel.close();
@@ -231,15 +245,15 @@ export async function closeAndCleaning() {
     const roomRef = db.collection('rooms').doc(roomId);
 
     // TODO: how can I do this properly?
-    // const calleeCandidates = await roomRef.collection('calleeCandidates').get();
-    // console.log('calleCandidates', calleeCandidates);
-    // calleeCandidates.forEach(candidate => {
+    // const answererCandidates = await roomRef.collection('answererCandidates').get();
+    // console.log('calleCandidates', answererCandidates);
+    // answererCandidates.forEach(candidate => {
     //   console.log(candidate);
     //   candidate.delete();
     // });
-    // const callerCandidates = await roomRef.collection('callerCandidates').get();
-    // console.log('callerCandidates', callerCandidates);
-    // callerCandidates.forEach(candidate => {
+    // const offerorCandidates = await roomRef.collection('offerorCandidates').get();
+    // console.log('offerorCandidates', offerorCandidates);
+    // offerorCandidates.forEach(candidate => {
     //   candidate.delete();
     // });
     await roomRef.delete();
@@ -248,7 +262,7 @@ export async function closeAndCleaning() {
   console.log('Did close and Cleaning!');
 }
 
-function registerPeerConnectionListeners() {
+function registerPeerConnectionListeners(peerConnection) {
   peerConnection.addEventListener('icegatheringstatechange', () => {
     console.log(
       `ICE gathering state changed: ${peerConnection.iceGatheringState}`
@@ -289,7 +303,7 @@ function registerPeerConnectionListeners() {
 
     console.log('data channel received!');
     printLog('data channel received!');
-    dataChannel.addEventListener('open', notifyOpen);
+    dataChannel.addEventListener('open', dataChannelOpened);
     dataChannel.addEventListener('message', recieveFromPeer);
     dataChannel.addEventListener('close', dataChannelClosed);
   });
@@ -317,31 +331,6 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
       }
     });
   });
-}
-
-export function sendToPeer(inputsOrMessage) {
-  if (typeof inputsOrMessage === 'string') {
-    const message = inputsOrMessage;
-    messageManager.pendingMessage = message;
-    const messageToPeer = message + String(messageManager.counter);
-    dataChannel.send(messageToPeer);
-    messageManager.resendIntervalID = setInterval(
-      () => dataChannel.send(messageToPeer),
-      1000
-    );
-  } else if (Array.isArray(inputsOrMessage)) {
-    const inputs = inputsOrMessage;
-    const buffer = new ArrayBuffer(4 * inputs.length);
-    const dataView = new DataView(buffer);
-    for (let i = 0; i < inputs.length; i++) {
-      const input = inputs[i];
-      dataView.setUint8(4 * i + 0, input.syncCounter);
-      dataView.setUint8(4 * i + 1, input.xDirection);
-      dataView.setUint8(4 * i + 2, input.yDirection);
-      dataView.setUint8(4 * i + 3, input.powerHit);
-    }
-    dataChannel.send(buffer);
-  }
 }
 
 function recieveFromPeer(event) {
@@ -428,7 +417,10 @@ function recieveFromPeer(event) {
   }
 }
 
-function notifyOpen() {
+/**
+ * Data channel open event listener
+ */
+function dataChannelOpened() {
   dataChannel.binaryType = 'arraybuffer';
   console.log('data channel opened!');
   printLog('data channel opened!');
@@ -459,15 +451,15 @@ function notifyOpen() {
       console.log(`ping avg: ${avg} ms, ping list: ${pingArray}`);
       printLog(`ping avg: ${avg} ms`);
       channel.isOpen = true;
-      if (!beforeConnection.classList.contains('hidden')) {
-        beforeConnection.classList.add('hidden');
-      }
-      flexContainer.classList.remove('hidden');
       channel.callbackAfterDataChannelOpened();
+      showGameCanvas();
     }
   }, 1000);
 }
 
+/**
+ * Data channel close event listener
+ */
 function dataChannelClosed() {
   console.log('data channel closed');
   channel.isOpen = false;

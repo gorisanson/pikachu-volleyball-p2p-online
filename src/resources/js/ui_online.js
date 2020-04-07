@@ -7,18 +7,17 @@ import {
 } from './data_channel.js';
 import { myKeyboard } from './pikavolley_online.js';
 
-const createBtn = document.getElementById('create-btn');
-const joinBtn = document.getElementById('join-btn');
-const joinRoomID = document.getElementById('join-room-id');
-const sendBtn = document.getElementById('send-btn');
-const chatInputWithButton = document.getElementById('chat-input-with-button');
 const chatOpenBtn = document.getElementById('chat-open-btn');
-const messageBox = document.getElementById('message-box');
-const noticeDisconnectedOKBtn = document.getElementById(
-  'notice-disconnected-ok-btn'
+const chatInputAndSendBtnContainer = document.getElementById(
+  'chat-input-and-send-btn-container'
 );
+const chatInput = document.getElementById('chat-input');
+const sendBtn = document.getElementById('send-btn');
 
 export function setUpUI() {
+  const createBtn = document.getElementById('create-btn');
+  const joinBtn = document.getElementById('join-btn');
+  const joinRoomID = document.getElementById('join-room-id');
   createBtn.addEventListener('click', () => {
     // @ts-ignore
     createBtn.disabled = true;
@@ -61,6 +60,9 @@ export function setUpUI() {
     }
   });
 
+  const noticeDisconnectedOKBtn = document.getElementById(
+    'notice-disconnected-ok-btn'
+  );
   noticeDisconnectedOKBtn.addEventListener('click', () => {
     location.reload();
   });
@@ -79,13 +81,41 @@ export function setUpUI() {
   disableMessageBtns();
 }
 
+export function printCurrentRoomID(roomId) {
+  const prettyRoomId = `${roomId.slice(0, 5)}-${roomId.slice(
+    5,
+    10
+  )}-${roomId.slice(10, 15)}-${roomId.slice(15)}`;
+  document.getElementById('current-room-id').textContent = prettyRoomId;
+}
+
+export function getJoinRoomID() {
+  return (
+    document
+      .getElementById('join-room-id')
+      // @ts-ignore
+      .value.trim()
+      .split('-')
+      .join('')
+  );
+}
+
+export function showGameCanvas() {
+  const flexContainer = document.getElementById('flex-container');
+  const beforeConnection = document.getElementById('before-connection');
+  if (!beforeConnection.classList.contains('hidden')) {
+    beforeConnection.classList.add('hidden');
+  }
+  flexContainer.classList.remove('hidden');
+}
+
 export function noticeDisconnected() {
   document.getElementById('notice-disconnected').classList.remove('hidden');
 }
 
 export function enableMessageBtns() {
   // @ts-ignore
-  messageBox.disabled = false;
+  chatInput.disabled = false;
   // @ts-ignore
   chatOpenBtn.disabled = false;
   // @ts-ignore
@@ -94,7 +124,7 @@ export function enableMessageBtns() {
 
 function disableMessageBtns() {
   // @ts-ignore
-  messageBox.disabled = true;
+  chatInput.disabled = true;
   // @ts-ignore
   chatOpenBtn.disabled = true;
   // @ts-ignore
@@ -105,8 +135,8 @@ function chatOpenBtnClicked() {
   if (!chatOpenBtn.classList.contains('hidden')) {
     chatOpenBtn.classList.add('hidden');
   }
-  chatInputWithButton.classList.remove('hidden');
-  messageBox.focus({ preventScroll: true });
+  chatInputAndSendBtnContainer.classList.remove('hidden');
+  chatInput.focus({ preventScroll: true });
   myKeyboard.unsubscribe();
 }
 
@@ -115,17 +145,17 @@ function sendBtnClicked() {
   // @ts-ignore
   disableMessageBtns();
   chatOpenBtn.classList.remove('hidden');
-  if (!chatInputWithButton.classList.contains('hidden')) {
-    chatInputWithButton.classList.add('hidden');
+  if (!chatInputAndSendBtnContainer.classList.contains('hidden')) {
+    chatInputAndSendBtnContainer.classList.add('hidden');
   }
   // @ts-ignore
-  const message = messageBox.value;
+  const message = chatInput.value;
   if (message === '') {
     // @ts-ignore
     enableMessageBtns();
     return;
   }
   // @ts-ignore
-  messageBox.value = '';
+  chatInput.value = '';
   sendToPeer(message);
 }
