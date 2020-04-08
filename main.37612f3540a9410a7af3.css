@@ -125,6 +125,9 @@ canvas {
 #create-btn-with-created-room-id {
   grid-template-columns: var(--btn-width) auto;
 }
+#room-id-with-join-btn {
+  margin-top: calc(var(--btn-height) / 2);
+}
 #chat-input,
 #send-btn {
   width: 100%;
@@ -306,4 +309,4 @@ button.btn-in-box {
 }
 
 
-/*# sourceMappingURL=main.28c681b8628debf6de8d.css.map*/
+/*# sourceMappingURL=main.37612f3540a9410a7af3.css.map*/
