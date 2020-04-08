@@ -1,7 +1,7 @@
 {
   "name": "pikachu-volleyball-online",
-  "version": "0.0.1",
-  "description": "Pikachu Volleyball implemented into JavaScript by reverse engineering the original game",
+  "version": "1.0.0",
+  "description": "Pikachu Volleyball peer-to-peer online via WebRTC data channels",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gorisanson/pikachu-volleyball-online.git"
+    "url": "git+https://github.com/gorisanson/pikachu-volleyball-p2p-online.git"
   },
   "keywords": [
     "game"
@@ -18,9 +18,9 @@
   "author": "Lee, Kyutae",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/gorisanson/pikachu-volleyball-online/issues"
+    "url": "https://github.com/gorisanson/pikachu-volleyball-p2p-online/issues"
   },
-  "homepage": "https://github.com/gorisanson/pikachu-volleyball-online#readme",
+  "homepage": "https://github.com/gorisanson/pikachu-volleyball-p2p-online#readme",
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.1.1",
