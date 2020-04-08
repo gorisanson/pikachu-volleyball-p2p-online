@@ -6,6 +6,7 @@ import {
   closeAndCleaning,
 } from './data_channel.js';
 import { myKeyboard } from './pikavolley_online.js';
+import '../style.css';
 
 const chatOpenBtn = document.getElementById('chat-open-btn');
 const chatInputAndSendBtnContainer = document.getElementById(

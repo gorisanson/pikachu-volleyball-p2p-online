@@ -4,6 +4,7 @@ import 'pixi-sound';
 import { PikachuVolleyballOnline } from './pikavolley_online.js';
 import { ASSETS_PATH } from './offline_version_js/assets_path.js';
 import { setUpUI } from './ui_online.js';
+import '../style.css';
 
 const TEXTURES = ASSETS_PATH.TEXTURES;
 TEXTURES.WITH_COMPUTER = TEXTURES.WITH_FRIEND;

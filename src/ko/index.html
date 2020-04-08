@@ -17,7 +17,6 @@
       sizes="32x32"
       href="../resources/assets/images/IDI_PIKAICON-0.png"
     />
-    <link rel="stylesheet" href="../resources/style.css" />
   </head>
   <body>
     <div id="before-connection">
@@ -56,10 +55,10 @@
           >
         </p>
         <p class="release-date">
-          공개한 날: 2020-04-05
+          공개한 날: 2020-04-08
         </p>
         <!-- <p class="last-updated">
-              마지막으로 수정한 날: 2020-04-05
+              마지막으로 수정한 날: 2020-04-08
             </p> -->
       </div>
       <div id="about-box-content">
@@ -74,16 +73,18 @@
               >이용 가능한 브라우저 목록은 여기에서 볼 수 있습니다. (초록색
               표시가 이용 가능한 브라우저 입니다.)</a
             >
+            최신 버전의 iOS Safari도 지원을 하지만, 아직 표가 업데이트되지
+            않았습니다.
           </p>
           <p>
             <span class="thick">방장</span> - "방 만들기" 버튼을 누른 후,
-            만들어진 방의 ID를 같이 온라인으로 플레이할 친구("방장의 친구")에게
+            만들어진 방 ID를 같이 온라인으로 플레이할 친구("방장의 친구")에게
             보냅니다. 컴퓨터에서 쉽게 복사 붙여넣기 할 수 있도록 카카오톡 등의
             메신저로 보내거나 이메일로 보내면 편리합니다.
           </p>
           <p>
             <span class="thick">방장의 친구</span> - 메신저 또는 이메일 등으로
-            받은 방의 ID를 "방 들어가기" 버튼 왼편에 있는 텍스트 박스에 복사
+            받은 방 ID를 "방 들어가기" 버튼 왼편에 있는 텍스트 박스에 복사
             붙여넣기 합니다. 그리고 "방 들어가기" 버튼을 누릅니다. 이제 연결이
             시작됩니다.
           </p>
@@ -96,11 +97,11 @@
             반대입니다.
           </p>
           <p>
-            <span class="thick">알림:</span> 정상적인 경우 "방장의 친구"가 "방
-            들어가기" 버튼을 누르고 나서 약 5-10초 이내로 연결이 이루어집니다.
-            이보다 오래 지나도 게임이 시작되지 않는다면 연결이 실패한 것입니다.
-            네트워크가 (회사나 학교 등의) 방화벽 하에 있어 UDP 포트들이 막혀있는
-            경우, 네트워크가
+            <span class="thick">유의사항:</span> 정상적인 경우 "방장의 친구"가
+            "방 들어가기" 버튼을 누르고 나서 약 5-10초 이내로 연결이
+            이루어집니다. 이보다 오래 지나도 게임이 시작되지 않는다면 연결이
+            실패한 것입니다. 네트워크가 (회사나 학교 등의) 방화벽 하에 있어 UDP
+            포트들이 막혀있는 경우, 네트워크가
             <a
               href="https://en.wikipedia.org/wiki/Network_address_translation#Methods_of_translation"
               target="_blank"
@@ -152,7 +153,7 @@
       <div id="game-canvas-container">
         <div id="player1-chat-box" class="chat-box"></div>
         <div id="player2-chat-box" class="chat-box"></div>
-        <div class="fade-in-box loading hidden" id="loading-box">
+        <div class="fade-in-box loading black" id="loading-box">
           <div>
             <p>게임 스프라이트/사운드 로드 중...</p>
             <div id="progress-bar-border">
@@ -160,12 +161,12 @@
             </div>
           </div>
         </div>
-        <div class="fade-in-box peer-loading hidden" id="peer-loading-box">
+        <div class="fade-in-box peer-loading black" id="peer-loading-box">
           <div>
             <p>상대방의 게임 스트라이트/사운드 로드를 기다리는 중...</p>
           </div>
         </div>
-        <div class="fade-in-box ping hidden" id="ping-box">
+        <div class="fade-in-box ping black" id="ping-box">
           <div>
             <p>평균 핑: <span id="average-ping"></span> ms</p>
             <p>게임을 <span id="starts-in"></span>초 뒤에 시작합니다.</p>

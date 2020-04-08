@@ -9,7 +9,7 @@ module.exports = {
     ko: './src/ko/ko.js',
   },
   output: {
-    filename: '[name].bundle.js',
+    filename: '[name].[chunkhash].js',
     path: path.resolve(__dirname, 'dist'),
   },
   optimization: {
@@ -17,6 +17,14 @@ module.exports = {
     splitChunks: {
       chunks: 'all',
     },
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
   },
   plugins: [
     new CleanWebpackPlugin(),

@@ -64,7 +64,6 @@ html {
   margin-left: auto;
   margin-right: auto;
 }
-
 #game-canvas-container,
 canvas {
   position: relative;
@@ -72,7 +71,6 @@ canvas {
   width: var(--canvas-width);
   height: var(--canvas-height);
 }
-
 .chat-box {
   position: absolute;
   top: 50%;
@@ -81,14 +79,12 @@ canvas {
   background-color: transparent;
   font-size: 20px;
 }
-
 #player1-chat-box {
   right: 70%;
 }
 #player2-chat-box {
   left: 70%;
 }
-
 .chat-box {
   z-index: -1;
   visibility: hidden;
@@ -134,7 +130,6 @@ canvas {
 #create-btn-with-created-room-id {
   grid-template-columns: var(--btn-width) auto;
 }
-
 #chat-input,
 #send-btn {
   width: 100%;
