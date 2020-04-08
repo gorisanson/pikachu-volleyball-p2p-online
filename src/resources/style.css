@@ -271,10 +271,16 @@ span.margin-left-right {
 .fade-in-box.hidden {
   display: none;
 }
-.fade-in-box.loading {
-  background-color: transparent;
+.fade-in-box.peer-loading {
+  z-index: 5;
+  background-color: black;
   color: white;
-  animation-duration: 0.5s;
+  animation-duration: 0s;
+}
+.fade-in-box.loading {
+  background-color: black;
+  color: white;
+  animation-duration: 0s;
 }
 .fade-in-box.ping {
   z-index: 15;

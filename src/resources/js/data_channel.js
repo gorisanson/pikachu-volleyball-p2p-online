@@ -90,6 +90,7 @@ const configuration = {
 let peerConnection = null;
 let dataChannel = null;
 let roomId = null;
+let isFirstInputQueueFromPeer = true;
 
 export async function createRoom() {
   channel.amICreatedRoom = true;
@@ -254,6 +255,15 @@ export function sendInputQueueToPeer(inputQueue) {
  * @param {ArrayBuffer} data
  */
 function receiveInputQueueFromPeer(data) {
+  if (isFirstInputQueueFromPeer) {
+    isFirstInputQueueFromPeer = false;
+
+    const peerLoadingBox = document.getElementById('peer-loading-box');
+    if (!peerLoadingBox.classList.contains('hidden')) {
+      peerLoadingBox.classList.add('hidden');
+    }
+  }
+
   const dataView = new DataView(data);
 
   for (let i = 0; i < data.byteLength / 4; i++) {

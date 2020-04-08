@@ -45,7 +45,6 @@ setUpUI();
 function setUpLoaderProgresBar() {
   const loadingBox = document.getElementById('loading-box');
   const progressBar = document.getElementById('progress-bar');
-  loadingBox.classList.remove('hidden');
 
   loader.on('progress', () => {
     progressBar.style.width = `${loader.progress}%`;

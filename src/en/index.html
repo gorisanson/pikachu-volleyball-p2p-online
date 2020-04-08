@@ -148,12 +148,17 @@
       <div id="game-canvas-container">
         <div id="player1-chat-box" class="chat-box"></div>
         <div id="player2-chat-box" class="chat-box"></div>
-        <div class="fade-in-box loading hidden" id="loading-box">
+        <div class="fade-in-box loading" id="loading-box">
           <div>
             <p>Loading the game assets...</p>
             <div id="progress-bar-border">
               <div id="progress-bar" style="width: 0%;"></div>
             </div>
+          </div>
+        </div>
+        <div class="fade-in-box peer-loading" id="peer-loading-box">
+          <div>
+            <p>Waiting for the peer to load the game assets...</p>
           </div>
         </div>
         <div class="fade-in-box ping hidden" id="ping-box">
