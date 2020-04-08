@@ -1,8 +1,4 @@
-resource/
-
 dist/
 node_modules/
-
-.firebase/
-
 firebase_config.js
+analytics.html
