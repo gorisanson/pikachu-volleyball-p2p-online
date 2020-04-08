@@ -363,7 +363,6 @@ function startGameAfterPingTest() {
       printLog(`Average ping: ${avg} ms`);
       printLog(`The game will start in 5 seconds.`);
       showGameCanvas();
-      channel.callbackAfterDataChannelOpened();
 
       const pingBox = document.getElementById('ping-box');
       pingBox.classList.remove('hidden');

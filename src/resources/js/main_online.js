@@ -1,10 +1,9 @@
 'use strict';
 import * as PIXI from 'pixi.js';
 import 'pixi-sound';
-import { myKeyboard, PikachuVolleyballOnline } from './pikavolley_online.js';
+import { PikachuVolleyballOnline } from './pikavolley_online.js';
 import { ASSETS_PATH } from './offline_version_js/assets_path.js';
 import { setUpUI } from './ui_online.js';
-import { channel } from './data_channel.js';
 
 const TEXTURES = ASSETS_PATH.TEXTURES;
 TEXTURES.WITH_COMPUTER = TEXTURES.WITH_FRIEND;
@@ -38,9 +37,6 @@ for (const prop in ASSETS_PATH.SOUNDS) {
 setUpLoaderProgresBar();
 loader.load(setup);
 
-channel.callbackAfterDataChannelOpened = () => {
-  myKeyboard.subscribe();
-};
 setUpUI();
 
 /**

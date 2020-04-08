@@ -15,6 +15,9 @@ const chatInput = document.getElementById('chat-input');
 const sendBtn = document.getElementById('send-btn');
 
 export function setUpUI() {
+  // game keyboard input needs to be unsubscribe for typing join room ID
+  myKeyboard.unsubscribe();
+
   const createBtn = document.getElementById('create-btn');
   const joinBtn = document.getElementById('join-btn');
   const joinRoomID = document.getElementById('join-room-id');
@@ -107,6 +110,7 @@ export function showGameCanvas() {
     beforeConnection.classList.add('hidden');
   }
   flexContainer.classList.remove('hidden');
+  myKeyboard.subscribe();
 }
 
 export function noticeDisconnected() {
