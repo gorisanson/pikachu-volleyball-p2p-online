@@ -171,7 +171,8 @@ canvas {
   grid-column-start: 1;
 }
 #created-room-id-container,
-#join-room-id {
+#join-room-id,
+#chat-input {
   font-size: var(--font-size);
 }
 #join-btn,
@@ -309,4 +310,4 @@ button.btn-in-box {
 }
 
 
-/*# sourceMappingURL=main.37612f3540a9410a7af3.css.map*/
+/*# sourceMappingURL=main.3109774bd1f220bb7826.css.map*/
