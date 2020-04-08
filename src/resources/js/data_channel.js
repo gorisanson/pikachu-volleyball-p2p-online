@@ -22,6 +22,10 @@ import {
   noticeDisconnected,
   enableMessageBtns,
   showGameCanvas,
+  hideWatingPeerAssetsLoadingBox,
+  hidePingBox,
+  printAvgPing,
+  printStartsIn,
 } from './ui_online.js';
 import {
   setChatRngs,
@@ -257,11 +261,7 @@ export function sendInputQueueToPeer(inputQueue) {
 function receiveInputQueueFromPeer(data) {
   if (isFirstInputQueueFromPeer) {
     isFirstInputQueueFromPeer = false;
-
-    const peerLoadingBox = document.getElementById('peer-loading-box');
-    if (!peerLoadingBox.classList.contains('hidden')) {
-      peerLoadingBox.classList.add('hidden');
-    }
+    hideWatingPeerAssetsLoadingBox();
   }
 
   const dataView = new DataView(data);
@@ -374,21 +374,16 @@ function startGameAfterPingTest() {
       printLog(`The game will start in 5 seconds.`);
       showGameCanvas();
 
-      const pingBox = document.getElementById('ping-box');
-      pingBox.classList.remove('hidden');
-      document.getElementById('average-ping').textContent = String(avg);
-      const startsIn = document.getElementById('starts-in');
+      printAvgPing(avg);
+
       let t = 5;
-      startsIn.textContent = String(t);
+      printStartsIn(t);
       const intervalID2 = setInterval(() => {
         t--;
-        startsIn.textContent = String(t);
+        printStartsIn(t);
         if (t === 0) {
           window.clearInterval(intervalID2);
-          if (!pingBox.classList.contains('hidden')) {
-            pingBox.classList.add('hidden');
-          }
-
+          hidePingBox();
           channel.gameStartAllowed = true;
           return;
         }

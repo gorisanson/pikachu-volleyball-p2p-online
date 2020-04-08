@@ -113,6 +113,28 @@ export function showGameCanvas() {
   myKeyboard.subscribe();
 }
 
+export function hidePingBox() {
+  const pingBox = document.getElementById('ping-box');
+  if (!pingBox.classList.contains('hidden')) {
+    pingBox.classList.add('hidden');
+  }
+}
+
+export function printAvgPing(avgPing) {
+  document.getElementById('average-ping').textContent = String(avgPing);
+}
+
+export function printStartsIn(startsIn) {
+  document.getElementById('starts-in').textContent = String(startsIn);
+}
+
+export function hideWatingPeerAssetsLoadingBox() {
+  const peerLoadingBox = document.getElementById('peer-loading-box');
+  if (!peerLoadingBox.classList.contains('hidden')) {
+    peerLoadingBox.classList.add('hidden');
+  }
+}
+
 export function noticeDisconnected() {
   document.getElementById('notice-disconnected').classList.remove('hidden');
 }
