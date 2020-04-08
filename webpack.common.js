@@ -2,6 +2,7 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   entry: {
@@ -21,8 +22,8 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
     ],
   },
@@ -36,6 +37,10 @@ module.exports = {
       { from: 'src/resources/style.css', to: 'resources/style.css' },
       { from: 'src/index.html', to: 'index.html' },
     ]),
+    new MiniCssExtractPlugin({
+      filename: '[name].[contenthash].css',
+      chunkFilename: 'chunk.[name].[contenthash].css',
+    }),
     new HtmlWebpackPlugin({
       template: 'src/en/index.html',
       filename: 'en/index.html',
