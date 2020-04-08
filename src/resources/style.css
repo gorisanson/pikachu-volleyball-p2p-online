@@ -71,14 +71,6 @@ canvas {
   width: var(--canvas-width);
   height: var(--canvas-height);
 }
-.chat-box {
-  position: absolute;
-  top: 50%;
-  z-index: 1;
-  color: white;
-  background-color: transparent;
-  font-size: 20px;
-}
 #player1-chat-box {
   right: 70%;
 }
@@ -86,7 +78,12 @@ canvas {
   left: 70%;
 }
 .chat-box {
-  z-index: -1;
+  z-index: 20;
+  position: absolute;
+  top: 50%;
+  color: white;
+  background-color: transparent;
+  font-size: var(--font-size);
   visibility: hidden;
   opacity: 0;
   animation-name: fade-inout;
@@ -95,7 +92,6 @@ canvas {
 @keyframes fade-inout {
   0% {
     visibility: visible;
-    z-index: 10;
     opacity: 0;
   }
   25% {
@@ -106,7 +102,6 @@ canvas {
   }
   100% {
     visibility: hidden;
-    z-index: 10;
     opacity: 0;
   }
 }
