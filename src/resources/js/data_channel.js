@@ -218,19 +218,6 @@ export async function closeAndCleaning() {
     // eslint-disable-next-line no-undef
     const db = firebase.firestore();
     const roomRef = db.collection('rooms').doc(roomId);
-
-    // TODO: how can I do this properly?
-    // const answererCandidates = await roomRef.collection('answererCandidates').get();
-    // console.log('calleCandidates', answererCandidates);
-    // answererCandidates.forEach(candidate => {
-    //   console.log(candidate);
-    //   candidate.delete();
-    // });
-    // const offerorCandidates = await roomRef.collection('offerorCandidates').get();
-    // console.log('offerorCandidates', offerorCandidates);
-    // offerorCandidates.forEach(candidate => {
-    //   candidate.delete();
-    // });
     await roomRef.delete();
     console.log('did room delete!');
   }
