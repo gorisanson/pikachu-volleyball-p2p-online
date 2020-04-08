@@ -36,11 +36,10 @@ for (const prop in ASSETS_PATH.SOUNDS) {
   loader.add(ASSETS_PATH.SOUNDS[prop]);
 }
 setUpLoaderProgresBar();
+loader.load(setup);
 
 channel.callbackAfterDataChannelOpened = () => {
-  document.getElementById('loading-box').classList.remove('hidden');
   myKeyboard.subscribe();
-  loader.load(setup);
 };
 setUpUI();
 
@@ -50,6 +49,8 @@ setUpUI();
 function setUpLoaderProgresBar() {
   const loadingBox = document.getElementById('loading-box');
   const progressBar = document.getElementById('progress-bar');
+  loadingBox.classList.remove('hidden');
+
   loader.on('progress', () => {
     progressBar.style.width = `${loader.progress}%`;
   });
