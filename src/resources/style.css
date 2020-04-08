@@ -276,6 +276,11 @@ span.margin-left-right {
   color: white;
   animation-duration: 0.5s;
 }
+.fade-in-box.ping {
+  z-index: 15;
+  background-color: rgb(200, 200, 200);
+  animation-duration: 0s;
+}
 #progress-bar-border {
   position: relative;
   border: solid;

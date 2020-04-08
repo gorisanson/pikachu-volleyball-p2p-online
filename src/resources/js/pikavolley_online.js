@@ -100,7 +100,7 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
    * This function should be called at regular intervals ( interval = (1 / FPS) second )
    */
   gameLoop() {
-    if (channel.isOpen !== true) {
+    if (!(channel.gameStartAllowed && channel.isOpen)) {
       return;
     }
 

@@ -33,6 +33,7 @@ firebase.initializeApp(firebaseConfig);
 
 export const channel = {
   isOpen: false,
+  gameStartAllowed: false,
   amICreatedRoom: false,
   amIPlayer2: null, // set from pikavolley_online.js
 
@@ -361,11 +362,28 @@ function startGameAfterPingTest() {
       );
       printLog(`Average ping: ${avg} ms`);
       printLog(`The game will start in 5 seconds.`);
-      setTimeout(() => {
-        channel.isOpen = true;
-        channel.callbackAfterDataChannelOpened();
-        showGameCanvas();
-      }, 5000);
+      showGameCanvas();
+      channel.callbackAfterDataChannelOpened();
+
+      const pingBox = document.getElementById('ping-box');
+      pingBox.classList.remove('hidden');
+      document.getElementById('average-ping').textContent = String(avg);
+      const startsIn = document.getElementById('starts-in');
+      let t = 5;
+      startsIn.textContent = String(t);
+      const intervalID2 = setInterval(() => {
+        t--;
+        startsIn.textContent = String(t);
+        if (t === 0) {
+          window.clearInterval(intervalID2);
+          if (!pingBox.classList.contains('hidden')) {
+            pingBox.classList.add('hidden');
+          }
+
+          channel.gameStartAllowed = true;
+          return;
+        }
+      }, 1000);
       return;
     }
     pingTestManager.pingSentTimeArray[n] = Date.now();
@@ -420,9 +438,10 @@ function recieveFromPeer(event) {
  * Data channel open event listener
  */
 function dataChannelOpened() {
-  dataChannel.binaryType = 'arraybuffer';
   console.log('data channel opened!');
   printLog('data channel opened!');
+  channel.isOpen = true;
+  dataChannel.binaryType = 'arraybuffer';
 
   const customRng = seedrandom.alea(roomId.slice(10));
   setCustomRng(customRng);
