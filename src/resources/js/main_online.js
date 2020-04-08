@@ -3,6 +3,7 @@ import * as PIXI from 'pixi.js';
 import 'pixi-sound';
 import { PikachuVolleyballOnline } from './pikavolley_online.js';
 import { ASSETS_PATH } from './offline_version_js/assets_path.js';
+import { channel } from './data_channel.js';
 import { setUpUI } from './ui_online.js';
 import '../style.css';
 
@@ -36,7 +37,9 @@ for (const prop in ASSETS_PATH.SOUNDS) {
   loader.add(ASSETS_PATH.SOUNDS[prop]);
 }
 setUpLoaderProgresBar();
-loader.load(setup);
+channel.callbackAfterDataChannelOpened = () => {
+  loader.load(setup);
+};
 
 setUpUI();
 

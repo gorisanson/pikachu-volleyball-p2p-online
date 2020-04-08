@@ -357,8 +357,7 @@ function startGameAfterPingTest() {
       console.log(
         `average ping: ${avg} ms, ping list: ${pingTestManager.pingMesurementArray}`
       );
-      printLog(`Average ping: ${avg} ms`);
-      printLog(`The game will start in 5 seconds.`);
+      channel.callbackAfterDataChannelOpened();
       showGameCanvas();
 
       printAvgPing(avg);
