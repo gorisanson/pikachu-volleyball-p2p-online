@@ -1,11 +1,10 @@
 'use strict';
 import * as PIXI from 'pixi.js';
 import 'pixi-sound';
-import { PikachuVolleyballOnline } from './pikavolley_online.js';
-import { setUpUI } from './ui_online.js';
+import { myKeyboard, PikachuVolleyballOnline } from './pikavolley_online.js';
 import { ASSETS_PATH } from './offline_version_js/assets_path.js';
+import { setUpUI } from './ui_online.js';
 import { channel } from './data_channel.js';
-import { myKeyboard } from './pikavolley_online.js';
 
 const TEXTURES = ASSETS_PATH.TEXTURES;
 TEXTURES.WITH_COMPUTER = TEXTURES.WITH_FRIEND;
@@ -36,13 +35,19 @@ loader.add(ASSETS_PATH.SPRITE_SHEET);
 for (const prop in ASSETS_PATH.SOUNDS) {
   loader.add(ASSETS_PATH.SOUNDS[prop]);
 }
-setUpForLoader();
+setUpLoaderProgresBar();
+
+channel.callbackAfterDataChannelOpened = () => {
+  document.getElementById('loading-box').classList.remove('hidden');
+  myKeyboard.subscribe();
+  loader.load(setup);
+};
 setUpUI();
 
 /**
- * Set up for the asset loading.
+ * Set up the loader progress bar.
  */
-function setUpForLoader() {
+function setUpLoaderProgresBar() {
   const loadingBox = document.getElementById('loading-box');
   const progressBar = document.getElementById('progress-bar');
   loader.on('progress', () => {
@@ -53,11 +58,6 @@ function setUpForLoader() {
       loadingBox.classList.add('hidden');
     }
   });
-  channel.callbackAfterDataChannelOpened = () => {
-    myKeyboard.subscribe();
-    loadingBox.classList.remove('hidden');
-    loader.load(setup);
-  };
 }
 
 function setup() {

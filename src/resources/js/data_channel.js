@@ -11,10 +11,11 @@
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import { firebaseConfig } from './firebase_config.js';
+import { generatePushID } from './generate_pushid.js';
 import seedrandom from 'seedrandom';
 import { setCustomRng } from './offline_version_js/rand.js';
-import { PikaUserInputWithSync } from './pika_keyboard_online.js';
 import { mod, isInModRange } from './mod.js';
+import { PikaUserInputWithSync } from './pika_keyboard_online.js';
 import {
   printCurrentRoomID,
   getJoinRoomID,
@@ -22,7 +23,6 @@ import {
   enableMessageBtns,
   showGameCanvas,
 } from './ui_online.js';
-import { generatePushID } from './generate_pushid.js';
 import {
   setChatRngs,
   displayMyChatMessage,
@@ -34,6 +34,7 @@ firebase.initializeApp(firebaseConfig);
 export const channel = {
   isOpen: false,
   amICreatedRoom: false,
+  amIPlayer2: null, // set from pikavolley_online.js
 
   /** @type {PikaUserInputWithSync[]} */
   peerInputQueue: [],
@@ -46,10 +47,13 @@ export const channel = {
   },
 
   callbackAfterDataChannelOpened: null,
-  callbackWhenReceivePeerInput: null,
+  callbackAfterPeerInputQueueReceived: null,
+};
 
-  // TODO: refactor this.... it is used on chat.js....
-  amIPlayer2: null, // received from pikavolley_online
+const pingTestManager = {
+  pingSentTimeArray: new Array(5),
+  receivedPingResponseNumber: 0,
+  pingMesurementArray: [],
 };
 
 const chatManager = {
@@ -71,7 +75,6 @@ const chatManager = {
   },
 };
 
-// DEfault configuration - Change these if you have a different STUN or TURN server.
 const configuration = {
   iceServers: [
     {
@@ -86,10 +89,6 @@ const configuration = {
 let peerConnection = null;
 let dataChannel = null;
 let roomId = null;
-
-let pingReceivedNumber = 0;
-const pingSentTimeArray = new Array(5);
-const pingArray = [];
 
 export async function createRoom() {
   channel.amICreatedRoom = true;
@@ -352,9 +351,14 @@ function startGameAfterPingTest() {
   const intervalID = setInterval(() => {
     if (n === 5) {
       window.clearInterval(intervalID);
-      const sum = pingArray.reduce((acc, val) => acc + val, 0);
-      const avg = sum / pingArray.length;
-      console.log(`average ping: ${avg} ms, ping list: ${pingArray}`);
+      const sum = pingTestManager.pingMesurementArray.reduce(
+        (acc, val) => acc + val,
+        0
+      );
+      const avg = sum / pingTestManager.pingMesurementArray.length;
+      console.log(
+        `average ping: ${avg} ms, ping list: ${pingTestManager.pingMesurementArray}`
+      );
       printLog(`Average ping: ${avg} ms`);
       printLog(`The game will start in 5 seconds.`);
       setTimeout(() => {
@@ -364,7 +368,7 @@ function startGameAfterPingTest() {
       }, 5000);
       return;
     }
-    pingSentTimeArray[n] = Date.now();
+    pingTestManager.pingSentTimeArray[n] = Date.now();
     dataChannel.send(buffer);
     printLog('.');
     n++;
@@ -381,8 +385,13 @@ function respondToPingTest(data) {
     console.log('respond to ping');
     dataChannel.send(buffer);
   } else if (dataView.getInt16(0, true) === -2) {
-    pingArray.push(Date.now() - pingSentTimeArray[pingReceivedNumber]);
-    pingReceivedNumber++;
+    pingTestManager.pingMesurementArray.push(
+      Date.now() -
+        pingTestManager.pingSentTimeArray[
+          pingTestManager.receivedPingResponseNumber
+        ]
+    );
+    pingTestManager.receivedPingResponseNumber++;
   }
 }
 
@@ -391,9 +400,9 @@ function recieveFromPeer(event) {
   if (data instanceof ArrayBuffer) {
     if (data.byteLength % 4 === 0 && data.byteLength / 4 <= 11) {
       receiveInputQueueFromPeer(data);
-      if (channel.callbackWhenReceivePeerInput !== null) {
-        const callback = channel.callbackWhenReceivePeerInput;
-        channel.callbackWhenReceivePeerInput = null;
+      if (channel.callbackAfterPeerInputQueueReceived !== null) {
+        const callback = channel.callbackAfterPeerInputQueueReceived;
+        channel.callbackAfterPeerInputQueueReceived = null;
         callback();
         console.log('callback!');
       }
