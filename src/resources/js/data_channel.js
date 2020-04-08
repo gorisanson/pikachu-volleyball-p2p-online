@@ -413,7 +413,6 @@ function recieveFromPeer(event) {
         const callback = channel.callbackAfterPeerInputQueueReceived;
         channel.callbackAfterPeerInputQueueReceived = null;
         callback();
-        console.log('callback!');
       }
     } else if (data.byteLength === 1) {
       receiveChatMessageAckFromPeer(data);
