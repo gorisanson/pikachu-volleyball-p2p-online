@@ -38,8 +38,7 @@ module.exports = {
       { from: 'src/index.html', to: 'index.html' },
     ]),
     new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css',
-      chunkFilename: 'chunk.[name].[contenthash].css',
+      chunkFilename: '[name].[contenthash].css',
     }),
     new HtmlWebpackPlugin({
       template: 'src/en/index.html',
