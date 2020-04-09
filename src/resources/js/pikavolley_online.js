@@ -143,6 +143,10 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     this.physics.player2.isComputer = false;
     this.state();
 
+    // window.setTimeout(callback, 0) is used because it puts
+    // the callback to the message queue of Javascript runtime event loop,
+    // so the callback does not stack upon the stack of the caller function and
+    // also does not block if the callbacks are called a bunch in a row.
     if (this.peerOnlineKeyboard.inputQueue.length > 1) {
       if (this.myOnlineKeyboard.inputQueue.length > 1) {
         window.setTimeout(this.gameLoopFromGettingPeerInput.bind(this), 0);
