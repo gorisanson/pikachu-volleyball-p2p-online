@@ -162,13 +162,18 @@ canvas {
 #create-btn,
 #join-room-id,
 #join-btn {
-  font-size: calc(0.8 * var(--font-size));
   width: 100%;
   height: var(--btn-height);
 }
 #join-room-id,
 #create-btn {
   grid-column-start: 1;
+}
+#create-btn,
+#join-btn,
+#send-btn,
+#chat-open-btn {
+  font-size: calc(0.8 * var(--font-size));
 }
 #created-room-id-container,
 #join-room-id,
@@ -310,4 +315,4 @@ button.btn-in-box {
 }
 
 
-/*# sourceMappingURL=main.3109774bd1f220bb7826.css.map*/
+/*# sourceMappingURL=main.b3eac782ea8f1f7df5de.css.map*/
