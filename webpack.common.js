@@ -34,7 +34,6 @@ module.exports = {
         context: 'src/',
         from: 'resources/assets/**/*.+(json|png|mp3|wav)',
       },
-      { from: 'src/resources/style.css', to: 'resources/style.css' },
       { from: 'src/index.html', to: 'index.html' },
     ]),
     new MiniCssExtractPlugin({

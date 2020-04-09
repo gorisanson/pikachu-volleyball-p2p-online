@@ -218,19 +218,6 @@ export async function closeAndCleaning() {
     // eslint-disable-next-line no-undef
     const db = firebase.firestore();
     const roomRef = db.collection('rooms').doc(roomId);
-
-    // TODO: how can I do this properly?
-    // const answererCandidates = await roomRef.collection('answererCandidates').get();
-    // console.log('calleCandidates', answererCandidates);
-    // answererCandidates.forEach(candidate => {
-    //   console.log(candidate);
-    //   candidate.delete();
-    // });
-    // const offerorCandidates = await roomRef.collection('offerorCandidates').get();
-    // console.log('offerorCandidates', offerorCandidates);
-    // offerorCandidates.forEach(candidate => {
-    //   candidate.delete();
-    // });
     await roomRef.delete();
     console.log('did room delete!');
   }
@@ -370,8 +357,7 @@ function startGameAfterPingTest() {
       console.log(
         `average ping: ${avg} ms, ping list: ${pingTestManager.pingMesurementArray}`
       );
-      printLog(`Average ping: ${avg} ms`);
-      printLog(`The game will start in 5 seconds.`);
+      channel.callbackAfterDataChannelOpened();
       showGameCanvas();
 
       printAvgPing(avg);
@@ -426,7 +412,6 @@ function recieveFromPeer(event) {
         const callback = channel.callbackAfterPeerInputQueueReceived;
         channel.callbackAfterPeerInputQueueReceived = null;
         callback();
-        console.log('callback!');
       }
     } else if (data.byteLength === 1) {
       receiveChatMessageAckFromPeer(data);

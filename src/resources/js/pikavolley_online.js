@@ -151,10 +151,8 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     if (this.peerOnlineKeyboard.inputQueue.length > 1) {
       if (this.myOnlineKeyboard.inputQueue.length > 1) {
         this.gameLoopFromGettingPeerInput();
-        console.log('hehe');
       } else {
         this.gameLoop();
-        console.log('hehe2');
       }
     }
   }

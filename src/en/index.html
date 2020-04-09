@@ -66,9 +66,9 @@
         <p class="release-date">
           Release Date: 2020-04-08
         </p>
-        <!-- <p class="last-updated">
-              Last Updated: 2020-04-08
-            </p> -->
+        <p class="last-updated">
+          Last Updated: 2020-04-09
+        </p>
       </div>
       <div id="about-box-content">
         <div>
@@ -142,7 +142,8 @@
           </div>
         </div>
         <div id="room-id-with-join-btn">
-          <input type="text" id="join-room-id" />
+          <label for="join-room-id">Room ID to join</label>
+          <input type="text" id="join-room-id" maxlength="30" />
           <button type="button" id="join-btn">join room</button>
         </div>
       </div>
@@ -186,7 +187,7 @@
       </div>
       <div id="chat-input-here">
         <div id="chat-input-and-send-btn-container" class="hidden">
-          <input type="text" id="chat-input" />
+          <input type="text" id="chat-input" maxlength="50" />
           <button type="button" id="send-btn">send (esc)</button>
         </div>
         <button id="chat-open-btn">Chat (esc)</button>
