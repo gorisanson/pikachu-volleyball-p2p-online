@@ -38,7 +38,8 @@ html {
 * {
   font-family: Arial, Helvetica, sans-serif;
 }
-#flex-container {
+#flex-container,
+#before-connection {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -51,10 +52,27 @@ html {
   margin-right: auto;
 }
 #before-connection {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: var(--canvas-width);
+  align-items: center;
+  justify-content: flex-start;
+  height: auto;
+  font-size: var(--font-size);
+  padding-left: var(--font-size);
+  padding-right: var(--font-size);
+  overflow: visible;
+  text-align: left;
+  margin-bottom: 50vh;
+}
+#about-box-head {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  font-size: var(--font-size);
+  text-align: center;
+  visibility: visible;
+  overflow: visible;
 }
 #flex-container.hidden,
 #before-connection.hidden {
@@ -117,7 +135,7 @@ canvas {
 #room-id-with-join-btn,
 #create-btn-with-created-room-id {
   display: grid;
-  width: var(--canvas-width);
+  width: 100%;
   height: 100%;
   z-index: 1;
   grid-template-columns: auto var(--btn-width);
@@ -188,29 +206,8 @@ canvas {
   display: flex;
   align-items: center;
 }
-#about-box-head,
-#about-box-content {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-  width: var(--canvas-width);
-  font-size: var(--font-size);
-  padding-left: var(--font-size);
-  padding-right: var(--font-size);
-  text-align: center;
-  visibility: visible;
-  overflow: visible;
-}
-#about-box-content {
-  justify-content: flex-start;
-  height: auto;
-  text-align: left;
-  margin-top: calc(1.5 * var(--font-size));
-  margin-bottom: calc(1.5 * var(--font-size));
-}
 #connection-log-container {
+  width: 100%;
   font-size: var(--font-size);
 }
 p.languages,
@@ -313,6 +310,9 @@ button.btn-in-box {
   text-decoration: none;
   border-radius: 10px;
 }
+img.controls {
+  max-width: 100%;
+}
 
 
-/*# sourceMappingURL=main.b3eac782ea8f1f7df5de.css.map*/
+/*# sourceMappingURL=main.c205851508a9feb7a666.css.map*/
