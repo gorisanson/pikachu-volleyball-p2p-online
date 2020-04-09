@@ -386,7 +386,6 @@ function startGameAfterPingTest() {
 
 function respondToPingTest(data) {
   const dataView = new DataView(data);
-  // TODO: clean ping test to arraybuffer with length 1?
   if (dataView.getInt16(0, true) === -1) {
     const buffer = new ArrayBuffer(2);
     const view = new DataView(buffer);
