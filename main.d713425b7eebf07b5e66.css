@@ -45,22 +45,21 @@ html {
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: center;
-  align-items: flex-start;
+  align-items: stretch;
   width: var(--canvas-width);
   height: 100vh;
   margin-left: auto;
   margin-right: auto;
 }
 #before-connection {
-  align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
+  align-items: stretch;
   height: auto;
   font-size: var(--font-size);
   padding-left: var(--font-size);
   padding-right: var(--font-size);
   overflow: visible;
   text-align: left;
-  margin-bottom: 50vh;
 }
 #about-box-head {
   display: flex;
@@ -156,6 +155,8 @@ canvas {
 }
 #send-btn {
   grid-column-start: 2;
+  border-radius: 0;
+  border-width: 1px;
 }
 #chat-open-btn {
   position: absolute;
@@ -163,6 +164,8 @@ canvas {
   height: 100%;
   width: 100%;
   text-align: center;
+  border-radius: 0;
+  border-width: 1px;
 }
 #chat-input-and-send-btn-container {
   position: absolute;
@@ -207,6 +210,7 @@ canvas {
   align-items: center;
 }
 #connection-log-container {
+  min-height: 50vh;
   width: 100%;
   font-size: var(--font-size);
 }
@@ -240,7 +244,7 @@ span.margin-left-right {
 .fade-in-box {
   position: absolute;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
@@ -296,6 +300,26 @@ span.margin-left-right {
   height: 100%;
   background-color: white;
 }
+button {
+  display: inline-block;
+  border: 2px solid rgb(50, 50, 50);
+  margin: 0;
+  padding: 0;
+  background-color: rbg(210, 210, 210);
+  background-image: linear-gradient(rgb(250, 250, 250), rgb(230, 230, 230));
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+}
+input {
+  border-color: black;
+}
+button:disabled,
+input:disabled {
+  border-color: rgb(200, 200, 200);
+  color: rgb(200, 200, 200);
+}
 button.btn-in-box {
   display: block;
   height: calc(2 * var(--font-size));
@@ -304,6 +328,7 @@ button.btn-in-box {
   margin: 0 auto;
   padding: 0;
   background-color: rgb(50, 50, 50);
+  background-image: none;
   color: white;
   font-size: var(--font-size);
   text-align: center;
@@ -315,4 +340,4 @@ img.controls {
 }
 
 
-/*# sourceMappingURL=main.c205851508a9feb7a666.css.map*/
+/*# sourceMappingURL=main.d713425b7eebf07b5e66.css.map*/
