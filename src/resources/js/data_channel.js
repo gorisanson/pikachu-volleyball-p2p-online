@@ -15,7 +15,10 @@ import { generatePushID } from './generate_pushid.js';
 import seedrandom from 'seedrandom';
 import { setCustomRng } from './offline_version_js/rand.js';
 import { mod, isInModRange } from './mod.js';
-import { PikaUserInputWithSync } from './pika_keyboard_online.js';
+import {
+  inputQueueMaxLength,
+  PikaUserInputWithSync,
+} from './pika_keyboard_online.js';
 import {
   printCurrentRoomID,
   getJoinRoomID,
@@ -263,7 +266,7 @@ function receiveInputQueueFromPeer(data) {
         isInModRange(
           syncCounter,
           channel.peerInputQueue[0].syncCounter,
-          channel.peerInputQueue[0].syncCounter + 10,
+          channel.peerInputQueue[0].syncCounter + inputQueueMaxLength,
           256
         ))
     ) {
@@ -406,7 +409,10 @@ function respondToPingTest(data) {
 function recieveFromPeer(event) {
   const data = event.data;
   if (data instanceof ArrayBuffer) {
-    if (data.byteLength % 4 === 0 && data.byteLength / 4 <= 11) {
+    if (
+      data.byteLength % 4 === 0 &&
+      data.byteLength / 4 <= inputQueueMaxLength + 1
+    ) {
       receiveInputQueueFromPeer(data);
       if (channel.callbackAfterPeerInputQueueReceived !== null) {
         const callback = channel.callbackAfterPeerInputQueueReceived;

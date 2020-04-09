@@ -5,6 +5,9 @@ import { PikaUserInput } from './offline_version_js/physics.js';
 import { sendInputQueueToPeer } from './data_channel.js';
 import { mod, isInModRange } from './mod.js';
 
+/** @constant inputQueueMaxLength communicated input queue (buffer) length, rigorously, the actual queue max length is (inputQueueMaxLength + 1) */
+export const inputQueueMaxLength = 50;
+
 export class MyKeyboard {
   /**
    * Create a keyboard used for game controller
@@ -68,7 +71,7 @@ export class MyKeyboard {
       isInModRange(
         this.syncCounter,
         this.inputQueue[0].syncCounter,
-        this.inputQueue[0].syncCounter + 10,
+        this.inputQueue[0].syncCounter + inputQueueMaxLength,
         256
       )
     ) {
