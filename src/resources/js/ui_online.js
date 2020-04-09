@@ -53,14 +53,28 @@ export function setUpUI() {
   chatOpenBtn.addEventListener('click', chatOpenBtnClicked);
   sendBtn.addEventListener('click', sendBtnClicked);
   window.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') {
+    if (event.code === 'Escape') {
       if (!chatOpenBtn.classList.contains('hidden')) {
         chatOpenBtn.click();
-        // @ts-ignore
       } else {
-        sendBtn.click();
+        // @ts-ignore
+        chatInput.value = '';
+        // This setTimeout is for Korean input weired thing which happens on Chrome..
+        // When Korean character typed on input element and press some key (for example, esc key),
+        // the key event occur twice on Chrome browser. (It was not the case on Firefox or Safari.)
+        // This setTimeout prevent the event occur twice.
+        window.setTimeout(() => sendBtn.click(), 0);
       }
       event.preventDefault();
+    } else if (event.code === 'Enter') {
+      event.preventDefault();
+    }
+  });
+  window.addEventListener('keyup', (event) => {
+    if (event.code === 'Enter') {
+      if (!chatInputAndSendBtnContainer.classList.contains('hidden')) {
+        window.setTimeout(() => sendBtn.click(), 0);
+      }
     }
   });
 
@@ -82,7 +96,7 @@ export function setUpUI() {
     }
   });
 
-  disableMessageBtns();
+  disableChatBtns();
 }
 
 export function printCurrentRoomID(roomId) {
@@ -140,16 +154,12 @@ export function noticeDisconnected() {
   document.getElementById('notice-disconnected').classList.remove('hidden');
 }
 
-export function enableMessageBtns() {
-  // @ts-ignore
-  chatInput.disabled = false;
+export function enableChatOpenBtn() {
   // @ts-ignore
   chatOpenBtn.disabled = false;
-  // @ts-ignore
-  sendBtn.disabled = false;
 }
 
-function disableMessageBtns() {
+function disableChatBtns() {
   // @ts-ignore
   chatInput.disabled = true;
   // @ts-ignore
@@ -159,27 +169,31 @@ function disableMessageBtns() {
 }
 
 function chatOpenBtnClicked() {
+  // @ts-ignore
+  chatOpenBtn.disabled = true;
+  // @ts-ignore
+  chatInput.disabled = false;
+  // @ts-ignore
+  sendBtn.disabled = false;
+  myKeyboard.unsubscribe();
   if (!chatOpenBtn.classList.contains('hidden')) {
     chatOpenBtn.classList.add('hidden');
   }
   chatInputAndSendBtnContainer.classList.remove('hidden');
   chatInput.focus({ preventScroll: true });
-  myKeyboard.unsubscribe();
 }
 
 function sendBtnClicked() {
+  disableChatBtns();
   myKeyboard.subscribe();
-  // @ts-ignore
-  disableMessageBtns();
-  chatOpenBtn.classList.remove('hidden');
   if (!chatInputAndSendBtnContainer.classList.contains('hidden')) {
     chatInputAndSendBtnContainer.classList.add('hidden');
   }
+  chatOpenBtn.classList.remove('hidden');
   // @ts-ignore
   const message = chatInput.value;
   if (message === '') {
-    // @ts-ignore
-    enableMessageBtns();
+    enableChatOpenBtn();
     return;
   }
   // @ts-ignore

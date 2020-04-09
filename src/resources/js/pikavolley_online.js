@@ -39,10 +39,7 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     this._amIPlayer2 = false;
     this.keyboardArray = [this.myOnlineKeyboard, this.peerOnlineKeyboard];
     this._syncCounter = 0;
-    this.noInputFrameTotal.menu = 0;
-    this.noInputFrameTotal = {
-      menu: Infinity,
-    };
+    this.noInputFrameTotal.menu = Infinity;
   }
 
   /**
