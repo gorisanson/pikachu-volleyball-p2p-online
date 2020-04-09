@@ -121,7 +121,6 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     }
     const succeedTest = this.myOnlineKeyboard.getInput(this.syncCounter);
     if (!succeedTest) {
-      console.log('Something is wrong.....');
       return;
     }
     this.syncCounter++;
@@ -146,9 +145,9 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
 
     if (this.peerOnlineKeyboard.inputQueue.length > 1) {
       if (this.myOnlineKeyboard.inputQueue.length > 1) {
-        this.gameLoopFromGettingPeerInput();
+        window.setTimeout(this.gameLoopFromGettingPeerInput.bind(this), 0);
       } else {
-        this.gameLoop();
+        window.setTimeout(this.gameLoop.bind(this), 0);
       }
     }
   }
