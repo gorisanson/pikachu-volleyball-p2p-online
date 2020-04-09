@@ -117,7 +117,6 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
       channel.callbackAfterPeerInputQueueReceived = this.gameLoopFromGettingPeerInput.bind(
         this
       );
-      // TODO: resend....
       return;
     }
     const succeedTest = this.myOnlineKeyboard.getInput(this.syncCounter);
