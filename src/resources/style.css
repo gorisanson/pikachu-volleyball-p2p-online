@@ -162,13 +162,18 @@ canvas {
 #create-btn,
 #join-room-id,
 #join-btn {
-  font-size: calc(0.8 * var(--font-size));
   width: 100%;
   height: var(--btn-height);
 }
 #join-room-id,
 #create-btn {
   grid-column-start: 1;
+}
+#create-btn,
+#join-btn,
+#send-btn,
+#chat-open-btn {
+  font-size: calc(0.8 * var(--font-size));
 }
 #created-room-id-container,
 #join-room-id,

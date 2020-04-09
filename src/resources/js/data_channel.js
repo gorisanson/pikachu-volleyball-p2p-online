@@ -20,7 +20,7 @@ import {
   printCurrentRoomID,
   getJoinRoomID,
   noticeDisconnected,
-  enableMessageBtns,
+  enableChatOpenBtn,
   showGameCanvas,
   hideWatingPeerAssetsLoadingBox,
   hidePingBox,
@@ -309,7 +309,7 @@ function receiveChatMessageAckFromPeer(data) {
     chatManager.syncCounter++;
     clearInterval(chatManager.resendIntervalID);
     displayMyChatMessage(chatManager.pendingChatMessage);
-    enableMessageBtns();
+    enableChatOpenBtn();
   }
 }
 
@@ -359,6 +359,7 @@ function startGameAfterPingTest() {
       );
       channel.callbackAfterDataChannelOpened();
       showGameCanvas();
+      enableChatOpenBtn();
 
       printAvgPing(avg);
 
@@ -411,7 +412,7 @@ function recieveFromPeer(event) {
       if (channel.callbackAfterPeerInputQueueReceived !== null) {
         const callback = channel.callbackAfterPeerInputQueueReceived;
         channel.callbackAfterPeerInputQueueReceived = null;
-        callback();
+        window.setTimeout(callback, 0);
       }
     } else if (data.byteLength === 1) {
       receiveChatMessageAckFromPeer(data);
@@ -439,7 +440,6 @@ function dataChannelOpened() {
   const rngForPlayer2Chat = seedrandom.alea(roomId.slice(15));
   setChatRngs(rngForPlayer1Chat, rngForPlayer2Chat);
 
-  enableMessageBtns();
   startGameAfterPingTest();
 }
 

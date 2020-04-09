@@ -39,10 +39,7 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     this._amIPlayer2 = false;
     this.keyboardArray = [this.myOnlineKeyboard, this.peerOnlineKeyboard];
     this._syncCounter = 0;
-    this.noInputFrameTotal.menu = 0;
-    this.noInputFrameTotal = {
-      menu: Infinity,
-    };
+    this.noInputFrameTotal.menu = Infinity;
   }
 
   /**
@@ -120,12 +117,10 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
       channel.callbackAfterPeerInputQueueReceived = this.gameLoopFromGettingPeerInput.bind(
         this
       );
-      // TODO: resend....
       return;
     }
     const succeedTest = this.myOnlineKeyboard.getInput(this.syncCounter);
     if (!succeedTest) {
-      console.log('Something is wrong.....');
       return;
     }
     this.syncCounter++;
@@ -148,11 +143,15 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     this.physics.player2.isComputer = false;
     this.state();
 
+    // window.setTimeout(callback, 0) is used because it puts
+    // the callback to the message queue of Javascript runtime event loop,
+    // so the callback does not stack upon the stack of the caller function and
+    // also does not block if the callbacks are called a bunch in a row.
     if (this.peerOnlineKeyboard.inputQueue.length > 1) {
       if (this.myOnlineKeyboard.inputQueue.length > 1) {
-        this.gameLoopFromGettingPeerInput();
+        window.setTimeout(this.gameLoopFromGettingPeerInput.bind(this), 0);
       } else {
-        this.gameLoop();
+        window.setTimeout(this.gameLoop.bind(this), 0);
       }
     }
   }
