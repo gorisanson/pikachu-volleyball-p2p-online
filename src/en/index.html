@@ -61,7 +61,7 @@
             target="_blank"
             rel="noopener"
             >GitHub</a
-          >
+          >.
         </p>
         <p class="release-date">
           Release Date: 2020-04-08
@@ -70,78 +70,76 @@
           Last Updated: 2020-04-09
         </p>
       </div>
-      <div id="about-box-content">
-        <div>
-          <p><span class="thick">How to play online:</span></p>
-          <p>
-            Latest version of the web browser is recommended.
-            <a
-              href="https://caniuse.com/#feat=mdn-api_rtcdatachannel"
-              target="_blank"
-              rel="noopener"
-              >Here's the list of the supported browser (indicated by green
-              color).</a
-            >
-            Latest version of iOS Safari is also supported but the list seems to
-            be not updated yet.
-          </p>
-          <p>
-            <span class="thick">Room Creator</span> - Click "create room"
-            button. Then, send the Room ID (via messenger, email or whatever) to
-            the one ("Joiner") you want to play this game online with.
-          </p>
-          <p>
-            <span class="thick">Joiner</span> - Copy and paste the received Room
-            ID into the text input box left of the "join room" button, and click
-            the "join room" button. Then connection process will be started.
-          </p>
-          <p>
-            If the connection is established successfully, the game will be
-            started. If the upper
-            <span class="no-wrap">"2人でぴかちゅ~"</span> is selected, the room
-            creator will play as player 1 (on the left side) and the joiner will
-            play as player 2 (on the right side). If the lower
-            <span class="no-wrap">"2人でぴかちゅ~"</span> is selected, it's the
-            opposite.
-          </p>
-          <p>
-            <span class="thick">Controls:</span> Use the one comfortable for you
-          </p>
-          <p>
-            <img
-              class="controls"
-              src="../resources/assets/images/controls_online.png"
-              alt="game controls"
-            />
-          </p>
-          <p>
-            <span class="thick">Notice:</span> The connection will be
-            established in about 5-10 seconds after the joiner clicked the "join
-            room" button. If the game is not started after the waiting time, it
-            indicates that the connection failed.
-            <a href="https://webrtc.org/" target="_blank" rel="noopener"
-              >WebRTC</a
-            >
-            &mdash; a technology this P2P online version utilizes &mdash; cannot
-            establish a
-            <a
-              href="https://en.wikipedia.org/wiki/Peer-to-peer"
-              target="_blank"
-              rel="noopener"
-              >peer-to-peer</a
-            >
-            connection under the following circumstances.<br />
-            - If you are under a (corporate) firewall which blocks UDP ports<br />
-            - If you are under an
-            <a
-              href="https://en.wikipedia.org/wiki/Network_address_translation#Methods_of_translation"
-              target="_blank"
-              rel="noopener"
-              >symmetric NAT</a
-            ><br />
-            - if you are under 3G, 4G or LTE cellular network
-          </p>
-        </div>
+      <div>
+        <p><span class="thick">How to play online:</span></p>
+        <p>
+          Latest version of the web browser is recommended.
+          <a
+            href="https://caniuse.com/#feat=mdn-api_rtcdatachannel"
+            target="_blank"
+            rel="noopener"
+            >Here's the list of the supported browser (indicated by green
+            color).</a
+          >
+          Latest version of iOS Safari is also supported but the list seems to
+          be not updated yet.
+        </p>
+        <p>
+          <span class="thick">Room Creator</span> - Click "create room" button.
+          Then, send the Room ID (via messenger, email or whatever) to the one
+          ("Joiner") you want to play this game online with.
+        </p>
+        <p>
+          <span class="thick">Joiner</span> - Copy and paste the received Room
+          ID into the text input box left of the "join room" button, and click
+          the "join room" button. Then connection process will be started.
+        </p>
+        <p>
+          If the connection is established successfully, the game will be
+          started. If the upper
+          <span class="no-wrap">"2人でぴかちゅ~"</span> is selected, the room
+          creator will play as player 1 (on the left side) and the joiner will
+          play as player 2 (on the right side). If the lower
+          <span class="no-wrap">"2人でぴかちゅ~"</span> is selected, it's the
+          opposite.
+        </p>
+        <p>
+          <span class="thick">Controls:</span> Use the one comfortable for you
+        </p>
+        <p>
+          <img
+            class="controls"
+            src="../resources/assets/images/controls_online.png"
+            alt="game controls"
+          />
+        </p>
+        <p>
+          <span class="thick">Notice:</span> The connection will be established
+          in about 5-10 seconds after the joiner clicked the "join room" button.
+          If the game is not started after the waiting time, it indicates that
+          the connection failed.
+          <a href="https://webrtc.org/" target="_blank" rel="noopener"
+            >WebRTC</a
+          >
+          &mdash; a technology this P2P online version utilizes &mdash; cannot
+          establish a
+          <a
+            href="https://en.wikipedia.org/wiki/Peer-to-peer"
+            target="_blank"
+            rel="noopener"
+            >peer-to-peer</a
+          >
+          connection under the following circumstances.<br />
+          - If you are under a (corporate) firewall which blocks UDP ports<br />
+          - If you are under an
+          <a
+            href="https://en.wikipedia.org/wiki/Network_address_translation#Methods_of_translation"
+            target="_blank"
+            rel="noopener"
+            >symmetric NAT</a
+          ><br />
+          - if you are under 3G, 4G or LTE cellular network
+        </p>
       </div>
       <div>
         <div id="create-btn-with-created-room-id">
@@ -156,13 +154,12 @@
           <input type="text" id="join-room-id" maxlength="30" />
           <button type="button" id="join-btn">join room</button>
         </div>
-      </div>
-      <div id="current-room"></div>
-      <div id="connection-log-container">
-        <p>
-          <span class="thick">Connection Log:</span>
-        </p>
-        <div id="connection-log" style="white-space: pre-line;"></div>
+        <div id="connection-log-container">
+          <p>
+            <span class="thick">Connection Log:</span>
+          </p>
+          <div id="connection-log" style="white-space: pre-line;"></div>
+        </div>
       </div>
     </div>
     <div id="flex-container" class="hidden">
