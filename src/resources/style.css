@@ -72,6 +72,7 @@ html {
   text-align: center;
   visibility: visible;
   overflow: visible;
+  margin-bottom: calc(1.5 * var(--font-size));
 }
 #flex-container.hidden,
 #before-connection.hidden {
