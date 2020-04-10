@@ -8,7 +8,7 @@
 
 https://gorisanson.github.io/pikachu-volleyball/ko/ 에서 이 피카츄 배구 P2P 온라인을 플레이할 수 있습니다.
 
-<img src="pikachu_volleyball.png" alt="피카츄 배구 게임 이미지" width="648">
+<img src="src/resources/assets/images/screenshot.png" alt="피카츄 배구 게임 스크린샷" width="648">
 
 ## 구조
 
