@@ -230,7 +230,6 @@ p.release-date {
 }
 p.last-updated {
   margin-block-start: 0;
-  margin-block-end: 0;
 }
 span.no-wrap {
   white-space: nowrap;
@@ -336,6 +335,12 @@ button.btn-in-box {
   text-decoration: none;
   border-radius: 10px;
 }
+div.align-center-horizontally {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+img.screenshot,
 img.controls {
   max-width: 100%;
 }

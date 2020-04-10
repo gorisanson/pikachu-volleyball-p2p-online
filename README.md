@@ -8,7 +8,7 @@ Pikachu Volleyball P2P Online is an peer-to-peer online version of the game. You
 
 You can play Pikachu Volleyball P2P online on the website: https://gorisanson.github.io/pikachu-volleyball-p2p-online/en/
 
-<img src="pikachu_volleyball.png" alt="Pikachu Volleyball game image" width="648">
+<img src="src/resources/assets/images/screenshot.png" alt="Pikachu Volleyball game screenshot" width="648">
 
 ## Structure
 
