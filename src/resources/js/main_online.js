@@ -27,9 +27,6 @@ const ticker = new PIXI.Ticker();
 const loader = new PIXI.Loader();
 
 document.querySelector('#game-canvas-container').appendChild(renderer.view);
-ticker.add(() => {
-  renderer.render(stage);
-}, PIXI.UPDATE_PRIORITY.LOW);
 
 renderer.render(stage); // To make the initial canvas painting stable in the Firefox browser.
 loader.add(ASSETS_PATH.SPRITE_SHEET);
@@ -68,6 +65,15 @@ function setup() {
 function start(pikaVolley) {
   ticker.maxFPS = pikaVolley.normalFPS;
   ticker.add(() => {
+    // Redering and gameLoop order is the opposite of
+    // the offline web version (refer: ./offline_version_js/main.js).
+    // It's for the smooth rendering for the online version
+    // which gameLoop can not always succeed right on this "ticker.add"ed code
+    // because of the transfer delay or connection status. (If gameLoop here fails,
+    // it is recovered by the callback gameLoop which is called after peer input received.)
+    // Now the rendering is delayed 40ms (when pikaVolley.normalFPS == 25)
+    // behind gameLoop.
+    renderer.render(stage);
     pikaVolley.gameLoop();
   });
   ticker.start();
