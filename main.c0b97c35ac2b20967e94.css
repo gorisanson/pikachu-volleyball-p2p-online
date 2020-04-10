@@ -101,7 +101,7 @@ canvas {
   top: 50%;
   color: white;
   background-color: transparent;
-  font-size: var(--font-size);
+  font-size: calc(1.5 * var(--font-size));
   visibility: hidden;
   opacity: 0;
   animation-name: fade-inout;
@@ -344,4 +344,4 @@ div.hidden {
 }
 
 
-/*# sourceMappingURL=main.fa070c7a5e00fe949b35.css.map*/
+/*# sourceMappingURL=main.c0b97c35ac2b20967e94.css.map*/
