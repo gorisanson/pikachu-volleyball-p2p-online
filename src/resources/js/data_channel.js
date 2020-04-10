@@ -152,9 +152,7 @@ export async function joinRoom() {
   // @ts-ignore
   roomId = getJoinRoomID();
   if (roomId.length !== 20) {
-    printLog(
-      'The room ID is not in correct form. Please check the entered room ID.'
-    );
+    printLog(document.getElementById('not-valid-room-id-message').textContent);
     return false;
   }
   console.log('Join room: ', roomId);
@@ -166,9 +164,7 @@ export async function joinRoom() {
   const roomSnapshot = await roomRef.get();
   console.log('Got room:', roomSnapshot.exists);
   if (!roomSnapshot.exists) {
-    printLog(
-      'There is no room mathing the ID. Please check the entered room ID.'
-    );
+    printLog(document.getElementById('no-room-matching-meesage').textContent);
     return false;
   }
 

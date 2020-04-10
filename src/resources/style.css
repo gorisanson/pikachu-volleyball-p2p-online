@@ -72,6 +72,7 @@ html {
   text-align: center;
   visibility: visible;
   overflow: visible;
+  margin-bottom: calc(1.5 * var(--font-size));
 }
 #flex-container.hidden,
 #before-connection.hidden {
@@ -100,7 +101,7 @@ canvas {
   top: 50%;
   color: white;
   background-color: transparent;
-  font-size: var(--font-size);
+  font-size: calc(1.5 * var(--font-size));
   visibility: hidden;
   opacity: 0;
   animation-name: fade-inout;
@@ -337,4 +338,7 @@ button.btn-in-box {
 }
 img.controls {
   max-width: 100%;
+}
+div.hidden {
+  display: none;
 }
