@@ -338,3 +338,6 @@ button.btn-in-box {
 img.controls {
   max-width: 100%;
 }
+div.hidden {
+  display: none;
+}
