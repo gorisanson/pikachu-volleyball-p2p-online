@@ -5,8 +5,8 @@ import { PikaUserInput } from './offline_version_js/physics.js';
 import { sendInputQueueToPeer } from './data_channel.js';
 import { mod, isInModRange } from './mod.js';
 
-/** @constant inputQueueMaxLength communicated input queue (buffer) length, rigorously, the actual queue max length is (inputQueueMaxLength + 1) */
-export const inputQueueMaxLength = 50;
+/** @constant @type {number} communicated input queue buffer length */
+export const bufferLength = 25;
 
 export class MyKeyboard {
   /**
@@ -65,13 +65,13 @@ export class MyKeyboard {
    *
    *
    */
-  getInputIfNeededAndSendToPeer() {
+  getInputIfNeededAndSendToPeer(syncCounter) {
     if (
       this.inputQueue.length === 0 ||
       isInModRange(
         this.syncCounter,
-        this.inputQueue[0].syncCounter,
-        this.inputQueue[0].syncCounter + inputQueueMaxLength,
+        syncCounter,
+        syncCounter + bufferLength - 1,
         256
       )
     ) {
@@ -115,34 +115,85 @@ export class OnlineKeyboard {
     this.yDirection = 0;
     this.powerHit = 0;
     this.inputQueue = inputQueue;
+    this.isHistoryBufferFilled = false;
   }
 
   /**
+   * Check whether an input which corrsponds syncConter is on inputQueue
    * @param {number} syncCounter
    * @return {boolean} get input from peer succeed?
    */
-  getInput(syncCounter) {
+  isInputOnQueue(syncCounter) {
     if (this.inputQueue.length === 0) {
       return false;
     }
-    // Keep the previous input at the head of queue so that
-    // the previous input can be resended if lost.
-    let input;
-    if (this.inputQueue[0].syncCounter === syncCounter) {
-      input = this.inputQueue[0];
-    } else if (
-      this.inputQueue.length > 1 &&
-      this.inputQueue[1].syncCounter === syncCounter
-    ) {
-      input = this.inputQueue[1];
-      this.inputQueue.shift();
-    } else {
+    if (this.isHistoryBufferFilled) {
+      if (this.inputQueue.length > bufferLength) {
+        if (this.inputQueue[bufferLength].syncCounter !== syncCounter) {
+          console.log('Something in OnlineKeyboard is wrong...');
+          return false;
+        }
+        return true;
+      }
       return false;
+    } else {
+      for (let i = 0; i < this.inputQueue.length; i++) {
+        if (this.inputQueue[i].syncCounter === syncCounter) {
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+
+  /**
+   * It should be called after checking the isInputOnQueue return value
+   * is true. The input gotten by this method should be used, not discarded,
+   * since this method does this.inputQueue.shift if it is needed.
+   * @param {number} syncCounter
+   */
+  getInput(syncCounter) {
+    if (this.inputQueue.length === 0) {
+      console.log('Something in getInput method is wrong...0');
+      return;
+    }
+    // Keep the history buffers (previous inputs) at the head of queue so that
+    // the history buffers can be resended if lost.
+    // The future buffers (now and upcomming inputs) and the history buffers
+    // should have same length (bufferLength) to keep the sync connection.
+    // So the maximum length of this.inputQueue is (2 * bufferLength).
+    let input = null;
+    if (this.isHistoryBufferFilled) {
+      if (this.inputQueue.length > bufferLength) {
+        input = this.inputQueue[bufferLength];
+        if (input.syncCounter !== syncCounter) {
+          console.log('Something in getInput method is wrong...1');
+          return;
+        }
+        this.inputQueue.shift();
+      } else {
+        console.log('Something in getInput method is wrong...2');
+        return;
+      }
+    } else {
+      for (let i = 0; i < this.inputQueue.length; i++) {
+        if (this.inputQueue[i].syncCounter === syncCounter) {
+          input = this.inputQueue[i];
+          if (i === bufferLength) {
+            this.isHistoryBufferFilled = true;
+            this.inputQueue.shift();
+          }
+          break;
+        }
+      }
+    }
+    if (input === null) {
+      console.log('Something in getInput method is wrong...3');
+      return;
     }
     this.xDirection = input.xDirection;
     this.yDirection = input.yDirection;
     this.powerHit = input.powerHit;
-    return true;
   }
 }
 

@@ -1,6 +1,10 @@
 'ues strics';
 import { PikachuVolleyball } from './offline_version_js/pikavolley.js';
-import { MyKeyboard, OnlineKeyboard } from './pika_keyboard_online.js';
+import {
+  bufferLength,
+  MyKeyboard,
+  OnlineKeyboard,
+} from './pika_keyboard_online.js';
 import { channel } from './data_channel';
 import { mod } from './mod.js';
 
@@ -107,22 +111,28 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     // for example, if peer use other tap on the browser
     // so peer's game pause while my game goes on slow-mo.
     // This broken frame sync results into different game state between two peers.
-    this.myKeyboard.getInputIfNeededAndSendToPeer();
+    this.myKeyboard.getInputIfNeededAndSendToPeer(this.syncCounter);
     this.gameLoopFromGettingPeerInput();
   }
 
   gameLoopFromGettingPeerInput() {
-    const succeed = this.peerOnlineKeyboard.getInput(this.syncCounter);
-    if (!succeed) {
+    const checkForPeerInputQueue = this.peerOnlineKeyboard.isInputOnQueue(
+      this.syncCounter
+    );
+    if (!checkForPeerInputQueue) {
       channel.callbackAfterPeerInputQueueReceived = this.gameLoopFromGettingPeerInput.bind(
         this
       );
       return;
     }
-    const succeedTest = this.myOnlineKeyboard.getInput(this.syncCounter);
-    if (!succeedTest) {
+    const checkForMyInputQueue = this.myOnlineKeyboard.isInputOnQueue(
+      this.syncCounter
+    );
+    if (!checkForMyInputQueue) {
       return;
     }
+    this.peerOnlineKeyboard.getInput(this.syncCounter);
+    this.myOnlineKeyboard.getInput(this.syncCounter);
     this.syncCounter++;
 
     // slow-mo effect
@@ -147,8 +157,8 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     // the callback to the message queue of Javascript runtime event loop,
     // so the callback does not stack upon the stack of the caller function and
     // also does not block if the callbacks are called a bunch in a row.
-    if (this.peerOnlineKeyboard.inputQueue.length > 1) {
-      if (this.myOnlineKeyboard.inputQueue.length > 1) {
+    if (this.peerOnlineKeyboard.inputQueue.length > bufferLength) {
+      if (this.myOnlineKeyboard.inputQueue.length > bufferLength) {
         window.setTimeout(this.gameLoopFromGettingPeerInput.bind(this), 0);
       } else {
         window.setTimeout(this.gameLoop.bind(this), 0);
