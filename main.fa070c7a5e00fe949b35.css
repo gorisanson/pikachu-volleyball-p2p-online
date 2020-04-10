@@ -72,6 +72,7 @@ html {
   text-align: center;
   visibility: visible;
   overflow: visible;
+  margin-bottom: calc(1.5 * var(--font-size));
 }
 #flex-container.hidden,
 #before-connection.hidden {
@@ -343,4 +344,4 @@ div.hidden {
 }
 
 
-/*# sourceMappingURL=main.c559f76ca9268d0acbc1.css.map*/
+/*# sourceMappingURL=main.fa070c7a5e00fe949b35.css.map*/
