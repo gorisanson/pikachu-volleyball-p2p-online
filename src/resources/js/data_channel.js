@@ -1,11 +1,12 @@
-/*
- * references
+/**
+ * Manages a data channel between the two peers.
+ *
+ * A large portion (mainly, {@link createRoom}, {@link joinRoom}, {@link registerPeerConnectionListeners} and {@link collectIceCandidates} functions)
+ * of the code in this module is copied (or edited after copied) from the links below:
  * https://github.com/webrtc/FirebaseRTC
  * https://webrtc.org/getting-started/firebase-rtc-codelab
  * https://webrtc.org/getting-started/data-channels
- *
  */
-
 'use strict;';
 
 import * as firebase from 'firebase/app';
