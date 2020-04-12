@@ -244,14 +244,34 @@ export async function closeAndCleaning() {
  * @param {PikaUserInputWithSync[]} inputQueue
  */
 export function sendInputQueueToPeer(inputQueue) {
-  const buffer = new ArrayBuffer(4 * inputQueue.length);
+  const buffer = new ArrayBuffer(2 * inputQueue.length);
   const dataView = new DataView(buffer);
   for (let i = 0; i < inputQueue.length; i++) {
     const input = inputQueue[i];
-    dataView.setUint8(4 * i + 0, input.syncCounter);
-    dataView.setUint8(4 * i + 1, input.xDirection);
-    dataView.setUint8(4 * i + 2, input.yDirection);
-    dataView.setUint8(4 * i + 3, input.powerHit);
+    dataView.setUint8(2 * i + 0, input.syncCounter);
+    let byte = 0;
+    switch (input.xDirection) {
+      case 1:
+        byte += 1;
+        break;
+      case -1:
+        byte += (1 << 1) + 1;
+        break;
+    }
+    switch (input.yDirection) {
+      case 1:
+        byte += 1 << 2;
+        break;
+      case -1:
+        byte += (1 << 3) + (1 << 2);
+        break;
+    }
+    switch (input.powerHit) {
+      case 1:
+        byte += 1 << 4;
+        break;
+    }
+    dataView.setUint8(2 * i + 1, byte);
   }
   dataChannel.send(buffer);
 }
@@ -268,8 +288,8 @@ function receiveInputQueueFromPeer(data) {
 
   const dataView = new DataView(data);
 
-  for (let i = 0; i < data.byteLength / 4; i++) {
-    const syncCounter = dataView.getUint8(i * 4 + 0);
+  for (let i = 0; i < data.byteLength / 2; i++) {
+    const syncCounter = dataView.getUint8(2 * i + 0);
     // isInModeRange in the below if statement is
     // to prevent overflow of the queue by a corrupted peer code
     if (
@@ -282,9 +302,32 @@ function receiveInputQueueFromPeer(data) {
           256
         ))
     ) {
-      const xDirection = dataView.getInt8(i * 4 + 1);
-      const yDirection = dataView.getInt8(i * 4 + 2);
-      const powerHit = dataView.getInt8(i * 4 + 3);
+      const byte = dataView.getInt8(2 * i + 1);
+      let xDirection;
+      switch (byte % (1 << 2)) {
+        case 0:
+          xDirection = 0;
+          break;
+        case 1:
+          xDirection = 1;
+          break;
+        case 3:
+          xDirection = -1;
+          break;
+      }
+      let yDirection;
+      switch ((byte >>> 2) % (1 << 2)) {
+        case 0:
+          yDirection = 0;
+          break;
+        case 1:
+          yDirection = 1;
+          break;
+        case 3:
+          yDirection = -1;
+          break;
+      }
+      const powerHit = byte >>> 4;
       const peerInputWithSync = new PikaUserInputWithSync(
         syncCounter,
         xDirection,
@@ -357,9 +400,9 @@ function receiveChatMessageFromPeer(chatMessage) {
 
 function startGameAfterPingTest() {
   printLog('start ping test');
-  const buffer = new ArrayBuffer(2);
+  const buffer = new ArrayBuffer(1);
   const view = new DataView(buffer);
-  view.setInt16(0, -1, true);
+  view.setInt8(0, -1);
   let n = 0;
   const intervalID = setInterval(() => {
     if (n === 5) {
@@ -401,13 +444,13 @@ function startGameAfterPingTest() {
 
 function respondToPingTest(data) {
   const dataView = new DataView(data);
-  if (dataView.getInt16(0, true) === -1) {
-    const buffer = new ArrayBuffer(2);
+  if (dataView.getInt8(0) === -1) {
+    const buffer = new ArrayBuffer(1);
     const view = new DataView(buffer);
-    view.setInt16(0, -2, true);
+    view.setInt8(0, -2);
     console.log('respond to ping');
     dataChannel.send(buffer);
-  } else if (dataView.getInt16(0, true) === -2) {
+  } else if (dataView.getInt8(0) === -2) {
     pingTestManager.pingMesurementArray.push(
       Date.now() -
         pingTestManager.pingSentTimeArray[
@@ -421,7 +464,7 @@ function respondToPingTest(data) {
 function recieveFromPeer(event) {
   const data = event.data;
   if (data instanceof ArrayBuffer) {
-    if (data.byteLength % 4 === 0 && data.byteLength / 4 <= 2 * bufferLength) {
+    if (data.byteLength % 2 === 0 && data.byteLength / 2 <= 2 * bufferLength) {
       receiveInputQueueFromPeer(data);
       if (channel.callbackAfterPeerInputQueueReceived !== null) {
         const callback = channel.callbackAfterPeerInputQueueReceived;
@@ -429,9 +472,12 @@ function recieveFromPeer(event) {
         window.setTimeout(callback, 0);
       }
     } else if (data.byteLength === 1) {
-      receiveChatMessageAckFromPeer(data);
-    } else if (data.byteLength === 2) {
-      respondToPingTest(data);
+      const view = new DataView(data);
+      if (view.getInt8(0) >= 0) {
+        receiveChatMessageAckFromPeer(data);
+      } else {
+        respondToPingTest(data);
+      }
     }
   } else if (typeof data === 'string') {
     receiveChatMessageFromPeer(data);
