@@ -5,7 +5,7 @@ import {
   MyKeyboard,
   OnlineKeyboard,
 } from './pika_keyboard_online.js';
-import { channel } from './data_channel';
+import { SYNC_DIVISOR, channel } from './data_channel';
 import { mod } from './mod.js';
 
 /** @typedef GameState @type {function():void} */
@@ -73,7 +73,7 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
   }
 
   set syncCounter(counter) {
-    this._syncCounter = mod(counter, 256); // since it is to be sent as Uint8
+    this._syncCounter = mod(counter, SYNC_DIVISOR);
   }
 
   beforeStartOfNewGame() {

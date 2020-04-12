@@ -36,6 +36,9 @@ import {
 
 firebase.initializeApp(firebaseConfig);
 
+// It is set to (1 << 8) since syncCounter is to be sent as Uint8
+export const SYNC_DIVISOR = 1 << 8; // 256
+
 export const channel = {
   isOpen: false,
   gameStartAllowed: false,
@@ -49,7 +52,7 @@ export const channel = {
     return this._peerInputQueueSyncCounter;
   },
   set peerInputQueueSyncCounter(counter) {
-    this._peerInputQueueSyncCounter = mod(counter, 256);
+    this._peerInputQueueSyncCounter = mod(counter, SYNC_DIVISOR);
   },
 
   callbackAfterDataChannelOpened: null,
@@ -240,18 +243,45 @@ export async function closeAndCleaning() {
 }
 
 /**
- * Send my input queue to the peer
+ * Send my input queue to the peer.
+ *
+ * Input is transmitted by 5 bits (so fit in 1 byte = 8 bits).
+ * input.xDirection: 2bits. 0: 00, 1: 01, -1: 11.
+ * input.yDirection: 2bits. 0: 00, 1: 01, -1: 11.
+ * input.powerHit: 1bits. 0: 0, 1: 1.
+ * The bits order is input.powerHit, input.yDirection, input.xDirection.
+ *
  * @param {PikaUserInputWithSync[]} inputQueue
  */
 export function sendInputQueueToPeer(inputQueue) {
-  const buffer = new ArrayBuffer(4 * inputQueue.length);
+  const buffer = new ArrayBuffer(1 + inputQueue.length);
   const dataView = new DataView(buffer);
+  dataView.setUint8(0, inputQueue[0].syncCounter);
   for (let i = 0; i < inputQueue.length; i++) {
     const input = inputQueue[i];
-    dataView.setUint8(4 * i + 0, input.syncCounter);
-    dataView.setUint8(4 * i + 1, input.xDirection);
-    dataView.setUint8(4 * i + 2, input.yDirection);
-    dataView.setUint8(4 * i + 3, input.powerHit);
+    let byte = 0;
+    switch (input.xDirection) {
+      case 1:
+        byte += 1;
+        break;
+      case -1:
+        byte += (1 << 1) + 1;
+        break;
+    }
+    switch (input.yDirection) {
+      case 1:
+        byte += 1 << 2;
+        break;
+      case -1:
+        byte += (1 << 3) + (1 << 2);
+        break;
+    }
+    switch (input.powerHit) {
+      case 1:
+        byte += 1 << 4;
+        break;
+    }
+    dataView.setUint8(1 + i, byte);
   }
   dataChannel.send(buffer);
 }
@@ -267,9 +297,9 @@ function receiveInputQueueFromPeer(data) {
   }
 
   const dataView = new DataView(data);
-
-  for (let i = 0; i < data.byteLength / 4; i++) {
-    const syncCounter = dataView.getUint8(i * 4 + 0);
+  const syncCounter0 = dataView.getUint8(0);
+  for (let i = 0; i < data.byteLength - 1; i++) {
+    const syncCounter = mod(syncCounter0 + i, SYNC_DIVISOR);
     // isInModeRange in the below if statement is
     // to prevent overflow of the queue by a corrupted peer code
     if (
@@ -279,12 +309,35 @@ function receiveInputQueueFromPeer(data) {
           syncCounter,
           channel.peerInputQueue[0].syncCounter,
           channel.peerInputQueue[0].syncCounter + 2 * bufferLength - 1,
-          256
+          SYNC_DIVISOR
         ))
     ) {
-      const xDirection = dataView.getInt8(i * 4 + 1);
-      const yDirection = dataView.getInt8(i * 4 + 2);
-      const powerHit = dataView.getInt8(i * 4 + 3);
+      const byte = dataView.getUint8(1 + i);
+      let xDirection;
+      switch (byte % (1 << 2)) {
+        case 0:
+          xDirection = 0;
+          break;
+        case 1:
+          xDirection = 1;
+          break;
+        case 3:
+          xDirection = -1;
+          break;
+      }
+      let yDirection;
+      switch ((byte >>> 2) % (1 << 2)) {
+        case 0:
+          yDirection = 0;
+          break;
+        case 1:
+          yDirection = 1;
+          break;
+        case 3:
+          yDirection = -1;
+          break;
+      }
+      const powerHit = byte >>> 4;
       const peerInputWithSync = new PikaUserInputWithSync(
         syncCounter,
         xDirection,
@@ -357,9 +410,9 @@ function receiveChatMessageFromPeer(chatMessage) {
 
 function startGameAfterPingTest() {
   printLog('start ping test');
-  const buffer = new ArrayBuffer(2);
+  const buffer = new ArrayBuffer(1);
   const view = new DataView(buffer);
-  view.setInt16(0, -1, true);
+  view.setInt8(0, -1);
   let n = 0;
   const intervalID = setInterval(() => {
     if (n === 5) {
@@ -401,13 +454,13 @@ function startGameAfterPingTest() {
 
 function respondToPingTest(data) {
   const dataView = new DataView(data);
-  if (dataView.getInt16(0, true) === -1) {
-    const buffer = new ArrayBuffer(2);
+  if (dataView.getInt8(0) === -1) {
+    const buffer = new ArrayBuffer(1);
     const view = new DataView(buffer);
-    view.setInt16(0, -2, true);
+    view.setInt8(0, -2);
     console.log('respond to ping');
     dataChannel.send(buffer);
-  } else if (dataView.getInt16(0, true) === -2) {
+  } else if (dataView.getInt8(0) === -2) {
     pingTestManager.pingMesurementArray.push(
       Date.now() -
         pingTestManager.pingSentTimeArray[
@@ -421,7 +474,7 @@ function respondToPingTest(data) {
 function recieveFromPeer(event) {
   const data = event.data;
   if (data instanceof ArrayBuffer) {
-    if (data.byteLength % 4 === 0 && data.byteLength / 4 <= 2 * bufferLength) {
+    if (data.byteLength > 1 && data.byteLength <= 1 + 2 * bufferLength) {
       receiveInputQueueFromPeer(data);
       if (channel.callbackAfterPeerInputQueueReceived !== null) {
         const callback = channel.callbackAfterPeerInputQueueReceived;
@@ -429,9 +482,12 @@ function recieveFromPeer(event) {
         window.setTimeout(callback, 0);
       }
     } else if (data.byteLength === 1) {
-      receiveChatMessageAckFromPeer(data);
-    } else if (data.byteLength === 2) {
-      respondToPingTest(data);
+      const view = new DataView(data);
+      if (view.getInt8(0) >= 0) {
+        receiveChatMessageAckFromPeer(data);
+      } else {
+        respondToPingTest(data);
+      }
     }
   } else if (typeof data === 'string') {
     receiveChatMessageFromPeer(data);
