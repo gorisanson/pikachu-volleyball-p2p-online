@@ -6,7 +6,7 @@ import { sendInputQueueToPeer } from './data_channel.js';
 import { mod, isInModRange } from './mod.js';
 
 /** @constant @type {number} communicated input queue buffer length */
-export const bufferLength = 25;
+export const bufferLength = 15;
 
 export class MyKeyboard {
   /**
