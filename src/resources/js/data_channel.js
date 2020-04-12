@@ -116,7 +116,25 @@ export async function createRoom() {
   );
 
   console.log('Create DataChannel', dataChannel);
-  dataChannel = peerConnection.createDataChannel('pikavolley_p2p_channel');
+  // Create an unreliable and ordered data channel.
+  // An reliable and ordered data channel can be used but,
+  // even if reliable channel is used, the sync brokes somehow after one of the peer,
+  // for example, stops the game a while by minimizing the browser window.
+  // So, I decided to manage the transmission reliability on the application layer.
+  // I don't know how the "ordered" is implemented on "unreliable" data chanel.
+  // But I think the guess in here https://jameshfisher.com/2017/01/17/webrtc-datachannel-reliability/
+  // would be right. The receiver may discard earlier messages if arriving after later ones.
+  //
+  // references:
+  // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/createDataChannel
+  // https://www.w3.org/TR/webrtc/#rtcpeerconnection-interface-extensions-0
+  // https://www.w3.org/TR/webrtc/#methods-11
+  // https://www.w3.org/TR/webrtc/#rtcdatachannel
+  // https://www.w3.org/TR/webrtc/#dictionary-rtcdatachannelinit-members
+  dataChannel = peerConnection.createDataChannel('pikavolley_p2p_channel', {
+    ordered: true,
+    maxRetransmits: 0,
+  });
 
   dataChannel.addEventListener('open', dataChannelOpened);
   dataChannel.addEventListener('message', recieveFromPeer);
@@ -424,8 +442,10 @@ function recieveFromPeer(event) {
  * Data channel open event listener
  */
 function dataChannelOpened() {
-  console.log('data channel opened!');
   printLog('data channel opened!');
+  console.log('data channel opened!');
+  console.log(`dataChannel.ordered: ${dataChannel.ordered}`);
+  console.log(`dataChannel.maxRetransmits: ${dataChannel.maxRetransmits}`);
   channel.isOpen = true;
   dataChannel.binaryType = 'arraybuffer';
 
