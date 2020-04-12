@@ -36,6 +36,9 @@ import {
 
 firebase.initializeApp(firebaseConfig);
 
+// It is set to (1 << 8) since syncCounter is to be sent as Uint8
+export const SYNC_DIVISOR = 1 << 8; // 256
+
 export const channel = {
   isOpen: false,
   gameStartAllowed: false,
@@ -49,7 +52,7 @@ export const channel = {
     return this._peerInputQueueSyncCounter;
   },
   set peerInputQueueSyncCounter(counter) {
-    this._peerInputQueueSyncCounter = mod(counter, 256);
+    this._peerInputQueueSyncCounter = mod(counter, SYNC_DIVISOR);
   },
 
   callbackAfterDataChannelOpened: null,
@@ -296,7 +299,7 @@ function receiveInputQueueFromPeer(data) {
   const dataView = new DataView(data);
   const syncCounter0 = dataView.getUint8(0);
   for (let i = 0; i < data.byteLength - 1; i++) {
-    const syncCounter = mod(syncCounter0 + i, 256);
+    const syncCounter = mod(syncCounter0 + i, SYNC_DIVISOR);
     // isInModeRange in the below if statement is
     // to prevent overflow of the queue by a corrupted peer code
     if (
@@ -306,7 +309,7 @@ function receiveInputQueueFromPeer(data) {
           syncCounter,
           channel.peerInputQueue[0].syncCounter,
           channel.peerInputQueue[0].syncCounter + 2 * bufferLength - 1,
-          256
+          SYNC_DIVISOR
         ))
     ) {
       const byte = dataView.getUint8(1 + i);

@@ -2,7 +2,7 @@
 
 import { PikaKeyboard } from './offline_version_js/keyboard.js';
 import { PikaUserInput } from './offline_version_js/physics.js';
-import { sendInputQueueToPeer } from './data_channel.js';
+import { SYNC_DIVISOR, sendInputQueueToPeer } from './data_channel.js';
 import { mod, isInModRange } from './mod.js';
 
 /** @constant @type {number} communicated input queue buffer length */
@@ -48,7 +48,7 @@ export class MyKeyboard {
   }
 
   set syncCounter(counter) {
-    this._syncCounter = mod(counter, 256);
+    this._syncCounter = mod(counter, SYNC_DIVISOR);
   }
 
   subscribe() {
@@ -72,7 +72,7 @@ export class MyKeyboard {
         this.syncCounter,
         syncCounter,
         syncCounter + bufferLength - 1,
-        256
+        SYNC_DIVISOR
       )
     ) {
       this.keyboard1.getInput();
