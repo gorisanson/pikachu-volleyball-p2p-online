@@ -1,5 +1,5 @@
 'use strict';
-import * as PIXI from 'pixi.js';
+import * as PIXI from 'pixi.js-legacy';
 import 'pixi-sound';
 import { PikachuVolleyballOnline } from './pikavolley_online.js';
 import { ASSETS_PATH } from './offline_version_js/assets_path.js';
