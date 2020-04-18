@@ -38,7 +38,7 @@
   "dependencies": {
     "firebase": "^7.13.2",
     "pixi-sound": "3.0.4",
-    "pixi.js": "5.2.1",
+    "pixi.js-legacy": "5.2.1",
     "seedrandom": "3.0.5"
   }
 }
