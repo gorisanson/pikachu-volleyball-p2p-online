@@ -352,3 +352,11 @@ img.controls {
 div.hidden {
   display: none;
 }
+div.margin-top,
+p.margin-top {
+  margin-top: calc(2.5 * var(--font-size));
+}
+ul {
+  margin-top: var(--font-size);
+  margin-bottom: 0;
+}
