@@ -72,7 +72,6 @@ html {
   text-align: center;
   visibility: visible;
   overflow: visible;
-  margin-bottom: calc(1.5 * var(--font-size));
 }
 #flex-container.hidden,
 #before-connection.hidden {
@@ -229,12 +228,10 @@ p.page-last-updated {
 p.release-date {
   margin-block-end: 0;
 }
-p.game-last-updated {
-  margin-block-start: 0;
-  margin-block-end: 0;
-}
+p.game-last-updated,
 p.page-last-updated {
   margin-block-start: 0;
+  margin-block-end: 0;
 }
 span.no-wrap {
   white-space: nowrap;
@@ -362,4 +359,4 @@ ul {
 }
 
 
-/*# sourceMappingURL=main.c2ea850238c628cadfba.css.map*/
+/*# sourceMappingURL=main.2b7642398f51f500cc82.css.map*/
