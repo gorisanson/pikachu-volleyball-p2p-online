@@ -344,7 +344,13 @@ div.align-center-horizontally {
 }
 img.screenshot,
 img.controls {
-  max-width: 100%;
+  width: 100%;
+}
+img.screenshot {
+  max-width: 864px;
+}
+img.controls {
+  max-width: 950px;
 }
 div.hidden {
   display: none;
@@ -359,4 +365,4 @@ ul {
 }
 
 
-/*# sourceMappingURL=main.2b7642398f51f500cc82.css.map*/
+/*# sourceMappingURL=main.65582f052309e5a3c230.css.map*/
