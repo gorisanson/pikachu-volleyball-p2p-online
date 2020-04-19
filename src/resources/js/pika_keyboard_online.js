@@ -1,5 +1,8 @@
-// TODO:
-
+/**
+ * This module takes charge of the online user input via keyboard
+ *
+ * The user inputs (inputQueue) are transmitted between peers.
+ */
 import { PikaKeyboard } from './offline_version_js/keyboard.js';
 import { PikaUserInput } from './offline_version_js/physics.js';
 import { SYNC_DIVISOR, sendInputQueueToPeer } from './data_channel.js';
@@ -61,10 +64,6 @@ export class MyKeyboard {
     this.keyboard2.unsubscribe();
   }
 
-  /**
-   *
-   *
-   */
   getInputIfNeededAndSendToPeer(syncCounter) {
     if (
       this.inputQueue.length === 0 ||
