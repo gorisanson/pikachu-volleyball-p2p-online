@@ -59,13 +59,13 @@
           Release Date: 2020-04-08
         </p>
         <p class="game-last-updated">
-          Game Last Updated: 2020-04-12
+          Game Last Updated: 2020-04-18
         </p>
         <p class="page-last-updated">
-          Page Last Updated: 2020-04-17
+          Page Last Updated: 2020-04-19
         </p>
       </div>
-      <div>
+      <div class="margin-top">
         <div class="align-center-horizontally">
           <img
             class="screenshot"
@@ -77,7 +77,7 @@
           Pikachu Volleyball is an old Windows game which was developed in Japan
           in 1997. You can play this game here online with one of your friends.
         </p>
-        <p><span class="thick">How to play online:</span></p>
+        <p class="margin-top"><span class="thick">How to play online:</span></p>
         <p>
           Latest version of the web browser is recommended.
           <a
@@ -109,7 +109,7 @@
           <span class="no-wrap">"2人でぴかちゅ~"</span> is selected, it's the
           opposite.
         </p>
-        <p>
+        <p class="margin-top">
           <span class="thick">Controls:</span> Use the one comfortable for you.
         </p>
         <div class="align-center-horizontally">
@@ -119,12 +119,15 @@
             alt="game controls"
           />
         </div>
-        <p>
+        <p class="margin-top">
           <span class="thick">Notice:</span> The connection will be established
           in about 5-10 seconds after the joiner clicked the "join room" button.
           If the game is not started after the waiting time, it indicates that
-          the connection failed.
-          <a href="https://webrtc.org/" target="_blank" rel="noopener"
+          the connection failed. This peer-to-peer online version is not
+          playable under the following environment. (<a
+            href="https://webrtc.org/"
+            target="_blank"
+            rel="noopener"
             >WebRTC</a
           >
           &mdash; a technology this P2P online version utilizes &mdash; cannot
@@ -135,19 +138,25 @@
             rel="noopener"
             >peer-to-peer</a
           >
-          connection under the following circumstances.<br />
-          - If you are under a (corporate) firewall which blocks UDP ports<br />
-          - If you are under an
-          <a
-            href="https://en.wikipedia.org/wiki/Network_address_translation#Methods_of_translation"
-            target="_blank"
-            rel="noopener"
-            >symmetric NAT</a
-          ><br />
-          - if you are under 3G, 4G or LTE cellular network
+          connection under the following environment.)
         </p>
+        <ul>
+          <li>
+            If you are under a (corporate) firewall which blocks UDP ports
+          </li>
+          <li>
+            If you are under an
+            <a
+              href="https://en.wikipedia.org/wiki/Network_address_translation#Methods_of_translation"
+              target="_blank"
+              rel="noopener"
+              >symmetric NAT</a
+            >
+          </li>
+          <li>if you are under 3G, 4G or LTE cellular network</li>
+        </ul>
       </div>
-      <div>
+      <div class="margin-top">
         <div id="create-btn-with-created-room-id">
           <button type="button" id="create-btn">create room</button>
           <div id="created-room-id-container">
