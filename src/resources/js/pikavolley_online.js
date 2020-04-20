@@ -10,7 +10,6 @@ import { mod } from './mod.js';
 
 /** @typedef GameState @type {function():void} */
 
-// TODO: remove unnecessary "@ts-ignore"'s
 export const myKeyboard = new MyKeyboard(
   'KeyD',
   'KeyG',
@@ -60,10 +59,8 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     this._amIPlayer2 = bool;
     channel.amIPlayer2 = bool;
     if (this._amIPlayer2 === true) {
-      // @ts-ignore
       this.keyboardArray = [this.peerOnlineKeyboard, this.myOnlineKeyboard];
     } else {
-      // @ts-ignore
       this.keyboardArray = [this.myOnlineKeyboard, this.peerOnlineKeyboard];
     }
   }

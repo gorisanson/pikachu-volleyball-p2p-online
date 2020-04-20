@@ -124,9 +124,20 @@ export async function createRoom() {
   // even if reliable channel is used, the sync brokes somehow after one of the peer,
   // for example, stops the game a while by minimizing the browser window.
   // So, I decided to manage the transmission reliability on the application layer.
-  // I don't know how the "ordered" is implemented on "unreliable" data chanel.
+  // I don't know how the "ordered" is implemented on "unreliable" data channel.
   // But I think the guess in here https://jameshfisher.com/2017/01/17/webrtc-datachannel-reliability/
   // would be right. The receiver may discard earlier messages if arriving after later ones.
+  // This guess seems right according to the last paragraph RFC3758 section 3.6 which is the following.
+  //
+  // "Note that after receiving a FORWARD TSN and updating the cumulative
+  // acknowledgement point, if a TSN that was skipped does arrive (i.e.,
+  // due to network reordering), then the receiver will follow the normal
+  // rules defined in RFC 2960 [2] for handling duplicate data.  This
+  // implies that the receiver will drop the chunk and report it as a
+  // duplicate in the next outbound SACK chunk."
+  // (from https://tools.ietf.org/html/rfc3758#section-3.6
+  // which is refered by https://tools.ietf.org/html/draft-ietf-rtcweb-data-channel-13#section-5
+  // which is refered by https://www.w3.org/TR/webrtc/#bib-rtcweb-data)
   //
   // references:
   // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/createDataChannel
