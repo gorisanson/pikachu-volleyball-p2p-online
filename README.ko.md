@@ -16,4 +16,6 @@ https://gorisanson.github.io/pikachu-volleyball/ko/ 에서 이 피카츄 배구 
 
 - WebRTC data channels: WebRTC data channels를 이용한 P2P 온라인 핵심 기능들이 [`src/resources/js/data_channel.js`](src/resources/js/data_channel.js)에 담겨 있습니다.
 
-다른 세부 사항은 [오프라인 웹 버전 저장소](https://github.com/gorisanson/pikachu-volleyball)를 참고할 수 있습니다.
+게임에서 사용되는 RNG (random number generator) 부분만을 제외하면 게임 상태는 오로지 사용자의 (키보드) 입력에 의해 결정됩니다. 따라서 네트워크 양편에 있는 두 사용자가 사용하는 RNG가 같다면, 사용자의 입력을 서로 주고 받는 것만으로도 두 사용자의 게임 상태를 동일하게 유지할 수 있습니다. 이 P2P 온라인 버전은 data channel open event가 발생할 때 이 두 사용자의 RNG를 같게 만들고 그 후 사용자의 입력을 네트워크를 통해 서로 주고 받습니다.
+
+더 자세한 사항은 [`src/resources/js/main_online.js`](src/resources/js/main_online.js) 파일에 있는 주석에서 볼 수 있습니다.
