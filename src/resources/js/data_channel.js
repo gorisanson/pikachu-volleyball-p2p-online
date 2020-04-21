@@ -530,9 +530,11 @@ function dataChannelOpened() {
   channel.isOpen = true;
   dataChannel.binaryType = 'arraybuffer';
 
+  // Set the same RNG (used for the game) for both peers
   const customRng = seedrandom.alea(roomId.slice(10));
   setCustomRng(customRng);
 
+  // Set the same RNG (used for displaying chat messages) for both peers
   const rngForPlayer1Chat = seedrandom.alea(roomId.slice(10, 15));
   const rngForPlayer2Chat = seedrandom.alea(roomId.slice(15));
   setChatRngs(rngForPlayer1Chat, rngForPlayer2Chat);

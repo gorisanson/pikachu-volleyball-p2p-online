@@ -23,6 +23,9 @@ export const myKeyboard = new MyKeyboard(
   'Enter'
 );
 
+/**
+ * Class reperesenting Pikachu Volleyball p2p online game
+ */
 // @ts-ignore
 export class PikachuVolleyballOnline extends PikachuVolleyball {
   constructor(stage, resources) {
@@ -73,6 +76,11 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     this._syncCounter = mod(counter, SYNC_DIVISOR);
   }
 
+  /**
+   * Override the "beforeStartOfNewGame" method in the super class.
+   * It determines "am I player 1 or player 2" before super.beforeStartOfNewGame().
+   * @type {GameState}
+   */
   beforeStartOfNewGame() {
     if (this.frameCounter === 0) {
       if (channel.amICreatedRoom) {

@@ -1,3 +1,39 @@
+/**
+ * This is the main script which executes the p2p online version game.
+ * General explanations for the all source code files of the game are following.
+ *
+ ********************************************************************************************************************
+ * This p2p online version of the Pikachu Volleyball is developed based on
+ * the Pikachu Volleyball offline web version (https://github.com/gorisanson/pikachu-volleyball)
+ * which is made by reverse engineering the core part of the original Pikachu Volleyball game
+ * which is developed by "1997 (C) SACHI SOFT / SAWAYAKAN Programmers" & "1997 (C) Satoshi Takenouchi".
+ ********************************************************************************************************************
+ *
+ * This p2p online version game is mainly composed of two parts below.
+ *  1) Offline version: All the offline web version source code files is in the directory "offline_version_js".
+ *  2) WebRTC data channels: It utilizes WebRTC data channels to communicate with the peer.
+ *                           The peer-to-peer online functions are contained in "data_channel.js"
+ *
+ * The game is deterministic on the user (keyboard) inputs except the RNG (random number generator) used in
+ * "offline_version_js/physics.js" and "offline_version_js/cloud_and_wave.js". (The RNG is contained
+ * in "offline_version_js/rand.js".) So if the RNG is the same on both peers, only the user inputs need
+ * to be communicated to maintain the same game state between the peers. In this p2p online version, the RNG
+ * is set to the same thing on both peers at the data channel open event (handled by the function
+ * "dataChannelOpened" in "data_channel.js"), then the user inputs are communicated via the data channel.
+ *
+ * And expainations for other source files are below.
+ *  - "pikavolley_online.js": A wrapper for "offline_version_js/pikavolley.js".
+ *  - "keyboard_online.js": A wrapper for offline version "offline_version_js/keyboard.js".
+ *                          This module gets user inputs and load them up onto the data channel to the peer.
+ *  - "generate_pushid.js": Generate a room ID easilly distinguishable by human eye.
+ *  - "mod.js": To maintain game sync, sync counter is attached for each user input, and mod is used to
+ *              make sync counter cycle in a range [0, 255] which fits in a byte.
+ *  - "ui_online.js": For the user interface of the html page and inputs/outputs relevant to html elements.
+ *  - "chat_display.js": For displaying chat messages.
+ *  - "firebase_config.template.js": This p2p online version utilized firebase cloud firestore to establish
+ *                                   webRTC data channel connection between peers. Fill this template and
+ *                                   change the file name to "firebase_config.js".
+ */
 'use strict';
 import * as PIXI from 'pixi.js-legacy';
 import 'pixi-sound';
