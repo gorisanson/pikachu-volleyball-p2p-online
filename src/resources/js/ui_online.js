@@ -138,7 +138,7 @@ export function printNotValidRoomIdMessage() {
 }
 
 export function printNoRoomMatchingMessage() {
-  printLog(document.getElementById('no-room-matching-meesage').textContent);
+  printLog(document.getElementById('no-room-matching-message').textContent);
 }
 
 export function showGameCanvas() {
