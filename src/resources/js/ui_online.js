@@ -1,7 +1,6 @@
 /**
  * Manages outputs to and inputs from the html elements UI
- * and event listeners relevant to the UI
- * of the web page
+ * and event listeners relevant to the UI of the web page
  */
 import {
   channel,
