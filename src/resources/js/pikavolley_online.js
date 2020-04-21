@@ -1,10 +1,6 @@
 'ues strics';
 import { PikachuVolleyball } from './offline_version_js/pikavolley.js';
-import {
-  bufferLength,
-  MyKeyboard,
-  OnlineKeyboard,
-} from './pika_keyboard_online.js';
+import { bufferLength, MyKeyboard, OnlineKeyboard } from './keyboard_online.js';
 import { SYNC_DIVISOR, channel } from './data_channel';
 import { mod } from './mod.js';
 

@@ -16,7 +16,7 @@ import { generatePushID } from './generate_pushid.js';
 import seedrandom from 'seedrandom';
 import { setCustomRng } from './offline_version_js/rand.js';
 import { mod, isInModRange } from './mod.js';
-import { bufferLength, PikaUserInputWithSync } from './pika_keyboard_online.js';
+import { bufferLength, PikaUserInputWithSync } from './keyboard_online.js';
 import {
   printCurrentRoomID,
   getJoinRoomID,
