@@ -1,10 +1,6 @@
 'ues strics';
 import { PikachuVolleyball } from './offline_version_js/pikavolley.js';
-import {
-  bufferLength,
-  MyKeyboard,
-  OnlineKeyboard,
-} from './pika_keyboard_online.js';
+import { bufferLength, MyKeyboard, OnlineKeyboard } from './keyboard_online.js';
 import { SYNC_DIVISOR, channel } from './data_channel';
 import { mod } from './mod.js';
 
@@ -23,6 +19,9 @@ export const myKeyboard = new MyKeyboard(
   'Enter'
 );
 
+/**
+ * Class reperesenting Pikachu Volleyball p2p online game
+ */
 // @ts-ignore
 export class PikachuVolleyballOnline extends PikachuVolleyball {
   constructor(stage, resources) {
@@ -73,6 +72,11 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     this._syncCounter = mod(counter, SYNC_DIVISOR);
   }
 
+  /**
+   * Override the "beforeStartOfNewGame" method in the super class.
+   * It determines "am I player 1 or player 2" before super.beforeStartOfNewGame().
+   * @type {GameState}
+   */
   beforeStartOfNewGame() {
     if (this.frameCounter === 0) {
       if (channel.amICreatedRoom) {

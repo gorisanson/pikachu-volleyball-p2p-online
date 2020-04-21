@@ -11,6 +11,11 @@ import { mod, isInModRange } from './mod.js';
 /** @constant @type {number} communicated input queue buffer length */
 export const bufferLength = 15;
 
+/**
+ * Class representing my keyboard used for game controller.
+ * User chooses a comportable side, so it contains both sides
+ * (player 1 side in offline version, player 2 side in offline version).
+ */
 export class MyKeyboard {
   /**
    * Create a keyboard used for game controller
@@ -54,16 +59,27 @@ export class MyKeyboard {
     this._syncCounter = mod(counter, SYNC_DIVISOR);
   }
 
+  /**
+   * Subscribe keydown, keyup event listners for the keys of this keyboard
+   */
   subscribe() {
     this.keyboard1.subscribe();
     this.keyboard2.subscribe();
   }
 
+  /**
+   * Unsubscribe keydown, keyup event listners for the keys of this keyboard
+   */
   unsubscribe() {
     this.keyboard1.unsubscribe();
     this.keyboard2.unsubscribe();
   }
 
+  /**
+   * Get user input if needed (judged by the syncCounter),
+   * then push it to the input queue and send the input queue to peer.
+   * @param {number} syncCounter
+   */
   getInputIfNeededAndSendToPeer(syncCounter) {
     if (
       this.inputQueue.length === 0 ||
@@ -102,7 +118,7 @@ export class MyKeyboard {
 }
 
 /**
- * Class representing the online keyboard receiveing input from input queue
+ * Class representing the online keyboard which gets input from input queue
  */
 export class OnlineKeyboard {
   /**
@@ -196,6 +212,9 @@ export class OnlineKeyboard {
   }
 }
 
+/**
+ * Class reperesenting a user input with a corresponding sync counter
+ */
 export class PikaUserInputWithSync extends PikaUserInput {
   constructor(syncCounter, xDirection, yDirection, powerHit) {
     super();

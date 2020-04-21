@@ -16,7 +16,7 @@ import { generatePushID } from './generate_pushid.js';
 import seedrandom from 'seedrandom';
 import { setCustomRng } from './offline_version_js/rand.js';
 import { mod, isInModRange } from './mod.js';
-import { bufferLength, PikaUserInputWithSync } from './pika_keyboard_online.js';
+import { bufferLength, PikaUserInputWithSync } from './keyboard_online.js';
 import {
   printCurrentRoomID,
   getJoinRoomID,
@@ -27,6 +27,9 @@ import {
   hidePingBox,
   printAvgPing,
   printStartsIn,
+  printLog,
+  printNotValidRoomIdMessage,
+  printNoRoomMatchingMessage,
 } from './ui_online.js';
 import {
   setChatRngs,
@@ -185,7 +188,7 @@ export async function joinRoom() {
   // @ts-ignore
   roomId = getJoinRoomID();
   if (roomId.length !== 20) {
-    printLog(document.getElementById('not-valid-room-id-message').textContent);
+    printNotValidRoomIdMessage();
     return false;
   }
   console.log('Join room: ', roomId);
@@ -197,7 +200,7 @@ export async function joinRoom() {
   const roomSnapshot = await roomRef.get();
   console.log('Got room:', roomSnapshot.exists);
   if (!roomSnapshot.exists) {
-    printLog(document.getElementById('no-room-matching-meesage').textContent);
+    printNoRoomMatchingMessage();
     return false;
   }
 
@@ -419,6 +422,9 @@ function receiveChatMessageFromPeer(chatMessage) {
   dataChannel.send(buffer);
 }
 
+/**
+ * Test average ping by sending ping test arraybuffers, then start the game
+ */
 function startGameAfterPingTest() {
   printLog('start ping test');
   const buffer = new ArrayBuffer(1);
@@ -463,6 +469,10 @@ function startGameAfterPingTest() {
   }, 1000);
 }
 
+/**
+ * Respond to received ping test array buffer.
+ * @param {ArrayBuffer} data array buffer with length 1
+ */
 function respondToPingTest(data) {
   const dataView = new DataView(data);
   if (dataView.getInt8(0) === -1) {
@@ -482,6 +492,10 @@ function respondToPingTest(data) {
   }
 }
 
+/**
+ * Event handler for the message event (which has data received from the peer) of data channel
+ * @param {MessageEvent} event
+ */
 function recieveFromPeer(event) {
   const data = event.data;
   if (data instanceof ArrayBuffer) {
@@ -516,9 +530,11 @@ function dataChannelOpened() {
   channel.isOpen = true;
   dataChannel.binaryType = 'arraybuffer';
 
+  // Set the same RNG (used for the game) for both peers
   const customRng = seedrandom.alea(roomId.slice(10));
   setCustomRng(customRng);
 
+  // Set the same RNG (used for displaying chat messages) for both peers
   const rngForPlayer1Chat = seedrandom.alea(roomId.slice(10, 15));
   const rngForPlayer2Chat = seedrandom.alea(roomId.slice(15));
   setChatRngs(rngForPlayer1Chat, rngForPlayer2Chat);
@@ -533,12 +549,6 @@ function dataChannelClosed() {
   console.log('data channel closed');
   channel.isOpen = false;
   noticeDisconnected();
-}
-
-function printLog(log) {
-  const connectionLog = document.getElementById('connection-log');
-  connectionLog.textContent += `${log}\n`;
-  connectionLog.scrollIntoView();
 }
 
 function registerPeerConnectionListeners(peerConnection) {
