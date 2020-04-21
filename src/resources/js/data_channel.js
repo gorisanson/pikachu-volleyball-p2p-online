@@ -419,6 +419,9 @@ function receiveChatMessageFromPeer(chatMessage) {
   dataChannel.send(buffer);
 }
 
+/**
+ * Test average ping by sending ping test arraybuffers, then start the game
+ */
 function startGameAfterPingTest() {
   printLog('start ping test');
   const buffer = new ArrayBuffer(1);
@@ -463,6 +466,10 @@ function startGameAfterPingTest() {
   }, 1000);
 }
 
+/**
+ * Respond to received ping test array buffer.
+ * @param {ArrayBuffer} data array buffer with length 1
+ */
 function respondToPingTest(data) {
   const dataView = new DataView(data);
   if (dataView.getInt8(0) === -1) {
@@ -482,6 +489,10 @@ function respondToPingTest(data) {
   }
 }
 
+/**
+ * Event handler for the message event (which has data received from the peer) of data channel
+ * @param {MessageEvent} event
+ */
 function recieveFromPeer(event) {
   const data = event.data;
   if (data instanceof ArrayBuffer) {
