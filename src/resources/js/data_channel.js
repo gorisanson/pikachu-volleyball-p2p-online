@@ -27,6 +27,9 @@ import {
   hidePingBox,
   printAvgPing,
   printStartsIn,
+  printLog,
+  printNotValidRoomIdMessage,
+  printNoRoomMatchingMessage,
 } from './ui_online.js';
 import {
   setChatRngs,
@@ -185,7 +188,7 @@ export async function joinRoom() {
   // @ts-ignore
   roomId = getJoinRoomID();
   if (roomId.length !== 20) {
-    printLog(document.getElementById('not-valid-room-id-message').textContent);
+    printNotValidRoomIdMessage();
     return false;
   }
   console.log('Join room: ', roomId);
@@ -197,7 +200,7 @@ export async function joinRoom() {
   const roomSnapshot = await roomRef.get();
   console.log('Got room:', roomSnapshot.exists);
   if (!roomSnapshot.exists) {
-    printLog(document.getElementById('no-room-matching-meesage').textContent);
+    printNoRoomMatchingMessage();
     return false;
   }
 
@@ -544,12 +547,6 @@ function dataChannelClosed() {
   console.log('data channel closed');
   channel.isOpen = false;
   noticeDisconnected();
-}
-
-function printLog(log) {
-  const connectionLog = document.getElementById('connection-log');
-  connectionLog.textContent += `${log}\n`;
-  connectionLog.scrollIntoView();
 }
 
 function registerPeerConnectionListeners(peerConnection) {

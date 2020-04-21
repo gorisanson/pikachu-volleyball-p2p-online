@@ -123,6 +123,24 @@ export function getJoinRoomID() {
   );
 }
 
+/**
+ * Print log to connection log box
+ * @param {string} log
+ */
+export function printLog(log) {
+  const connectionLog = document.getElementById('connection-log');
+  connectionLog.textContent += `${log}\n`;
+  connectionLog.scrollIntoView();
+}
+
+export function printNotValidRoomIdMessage() {
+  printLog(document.getElementById('not-valid-room-id-message').textContent);
+}
+
+export function printNoRoomMatchingMessage() {
+  printLog(document.getElementById('no-room-matching-meesage').textContent);
+}
+
 export function showGameCanvas() {
   const flexContainer = document.getElementById('flex-container');
   const beforeConnection = document.getElementById('before-connection');
