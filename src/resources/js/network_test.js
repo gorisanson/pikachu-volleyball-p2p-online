@@ -75,6 +75,7 @@ function parseCandidate(line) {
  * Major part of this function is copied from https://webrtchacks.com/symmetric-nat/
  */
 export async function testNetwork(
+  callBack,
   callBackIfPassed,
   callBackIfDidNotGetSrflx,
   callBackIfBehindSymmetricNat
@@ -102,6 +103,7 @@ export async function testNetwork(
       if (!didNotGetSrflx && !isBehindSymmetricNat) {
         window.setTimeout(callBackIfPassed, 0);
       }
+      window.setTimeout(callBack, 0);
       return;
     }
     if (event.candidate.candidate.includes('srflx')) {
