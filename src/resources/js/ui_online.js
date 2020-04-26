@@ -10,6 +10,7 @@ import {
   closeAndCleaning,
 } from './data_channel.js';
 import { myKeyboard } from './pikavolley_online.js';
+import { testNetwork } from './network_test.js';
 import '../style.css';
 
 const chatOpenBtn = document.getElementById('chat-open-btn');
@@ -23,34 +24,59 @@ export function setUpUI() {
   // game keyboard input needs to be unsubscribe for typing join room ID
   myKeyboard.unsubscribe();
 
+  const networkTestBtn = document.getElementById('network-test-btn');
   const createBtn = document.getElementById('create-btn');
   const joinBtn = document.getElementById('join-btn');
   const joinRoomID = document.getElementById('join-room-id');
-  createBtn.addEventListener('click', () => {
+  const disableBtns = () => {
+    // @ts-ignore
+    networkTestBtn.disabled = true;
     // @ts-ignore
     createBtn.disabled = true;
     // @ts-ignore
     joinBtn.disabled = true;
     // @ts-ignore
     joinRoomID.disabled = true;
+  };
+  const enableBtns = () => {
+    // @ts-ignore
+    networkTestBtn.disabled = false;
+    // @ts-ignore
+    createBtn.disabled = false;
+    // @ts-ignore
+    joinBtn.disabled = false;
+    // @ts-ignore
+    joinRoomID.disabled = false;
+  };
+  networkTestBtn.addEventListener('click', () => {
+    disableBtns();
+    const callBackIfPassed = () => {
+      window.alert(document.getElementById('test-passed').textContent);
+    };
+    const callBackIfDidNotGetSrflx = () => {
+      window.alert(
+        document.getElementById('did-not-get-srflx-candidate').textContent
+      );
+    };
+    const callBackIfBehindSymmetricNat = () => {
+      window.alert(document.getElementById('behind-symmetric-nat').textContent);
+    };
+    testNetwork(
+      enableBtns,
+      callBackIfPassed,
+      callBackIfDidNotGetSrflx,
+      callBackIfBehindSymmetricNat
+    );
+  });
+  createBtn.addEventListener('click', () => {
+    disableBtns();
     createRoom();
   });
-
   joinBtn.addEventListener('click', () => {
-    // @ts-ignore
-    createBtn.disabled = true;
-    // @ts-ignore
-    joinBtn.disabled = true;
-    // @ts-ignore
-    joinRoomID.disabled = true;
+    disableBtns();
     joinRoom().then((joined) => {
       if (!joined) {
-        // @ts-ignore
-        createBtn.disabled = false;
-        // @ts-ignore
-        joinBtn.disabled = false;
-        // @ts-ignore
-        joinRoomID.disabled = false;
+        enableBtns();
       }
     });
   });

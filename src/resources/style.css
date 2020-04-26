@@ -180,6 +180,7 @@ canvas {
 #dev-here {
   width: var(--canvas-width);
 }
+#network-test-btn,
 #create-btn,
 #join-room-id,
 #join-btn {
@@ -190,6 +191,7 @@ canvas {
 #create-btn {
   grid-column-start: 1;
 }
+#network-test-btn,
 #create-btn,
 #join-btn,
 #send-btn,
@@ -361,5 +363,5 @@ p.margin-top {
 }
 ul {
   margin-top: var(--font-size);
-  margin-bottom: 0;
+  margin-bottom: var(--font-size);
 }

@@ -36,6 +36,7 @@ import {
   displayMyChatMessage,
   displayPeerChatMessage,
 } from './chat_display.js';
+import { rtcConfiguration } from './rtc_configuration.js';
 
 firebase.initializeApp(firebaseConfig);
 
@@ -87,17 +88,6 @@ const chatManager = {
   },
 };
 
-const configuration = {
-  iceServers: [
-    {
-      urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],
-    },
-    {
-      urls: ['stun:stun.stunprotocol.org'],
-    },
-  ],
-};
-
 let peerConnection = null;
 let dataChannel = null;
 let roomId = null;
@@ -110,8 +100,8 @@ export async function createRoom() {
   const db = firebase.firestore();
   const roomRef = db.collection('rooms').doc(roomId);
 
-  console.log('Create PeerConnection with configuration: ', configuration);
-  peerConnection = new RTCPeerConnection(configuration);
+  console.log('Create PeerConnection with configuration: ', rtcConfiguration);
+  peerConnection = new RTCPeerConnection(rtcConfiguration);
   registerPeerConnectionListeners(peerConnection);
 
   collectIceCandidates(
@@ -204,8 +194,8 @@ export async function joinRoom() {
     return false;
   }
 
-  console.log('Create PeerConnection with configuration: ', configuration);
-  peerConnection = new RTCPeerConnection(configuration);
+  console.log('Create PeerConnection with configuration: ', rtcConfiguration);
+  peerConnection = new RTCPeerConnection(rtcConfiguration);
   registerPeerConnectionListeners(peerConnection);
 
   // Code for collecting ICE candidates below
