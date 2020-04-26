@@ -72,7 +72,7 @@ function parseCandidate(line) {
 }
 
 /**
- * Major part of this function is from https://webrtchacks.com/symmetric-nat/
+ * Major part of this function is copied from https://webrtchacks.com/symmetric-nat/
  */
 export async function testNetwork(
   callBackIfPassed,
