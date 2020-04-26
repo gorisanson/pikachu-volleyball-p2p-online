@@ -110,9 +110,13 @@ export async function testNetwork(
       didNotGetSrflx = false;
       const cand = parseCandidate(event.candidate.candidate);
       if (!candidates[cand.relatedPort]) {
-        candidates[cand.relatedPort] = [];
+        candidates[cand.relatedPort] = [cand.port];
+        // this is for the Firefox browser
+        // Firefox brower trigger an event even if a candidiate with
+        // the same port after translation is received from another STUN server.
+      } else if (candidates[cand.relatedPort][0] !== cand.port) {
+        candidates[cand.relatedPort].push(cand.port);
       }
-      candidates[cand.relatedPort].push(cand.port);
     }
     console.log('Got candidate: ', event.candidate);
   });
