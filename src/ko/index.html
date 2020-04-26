@@ -21,7 +21,7 @@
   <body>
     <div id="before-connection">
       <div id="about-box-head">
-        <h1>피카츄 배구 P2P 온라인</h1>
+        <h1>피카츄 배구 <span class="no-wrap">P2P 온라인</span></h1>
         <p class="languages">
           <a href="../en/" target="_self">English</a>
           | &check; Korean(한국어)
@@ -59,10 +59,10 @@
           공개한 날: 2020-04-08
         </p>
         <p class="game-last-updated">
-          게임을 마지막으로 업데이트한 날: 2020-04-19
+          게임을 마지막으로 업데이트한 날: 2020-04-21
         </p>
         <p class="page-last-updated">
-          페이지를 마지막으로 업데이트한 날: 2020-04-20
+          페이지를 마지막으로 업데이트한 날: 2020-04-24
         </p>
       </div>
       <div class="margin-top">
@@ -111,6 +111,7 @@
         </p>
         <p class="margin-top">
           <span class="thick">조작법:</span> 다음 중 편한 쪽을 사용하면 됩니다.
+          (스마트폰이나 태블릿의 경우, 블루투스 키보드가 필요합니다.)
         </p>
         <div class="align-center-horizontally">
           <img
@@ -167,7 +168,14 @@
         </div>
         <div id="room-id-with-join-btn">
           <label for="join-room-id">들어갈 방 ID</label>
-          <input type="text" id="join-room-id" maxlength="30" />
+          <input
+            type="text"
+            id="join-room-id"
+            maxlength="30"
+            autocapitalize="none"
+            autocomplete="off"
+            autocorrect="off"
+          />
           <button type="button" id="join-btn">
             방 <span class="no-wrap">들어가기</span>
           </button>

@@ -14,6 +14,8 @@ You can play Pikachu Volleyball P2P online on the website: https://gorisanson.gi
 
 - Offline version: All the offline web version source code files is in the directory [`src/resources/js/offline_version_js/`](src/resources/js/offline_version_js). These are the same as the source code files in https://github.com/gorisanson/pikachu-volleyball/tree/master/src/resources/js. The online version is developed base on these.
 
-- WebRTC data channels: The core peer-to-peer online functions utilizing WebRTC data channels are contained in [`src/resources/js/data_channel.js`](src/resources/js/data_channel.js).
+- WebRTC data channels: The peer-to-peer online functions utilizing WebRTC data channels are contained in [`src/resources/js/data_channel.js`](src/resources/js/data_channel.js).
 
-For other details, you can refer [the offline web version repository](https://github.com/gorisanson/pikachu-volleyball).
+The game state is deterministic on the user (keyboard) inputs except the RNG (random number generator) used in the game. So if the RNG is the same on both peers, only the user inputs need to be communicated to maintain the same game state between the peers. In this p2p online version, the RNG is set to the same thing on both peers at the data channel open event, then the user inputs are communicated via the data channel.
+
+Refer comments on [`src/resources/js/main_online.js`](src/resources/js/main_online.js) for other details.

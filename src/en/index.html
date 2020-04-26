@@ -21,7 +21,7 @@
   <body>
     <div id="before-connection">
       <div id="about-box-head">
-        <h1>Pikachu Volleyball P2P Online</h1>
+        <h1>Pikachu Volleyball <span class="no-wrap">P2P Online</span></h1>
         <p class="languages">
           &check; English |
           <a href="../ko/" target="_self">Korean(한국어)</a>
@@ -59,10 +59,10 @@
           Release Date: 2020-04-08
         </p>
         <p class="game-last-updated">
-          Game Last Updated: 2020-04-19
+          Game Last Updated: 2020-04-21
         </p>
         <p class="page-last-updated">
-          Page Last Updated: 2020-04-20
+          Page Last Updated: 2020-04-24
         </p>
       </div>
       <div class="margin-top">
@@ -79,7 +79,7 @@
         </p>
         <p class="margin-top"><span class="thick">How to play online:</span></p>
         <p>
-          Latest version of the web browser is recommended.
+          The latest version of the web browser is recommended.
           <a
             href="https://caniuse.com/#feat=mdn-api_rtcdatachannel"
             target="_blank"
@@ -87,12 +87,12 @@
             >Here's the list of the supported browser (indicated by green
             color).</a
           >
-          Latest version of iOS Safari is also supported but the list seems to
-          be not updated yet.
+          The latest version of iOS Safari is also supported but the list seems
+          to be not updated yet.
         </p>
         <p>
           <span class="thick">Room Creator</span> - Click "create room" button.
-          Then, send the Room ID (via messenger, email or whatever) to the one
+          Then, send the Room ID (via a messenger, email or whatever) to the one
           ("Joiner") you want to play this game online with.
         </p>
         <p>
@@ -111,6 +111,7 @@
         </p>
         <p class="margin-top">
           <span class="thick">Controls:</span> Use the one comfortable for you.
+          (In case of a touch/mobile device, you need a Bluetooth keyboard.)
         </p>
         <div class="align-center-horizontally">
           <img
@@ -129,8 +130,7 @@
             target="_blank"
             rel="noopener"
             >WebRTC</a
-          >
-          &mdash; a technology this P2P online version utilizes &mdash; cannot
+          >, which is a technology this P2P online version utilizes, cannot
           establish a
           <a
             href="https://en.wikipedia.org/wiki/Peer-to-peer"
@@ -145,7 +145,7 @@
             If you are under a (corporate) firewall which blocks UDP ports
           </li>
           <li>
-            If you are under an
+            If you are under a
             <a
               href="https://en.wikipedia.org/wiki/Network_address_translation#Methods_of_translation"
               target="_blank"
@@ -153,7 +153,7 @@
               >symmetric NAT</a
             >
           </li>
-          <li>if you are under 3G, 4G or LTE cellular network</li>
+          <li>If you are under 3G, 4G or LTE cellular network</li>
         </ul>
       </div>
       <div class="margin-top">
@@ -166,7 +166,14 @@
         </div>
         <div id="room-id-with-join-btn">
           <label for="join-room-id">Room ID to join</label>
-          <input type="text" id="join-room-id" maxlength="30" />
+          <input
+            type="text"
+            id="join-room-id"
+            maxlength="30"
+            autocapitalize="none"
+            autocomplete="off"
+            autocorrect="off"
+          />
           <button type="button" id="join-btn">join room</button>
         </div>
         <div id="connection-log-container">
