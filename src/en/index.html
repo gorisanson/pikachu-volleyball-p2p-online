@@ -155,6 +155,13 @@
           </li>
           <li>If you are under 3G, 4G or LTE cellular network</li>
         </ul>
+        <p>
+          By using the "Test network" button below, you can test whether this
+          P2P online version is going to work on your network.
+        </p>
+        <button type="button" id="network-test-btn">
+          Test network
+        </button>
       </div>
       <div class="margin-top">
         <div id="create-btn-with-created-room-id">
@@ -187,6 +194,22 @@
         </div>
         <div id="no-room-matching-message" class="hidden">
           There is no room matching the ID. Please check the entered room ID.
+        </div>
+        <div id="test-passed" class="hidden">
+          Your network passed the test. (1) The server reflexive candidate can
+          be gotten, and (2) your network is not behind a symmetric NAT. With a
+          high probability, this P2P Online version works normally on your
+          network.
+        </div>
+        <div id="did-not-get-srflx-candidate" class="hidden">
+          This P2P online version does not work on your network. The server
+          reflexive candidate can't be gotten. Maybe the reason is that the
+          necessary UDP ports are blocked. If you connected via a corporate
+          network, maybe the firewall is blocking the UDP ports.
+        </div>
+        <div id="behind-symmetric-nat" class="hidden">
+          This P2P online version does not work on your network. Your network is
+          behind a symmetric NAT.
         </div>
       </div>
     </div>

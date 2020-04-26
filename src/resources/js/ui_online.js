@@ -10,6 +10,7 @@ import {
   closeAndCleaning,
 } from './data_channel.js';
 import { myKeyboard } from './pikavolley_online.js';
+import { testNetwork } from './network_test.js';
 import '../style.css';
 
 const chatOpenBtn = document.getElementById('chat-open-btn');
@@ -22,6 +23,9 @@ const sendBtn = document.getElementById('send-btn');
 export function setUpUI() {
   // game keyboard input needs to be unsubscribe for typing join room ID
   myKeyboard.unsubscribe();
+
+  const networkTestBtn = document.getElementById('network-test-btn');
+  networkTestBtn.addEventListener('click', networkTestBtnClicked);
 
   const createBtn = document.getElementById('create-btn');
   const joinBtn = document.getElementById('join-btn');
@@ -221,4 +225,23 @@ function sendBtnClicked() {
   // @ts-ignore
   chatInput.value = '';
   sendChatMessageToPeer(message);
+}
+
+function networkTestBtnClicked() {
+  const callBackIfDidNotGetSrflx = () => {
+    window.alert(
+      document.getElementById('did-not-get-srflx-candidate').textContent
+    );
+  };
+  const callBackIfBehindSymmetricNat = () => {
+    window.alert(document.getElementById('behind-symmetric-nat').textContent);
+  };
+  const callBackIfPassed = () => {
+    window.alert(document.getElementById('test-passed').textContent);
+  };
+  testNetwork(
+    callBackIfPassed,
+    callBackIfDidNotGetSrflx,
+    callBackIfBehindSymmetricNat
+  );
 }
