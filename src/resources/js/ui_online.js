@@ -32,6 +32,8 @@ export function setUpUI() {
   const joinRoomID = document.getElementById('join-room-id');
   createBtn.addEventListener('click', () => {
     // @ts-ignore
+    networkTestBtn.disabled = true;
+    // @ts-ignore
     createBtn.disabled = true;
     // @ts-ignore
     joinBtn.disabled = true;
@@ -39,8 +41,9 @@ export function setUpUI() {
     joinRoomID.disabled = true;
     createRoom();
   });
-
   joinBtn.addEventListener('click', () => {
+    // @ts-ignore
+    networkTestBtn.disabled = true;
     // @ts-ignore
     createBtn.disabled = true;
     // @ts-ignore
@@ -49,6 +52,8 @@ export function setUpUI() {
     joinRoomID.disabled = true;
     joinRoom().then((joined) => {
       if (!joined) {
+        // @ts-ignore
+        networkTestBtn.disabled = false;
         // @ts-ignore
         createBtn.disabled = false;
         // @ts-ignore
