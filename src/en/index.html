@@ -157,8 +157,8 @@
           </li>
         </ul>
         <p>
-          By using the "Test network" button below, you can test whether this
-          P2P online version is going to work on your network.
+          By using the "Test network" button below, you can check your network
+          about the two issues above.
         </p>
         <button type="button" id="network-test-btn">
           Test network
@@ -197,20 +197,19 @@
           There is no room matching the ID. Please check the entered room ID.
         </div>
         <div id="test-passed" class="hidden">
-          Your network passed the test. (1) The server reflexive candidate can
-          be gotten, and (2) your network is not behind a symmetric NAT. With a
-          high probability, this P2P Online version is going to work normally on
-          your network.
+          No issues are detected. (1) The server reflexive candidate can be
+          gotten (UDP ports are open), and (2) your network is not behind a
+          symmetric NAT.
         </div>
         <div id="did-not-get-srflx-candidate" class="hidden">
-          This P2P online version does not work on your network. The server
-          reflexive candidate can't be gotten. Maybe the reason is that the
-          necessary UDP ports are blocked. If you connected via a corporate
+          This P2P online version is not going to work on your network. The
+          server reflexive candidate can't be gotten. Maybe the reason is that
+          the necessary UDP ports are blocked. If you connected via a corporate
           network, maybe the firewall is blocking the UDP ports.
         </div>
         <div id="behind-symmetric-nat" class="hidden">
-          This P2P online version does not work on your network. Your network is
-          behind a symmetric NAT.
+          This P2P online version is not going to work on your network. Your
+          network is behind a symmetric NAT.
         </div>
       </div>
     </div>
