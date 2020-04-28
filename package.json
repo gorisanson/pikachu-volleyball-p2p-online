@@ -1,5 +1,5 @@
 {
-  "name": "pikachu-volleyball-online",
+  "name": "pikachu-volleyball-p2p-online",
   "version": "1.0.10",
   "description": "Pikachu Volleyball peer-to-peer online via WebRTC data channels",
   "private": true,
