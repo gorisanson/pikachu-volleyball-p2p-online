@@ -131,10 +131,12 @@ export function setUpUI() {
   quickMatchBtn.addEventListener('click', () => {
     disableBtns();
     channel.isQuickMatch = true;
-    document
-      .getElementById('press-enter-to-quick-match')
-      .classList.remove('hidden');
     window.addEventListener('keydown', startQuickMatchIfPressEnter);
+    const pressEnterToQuickMatch = document.getElementById(
+      'press-enter-to-quick-match'
+    );
+    pressEnterToQuickMatch.classList.remove('hidden');
+    pressEnterToQuickMatch.scrollIntoView();
   });
   withYourFriendBtn.addEventListener('click', () => {
     const aboutWithYourFriend = document.getElementById(
