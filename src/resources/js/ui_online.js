@@ -9,6 +9,7 @@ import {
   sendChatMessageToPeer,
   closeAndCleaning,
 } from './data_channel.js';
+import { generatePushID } from './generate_pushid.js';
 import { myKeyboard } from './pikavolley_online.js';
 import { testNetwork } from './network_test.js';
 import '../style.css';
@@ -70,12 +71,20 @@ export function setUpUI() {
   });
   createBtn.addEventListener('click', () => {
     disableBtns();
-    createRoom();
+
+    const roomId = generatePushID();
+    createRoom(roomId).then(() => {
+      printCurrentRoomID(roomId);
+    });
   });
   joinBtn.addEventListener('click', () => {
     disableBtns();
-    joinRoom().then((joined) => {
-      if (!joined) {
+
+    const roomId = getJoinRoomID();
+    joinRoom(roomId).then((joined) => {
+      if (joined) {
+        printCurrentRoomID(roomId);
+      } else {
         enableBtns();
       }
     });
@@ -129,7 +138,7 @@ export function setUpUI() {
   disableChatBtns();
 }
 
-export function printCurrentRoomID(roomId) {
+function printCurrentRoomID(roomId) {
   const prettyRoomId = `${roomId.slice(0, 5)}-${roomId.slice(
     5,
     10
@@ -137,7 +146,7 @@ export function printCurrentRoomID(roomId) {
   document.getElementById('current-room-id').textContent = prettyRoomId;
 }
 
-export function getJoinRoomID() {
+function getJoinRoomID() {
   return (
     document
       .getElementById('join-room-id-input')
