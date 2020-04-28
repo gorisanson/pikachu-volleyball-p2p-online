@@ -182,12 +182,12 @@ canvas {
 }
 #network-test-btn,
 #create-btn,
-#join-room-id,
+#join-room-id-input,
 #join-btn {
   width: 100%;
   height: var(--btn-height);
 }
-#join-room-id,
+#join-room-id-input,
 #create-btn {
   grid-column-start: 1;
 }
@@ -199,7 +199,7 @@ canvas {
   font-size: calc(0.8 * var(--font-size));
 }
 #created-room-id-container,
-#join-room-id,
+#join-room-id-input,
 #chat-input {
   font-size: var(--font-size);
 }
@@ -210,6 +210,10 @@ canvas {
 #created-room-id-container {
   display: flex;
   align-items: center;
+}
+#quick-match-log-container {
+  width: 100%;
+  font-size: var(--font-size);
 }
 #connection-log-container {
   min-height: 50vh;
@@ -364,4 +368,19 @@ p.margin-top {
 ul {
   margin-top: var(--font-size);
   margin-bottom: var(--font-size);
+}
+div.grid-1-1 {
+  display: grid;
+  width: 100%;
+  height: calc(3 * var(--btn-height));
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+#quick-match-btn {
+  grid-column-start: 1;
+  font-size: var(--font-size);
+}
+#with-your-friend-btn {
+  grid-column-start: 2;
+  font-size: var(--font-size);
 }

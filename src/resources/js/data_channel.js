@@ -8,18 +8,14 @@
  * https://webrtc.org/getting-started/data-channels
  */
 'use strict';
-
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import { firebaseConfig } from './firebase_config.js';
-import { generatePushID } from './generate_pushid.js';
 import seedrandom from 'seedrandom';
 import { setCustomRng } from './offline_version_js/rand.js';
 import { mod, isInModRange } from './mod.js';
 import { bufferLength, PikaUserInputWithSync } from './keyboard_online.js';
 import {
-  printCurrentRoomID,
-  getJoinRoomID,
   noticeDisconnected,
   enableChatOpenBtn,
   showGameCanvas,
@@ -48,6 +44,7 @@ export const channel = {
   gameStartAllowed: false,
   amICreatedRoom: false,
   amIPlayer2: null, // set from pikavolley_online.js
+  isQuickMatch: null, // set from ui_online.js
 
   /** @type {PikaUserInputWithSync[]} */
   peerInputQueue: [],
@@ -93,9 +90,13 @@ let dataChannel = null;
 let roomId = null;
 let isFirstInputQueueFromPeer = true;
 
-export async function createRoom() {
+/**
+ * Create a room
+ * @param {string} roomIdToCreate
+ */
+export async function createRoom(roomIdToCreate) {
   channel.amICreatedRoom = true;
-  roomId = generatePushID();
+  roomId = roomIdToCreate;
 
   const db = firebase.firestore();
   const roomRef = db.collection('rooms').doc(roomId);
@@ -170,19 +171,19 @@ export async function createRoom() {
   roomRef.set(roomWithOffer);
   console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
   printLog('Offer sent');
-
-  printCurrentRoomID(roomId);
 }
 
-export async function joinRoom() {
-  // @ts-ignore
-  roomId = getJoinRoomID();
+/**
+ * Join the room
+ * @param {string} roomIdToJoin
+ */
+export async function joinRoom(roomIdToJoin) {
+  roomId = roomIdToJoin;
   if (roomId.length !== 20) {
     printNotValidRoomIdMessage();
     return false;
   }
   console.log('Join room: ', roomId);
-  printCurrentRoomID(roomId);
 
   // eslint-disable-next-line no-undef
   const db = firebase.firestore();
