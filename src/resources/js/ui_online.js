@@ -100,6 +100,9 @@ export function setUpUI() {
       document
         .getElementById('quick-match-log-container')
         .classList.remove('hidden');
+      document
+        .getElementById('connection-log-container')
+        .classList.remove('hidden');
       const callBackIfPassed = () => {
         const roomId = generatePushID();
         startQuickMatch(roomId);
@@ -137,12 +140,17 @@ export function setUpUI() {
     const aboutWithYourFriend = document.getElementById(
       'about-with-your-friend'
     );
+    const connectionLogContainer = document.getElementById(
+      'connection-log-container'
+    );
     if (aboutWithYourFriend.classList.contains('hidden')) {
       aboutWithYourFriend.classList.remove('hidden');
+      connectionLogContainer.classList.remove('hidden');
       // @ts-ignore
       quickMatchBtn.disabled = true;
     } else {
       aboutWithYourFriend.classList.add('hidden');
+      connectionLogContainer.classList.add('hidden');
       // @ts-ignore
       quickMatchBtn.disabled = false;
     }
