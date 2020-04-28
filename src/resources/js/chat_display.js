@@ -5,6 +5,7 @@
  * The positions are random but one message should appears on the same (random) position for both peers.
  * It is achieved by setting the same RNG (random number generator) for each player's chat box.
  */
+'use strict';
 import { channel } from './data_channel.js';
 
 let player1ChatRng = null;

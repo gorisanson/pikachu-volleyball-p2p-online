@@ -2,6 +2,7 @@
  * Manages outputs to and inputs from the html elements UI
  * and event listeners relevant to the UI of the web page
  */
+'use strict';
 import {
   channel,
   createRoom,
