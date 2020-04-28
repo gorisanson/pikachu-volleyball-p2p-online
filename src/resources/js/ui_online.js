@@ -100,8 +100,29 @@ export function setUpUI() {
       document
         .getElementById('quick-match-log-container')
         .classList.remove('hidden');
-      const roomId = generatePushID();
-      startQuickMatch(roomId);
+      const callBackIfPassed = () => {
+        const roomId = generatePushID();
+        startQuickMatch(roomId);
+      };
+      const callBackIfDidNotGetSrflx = () => {
+        printQuickMatchLog(
+          document.getElementById('did-not-get-srflx-candidate').textContent
+        );
+        enableBtns();
+      };
+      const callBackIfBehindSymmetricNat = () => {
+        printQuickMatchLog(
+          document.getElementById('behind-symmetric-nat').textContent
+        );
+        enableBtns();
+      };
+      // Start quick match only if user network passed the network test.
+      testNetwork(
+        () => {},
+        callBackIfPassed,
+        callBackIfDidNotGetSrflx,
+        callBackIfBehindSymmetricNat
+      );
     }
   };
   quickMatchBtn.addEventListener('click', () => {
