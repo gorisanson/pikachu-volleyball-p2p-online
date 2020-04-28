@@ -96,15 +96,15 @@ export async function testNetwork(
         console.log(isBehindSymmetricNat ? 'symmetric nat' : 'normal nat');
       }
       if (didNotGetSrflx) {
-        window.setTimeout(callBackIfDidNotGetSrflx, 0);
+        callBackIfDidNotGetSrflx();
       }
       if (isBehindSymmetricNat) {
-        window.setTimeout(callBackIfBehindSymmetricNat, 0);
+        callBackIfBehindSymmetricNat();
       }
       if (!didNotGetSrflx && !isBehindSymmetricNat) {
-        window.setTimeout(callBackIfPassed, 0);
+        callBackIfPassed();
       }
-      window.setTimeout(callBack, 0);
+      callBack();
       return;
     }
     if (event.candidate.candidate.includes('srflx')) {

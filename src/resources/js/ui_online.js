@@ -100,28 +100,59 @@ export function setUpUI() {
       document
         .getElementById('quick-match-log-container')
         .classList.remove('hidden');
-      const roomId = generatePushID();
-      startQuickMatch(roomId);
+      document
+        .getElementById('connection-log-container')
+        .classList.remove('hidden');
+      const callBackIfPassed = () => {
+        const roomId = generatePushID();
+        startQuickMatch(roomId);
+      };
+      const callBackIfDidNotGetSrflx = () => {
+        printQuickMatchLog(
+          document.getElementById('did-not-get-srflx-candidate').textContent
+        );
+        enableBtns();
+      };
+      const callBackIfBehindSymmetricNat = () => {
+        printQuickMatchLog(
+          document.getElementById('behind-symmetric-nat').textContent
+        );
+        enableBtns();
+      };
+      // Start quick match only if user network passed the network test.
+      testNetwork(
+        () => {},
+        callBackIfPassed,
+        callBackIfDidNotGetSrflx,
+        callBackIfBehindSymmetricNat
+      );
     }
   };
   quickMatchBtn.addEventListener('click', () => {
     disableBtns();
     channel.isQuickMatch = true;
-    document
-      .getElementById('press-enter-to-quick-match')
-      .classList.remove('hidden');
     window.addEventListener('keydown', startQuickMatchIfPressEnter);
+    const pressEnterToQuickMatch = document.getElementById(
+      'press-enter-to-quick-match'
+    );
+    pressEnterToQuickMatch.classList.remove('hidden');
+    pressEnterToQuickMatch.scrollIntoView();
   });
   withYourFriendBtn.addEventListener('click', () => {
     const aboutWithYourFriend = document.getElementById(
       'about-with-your-friend'
     );
+    const connectionLogContainer = document.getElementById(
+      'connection-log-container'
+    );
     if (aboutWithYourFriend.classList.contains('hidden')) {
       aboutWithYourFriend.classList.remove('hidden');
+      connectionLogContainer.classList.remove('hidden');
       // @ts-ignore
       quickMatchBtn.disabled = true;
     } else {
       aboutWithYourFriend.classList.add('hidden');
+      connectionLogContainer.classList.add('hidden');
       // @ts-ignore
       quickMatchBtn.disabled = false;
     }
