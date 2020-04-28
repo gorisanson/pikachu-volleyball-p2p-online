@@ -90,8 +90,16 @@ export function setUpUI() {
   const startQuickMatchIfPressEnter = (event) => {
     if (event.code === 'Enter') {
       event.preventDefault();
-      console.log('enenen');
       window.removeEventListener('keydown', startQuickMatchIfPressEnter);
+      const pressEnterToQuickMatch = document.getElementById(
+        'press-enter-to-quick-match'
+      );
+      if (!pressEnterToQuickMatch.classList.contains('hidden')) {
+        pressEnterToQuickMatch.classList.add('hidden');
+      }
+      document
+        .getElementById('quick-match-log-container')
+        .classList.remove('hidden');
       const roomId = generatePushID();
       startQuickMatch(roomId);
     }
@@ -100,9 +108,8 @@ export function setUpUI() {
     disableBtns();
     channel.isQuickMatch = true;
     document
-      .getElementById('quick-match-log-container')
+      .getElementById('press-enter-to-quick-match')
       .classList.remove('hidden');
-
     window.addEventListener('keydown', startQuickMatchIfPressEnter);
   });
   withYourFriendBtn.addEventListener('click', () => {
