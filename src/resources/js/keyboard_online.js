@@ -3,6 +3,7 @@
  *
  * The user inputs (inputQueue) are transmitted between peers.
  */
+'use strict';
 import { PikaKeyboard } from './offline_version_js/keyboard.js';
 import { PikaUserInput } from './offline_version_js/physics.js';
 import { SYNC_DIVISOR, sendInputQueueToPeer } from './data_channel.js';

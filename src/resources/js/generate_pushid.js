@@ -4,6 +4,7 @@
  *
  * Modified the origianl code somewhat so that the generated id can be easilly distinguishable by human eye.
  */
+'use strict';
 
 /**
  * Fancy ID generator that creates 20-character string identifiers with the following properties:

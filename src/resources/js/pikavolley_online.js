@@ -1,4 +1,4 @@
-'ues strics';
+'use strict';
 import { PikachuVolleyball } from './offline_version_js/pikavolley.js';
 import { bufferLength, MyKeyboard, OnlineKeyboard } from './keyboard_online.js';
 import { SYNC_DIVISOR, channel } from './data_channel';

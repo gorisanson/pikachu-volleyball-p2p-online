@@ -7,7 +7,7 @@
  * https://webrtc.org/getting-started/firebase-rtc-codelab
  * https://webrtc.org/getting-started/data-channels
  */
-'use strict;';
+'use strict';
 
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';

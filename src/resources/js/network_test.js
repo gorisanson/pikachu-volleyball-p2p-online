@@ -1,3 +1,4 @@
+'use strict';
 import { rtcConfiguration } from './rtc_configuration.js';
 
 /**

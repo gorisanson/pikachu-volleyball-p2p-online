@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Return positive modulo n % m
  * @param {number} n
