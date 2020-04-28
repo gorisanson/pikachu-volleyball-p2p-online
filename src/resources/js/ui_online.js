@@ -13,6 +13,7 @@ import {
 import { generatePushID } from './generate_pushid.js';
 import { myKeyboard } from './pikavolley_online.js';
 import { testNetwork } from './network_test.js';
+import { startQuickMath } from './quick_match.js';
 import '../style.css';
 
 const chatOpenBtn = document.getElementById('chat-open-btn');
@@ -88,6 +89,9 @@ export function setUpUI() {
   });
   quickMatchBtn.addEventListener('click', () => {
     disableBtns();
+
+    const roomId = generatePushID();
+    startQuickMath(roomId);
   });
   withYourFriendBtn.addEventListener('click', () => {
     const aboutWithYourFriend = document.getElementById(
