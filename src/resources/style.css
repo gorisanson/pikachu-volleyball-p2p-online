@@ -365,3 +365,18 @@ ul {
   margin-top: var(--font-size);
   margin-bottom: var(--font-size);
 }
+div.grid-1-1 {
+  display: grid;
+  width: 100%;
+  height: calc(3 * var(--btn-height));
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+#quick-match-btn {
+  grid-column-start: 1;
+  font-size: var(--font-size);
+}
+#with-your-friend-btn {
+  grid-column-start: 2;
+  font-size: var(--font-size);
+}

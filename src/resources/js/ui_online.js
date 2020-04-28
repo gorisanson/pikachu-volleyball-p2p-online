@@ -27,12 +27,18 @@ export function setUpUI() {
   myKeyboard.unsubscribe();
 
   const networkTestBtn = document.getElementById('network-test-btn');
+  const quickMatchBtn = document.getElementById('quick-match-btn');
+  const withYourFriendBtn = document.getElementById('with-your-friend-btn');
   const createBtn = document.getElementById('create-btn');
   const joinBtn = document.getElementById('join-btn');
   const joinRoomIdInput = document.getElementById('join-room-id-input');
   const disableBtns = () => {
     // @ts-ignore
     networkTestBtn.disabled = true;
+    // @ts-ignore
+    quickMatchBtn.disabled = true;
+    // @ts-ignore
+    withYourFriendBtn.disabled = true;
     // @ts-ignore
     createBtn.disabled = true;
     // @ts-ignore
@@ -43,6 +49,16 @@ export function setUpUI() {
   const enableBtns = () => {
     // @ts-ignore
     networkTestBtn.disabled = false;
+    if (
+      document
+        .getElementById('about-with-your-friend')
+        .classList.contains('hidden')
+    ) {
+      // @ts-ignore
+      quickMatchBtn.disabled = false;
+    }
+    // @ts-ignore
+    withYourFriendBtn.disabled = false;
     // @ts-ignore
     createBtn.disabled = false;
     // @ts-ignore
@@ -70,8 +86,27 @@ export function setUpUI() {
       callBackIfBehindSymmetricNat
     );
   });
+  quickMatchBtn.addEventListener('click', () => {
+    disableBtns();
+  });
+  withYourFriendBtn.addEventListener('click', () => {
+    const aboutWithYourFriend = document.getElementById(
+      'about-with-your-friend'
+    );
+    if (aboutWithYourFriend.classList.contains('hidden')) {
+      aboutWithYourFriend.classList.remove('hidden');
+      // @ts-ignore
+      quickMatchBtn.disabled = true;
+    } else {
+      aboutWithYourFriend.classList.add('hidden');
+      // @ts-ignore
+      quickMatchBtn.disabled = false;
+    }
+  });
   createBtn.addEventListener('click', () => {
     disableBtns();
+    // @ts-ignore
+    document.getElementById('join-room-id-input').value = '';
 
     const roomId = generatePushID();
     createRoom(roomId).then(() => {
