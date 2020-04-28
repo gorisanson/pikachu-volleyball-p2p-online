@@ -27,7 +27,7 @@ export const CLIENT_TO_DO = {
  * Start request/response with quick match server
  * @param {string} roomIdToCreateIfNeeded
  */
-export function startQuickMath(roomIdToCreateIfNeeded) {
+export function startQuickMatch(roomIdToCreateIfNeeded) {
   roomIdToCreate = roomIdToCreateIfNeeded;
   communicationCount = 0;
   postData(serverURL, objectToSendToServer(roomIdToCreate, false)).then(
