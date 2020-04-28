@@ -182,12 +182,12 @@ canvas {
 }
 #network-test-btn,
 #create-btn,
-#join-room-id,
+#join-room-id-input,
 #join-btn {
   width: 100%;
   height: var(--btn-height);
 }
-#join-room-id,
+#join-room-id-input,
 #create-btn {
   grid-column-start: 1;
 }
@@ -199,7 +199,7 @@ canvas {
   font-size: calc(0.8 * var(--font-size));
 }
 #created-room-id-container,
-#join-room-id,
+#join-room-id-input,
 #chat-input {
   font-size: var(--font-size);
 }

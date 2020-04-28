@@ -27,7 +27,7 @@ export function setUpUI() {
   const networkTestBtn = document.getElementById('network-test-btn');
   const createBtn = document.getElementById('create-btn');
   const joinBtn = document.getElementById('join-btn');
-  const joinRoomID = document.getElementById('join-room-id');
+  const joinRoomIdInput = document.getElementById('join-room-id-input');
   const disableBtns = () => {
     // @ts-ignore
     networkTestBtn.disabled = true;
@@ -36,7 +36,7 @@ export function setUpUI() {
     // @ts-ignore
     joinBtn.disabled = true;
     // @ts-ignore
-    joinRoomID.disabled = true;
+    joinRoomIdInput.disabled = true;
   };
   const enableBtns = () => {
     // @ts-ignore
@@ -46,7 +46,7 @@ export function setUpUI() {
     // @ts-ignore
     joinBtn.disabled = false;
     // @ts-ignore
-    joinRoomID.disabled = false;
+    joinRoomIdInput.disabled = false;
   };
   networkTestBtn.addEventListener('click', () => {
     disableBtns();
@@ -140,7 +140,7 @@ export function printCurrentRoomID(roomId) {
 export function getJoinRoomID() {
   return (
     document
-      .getElementById('join-room-id')
+      .getElementById('join-room-id-input')
       // @ts-ignore
       .value.trim()
       .split('-')
