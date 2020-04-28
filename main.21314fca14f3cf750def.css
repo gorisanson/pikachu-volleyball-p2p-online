@@ -216,9 +216,12 @@ canvas {
   font-size: var(--font-size);
 }
 #connection-log-container {
-  min-height: 50vh;
   width: 100%;
   font-size: var(--font-size);
+}
+#container-for-margin {
+  min-height: 50vh;
+  width: 100%;
 }
 p.languages,
 p.offline-version,
@@ -386,4 +389,4 @@ div.grid-1-1 {
 }
 
 
-/*# sourceMappingURL=main.80228767f90545fb2abe.css.map*/
+/*# sourceMappingURL=main.21314fca14f3cf750def.css.map*/
