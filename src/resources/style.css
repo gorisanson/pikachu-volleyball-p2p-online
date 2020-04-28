@@ -211,6 +211,10 @@ canvas {
   display: flex;
   align-items: center;
 }
+#quick-match-log-container {
+  width: 100%;
+  font-size: var(--font-size);
+}
 #connection-log-container {
   min-height: 50vh;
   width: 100%;

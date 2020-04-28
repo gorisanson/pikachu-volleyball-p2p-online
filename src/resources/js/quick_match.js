@@ -4,10 +4,17 @@
 'use strict';
 import { serverURL } from './quick_match_server_url.js';
 import { createRoom, joinRoom } from './data_channel.js';
+import {
+  printCommunicationCount,
+  printQuickMatchState,
+  printQuickMatchLog,
+  printFailedToConnectToQuickMatchServer,
+} from './ui_online.js';
 
 let roomIdToCreate = null;
+let communicationCount = null;
 
-const CLIENT_TO_DO = {
+export const CLIENT_TO_DO = {
   createRoom: 'createRoom',
   keepWait: 'keepWait', // keep sending wait packet
   connectToPeer: 'connectToPeer',
@@ -22,6 +29,7 @@ const CLIENT_TO_DO = {
  */
 export function startQuickMath(roomIdToCreateIfNeeded) {
   roomIdToCreate = roomIdToCreateIfNeeded;
+  communicationCount = 0;
   postData(serverURL, objectToSendToServer(roomIdToCreate, false)).then(
     callback
   );
@@ -29,21 +37,26 @@ export function startQuickMath(roomIdToCreateIfNeeded) {
 
 // Example POST method implementation:
 async function postData(url = '', data = {}) {
-  // Default options are marked with *
-  const response = await fetch(url, {
-    method: 'POST', // *GET, POST, PUT, DELETE, etc.
-    mode: 'cors', // no-cors, *cors, same-origin
-    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-    credentials: 'same-origin', // include, *same-origin, omit
-    headers: {
-      'Content-Type': 'application/json',
-      // 'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    redirect: 'follow', // manual, *follow, error
-    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-    body: JSON.stringify(data), // body data type must match "Content-Type" header
-  });
-  return response.json(); // parses JSON response into native JavaScript objects
+  try {
+    // Default options are marked with *
+    const response = await fetch(url, {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: 'same-origin', // include, *same-origin, omit
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow', // manual, *follow, error
+      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(data), // body data type must match "Content-Type" header
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  } catch (e) {
+    printQuickMatchLog(e);
+    printFailedToConnectToQuickMatchServer();
+  }
 }
 
 const callback = (data) => {
@@ -84,6 +97,9 @@ const callback = (data) => {
       console.log('room id abandoned.. please retry quick match.');
       break;
   }
+  communicationCount++;
+  printCommunicationCount(communicationCount);
+  printQuickMatchState(data.toDo);
 };
 
 /**

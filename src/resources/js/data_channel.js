@@ -44,6 +44,7 @@ export const channel = {
   gameStartAllowed: false,
   amICreatedRoom: false,
   amIPlayer2: null, // set from pikavolley_online.js
+  isQuickMatch: null, // set from ui_online.js
 
   /** @type {PikaUserInputWithSync[]} */
   peerInputQueue: [],

@@ -13,7 +13,7 @@ import {
 import { generatePushID } from './generate_pushid.js';
 import { myKeyboard } from './pikavolley_online.js';
 import { testNetwork } from './network_test.js';
-import { startQuickMath } from './quick_match.js';
+import { CLIENT_TO_DO, startQuickMath } from './quick_match.js';
 import '../style.css';
 
 const chatOpenBtn = document.getElementById('chat-open-btn');
@@ -89,6 +89,10 @@ export function setUpUI() {
   });
   quickMatchBtn.addEventListener('click', () => {
     disableBtns();
+    channel.isQuickMatch = true;
+    document
+      .getElementById('quick-match-log-container')
+      .classList.remove('hidden');
 
     const roomId = generatePushID();
     startQuickMath(roomId);
@@ -111,6 +115,7 @@ export function setUpUI() {
     disableBtns();
     // @ts-ignore
     document.getElementById('join-room-id-input').value = '';
+    channel.isQuickMatch = false;
 
     const roomId = generatePushID();
     createRoom(roomId).then(() => {
@@ -119,6 +124,7 @@ export function setUpUI() {
   });
   joinBtn.addEventListener('click', () => {
     disableBtns();
+    channel.isQuickMatch = false;
 
     const roomId = getJoinRoomID();
     joinRoom(roomId).then((joined) => {
@@ -164,6 +170,23 @@ export function setUpUI() {
     location.reload();
   });
 
+  const askOneMoreGameYesBtn = document.getElementById(
+    'ask-one-more-game-yes-btn'
+  );
+  askOneMoreGameYesBtn.addEventListener('click', () => {
+    const askOneMoreGameBox = document.getElementById('ask-one-more-game');
+    if (!askOneMoreGameBox.classList.contains('hidden')) {
+      askOneMoreGameBox.classList.add('hidden');
+    }
+  });
+
+  const askOneMoreGameNoBtn = document.getElementById(
+    'ask-one-more-game-no-btn'
+  );
+  askOneMoreGameNoBtn.addEventListener('click', () => {
+    location.reload();
+  });
+
   window.addEventListener('unload', closeAndCleaning);
 
   window.addEventListener('beforeunload', function (e) {
@@ -195,6 +218,62 @@ function getJoinRoomID() {
       .split('-')
       .join('')
   );
+}
+
+/**
+ * Print communication count
+ * @param {number} count
+ */
+export function printCommunicationCount(count) {
+  document.getElementById('communication-count').textContent = String(count);
+}
+
+/**
+ * Print quick match state to quick match log box
+ * @param {string} state CLIENT_TO_DO.x
+ */
+export function printQuickMatchState(state) {
+  let log = '';
+  switch (state) {
+    case CLIENT_TO_DO.createRoom:
+      log = document.getElementById('waiting-message').textContent;
+      break;
+    case CLIENT_TO_DO.keepWait:
+      return;
+    case CLIENT_TO_DO.waitPeerConnection:
+      log = document.getElementById('waiting-peer-to-connect-message')
+        .textContent;
+      break;
+    case CLIENT_TO_DO.connectToPeerAfterAWhile:
+      log = document.getElementById('connect-to-peer-after-a-while-message')
+        .textContent;
+      break;
+    case CLIENT_TO_DO.connectToPeer:
+      log = document.getElementById('connect-to-peer-message').textContent;
+      break;
+    case CLIENT_TO_DO.abandoned:
+      log = document.getElementById('abandoned-message').textContent;
+      break;
+    default:
+      return;
+  }
+  printQuickMatchLog(log);
+}
+
+export function printFailedToConnectToQuickMatchServer() {
+  const log = document.getElementById('failed-to-connect-to-server')
+    .textContent;
+  printQuickMatchLog(log);
+}
+
+/**
+ * Print log to quick match log box
+ * @param {string} log
+ */
+export function printQuickMatchLog(log) {
+  const connectionLog = document.getElementById('quick-match-log');
+  connectionLog.textContent += `${log}\n`;
+  connectionLog.scrollIntoView();
 }
 
 /**
@@ -249,6 +328,10 @@ export function hideWatingPeerAssetsLoadingBox() {
 
 export function noticeDisconnected() {
   document.getElementById('notice-disconnected').classList.remove('hidden');
+}
+
+export function askOneMoreGame() {
+  document.getElementById('ask-one-more-game').classList.remove('hidden');
 }
 
 export function enableChatOpenBtn() {

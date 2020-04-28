@@ -3,6 +3,7 @@ import { PikachuVolleyball } from './offline_version_js/pikavolley.js';
 import { bufferLength, MyKeyboard, OnlineKeyboard } from './keyboard_online.js';
 import { SYNC_DIVISOR, channel } from './data_channel';
 import { mod } from './mod.js';
+import { askOneMoreGame } from './ui_online.js';
 
 /** @typedef GameState @type {function():void} */
 
@@ -42,6 +43,8 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     this.keyboardArray = [this.myOnlineKeyboard, this.peerOnlineKeyboard];
     this._syncCounter = 0;
     this.noInputFrameTotal.menu = Infinity;
+
+    this.isFirstGame = true;
   }
 
   /**
@@ -70,6 +73,22 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
 
   set syncCounter(counter) {
     this._syncCounter = mod(counter, SYNC_DIVISOR);
+  }
+
+  /**
+   * Override the "intro" method in the super class.
+   * It is to ask for one more game with the peer after quick match game ends.
+   * @type {GameState}
+   */
+  intro() {
+    if (this.frameCounter === 0) {
+      if (this.isFirstGame) {
+        this.isFirstGame = false;
+      } else {
+        askOneMoreGame();
+      }
+    }
+    super.intro();
   }
 
   /**
