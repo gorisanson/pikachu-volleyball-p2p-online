@@ -13,7 +13,7 @@ import {
 import { generatePushID } from './generate_pushid.js';
 import { myKeyboard } from './pikavolley_online.js';
 import { testNetwork } from './network_test.js';
-import { CLIENT_TO_DO, startQuickMath } from './quick_match.js';
+import { CLIENT_TO_DO, startQuickMatch } from './quick_match.js';
 import '../style.css';
 
 const chatOpenBtn = document.getElementById('chat-open-btn');
@@ -87,6 +87,15 @@ export function setUpUI() {
       callBackIfBehindSymmetricNat
     );
   });
+  const startQuickMatchIfPressEnter = (event) => {
+    if (event.code === 'Enter') {
+      event.preventDefault();
+      console.log('enenen');
+      window.removeEventListener('keydown', startQuickMatchIfPressEnter);
+      const roomId = generatePushID();
+      startQuickMatch(roomId);
+    }
+  };
   quickMatchBtn.addEventListener('click', () => {
     disableBtns();
     channel.isQuickMatch = true;
@@ -94,8 +103,7 @@ export function setUpUI() {
       .getElementById('quick-match-log-container')
       .classList.remove('hidden');
 
-    const roomId = generatePushID();
-    startQuickMath(roomId);
+    window.addEventListener('keydown', startQuickMatchIfPressEnter);
   });
   withYourFriendBtn.addEventListener('click', () => {
     const aboutWithYourFriend = document.getElementById(
