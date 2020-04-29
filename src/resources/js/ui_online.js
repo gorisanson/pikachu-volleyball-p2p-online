@@ -70,15 +70,17 @@ export function setUpUI() {
   networkTestBtn.addEventListener('click', () => {
     disableBtns();
     const callBackIfPassed = () => {
-      window.alert(document.getElementById('test-passed').textContent);
+      document.getElementById('test-passed').classList.remove('hidden');
     };
     const callBackIfDidNotGetSrflx = () => {
-      window.alert(
-        document.getElementById('did-not-get-srflx-candidate').textContent
-      );
+      document
+        .getElementById('did-not-get-srflx-candidate')
+        .classList.remove('hidden');
     };
     const callBackIfBehindSymmetricNat = () => {
-      window.alert(document.getElementById('behind-symmetric-nat').textContent);
+      document
+        .getElementById('behind-symmetric-nat')
+        .classList.remove('hidden');
     };
     testNetwork(
       enableBtns,
@@ -108,15 +110,15 @@ export function setUpUI() {
         startQuickMatch(roomId);
       };
       const callBackIfDidNotGetSrflx = () => {
-        printQuickMatchLog(
-          document.getElementById('did-not-get-srflx-candidate').textContent
-        );
+        document
+          .getElementById('did-not-get-srflx-candidate')
+          .classList.remove('hidden');
         enableBtns();
       };
       const callBackIfBehindSymmetricNat = () => {
-        printQuickMatchLog(
-          document.getElementById('behind-symmetric-nat').textContent
-        );
+        document
+          .getElementById('behind-symmetric-nat')
+          .classList.remove('hidden');
         enableBtns();
       };
       // Start quick match only if user network passed the network test.
@@ -207,6 +209,27 @@ export function setUpUI() {
         window.setTimeout(() => sendBtn.click(), 0);
       }
     }
+  });
+
+  attachEventListenerToHideBtn('test-passed-ok-btn', 'test-passed');
+  attachEventListenerToHideBtn(
+    'did-not-get-srflx-candidate-ok-btn',
+    'did-not-get-srflx-candidate'
+  );
+  attachEventListenerToHideBtn(
+    'behind-symmetric-nat-ok-btn',
+    'behind-symmetric-nat'
+  );
+
+  const cancelQuickMatchBtn = document.getElementById('cancel-quick-match-btn');
+  cancelQuickMatchBtn.addEventListener('click', () => {
+    const pressEnterToQuickMatch = document.getElementById(
+      'press-enter-to-quick-match'
+    );
+    if (!pressEnterToQuickMatch.classList.contains('hidden')) {
+      pressEnterToQuickMatch.classList.add('hidden');
+    }
+    enableBtns();
   });
 
   const noticeDisconnectedOKBtn = document.getElementById(
@@ -425,4 +448,19 @@ function sendBtnClicked() {
   // @ts-ignore
   chatInput.value = '';
   sendChatMessageToPeer(message);
+}
+
+/**
+ * Attch event listner to the hide btn
+ * @param {string} btnId
+ * @param {string} boxIdToHide
+ */
+function attachEventListenerToHideBtn(btnId, boxIdToHide) {
+  const btn = document.getElementById(btnId);
+  btn.addEventListener('click', () => {
+    const box = document.getElementById(boxIdToHide);
+    if (!box.classList.contains('hidden')) {
+      box.classList.add('hidden');
+    }
+  });
 }
