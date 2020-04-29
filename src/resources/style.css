@@ -334,7 +334,7 @@ input:disabled {
 button.btn-in-box {
   display: block;
   height: calc(2 * var(--font-size));
-  width: calc(5 * var(--font-size));
+  width: calc(6 * var(--font-size));
   border: none;
   margin: 0 auto;
   padding: 0;
@@ -382,6 +382,10 @@ div.grid-1-1 {
   height: calc(3 * var(--btn-height));
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+}
+div.grid-1-1.center {
+  width: auto;
+  height: auto;
 }
 div.fixed {
   position: fixed;
