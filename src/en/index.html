@@ -199,11 +199,17 @@
           <button type="button" id="join-btn">join room</button>
         </div>
       </div>
-      <div id="press-enter-to-quick-match" class="margin-top hidden">
+      <div
+        id="press-enter-to-quick-match"
+        class="fade-in-box notice fixed hidden"
+      >
         <p>
-          Press "Enter" key to start the quick match. (It is for preventing
-          devices without a keyboard from doing quick match.)
+          <span class="thick">Press "Enter" key</span> to start Quick Match. (It
+          is for preventing devices without a keyboard from doing quick match.)
         </p>
+        <button id="cancel-quick-match-btn" class="btn-in-box large">
+          cancel <span class="no-wrap">Quick Match</span>
+        </button>
       </div>
       <div id="quick-match-log-container" class="margin-top hidden">
         <p>
@@ -248,20 +254,32 @@
       <div id="no-room-matching-message" class="hidden">
         There is no room matching the ID. Please check the entered room ID.
       </div>
-      <div id="test-passed" class="hidden">
-        No issues are detected. (1) The server reflexive candidate can be gotten
-        (UDP ports are open), and (2) your network is not behind a symmetric
-        NAT.
+      <div id="test-passed" class="fade-in-box notice fixed hidden">
+        No issues are detected.<br /><br />(1) The server reflexive candidate
+        can be gotten. (UDP ports are open.)<br />(2) Your network is not behind
+        a symmetric NAT.
+        <button id="test-passed-ok-btn" class="btn-in-box">
+          OK
+        </button>
       </div>
-      <div id="did-not-get-srflx-candidate" class="hidden">
-        This P2P online version is not going to work on your network. The server
-        reflexive candidate can't be gotten. Maybe the reason is that the
+      <div
+        id="did-not-get-srflx-candidate"
+        class="fade-in-box notice fixed hidden"
+      >
+        This P2P online version is not going to work on your network.<br /><br />The
+        server reflexive candidate can't be gotten. Maybe the reason is that the
         necessary UDP ports are blocked. If you connected via a corporate
         network, maybe the firewall is blocking the UDP ports.
+        <button id="did-not-get-srflx-candidate-ok-btn" class="btn-in-box">
+          OK
+        </button>
       </div>
-      <div id="behind-symmetric-nat" class="hidden">
-        This P2P online version is not going to work on your network. Your
+      <div id="behind-symmetric-nat" class="fade-in-box notice fixed hidden">
+        This P2P online version is not going to work on your network.<br /><br />Your
         network is behind a symmetric NAT.
+        <button id="behind-symmetric-nat-ok-btn" class="btn-in-box">
+          OK
+        </button>
       </div>
     </div>
     <div id="flex-container" class="hidden">

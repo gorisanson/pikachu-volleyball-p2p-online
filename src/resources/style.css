@@ -346,6 +346,10 @@ button.btn-in-box {
   text-decoration: none;
   border-radius: 10px;
 }
+button.large {
+  height: calc(3 * var(--font-size));
+  width: calc(7 * var(--font-size));
+}
 div.align-center-horizontally {
   display: flex;
   flex-direction: column;
@@ -378,6 +382,13 @@ div.grid-1-1 {
   height: calc(3 * var(--btn-height));
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+}
+div.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
 }
 #quick-match-btn {
   grid-column-start: 1;
