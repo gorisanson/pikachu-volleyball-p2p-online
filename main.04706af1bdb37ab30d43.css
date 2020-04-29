@@ -334,7 +334,7 @@ input:disabled {
 button.btn-in-box {
   display: block;
   height: calc(2 * var(--font-size));
-  width: calc(5 * var(--font-size));
+  width: calc(6 * var(--font-size));
   border: none;
   margin: 0 auto;
   padding: 0;
@@ -345,6 +345,10 @@ button.btn-in-box {
   text-align: center;
   text-decoration: none;
   border-radius: 10px;
+}
+button.large {
+  height: calc(3 * var(--font-size));
+  width: calc(7 * var(--font-size));
 }
 div.align-center-horizontally {
   display: flex;
@@ -379,6 +383,17 @@ div.grid-1-1 {
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
+div.grid-1-1.center {
+  width: auto;
+  height: auto;
+}
+div.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
 #quick-match-btn {
   grid-column-start: 1;
   font-size: var(--font-size);
@@ -389,4 +404,4 @@ div.grid-1-1 {
 }
 
 
-/*# sourceMappingURL=main.21314fca14f3cf750def.css.map*/
+/*# sourceMappingURL=main.04706af1bdb37ab30d43.css.map*/
