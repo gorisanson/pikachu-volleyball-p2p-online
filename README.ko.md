@@ -6,7 +6,7 @@
 
 피카츄 배구 P2P 온라인은 이 피카츄 배구 게임의 P2P (peer-to-peer) 온라인 버전입니다. 인터넷을 통해 친구와 함께 플레이할 수 있습니다. 원조 게임을 리버스 엔지니어링해서 만든 [피카츄 배구 오프라인 웹 버전](https://github.com/gorisanson/pikachu-volleyball)에 [WebRTC](https://webrtc.org/) [data channels](https://webrtc.org/getting-started/data-channels)을 결합하여 개발하였습니다.
 
-https://gorisanson.github.io/pikachu-volleyball/ko/ 에서 이 피카츄 배구 P2P 온라인을 플레이할 수 있습니다.
+https://gorisanson.github.io/pikachu-volleyball-p2p-online/ko/ 에서 이 피카츄 배구 P2P 온라인을 플레이할 수 있습니다.
 
 <img src="src/resources/assets/images/screenshot.png" alt="피카츄 배구 게임 스크린샷" width="648">
 
