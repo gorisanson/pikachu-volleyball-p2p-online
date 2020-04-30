@@ -14,7 +14,7 @@ https://gorisanson.github.io/pikachu-volleyball-p2p-online/ko/ 에서 피카츄 
 
 - 오프라인 버전: 오프라인 웹 버전의 소스 코드 파일이 모두 [`src/resources/js/offline_version_js/`](src/resources/js/offline_version_js)에 담겨 있습니다. https://github.com/gorisanson/pikachu-volleyball/tree/master/src/resources/js 에 있는 소스 코드 파일과 동일한 것입니다. 이를 기반으로 온라인 버전을 만들었습니다.
 
-- WebRTC data channels: WebRTC data channels를 이용한 P2P 온라인 핵심 기능들이 [`src/resources/js/data_channel.js`](src/resources/js/data_channel.js)에 담겨 있습니다. (WebRTC로 P2P 연결을 맺기 위한 매개 수단으로 [Firebase Cloud Firestore](https://firebase.google.com/docs/firestore)를 사용합니다. 방장이 방장의 친구에게 보내는 방 ID가 서로 공유하는 Cloud Firestore document의 ID입니다. [Firebase + WebRTC Codelab](https://webrtc.org/getting-started/firebase-rtc-codelab)과 [https://github.com/webrtc/FirebaseRTC](https://github.com/webrtc/FirebaseRTC)에서 사용하는 방식을 거의 그대로 이용한 것입니다.)
+- WebRTC data channels: WebRTC data channels를 이용한 P2P 온라인 핵심 기능들이 [`src/resources/js/data_channel.js`](src/resources/js/data_channel.js)에 담겨 있습니다. (WebRTC로 P2P 연결을 맺기 위한 매개 수단으로 [Firebase Cloud Firestore](https://firebase.google.com/docs/firestore)를 사용합니다. 방장이 방장의 친구에게 보내는 방 ID가 서로 공유하는 Cloud Firestore document의 ID입니다. [Firebase + WebRTC Codelab](https://webrtc.org/getting-started/firebase-rtc-codelab) 및 [https://github.com/webrtc/FirebaseRTC](https://github.com/webrtc/FirebaseRTC)에서 사용한 방식을 거의 그대로 이용한 것입니다.)
 
 - 퀵 매치: 퀵 매치 서버와 통신하는 기능이 [`src/resources/js/quick_match.js/`](src/resources/js/quick_match.js)에 담겨 있습니다. (퀵 매치 서버로는 [Google App Engine](https://cloud.google.com/appengine)을 사용합니다. 퀵 매치 서버는 퀵 매치를 위해 현재 대기하고 있는 사람의 방 ID를 새로 들어온 사람에게 보내주는 역할을 합니다.)
 
