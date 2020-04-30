@@ -10,7 +10,7 @@ import { SYNC_DIVISOR, sendInputQueueToPeer } from './data_channel.js';
 import { mod, isInModRange } from './mod.js';
 
 /** @constant @type {number} communicated input queue buffer length */
-export const bufferLength = 15;
+export const bufferLength = 8;
 
 /**
  * Class representing my keyboard used for game controller.

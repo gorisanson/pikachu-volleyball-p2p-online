@@ -163,15 +163,6 @@
             ID into the text input box left of the "join room" button, and click
             the "join room" button. Then connection process will be started.
           </p>
-          <p>
-            If the connection is established successfully, the game will be
-            started. If the upper
-            <span class="no-wrap">"2人でぴかちゅ~"</span> is selected, the room
-            creator will play as player 1 (on the left side) and the joiner will
-            play as player 2 (on the right side). If the lower
-            <span class="no-wrap">"2人でぴかちゅ~"</span> is selected, it's the
-            opposite.
-          </p>
           <p class="margin-top">
             <span class="thick">Notice:</span> The connection will be
             established in about 5-10 seconds after the joiner clicked the "join
@@ -295,6 +286,13 @@
               <div id="progress-bar" style="width: 0%;"></div>
             </div>
           </div>
+          <div>
+            Menu description<br /><br />
+            <span class="no-wrap">"2人でぴかちゅ~"</span>(upper) - Keep the
+            current side of play<br />
+            <span class="no-wrap">"2人でぴかちゅ~"</span>(lower) - Swap the side
+            of play
+          </div>
         </div>
         <div class="fade-in-box peer-loading black" id="peer-loading-box">
           <div>
@@ -304,6 +302,7 @@
         <div class="fade-in-box ping black" id="ping-box">
           <div>
             <p>Average ping: <span id="average-ping"></span> ms</p>
+            <p>If the ping is over 100 ms, the game play can be unstable.</p>
             <p>The game starts in <span id="starts-in"></span> seconds.</p>
           </div>
         </div>

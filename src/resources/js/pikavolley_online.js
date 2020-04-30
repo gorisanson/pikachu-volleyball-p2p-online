@@ -84,6 +84,11 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     if (this.frameCounter === 0) {
       if (this.isFirstGame) {
         this.isFirstGame = false;
+        if (channel.amICreatedRoom) {
+          this.amIPlayer2 = false;
+        } else {
+          this.amIPlayer2 = true;
+        }
       } else if (channel.isQuickMatch) {
         askOneMoreGame();
       }
@@ -98,18 +103,8 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
    */
   beforeStartOfNewGame() {
     if (this.frameCounter === 0) {
-      if (channel.amICreatedRoom) {
-        if (this.selectedWithWho === 0) {
-          this.amIPlayer2 = false;
-        } else {
-          this.amIPlayer2 = true;
-        }
-      } else {
-        if (this.selectedWithWho === 0) {
-          this.amIPlayer2 = true;
-        } else {
-          this.amIPlayer2 = false;
-        }
+      if (this.selectedWithWho === 1) {
+        this.amIPlayer2 = !this.amIPlayer2;
       }
     }
     super.beforeStartOfNewGame();
