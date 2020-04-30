@@ -439,7 +439,7 @@ function startGameAfterPingTest() {
 
       printAvgPing(avg);
 
-      let t = 5;
+      let t = 10;
       printStartsIn(t);
       const intervalID2 = setInterval(() => {
         t--;
