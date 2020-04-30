@@ -9,6 +9,7 @@ import {
   printQuickMatchState,
   printQuickMatchLog,
   printFailedToConnectToQuickMatchServer,
+  printNumberOfSuccessfulQuickMatches,
 } from './ui_online.js';
 
 let roomIdToCreate = null;
@@ -72,11 +73,10 @@ const callback = (data) => {
 
   if (data.numOfSuccess !== null) {
     const numOfSuccess = data.numOfSuccess;
-    numOfSuccess.withinLast10minutes;
-    numOfSuccess.withinLast1hour;
-    numOfSuccess.withinLast24hours;
-    printQuickMatchLog(
-      `10: ${numOfSuccess.withinLast10minutes}, 1 hour: ${numOfSuccess.withinLast1hour}, 24 hours:${numOfSuccess.withinLast24hours}`
+    printNumberOfSuccessfulQuickMatches(
+      numOfSuccess.withinLast24hours,
+      numOfSuccess.withinLast1hour,
+      numOfSuccess.withinLast10minutes
     );
   }
 

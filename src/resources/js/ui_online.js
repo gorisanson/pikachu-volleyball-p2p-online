@@ -346,6 +346,28 @@ export function printQuickMatchLog(log) {
 }
 
 /**
+ * Print number of successful quick matches
+ * @param {number} withinLast24hours
+ * @param {number} withinLast1hour
+ * @param {number} withinLast10minutes
+ */
+export function printNumberOfSuccessfulQuickMatches(
+  withinLast24hours,
+  withinLast1hour,
+  withinLast10minutes
+) {
+  document.getElementById('within-24-hours').textContent = String(
+    withinLast24hours
+  );
+  document.getElementById('within-1-hour').textContent = String(
+    withinLast1hour
+  );
+  document.getElementById('within-10-minutes').textContent = String(
+    withinLast10minutes
+  );
+}
+
+/**
  * Print log to connection log box
  * @param {string} log
  */
