@@ -206,14 +206,24 @@
         </button>
       </div>
       <div id="quick-match-log-container" class="margin-top hidden">
-        <p>
-          <span class="thick">퀵 매치 로그:</span>
-        </p>
-        <p>
-          퀵 매치 서버와 통신한 횟수:
-          <span id="communication-count">0</span>
-        </p>
-        <div id="quick-match-log" style="white-space: pre-line;"></div>
+        <div>
+          <span class="thick">퀵 매치로 성사된 매치 수</span>
+          <ul>
+            <li>최근 24시간: <span id="within-24-hours"></span></li>
+            <li>최근 1시간: <span id="within-1-hour"></span></li>
+            <li>최근 10분: <span id="within-10-minutes"></span></li>
+          </ul>
+        </div>
+        <div class="margin-top">
+          <p>
+            <span class="thick">퀵 매치 로그:</span>
+          </p>
+          <p>
+            퀵 매치 서버와 통신한 횟수:
+            <span id="communication-count">0</span>
+          </p>
+          <div id="quick-match-log" style="white-space: pre-line;"></div>
+        </div>
       </div>
       <div id="connection-log-container" class="margin-top hidden">
         <p>

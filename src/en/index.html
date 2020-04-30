@@ -204,14 +204,27 @@
         </button>
       </div>
       <div id="quick-match-log-container" class="margin-top hidden">
-        <p>
-          <span class="thick">Quick Match Log:</span>
-        </p>
-        <p>
-          Number of communication with the quick match server:
-          <span id="communication-count">0</span>
-        </p>
-        <div id="quick-match-log" style="white-space: pre-line;"></div>
+        <div>
+          <span class="thick"
+            >Number of successful matches connected by Quick Match within the
+            last..</span
+          >
+          <ul>
+            <li>24 hours: <span id="within-24-hours"></span></li>
+            <li>1 hour: <span id="within-1-hour"></span></li>
+            <li>10 minutes: <span id="within-10-minutes"></span></li>
+          </ul>
+        </div>
+        <div class="margin-top">
+          <p>
+            <span class="thick">Quick Match Log:</span>
+          </p>
+          <p>
+            Number of communication with the quick match server:
+            <span id="communication-count">0</span>
+          </p>
+          <div id="quick-match-log" style="white-space: pre-line;"></div>
+        </div>
       </div>
       <div id="connection-log-container" class="margin-top hidden">
         <p>

@@ -33,6 +33,7 @@ import {
   displayPeerChatMessage,
 } from './chat_display.js';
 import { rtcConfiguration } from './rtc_configuration.js';
+import { sendQuickMatchSucceededToServer } from './quick_match.js';
 
 firebase.initializeApp(firebaseConfig);
 
@@ -520,6 +521,10 @@ function dataChannelOpened() {
   console.log(`dataChannel.maxRetransmits: ${dataChannel.maxRetransmits}`);
   channel.isOpen = true;
   dataChannel.binaryType = 'arraybuffer';
+
+  if (channel.amICreatedRoom) {
+    sendQuickMatchSucceededToServer();
+  }
 
   // Set the same RNG (used for the game) for both peers
   const customRng = seedrandom.alea(roomId.slice(10));
