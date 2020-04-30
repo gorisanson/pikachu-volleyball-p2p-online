@@ -30,9 +30,17 @@ export const CLIENT_TO_DO = {
 export function startQuickMatch(roomIdToCreateIfNeeded) {
   roomIdToCreate = roomIdToCreateIfNeeded;
   communicationCount = 0;
-  postData(serverURL, objectToSendToServer(roomIdToCreate, false)).then(
+  postData(serverURL, objectToSendToServer(roomIdToCreate, false, false)).then(
     callback
   );
+}
+
+/**
+ * In quick match, the room creator send this quick match succeeded packet if data channel is opened.
+ */
+export function sendQuickMatchSucceededToServer() {
+  console.log('Send quick match success message to server');
+  postData(serverURL, objectToSendToServer(roomIdToCreate, true, true));
 }
 
 // Example POST method implementation:
@@ -61,22 +69,35 @@ async function postData(url = '', data = {}) {
 
 const callback = (data) => {
   // JSON data parsed by `response.json()` call
+
+  if (data.numOfSuccess !== null) {
+    const numOfSuccess = data.numOfSuccess;
+    numOfSuccess.withinLast10minutes;
+    numOfSuccess.withinLast1hour;
+    numOfSuccess.withinLast24hours;
+    printQuickMatchLog(
+      `10: ${numOfSuccess.withinLast10minutes}, 1 hour: ${numOfSuccess.withinLast1hour}, 24 hours:${numOfSuccess.withinLast24hours}`
+    );
+  }
+
   switch (data.toDo) {
     case CLIENT_TO_DO.createRoom:
       console.log('Create room!');
       createRoom(roomIdToCreate);
       window.setTimeout(() => {
-        postData(serverURL, objectToSendToServer(roomIdToCreate, true)).then(
-          callback
-        );
+        postData(
+          serverURL,
+          objectToSendToServer(roomIdToCreate, true, false)
+        ).then(callback);
       }, 1000);
       break;
     case CLIENT_TO_DO.keepWait:
       console.log('Keep wait!');
       window.setTimeout(() => {
-        postData(serverURL, objectToSendToServer(roomIdToCreate, true)).then(
-          callback
-        );
+        postData(
+          serverURL,
+          objectToSendToServer(roomIdToCreate, true, false)
+        ).then(callback);
       }, 1000);
       break;
     case CLIENT_TO_DO.waitPeerConnection:
@@ -97,6 +118,7 @@ const callback = (data) => {
       console.log('room id abandoned.. please retry quick match.');
       break;
   }
+
   communicationCount++;
   printCommunicationCount(communicationCount);
   printQuickMatchState(data.toDo);
@@ -106,10 +128,16 @@ const callback = (data) => {
  * Create an object to send to server by json
  * @param {string} roomIdToCreate
  * @param {boolean} roomCreated
+ * @param {boolean} quickMatchSucceeded
  */
-function objectToSendToServer(roomIdToCreate, roomCreated) {
+function objectToSendToServer(
+  roomIdToCreate,
+  roomCreated,
+  quickMatchSucceeded
+) {
   return {
     roomId: roomIdToCreate,
     roomCreated: roomCreated,
+    quickMatchSucceeded: quickMatchSucceeded,
   };
 }
