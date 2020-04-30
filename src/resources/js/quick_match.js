@@ -1,4 +1,6 @@
 /**
+ * Manages the communication with the quick match server.
+ *
  * Major parts of fetch API code is copied from https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
  */
 'use strict';
