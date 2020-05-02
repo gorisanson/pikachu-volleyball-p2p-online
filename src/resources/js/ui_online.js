@@ -11,7 +11,7 @@ import {
   closeAndCleaning,
 } from './data_channel.js';
 import { generatePushID } from './generate_pushid.js';
-import { myKeyboard } from './pikavolley_online.js';
+import { myKeyboard } from './keyboard_online.js';
 import { testNetwork } from './network_test.js';
 import { CLIENT_TO_DO, startQuickMatch } from './quick_match.js';
 import '../style.css';

@@ -1,24 +1,11 @@
 'use strict';
 import { PikachuVolleyball } from './offline_version_js/pikavolley.js';
-import { bufferLength, MyKeyboard, OnlineKeyboard } from './keyboard_online.js';
+import { bufferLength, myKeyboard, OnlineKeyboard } from './keyboard_online.js';
 import { SYNC_DIVISOR, channel } from './data_channel';
 import { mod } from './mod.js';
 import { askOneMoreGame } from './ui_online.js';
 
 /** @typedef GameState @type {function():void} */
-
-export const myKeyboard = new MyKeyboard(
-  'KeyD',
-  'KeyG',
-  'KeyR',
-  'KeyF',
-  'KeyZ',
-  'ArrowLeft',
-  'ArrowRight',
-  'ArrowUp',
-  'ArrowDown',
-  'Enter'
-);
 
 /**
  * Class reperesenting Pikachu Volleyball p2p online game

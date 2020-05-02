@@ -6,18 +6,58 @@
 'use strict';
 import { PikaKeyboard } from './offline_version_js/keyboard.js';
 import { PikaUserInput } from './offline_version_js/physics.js';
-import { SYNC_DIVISOR, sendInputQueueToPeer } from './data_channel.js';
+import { channel, SYNC_DIVISOR, sendInputQueueToPeer } from './data_channel.js';
 import { mod, isInModRange } from './mod.js';
 
 /** @constant @type {number} communicated input queue buffer length */
 export const bufferLength = 8;
 
 /**
+ * Class respresenting modified version of PikaKeyboard Class
+ */
+class PikaKeyboardModified extends PikaKeyboard {
+  /**
+   * Override the method in the superclass
+   */
+  getInput() {
+    if (this.leftKey.isDown) {
+      this.xDirection = -1;
+    } else if (
+      this.rightKey.isDown ||
+      (!channel.amIPlayer2 && this.downRightKey && this.downRightKey.isDown) // this.downRightKey works as right key only for player 1
+    ) {
+      this.xDirection = 1;
+    } else {
+      this.xDirection = 0;
+    }
+
+    if (this.upKey.isDown) {
+      this.yDirection = -1;
+    } else if (
+      this.downKey.isDown ||
+      (this.downRightKey && this.downRightKey.isDown)
+    ) {
+      this.yDirection = 1;
+    } else {
+      this.yDirection = 0;
+    }
+
+    const isDown = this.powerHitKey.isDown;
+    if (!this.powerHitKeyIsDownPrevious && isDown) {
+      this.powerHit = 1;
+    } else {
+      this.powerHit = 0;
+    }
+    this.powerHitKeyIsDownPrevious = isDown;
+  }
+}
+
+/**
  * Class representing my keyboard used for game controller.
- * User chooses a comportable side, so it contains both sides
+ * User chooses a comfortable side, so it contains both sides
  * (player 1 side in offline version, player 2 side in offline version).
  */
-export class MyKeyboard {
+class MyKeyboard {
   /**
    * Create a keyboard used for game controller
    * left, right, up, down, powerHit: KeyboardEvent.code value for each
@@ -27,6 +67,9 @@ export class MyKeyboard {
    * @param {string} up KeyboardEvent.code value of the key to use for up
    * @param {string} down KeyboardEvent.code value of the key to use for down
    * @param {string} powerHit KeyboardEvent.code value of the key to use for power hit or selection
+   * @param {string} downRight KeyboardEvent.code value of the key to use for having the same effect
+   *                          when pressing down key and right key at the same time (Only player 1
+   *                          has this key)
    * @param {string} left2 KeyboardEvent.code value of the key to use for left
    * @param {string} right2 KeyboardEvent.code value of the key to use for right
    * @param {string} up2 KeyboardEvent.code value of the key to use for up
@@ -39,14 +82,28 @@ export class MyKeyboard {
     up,
     down,
     powerHit,
+    downRight,
     left2,
     right2,
     up2,
     down2,
     powerHit2
   ) {
-    this.keyboard1 = new PikaKeyboard(left, right, up, down, powerHit);
-    this.keyboard2 = new PikaKeyboard(left2, right2, up2, down2, powerHit2);
+    this.keyboard1 = new PikaKeyboardModified(
+      left,
+      right,
+      up,
+      down,
+      powerHit,
+      downRight
+    );
+    this.keyboard2 = new PikaKeyboardModified(
+      left2,
+      right2,
+      up2,
+      down2,
+      powerHit2
+    );
     this._syncCounter = 0;
     /** @type {PikaUserInputWithSync[]} */
     this.inputQueue = [];
@@ -117,6 +174,21 @@ export class MyKeyboard {
     sendInputQueueToPeer(this.inputQueue);
   }
 }
+
+/** This Mykeybord instance is used among the modules */
+export const myKeyboard = new MyKeyboard(
+  'KeyD',
+  'KeyG',
+  'KeyR',
+  'KeyV',
+  'KeyZ',
+  'KeyF',
+  'ArrowLeft',
+  'ArrowRight',
+  'ArrowUp',
+  'ArrowDown',
+  'Enter'
+);
 
 /**
  * Class representing the online keyboard which gets input from input queue
