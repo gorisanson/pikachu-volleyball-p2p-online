@@ -12,6 +12,9 @@ import { mod, isInModRange } from './mod.js';
 /** @constant @type {number} communicated input queue buffer length */
 export const bufferLength = 8;
 
+/**
+ * Class respresenting modified version of PikaKeyboard Class
+ */
 class PikaKeyboardModified extends PikaKeyboard {
   /**
    * Override the method in the superclass
@@ -172,6 +175,7 @@ class MyKeyboard {
   }
 }
 
+/** This Mykeybord instance is used among the modules */
 export const myKeyboard = new MyKeyboard(
   'KeyD',
   'KeyG',
