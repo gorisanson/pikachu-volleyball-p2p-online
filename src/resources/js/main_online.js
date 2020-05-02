@@ -33,6 +33,10 @@
  *  - "firebase_config.template.js": This p2p online version utilized firebase cloud firestore to establish
  *                                   webRTC data channel connection between peers. Fill this template and
  *                                   change the file name to "firebase_config.js".
+ *  - "rtc_configuration.js": Contains RTCPeerConnection configuration.
+ *  - "quick_match.js": It is for the quick match function. Manages communication with the quick match server.
+ *  - "qucik_match_server_url.template.js": Fill this template the url of the quick match server and change
+ *                                          the file name to "qucik_match_server_url.js"
  */
 'use strict';
 import * as PIXI from 'pixi.js-legacy';
