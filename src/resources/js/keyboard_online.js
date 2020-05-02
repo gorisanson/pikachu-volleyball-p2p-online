@@ -17,7 +17,7 @@ export const bufferLength = 8;
  * User chooses a comfortable side, so it contains both sides
  * (player 1 side in offline version, player 2 side in offline version).
  */
-export class MyKeyboard {
+class MyKeyboard {
   /**
    * Create a keyboard used for game controller
    * left, right, up, down, powerHit: KeyboardEvent.code value for each
@@ -117,6 +117,19 @@ export class MyKeyboard {
     sendInputQueueToPeer(this.inputQueue);
   }
 }
+
+export const myKeyboard = new MyKeyboard(
+  'KeyD',
+  'KeyG',
+  'KeyR',
+  'KeyF',
+  'KeyZ',
+  'ArrowLeft',
+  'ArrowRight',
+  'ArrowUp',
+  'ArrowDown',
+  'Enter'
+);
 
 /**
  * Class representing the online keyboard which gets input from input queue
