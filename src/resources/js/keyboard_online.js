@@ -14,7 +14,7 @@ export const bufferLength = 8;
 
 /**
  * Class representing my keyboard used for game controller.
- * User chooses a comportable side, so it contains both sides
+ * User chooses a comfortable side, so it contains both sides
  * (player 1 side in offline version, player 2 side in offline version).
  */
 export class MyKeyboard {
