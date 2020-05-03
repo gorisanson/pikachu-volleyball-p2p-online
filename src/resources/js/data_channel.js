@@ -522,7 +522,7 @@ function dataChannelOpened() {
   channel.isOpen = true;
   dataChannel.binaryType = 'arraybuffer';
 
-  if (channel.amICreatedRoom) {
+  if (channel.isQuickMatch && channel.amICreatedRoom) {
     sendQuickMatchSucceededToServer();
   }
 
