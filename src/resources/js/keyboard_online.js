@@ -75,6 +75,9 @@ class MyKeyboard {
    * @param {string} up2 KeyboardEvent.code value of the key to use for up
    * @param {string} down2 KeyboardEvent.code value of the key to use for down
    * @param {string} powerHit2 KeyboardEvent.code value of the key to use for power hit or selection
+   * @param {string} downRight2 KeyboardEvent.code value of the key to use for having the same effect
+   *                           when pressing down key and right key at the same time (Only player 1
+   *                           has this key)
    */
   constructor(
     left,
@@ -87,7 +90,8 @@ class MyKeyboard {
     right2,
     up2,
     down2,
-    powerHit2
+    powerHit2,
+    downRight2
   ) {
     this.keyboard1 = new PikaKeyboardModified(
       left,
@@ -102,7 +106,8 @@ class MyKeyboard {
       right2,
       up2,
       down2,
-      powerHit2
+      powerHit2,
+      downRight2
     );
     this._syncCounter = 0;
     /** @type {PikaUserInputWithSync[]} */
@@ -187,7 +192,8 @@ export const myKeyboard = new MyKeyboard(
   'ArrowRight',
   'ArrowUp',
   'ArrowDown',
-  'Enter'
+  'Enter',
+  'ArrowDown'
 );
 
 /**
