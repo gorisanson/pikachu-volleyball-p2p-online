@@ -58,6 +58,9 @@ export function sendQuickMatchSucceededToServer() {
   );
 }
 
+/**
+ * In quick match, the room creator send this quick match cancel packet if they want to cancel quick match i.e. want to stop waiting.
+ */
 export function sendQuickMatchCancelMessageToServer() {
   console.log('Send quick match cancel message to server');
   postData(
