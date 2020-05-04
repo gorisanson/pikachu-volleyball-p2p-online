@@ -143,6 +143,7 @@ const callback = (data) => {
       console.log('Connect To Peer after 5 seconds...');
       window.setTimeout(() => {
         console.log('Connect To Peer!');
+        printQuickMatchState(MESSAGE_TO_CLIENT.connectToPeer);
         joinRoom(data.roomId);
       }, 5000);
       break;
