@@ -215,7 +215,7 @@ canvas {
   width: 100%;
   font-size: var(--font-size);
 }
-#connection-log-container {
+div.log {
   width: 100%;
   font-size: var(--font-size);
 }
@@ -402,6 +402,12 @@ div.fixed {
   grid-column-start: 2;
   font-size: var(--font-size);
 }
+div.scroll {
+  overflow: scroll;
+}
+button:disabled {
+  background-color: #cccccc;
+}
 
 
-/*# sourceMappingURL=main.04706af1bdb37ab30d43.css.map*/
+/*# sourceMappingURL=main.7293aadd97f4d5fe7117.css.map*/
