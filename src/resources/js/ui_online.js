@@ -100,10 +100,7 @@ export function setUpUI() {
         pressEnterToQuickMatch.classList.add('hidden');
       }
       document
-        .getElementById('quick-match-log-container')
-        .classList.remove('hidden');
-      document
-        .getElementById('connection-log-container')
+        .getElementById('quick-match-notice-box')
         .classList.remove('hidden');
       const callBackIfPassed = () => {
         const roomId = generatePushID();
@@ -144,17 +141,12 @@ export function setUpUI() {
     const aboutWithYourFriend = document.getElementById(
       'about-with-your-friend'
     );
-    const connectionLogContainer = document.getElementById(
-      'connection-log-container'
-    );
     if (aboutWithYourFriend.classList.contains('hidden')) {
       aboutWithYourFriend.classList.remove('hidden');
-      connectionLogContainer.classList.remove('hidden');
       // @ts-ignore
       quickMatchBtn.disabled = true;
     } else {
       aboutWithYourFriend.classList.add('hidden');
-      connectionLogContainer.classList.add('hidden');
       // @ts-ignore
       quickMatchBtn.disabled = false;
     }
@@ -229,6 +221,20 @@ export function setUpUI() {
     if (!pressEnterToQuickMatch.classList.contains('hidden')) {
       pressEnterToQuickMatch.classList.add('hidden');
     }
+    enableBtns();
+  });
+
+  const cancelQuickMatchBtn2 = document.getElementById(
+    'cancel-quick-match-btn-2'
+  );
+  cancelQuickMatchBtn2.addEventListener('click', () => {
+    const quickMatchNoticeBox = document.getElementById(
+      'quick-match-notice-box'
+    );
+    if (!quickMatchNoticeBox.classList.contains('hidden')) {
+      quickMatchNoticeBox.classList.add('hidden');
+    }
+    clearQuickMatchLog();
     enableBtns();
   });
 
@@ -345,6 +351,11 @@ export function printQuickMatchLog(log) {
   connectionLog.scrollIntoView();
 }
 
+function clearQuickMatchLog() {
+  const connectionLog = document.getElementById('quick-match-log');
+  connectionLog.textContent += ``;
+}
+
 /**
  * Print number of successful quick matches
  * @param {number} withinLast24hours
@@ -372,7 +383,11 @@ export function printNumberOfSuccessfulQuickMatches(
  * @param {string} log
  */
 export function printLog(log) {
-  const connectionLog = document.getElementById('connection-log');
+  let elementId = 'connection-log-with-friend';
+  if (channel.isQuickMatch) {
+    elementId = 'connection-log-quick-match';
+  }
+  const connectionLog = document.getElementById(elementId);
   connectionLog.textContent += `${log}\n`;
   connectionLog.scrollIntoView();
 }

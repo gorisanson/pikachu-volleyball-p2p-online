@@ -191,6 +191,15 @@
             방 <span class="no-wrap">들어가기</span>
           </button>
         </div>
+        <div class="margin-top log">
+          <p>
+            <span class="thick">연결 로그:</span>
+          </p>
+          <div
+            id="connection-log-with-friend"
+            style="white-space: pre-line;"
+          ></div>
+        </div>
       </div>
       <div
         id="press-enter-to-quick-match"
@@ -205,7 +214,7 @@
           <span class="no-wrap">퀵 매치</span> 취소
         </button>
       </div>
-      <div id="quick-match-log-container" class="margin-top hidden">
+      <div id="quick-match-notice-box" class="fade-in-box notice fixed hidden">
         <div>
           <span class="thick">퀵 매치로 성사된 매치 수</span>
           <ul>
@@ -224,12 +233,18 @@
           </p>
           <div id="quick-match-log" style="white-space: pre-line;"></div>
         </div>
-      </div>
-      <div id="connection-log-container" class="margin-top hidden">
-        <p>
-          <span class="thick">연결 로그:</span>
-        </p>
-        <div id="connection-log" style="white-space: pre-line;"></div>
+        <div class="margin-top log">
+          <p>
+            <span class="thick">연결 로그:</span>
+          </p>
+          <div
+            id="connection-log-quick-match"
+            style="white-space: pre-line;"
+          ></div>
+        </div>
+        <button id="cancel-quick-match-btn-2" class="btn-in-box large">
+          <span class="no-wrap">퀵 매치</span> 취소
+        </button>
       </div>
       <div id="container-for-margin"></div>
       <div id="waiting-message" class="hidden">

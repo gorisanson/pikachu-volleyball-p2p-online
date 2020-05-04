@@ -215,7 +215,7 @@ canvas {
   width: 100%;
   font-size: var(--font-size);
 }
-#connection-log-container {
+div.log {
   width: 100%;
   font-size: var(--font-size);
 }
