@@ -13,7 +13,7 @@ import {
 import { generatePushID } from './generate_pushid.js';
 import { myKeyboard } from './keyboard_online.js';
 import { testNetwork } from './network_test.js';
-import { CLIENT_TO_DO, startQuickMatch } from './quick_match.js';
+import { MESSAGE_TO_CLIENT, startQuickMatch } from './quick_match.js';
 import '../style.css';
 
 const chatOpenBtn = document.getElementById('chat-open-btn');
@@ -299,28 +299,28 @@ export function printCommunicationCount(count) {
 
 /**
  * Print quick match state to quick match log box
- * @param {string} state CLIENT_TO_DO.x
+ * @param {string} state MESSAGE_TO_CLIENT.x
  */
 export function printQuickMatchState(state) {
   let log = '';
   switch (state) {
-    case CLIENT_TO_DO.createRoom:
+    case MESSAGE_TO_CLIENT.createRoom:
       log = document.getElementById('waiting-message').textContent;
       break;
-    case CLIENT_TO_DO.keepWait:
+    case MESSAGE_TO_CLIENT.keepWait:
       return;
-    case CLIENT_TO_DO.waitPeerConnection:
+    case MESSAGE_TO_CLIENT.waitPeerConnection:
       log = document.getElementById('waiting-peer-to-connect-message')
         .textContent;
       break;
-    case CLIENT_TO_DO.connectToPeerAfterAWhile:
+    case MESSAGE_TO_CLIENT.connectToPeerAfterAWhile:
       log = document.getElementById('connect-to-peer-after-a-while-message')
         .textContent;
       break;
-    case CLIENT_TO_DO.connectToPeer:
+    case MESSAGE_TO_CLIENT.connectToPeer:
       log = document.getElementById('connect-to-peer-message').textContent;
       break;
-    case CLIENT_TO_DO.abandoned:
+    case MESSAGE_TO_CLIENT.abandoned:
       log = document.getElementById('abandoned-message').textContent;
       break;
     default:

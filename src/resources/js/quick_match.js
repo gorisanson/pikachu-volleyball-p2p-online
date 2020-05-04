@@ -17,7 +17,7 @@ import {
 let roomIdToCreate = null;
 let communicationCount = null;
 
-export const CLIENT_TO_DO = {
+export const MESSAGE_TO_CLIENT = {
   createRoom: 'createRoom',
   keepWait: 'keepWait', // keep sending wait packet
   connectToPeer: 'connectToPeer',
@@ -82,8 +82,8 @@ const callback = (data) => {
     );
   }
 
-  switch (data.toDo) {
-    case CLIENT_TO_DO.createRoom:
+  switch (data.message) {
+    case MESSAGE_TO_CLIENT.createRoom:
       console.log('Create room!');
       createRoom(roomIdToCreate);
       window.setTimeout(() => {
@@ -93,7 +93,7 @@ const callback = (data) => {
         ).then(callback);
       }, 1000);
       break;
-    case CLIENT_TO_DO.keepWait:
+    case MESSAGE_TO_CLIENT.keepWait:
       console.log('Keep wait!');
       window.setTimeout(() => {
         postData(
@@ -102,28 +102,28 @@ const callback = (data) => {
         ).then(callback);
       }, 1000);
       break;
-    case CLIENT_TO_DO.waitPeerConnection:
+    case MESSAGE_TO_CLIENT.waitPeerConnection:
       console.log('Wait peer connection!');
       break;
-    case CLIENT_TO_DO.connectToPeerAfterAWhile:
+    case MESSAGE_TO_CLIENT.connectToPeerAfterAWhile:
       console.log('Connect To Peer after 5 seconds...');
       window.setTimeout(() => {
         console.log('Connect To Peer!');
         joinRoom(data.roomId);
       }, 5000);
       break;
-    case CLIENT_TO_DO.connectToPeer:
+    case MESSAGE_TO_CLIENT.connectToPeer:
       console.log('Connect To Peer!');
       joinRoom(data.roomId);
       break;
-    case CLIENT_TO_DO.abandoned:
+    case MESSAGE_TO_CLIENT.abandoned:
       console.log('room id abandoned.. please retry quick match.');
       break;
   }
 
   communicationCount++;
   printCommunicationCount(communicationCount);
-  printQuickMatchState(data.toDo);
+  printQuickMatchState(data.message);
 };
 
 /**
