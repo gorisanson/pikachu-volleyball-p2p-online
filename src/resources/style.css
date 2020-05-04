@@ -402,3 +402,6 @@ div.fixed {
   grid-column-start: 2;
   font-size: var(--font-size);
 }
+div.scroll {
+  overflow: scroll;
+}
