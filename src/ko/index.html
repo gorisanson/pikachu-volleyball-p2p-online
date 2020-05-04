@@ -191,6 +191,15 @@
             방 <span class="no-wrap">들어가기</span>
           </button>
         </div>
+        <div class="margin-top log">
+          <p>
+            <span class="thick">연결 로그:</span>
+          </p>
+          <div
+            id="connection-log-with-friend"
+            style="white-space: pre-line;"
+          ></div>
+        </div>
       </div>
       <div
         id="press-enter-to-quick-match"
@@ -205,7 +214,10 @@
           <span class="no-wrap">퀵 매치</span> 취소
         </button>
       </div>
-      <div id="quick-match-log-container" class="margin-top hidden">
+      <div
+        id="quick-match-notice-box"
+        class="fade-in-box notice fixed scroll hidden"
+      >
         <div>
           <span class="thick">퀵 매치로 성사된 매치 수</span>
           <ul>
@@ -214,7 +226,7 @@
             <li>최근 10분: <span id="within-10-minutes"></span></li>
           </ul>
         </div>
-        <div class="margin-top">
+        <div>
           <p>
             <span class="thick">퀵 매치 로그:</span>
           </p>
@@ -224,26 +236,32 @@
           </p>
           <div id="quick-match-log" style="white-space: pre-line;"></div>
         </div>
-      </div>
-      <div id="connection-log-container" class="margin-top hidden">
-        <p>
-          <span class="thick">연결 로그:</span>
-        </p>
-        <div id="connection-log" style="white-space: pre-line;"></div>
+        <div class="log">
+          <p>
+            <span class="thick">연결 로그:</span>
+          </p>
+          <div
+            id="connection-log-quick-match"
+            style="white-space: pre-line;"
+          ></div>
+        </div>
+        <button id="cancel-quick-match-btn-2" class="btn-in-box large">
+          <span class="no-wrap">퀵 매치</span> 취소
+        </button>
       </div>
       <div id="container-for-margin"></div>
       <div id="waiting-message" class="hidden">
         피카츄 배구를 하러 누군가 오기를 기다리는 중...
       </div>
       <div id="waiting-peer-to-connect-message" class="hidden">
-        함께 게임할 상대방을 찾았습니다. (이 메시지가 표시되고서 약 10초가
+        함께 게임할 상대방을 찾았습니다. (이 메시지가 표시되고서 약 20초가
         지나도 게임이 시작되지 않으면, 연결에 실패한 것입니다.)
       </div>
       <div id="connect-to-peer-after-a-while-message" class="hidden">
         함께 게임할 상대방을 찾았습니다. 5초 후에 연결을 시작합니다.
       </div>
       <div id="connect-to-peer-message" class="hidden">
-        상대방과 연결하고 있는 중입니다. (이 메시지가 표시되고서 약 10초가
+        상대방과 연결하고 있는 중입니다. (이 메시지가 표시되고서 약 20초가
         지나도 게임이 시작되지 않으면, 연결에 실패한 것입니다.)
       </div>
       <div id="abandoned-message" class="hidden">

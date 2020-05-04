@@ -17,7 +17,15 @@ import {
 let roomIdToCreate = null;
 let communicationCount = null;
 
-export const CLIENT_TO_DO = {
+const MESSAGE_TO_SERVER = {
+  initial: 'initial',
+  roomCreated: 'roomCreated',
+  quickMatchSuccess: 'quickMatchSuccess',
+  withFriendSuccess: 'withFriendSuccess',
+  cancel: 'cancel',
+};
+
+export const MESSAGE_TO_CLIENT = {
   createRoom: 'createRoom',
   keepWait: 'keepWait', // keep sending wait packet
   connectToPeer: 'connectToPeer',
@@ -33,17 +41,43 @@ export const CLIENT_TO_DO = {
 export function startQuickMatch(roomIdToCreateIfNeeded) {
   roomIdToCreate = roomIdToCreateIfNeeded;
   communicationCount = 0;
-  postData(serverURL, objectToSendToServer(roomIdToCreate, false, false)).then(
-    callback
+  postData(
+    serverURL,
+    objectToSendToServer(MESSAGE_TO_SERVER.initial, roomIdToCreate)
+  ).then(callback);
+}
+
+/**
+ * In quick match, the room creator send this quick match success message if data channel is opened.
+ */
+export function sendQuickMatchSuccessMessageToServer() {
+  console.log('Send quick match success message to server');
+  postData(
+    serverURL,
+    objectToSendToServer(MESSAGE_TO_SERVER.quickMatchSuccess, roomIdToCreate)
   );
 }
 
 /**
- * In quick match, the room creator send this quick match succeeded packet if data channel is opened.
+ * In "with friend", the room creator send this packet if data channel is opened.
  */
-export function sendQuickMatchSucceededToServer() {
-  console.log('Send quick match success message to server');
-  postData(serverURL, objectToSendToServer(roomIdToCreate, true, true));
+export function sendWithFriendSuccessMessageToServer() {
+  console.log('Send with friend success message to server');
+  postData(
+    serverURL,
+    objectToSendToServer(MESSAGE_TO_SERVER.withFriendSuccess, roomIdToCreate)
+  );
+}
+
+/**
+ * In quick match, the room creator send this quick match cancel packet if they want to cancel quick match i.e. want to stop waiting.
+ */
+export function sendCancelQuickMatchMessageToServer() {
+  console.log('Send cancel quick match message to server');
+  postData(
+    serverURL,
+    objectToSendToServer(MESSAGE_TO_SERVER.cancel, roomIdToCreate)
+  );
 }
 
 // Example POST method implementation:
@@ -82,64 +116,63 @@ const callback = (data) => {
     );
   }
 
-  switch (data.toDo) {
-    case CLIENT_TO_DO.createRoom:
+  switch (data.message) {
+    case MESSAGE_TO_CLIENT.createRoom:
       console.log('Create room!');
       createRoom(roomIdToCreate);
       window.setTimeout(() => {
         postData(
           serverURL,
-          objectToSendToServer(roomIdToCreate, true, false)
+          objectToSendToServer(MESSAGE_TO_SERVER.roomCreated, roomIdToCreate)
         ).then(callback);
       }, 1000);
       break;
-    case CLIENT_TO_DO.keepWait:
+    case MESSAGE_TO_CLIENT.keepWait:
       console.log('Keep wait!');
       window.setTimeout(() => {
         postData(
           serverURL,
-          objectToSendToServer(roomIdToCreate, true, false)
+          objectToSendToServer(MESSAGE_TO_SERVER.roomCreated, roomIdToCreate)
         ).then(callback);
       }, 1000);
       break;
-    case CLIENT_TO_DO.waitPeerConnection:
+    case MESSAGE_TO_CLIENT.waitPeerConnection:
       console.log('Wait peer connection!');
       break;
-    case CLIENT_TO_DO.connectToPeerAfterAWhile:
+    case MESSAGE_TO_CLIENT.connectToPeerAfterAWhile:
       console.log('Connect To Peer after 5 seconds...');
       window.setTimeout(() => {
         console.log('Connect To Peer!');
+        printQuickMatchState(MESSAGE_TO_CLIENT.connectToPeer);
         joinRoom(data.roomId);
       }, 5000);
       break;
-    case CLIENT_TO_DO.connectToPeer:
+    case MESSAGE_TO_CLIENT.connectToPeer:
       console.log('Connect To Peer!');
       joinRoom(data.roomId);
       break;
-    case CLIENT_TO_DO.abandoned:
+    case MESSAGE_TO_CLIENT.abandoned:
       console.log('room id abandoned.. please retry quick match.');
+      break;
+    case MESSAGE_TO_CLIENT.cancelAccepted:
+      console.log('quick match cancel accepted');
+      // TODO: do something
       break;
   }
 
   communicationCount++;
   printCommunicationCount(communicationCount);
-  printQuickMatchState(data.toDo);
+  printQuickMatchState(data.message);
 };
 
 /**
  * Create an object to send to server by json
+ * @param {string} message
  * @param {string} roomIdToCreate
- * @param {boolean} roomCreated
- * @param {boolean} quickMatchSucceeded
  */
-function objectToSendToServer(
-  roomIdToCreate,
-  roomCreated,
-  quickMatchSucceeded
-) {
+function objectToSendToServer(message, roomIdToCreate) {
   return {
+    message: message,
     roomId: roomIdToCreate,
-    roomCreated: roomCreated,
-    quickMatchSucceeded: quickMatchSucceeded,
   };
 }

@@ -13,7 +13,11 @@ import {
 import { generatePushID } from './generate_pushid.js';
 import { myKeyboard } from './keyboard_online.js';
 import { testNetwork } from './network_test.js';
-import { CLIENT_TO_DO, startQuickMatch } from './quick_match.js';
+import {
+  MESSAGE_TO_CLIENT,
+  startQuickMatch,
+  sendCancelQuickMatchMessageToServer,
+} from './quick_match.js';
 import '../style.css';
 
 const chatOpenBtn = document.getElementById('chat-open-btn');
@@ -100,10 +104,7 @@ export function setUpUI() {
         pressEnterToQuickMatch.classList.add('hidden');
       }
       document
-        .getElementById('quick-match-log-container')
-        .classList.remove('hidden');
-      document
-        .getElementById('connection-log-container')
+        .getElementById('quick-match-notice-box')
         .classList.remove('hidden');
       const callBackIfPassed = () => {
         const roomId = generatePushID();
@@ -144,17 +145,12 @@ export function setUpUI() {
     const aboutWithYourFriend = document.getElementById(
       'about-with-your-friend'
     );
-    const connectionLogContainer = document.getElementById(
-      'connection-log-container'
-    );
     if (aboutWithYourFriend.classList.contains('hidden')) {
       aboutWithYourFriend.classList.remove('hidden');
-      connectionLogContainer.classList.remove('hidden');
       // @ts-ignore
       quickMatchBtn.disabled = true;
     } else {
       aboutWithYourFriend.classList.add('hidden');
-      connectionLogContainer.classList.add('hidden');
       // @ts-ignore
       quickMatchBtn.disabled = false;
     }
@@ -232,6 +228,14 @@ export function setUpUI() {
     enableBtns();
   });
 
+  const cancelQuickMatchBtn2 = document.getElementById(
+    'cancel-quick-match-btn-2'
+  );
+  cancelQuickMatchBtn2.addEventListener('click', () => {
+    sendCancelQuickMatchMessageToServer();
+    location.reload();
+  });
+
   const noticeDisconnectedOKBtn = document.getElementById(
     'notice-disconnected-ok-btn'
   );
@@ -289,6 +293,11 @@ function getJoinRoomID() {
   );
 }
 
+export function disableCancelQuickMatchBtn() {
+  // @ts-ignore
+  document.getElementById('cancel-quick-match-btn-2').disabled = true;
+}
+
 /**
  * Print communication count
  * @param {number} count
@@ -299,28 +308,28 @@ export function printCommunicationCount(count) {
 
 /**
  * Print quick match state to quick match log box
- * @param {string} state CLIENT_TO_DO.x
+ * @param {string} state MESSAGE_TO_CLIENT.x
  */
 export function printQuickMatchState(state) {
   let log = '';
   switch (state) {
-    case CLIENT_TO_DO.createRoom:
+    case MESSAGE_TO_CLIENT.createRoom:
       log = document.getElementById('waiting-message').textContent;
       break;
-    case CLIENT_TO_DO.keepWait:
+    case MESSAGE_TO_CLIENT.keepWait:
       return;
-    case CLIENT_TO_DO.waitPeerConnection:
+    case MESSAGE_TO_CLIENT.waitPeerConnection:
       log = document.getElementById('waiting-peer-to-connect-message')
         .textContent;
       break;
-    case CLIENT_TO_DO.connectToPeerAfterAWhile:
+    case MESSAGE_TO_CLIENT.connectToPeerAfterAWhile:
       log = document.getElementById('connect-to-peer-after-a-while-message')
         .textContent;
       break;
-    case CLIENT_TO_DO.connectToPeer:
+    case MESSAGE_TO_CLIENT.connectToPeer:
       log = document.getElementById('connect-to-peer-message').textContent;
       break;
-    case CLIENT_TO_DO.abandoned:
+    case MESSAGE_TO_CLIENT.abandoned:
       log = document.getElementById('abandoned-message').textContent;
       break;
     default:
@@ -372,8 +381,22 @@ export function printNumberOfSuccessfulQuickMatches(
  * @param {string} log
  */
 export function printLog(log) {
-  const connectionLog = document.getElementById('connection-log');
+  let elementId = 'connection-log-with-friend';
+  if (channel.isQuickMatch) {
+    elementId = 'connection-log-quick-match';
+  }
+  const connectionLog = document.getElementById(elementId);
   connectionLog.textContent += `${log}\n`;
+  connectionLog.scrollIntoView();
+}
+
+export function printPeriodInLog() {
+  let elementId = 'connection-log-with-friend';
+  if (channel.isQuickMatch) {
+    elementId = 'connection-log-quick-match';
+  }
+  const connectionLog = document.getElementById(elementId);
+  connectionLog.textContent += '.';
   connectionLog.scrollIntoView();
 }
 

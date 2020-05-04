@@ -24,8 +24,10 @@ import {
   printAvgPing,
   printStartsIn,
   printLog,
+  printPeriodInLog,
   printNotValidRoomIdMessage,
   printNoRoomMatchingMessage,
+  disableCancelQuickMatchBtn,
 } from './ui_online.js';
 import {
   setChatRngs,
@@ -33,7 +35,10 @@ import {
   displayPeerChatMessage,
 } from './chat_display.js';
 import { rtcConfiguration } from './rtc_configuration.js';
-import { sendQuickMatchSucceededToServer } from './quick_match.js';
+import {
+  sendQuickMatchSuccessMessageToServer,
+  sendWithFriendSuccessMessageToServer,
+} from './quick_match.js';
 
 firebase.initializeApp(firebaseConfig);
 
@@ -456,7 +461,7 @@ function startGameAfterPingTest() {
     }
     pingTestManager.pingSentTimeArray[n] = Date.now();
     dataChannel.send(buffer);
-    printLog('.');
+    printPeriodInLog();
     n++;
   }, 1000);
 }
@@ -522,8 +527,16 @@ function dataChannelOpened() {
   channel.isOpen = true;
   dataChannel.binaryType = 'arraybuffer';
 
-  if (channel.isQuickMatch && channel.amICreatedRoom) {
-    sendQuickMatchSucceededToServer();
+  if (channel.isQuickMatch) {
+    disableCancelQuickMatchBtn();
+  }
+
+  if (channel.amICreatedRoom) {
+    if (channel.isQuickMatch) {
+      sendQuickMatchSuccessMessageToServer();
+    } else {
+      sendWithFriendSuccessMessageToServer();
+    }
   }
 
   // Set the same RNG (used for the game) for both peers

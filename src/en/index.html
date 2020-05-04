@@ -189,6 +189,15 @@
           />
           <button type="button" id="join-btn">join room</button>
         </div>
+        <div class="margin-top log">
+          <p>
+            <span class="thick">Connection Log:</span>
+          </p>
+          <div
+            id="connection-log-with-friend"
+            style="white-space: pre-line;"
+          ></div>
+        </div>
       </div>
       <div
         id="press-enter-to-quick-match"
@@ -203,11 +212,14 @@
           cancel <span class="no-wrap">Quick Match</span>
         </button>
       </div>
-      <div id="quick-match-log-container" class="margin-top hidden">
+      <div
+        id="quick-match-notice-box"
+        class="fade-in-box notice fixed scroll hidden"
+      >
         <div>
           <span class="thick"
-            >Number of successful matches connected by Quick Match within the
-            last..</span
+            >Number of matches connected by<br />
+            Quick Match within the last..</span
           >
           <ul>
             <li>24 hours: <span id="within-24-hours"></span></li>
@@ -215,7 +227,7 @@
             <li>10 minutes: <span id="within-10-minutes"></span></li>
           </ul>
         </div>
-        <div class="margin-top">
+        <div>
           <p>
             <span class="thick">Quick Match Log:</span>
           </p>
@@ -225,26 +237,32 @@
           </p>
           <div id="quick-match-log" style="white-space: pre-line;"></div>
         </div>
-      </div>
-      <div id="connection-log-container" class="margin-top hidden">
-        <p>
-          <span class="thick">Connection Log:</span>
-        </p>
-        <div id="connection-log" style="white-space: pre-line;"></div>
+        <div class="log">
+          <p>
+            <span class="thick">Connection Log:</span>
+          </p>
+          <div
+            id="connection-log-quick-match"
+            style="white-space: pre-line;"
+          ></div>
+        </div>
+        <button id="cancel-quick-match-btn-2" class="btn-in-box large">
+          cancel <span class="no-wrap">Quick Match</span>
+        </button>
       </div>
       <div id="container-for-margin"></div>
       <div id="waiting-message" class="hidden">
         Waiting for someone to come here to play Pikachu Volleyball...
       </div>
       <div id="waiting-peer-to-connect-message" class="hidden">
-        Found a peer. (If the game is not started in about 10 seconds after this
+        Found a peer. (If the game is not started in about 20 seconds after this
         message appers, it means the connection failed.)
       </div>
       <div id="connect-to-peer-after-a-while-message" class="hidden">
         Found a peer. It will connect to them after 5 seconds.
       </div>
       <div id="connect-to-peer-message" class="hidden">
-        Now connecting to a peer... (If the game is not started in about 10
+        Now connecting to a peer... (If the game is not started in about 20
         seconds after this message appers, it means the connection failed.)
       </div>
       <div id="abandoned-message" class="hidden">
