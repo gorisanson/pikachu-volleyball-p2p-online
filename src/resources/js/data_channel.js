@@ -24,6 +24,7 @@ import {
   printAvgPing,
   printStartsIn,
   printLog,
+  printPeriodInLog,
   printNotValidRoomIdMessage,
   printNoRoomMatchingMessage,
   disableCancelQuickMatchBtn,
@@ -457,7 +458,7 @@ function startGameAfterPingTest() {
     }
     pingTestManager.pingSentTimeArray[n] = Date.now();
     dataChannel.send(buffer);
-    printLog('.');
+    printPeriodInLog();
     n++;
   }, 1000);
 }

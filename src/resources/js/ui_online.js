@@ -390,6 +390,16 @@ export function printLog(log) {
   connectionLog.scrollIntoView();
 }
 
+export function printPeriodInLog() {
+  let elementId = 'connection-log-with-friend';
+  if (channel.isQuickMatch) {
+    elementId = 'connection-log-quick-match';
+  }
+  const connectionLog = document.getElementById(elementId);
+  connectionLog.textContent += '.';
+  connectionLog.scrollIntoView();
+}
+
 export function printNotValidRoomIdMessage() {
   printLog(document.getElementById('not-valid-room-id-message').textContent);
 }
