@@ -21,6 +21,7 @@ const MESSAGE_TO_SERVER = {
   initial: 'initial',
   roomCreated: 'roomCreated',
   quickMatchSuccess: 'quickMatchSuccess',
+  cancel: 'cancel',
 };
 
 export const MESSAGE_TO_CLIENT = {
@@ -30,6 +31,7 @@ export const MESSAGE_TO_CLIENT = {
   connectToPeerAfterAWhile: 'connectToPeerAfterAWhile',
   waitPeerConnection: 'waitPeerConnection', // wait the peer to connect to you
   abandoned: 'abandoned',
+  cancelAccepted: 'cancelAccepted',
 };
 
 /**
@@ -53,6 +55,14 @@ export function sendQuickMatchSucceededToServer() {
   postData(
     serverURL,
     objectToSendToServer(MESSAGE_TO_SERVER.quickMatchSuccess, roomIdToCreate)
+  );
+}
+
+export function sendQuickMatchCancelMessageToServer() {
+  console.log('Send quick match cancel message to server');
+  postData(
+    serverURL,
+    objectToSendToServer(MESSAGE_TO_SERVER.cancel, roomIdToCreate)
   );
 }
 
@@ -128,6 +138,10 @@ const callback = (data) => {
       break;
     case MESSAGE_TO_CLIENT.abandoned:
       console.log('room id abandoned.. please retry quick match.');
+      break;
+    case MESSAGE_TO_CLIENT.cancelAccepted:
+      console.log('quick match cancel accepted');
+      // TODO: do something
       break;
   }
 
