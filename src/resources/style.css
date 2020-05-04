@@ -405,3 +405,6 @@ div.fixed {
 div.scroll {
   overflow: scroll;
 }
+button:disabled {
+  background-color: #cccccc;
+}
