@@ -21,6 +21,7 @@ const MESSAGE_TO_SERVER = {
   initial: 'initial',
   roomCreated: 'roomCreated',
   quickMatchSuccess: 'quickMatchSuccess',
+  withFriendSuccess: 'withFriendSuccess',
   cancel: 'cancel',
 };
 
@@ -47,13 +48,24 @@ export function startQuickMatch(roomIdToCreateIfNeeded) {
 }
 
 /**
- * In quick match, the room creator send this quick match succeeded packet if data channel is opened.
+ * In quick match, the room creator send this quick match success message if data channel is opened.
  */
-export function sendQuickMatchSucceededToServer() {
+export function sendQuickMatchSuccessMessageToServer() {
   console.log('Send quick match success message to server');
   postData(
     serverURL,
     objectToSendToServer(MESSAGE_TO_SERVER.quickMatchSuccess, roomIdToCreate)
+  );
+}
+
+/**
+ * In "with friend", the room creator send this packet if data channel is opened.
+ */
+export function sendWithFriendSuccessMessageToServer() {
+  console.log('Send with friend success message to server');
+  postData(
+    serverURL,
+    objectToSendToServer(MESSAGE_TO_SERVER.withFriendSuccess, roomIdToCreate)
   );
 }
 

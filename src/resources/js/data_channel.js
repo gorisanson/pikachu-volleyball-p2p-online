@@ -35,7 +35,10 @@ import {
   displayPeerChatMessage,
 } from './chat_display.js';
 import { rtcConfiguration } from './rtc_configuration.js';
-import { sendQuickMatchSucceededToServer } from './quick_match.js';
+import {
+  sendQuickMatchSuccessMessageToServer,
+  sendWithFriendSuccessMessageToServer,
+} from './quick_match.js';
 
 firebase.initializeApp(firebaseConfig);
 
@@ -528,8 +531,12 @@ function dataChannelOpened() {
     disableCancelQuickMatchBtn();
   }
 
-  if (channel.isQuickMatch && channel.amICreatedRoom) {
-    sendQuickMatchSucceededToServer();
+  if (channel.amICreatedRoom) {
+    if (channel.isQuickMatch) {
+      sendQuickMatchSuccessMessageToServer();
+    } else {
+      sendWithFriendSuccessMessageToServer();
+    }
   }
 
   // Set the same RNG (used for the game) for both peers
