@@ -26,6 +26,7 @@ import {
   printLog,
   printNotValidRoomIdMessage,
   printNoRoomMatchingMessage,
+  disableCancelQuickMatchBtn,
 } from './ui_online.js';
 import {
   setChatRngs,
@@ -521,6 +522,10 @@ function dataChannelOpened() {
   console.log(`dataChannel.maxRetransmits: ${dataChannel.maxRetransmits}`);
   channel.isOpen = true;
   dataChannel.binaryType = 'arraybuffer';
+
+  if (channel.isQuickMatch) {
+    disableCancelQuickMatchBtn();
+  }
 
   if (channel.isQuickMatch && channel.amICreatedRoom) {
     sendQuickMatchSucceededToServer();

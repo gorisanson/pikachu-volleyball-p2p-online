@@ -31,7 +31,6 @@ export const MESSAGE_TO_CLIENT = {
   connectToPeerAfterAWhile: 'connectToPeerAfterAWhile',
   waitPeerConnection: 'waitPeerConnection', // wait the peer to connect to you
   abandoned: 'abandoned',
-  cancelAccepted: 'cancelAccepted',
 };
 
 /**
@@ -61,8 +60,8 @@ export function sendQuickMatchSucceededToServer() {
 /**
  * In quick match, the room creator send this quick match cancel packet if they want to cancel quick match i.e. want to stop waiting.
  */
-export function sendQuickMatchCancelMessageToServer() {
-  console.log('Send quick match cancel message to server');
+export function sendCancelQuickMatchMessageToServer() {
+  console.log('Send cancel quick match message to server');
   postData(
     serverURL,
     objectToSendToServer(MESSAGE_TO_SERVER.cancel, roomIdToCreate)

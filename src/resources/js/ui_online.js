@@ -13,7 +13,11 @@ import {
 import { generatePushID } from './generate_pushid.js';
 import { myKeyboard } from './keyboard_online.js';
 import { testNetwork } from './network_test.js';
-import { MESSAGE_TO_CLIENT, startQuickMatch } from './quick_match.js';
+import {
+  MESSAGE_TO_CLIENT,
+  startQuickMatch,
+  sendCancelQuickMatchMessageToServer,
+} from './quick_match.js';
 import '../style.css';
 
 const chatOpenBtn = document.getElementById('chat-open-btn');
@@ -228,14 +232,8 @@ export function setUpUI() {
     'cancel-quick-match-btn-2'
   );
   cancelQuickMatchBtn2.addEventListener('click', () => {
-    const quickMatchNoticeBox = document.getElementById(
-      'quick-match-notice-box'
-    );
-    if (!quickMatchNoticeBox.classList.contains('hidden')) {
-      quickMatchNoticeBox.classList.add('hidden');
-    }
-    clearQuickMatchLog();
-    enableBtns();
+    sendCancelQuickMatchMessageToServer();
+    location.reload();
   });
 
   const noticeDisconnectedOKBtn = document.getElementById(
@@ -295,6 +293,11 @@ function getJoinRoomID() {
   );
 }
 
+export function disableCancelQuickMatchBtn() {
+  // @ts-ignore
+  document.getElementById('cancel-quick-match-btn-2').disabled = true;
+}
+
 /**
  * Print communication count
  * @param {number} count
@@ -349,11 +352,6 @@ export function printQuickMatchLog(log) {
   const connectionLog = document.getElementById('quick-match-log');
   connectionLog.textContent += `${log}\n`;
   connectionLog.scrollIntoView();
-}
-
-function clearQuickMatchLog() {
-  const connectionLog = document.getElementById('quick-match-log');
-  connectionLog.textContent += ``;
 }
 
 /**
