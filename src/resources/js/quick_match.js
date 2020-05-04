@@ -17,6 +17,12 @@ import {
 let roomIdToCreate = null;
 let communicationCount = null;
 
+const MESSAGE_TO_SERVER = {
+  initial: 'initial',
+  roomCreated: 'roomCreated',
+  quickMatchSuccess: 'quickMatchSuccess',
+};
+
 export const MESSAGE_TO_CLIENT = {
   createRoom: 'createRoom',
   keepWait: 'keepWait', // keep sending wait packet
@@ -33,9 +39,10 @@ export const MESSAGE_TO_CLIENT = {
 export function startQuickMatch(roomIdToCreateIfNeeded) {
   roomIdToCreate = roomIdToCreateIfNeeded;
   communicationCount = 0;
-  postData(serverURL, objectToSendToServer(roomIdToCreate, false, false)).then(
-    callback
-  );
+  postData(
+    serverURL,
+    objectToSendToServer(MESSAGE_TO_SERVER.initial, roomIdToCreate)
+  ).then(callback);
 }
 
 /**
@@ -43,7 +50,10 @@ export function startQuickMatch(roomIdToCreateIfNeeded) {
  */
 export function sendQuickMatchSucceededToServer() {
   console.log('Send quick match success message to server');
-  postData(serverURL, objectToSendToServer(roomIdToCreate, true, true));
+  postData(
+    serverURL,
+    objectToSendToServer(MESSAGE_TO_SERVER.quickMatchSuccess, roomIdToCreate)
+  );
 }
 
 // Example POST method implementation:
@@ -89,7 +99,7 @@ const callback = (data) => {
       window.setTimeout(() => {
         postData(
           serverURL,
-          objectToSendToServer(roomIdToCreate, true, false)
+          objectToSendToServer(MESSAGE_TO_SERVER.roomCreated, roomIdToCreate)
         ).then(callback);
       }, 1000);
       break;
@@ -98,7 +108,7 @@ const callback = (data) => {
       window.setTimeout(() => {
         postData(
           serverURL,
-          objectToSendToServer(roomIdToCreate, true, false)
+          objectToSendToServer(MESSAGE_TO_SERVER.roomCreated, roomIdToCreate)
         ).then(callback);
       }, 1000);
       break;
@@ -128,18 +138,12 @@ const callback = (data) => {
 
 /**
  * Create an object to send to server by json
+ * @param {string} message
  * @param {string} roomIdToCreate
- * @param {boolean} roomCreated
- * @param {boolean} quickMatchSucceeded
  */
-function objectToSendToServer(
-  roomIdToCreate,
-  roomCreated,
-  quickMatchSucceeded
-) {
+function objectToSendToServer(message, roomIdToCreate) {
   return {
+    message: message,
     roomId: roomIdToCreate,
-    roomCreated: roomCreated,
-    quickMatchSucceeded: quickMatchSucceeded,
   };
 }
