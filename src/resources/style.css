@@ -2,8 +2,8 @@
   /* Pikachu Volleyball's original width: 432px, original height: 304px */
   --aspect-ratio: calc(432 / 304);
   --inverse-aspect-ratio: calc(304 / 432);
-  --canvas-width: 96vmin;
-  --canvas-height: calc(96vmin * var(--inverse-aspect-ratio));
+  --canvas-width: 92vmin;
+  --canvas-height: calc(92vmin * var(--inverse-aspect-ratio));
   --font-size: 18px;
   --btn-width: calc(4 * var(--font-size));
   --btn-height: calc(2 * var(--font-size));
@@ -17,14 +17,14 @@
 }
 @media only screen and (min-aspect-ratio: 432/304) {
   :root {
-    --canvas-height: calc(96vh - var(--btn-height) - 10px);
+    --canvas-height: calc(92vh - 2.5 * var(--btn-height) - 10px);
     --canvas-width: calc(var(--canvas-height) * var(--aspect-ratio));
   }
 }
 @media only screen and (max-aspect-ratio: 432/304) {
   :root {
-    --canvas-width: 96vw;
-    --canvas-height: calc(96vw * var(--inverse-aspect-ratio));
+    --canvas-width: 92vw;
+    --canvas-height: calc(92vw * var(--inverse-aspect-ratio));
   }
 }
 html {
@@ -407,4 +407,64 @@ div.scroll {
 }
 button:disabled {
   background-color: #cccccc;
+}
+#menu-bar {
+  display: grid;
+  width: var(--canvas-width);
+  height: calc(1.5 * var(--btn-height));
+  grid-template-columns: 2fr 1fr;
+  margin-bottom: 10px;
+}
+button.btn {
+  display: inline-block;
+  grid-row-start: 1;
+  width: var(--btn-width);
+  height: calc(1.5 * var(--btn-height));
+  border: none;
+  border-radius: 10px;
+  padding: 0;
+  color: white;
+  background-color: rgba(50, 50, 50, 1);
+  background-image: none;
+  font-size: var(--font-size);
+  text-align: center;
+  text-decoration: none;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+button.btn:disabled {
+  background-color: #cccccc;
+}
+.relative-container {
+  position: relative;
+}
+.dropdown,
+.submenu {
+  position: absolute;
+  display: none;
+  z-index: 16;
+}
+.dropdown.show {
+  display: block;
+}
+.submenu.show {
+  display: inline-block;
+}
+.dropdown .btn {
+  margin-right: 0;
+  background-color: rgba(100, 100, 100, 0.9);
+}
+.submenu > .btn {
+  width: calc(1.4 * var(--btn-width));
+  margin-left: 0;
+}
+.dropdown .btn:hover,
+.submenu-btn.open {
+  background-color: rgba(50, 50, 50, 0.9);
+}
+span.check {
+  display: none;
+}
+.selected > span.check {
+  display: inline;
 }

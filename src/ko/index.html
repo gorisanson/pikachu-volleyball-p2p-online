@@ -306,7 +306,78 @@
         </button>
       </div>
     </div>
-    <div id="flex-container" class="hidden">
+    <div id="flex-container">
+      <!-- <div id="flex-container" class="hidden"> -->
+      <div id="menu-bar">
+        <div class="relative-container">
+          <button id="options-dropdown-btn" class="btn dropdown-btn">
+            설정
+          </button>
+          <div id="options-dropdown" class="dropdown">
+            <div class="relative-container">
+              <button id="bgm-submenu-btn" class="btn submenu-btn">
+                배경음악 &#9654;
+              </button>
+              <div id="bgm-submenu" class="submenu">
+                <button id="bgm-on-btn" class="btn selected">
+                  <span class="check">&check; </span>켜기
+                </button>
+                <button id="bgm-off-btn" class="btn">
+                  <span class="check">&check; </span>끄기
+                </button>
+              </div>
+            </div>
+            <div class="relative-container">
+              <button id="sfx-submenu-btn" class="btn submenu-btn">
+                효과음 &#9654;
+              </button>
+              <div id="sfx-submenu" class="submenu">
+                <button id="stereo-btn" class="btn selected">
+                  <span class="check">&check; </span>스테레오
+                </button>
+                <button id="mono-btn" class="btn">
+                  <span class="check">&check; </span>모노
+                </button>
+                <button id="sfx-off-btn" class="btn">
+                  <span class="check">&check; </span>끄기
+                </button>
+              </div>
+            </div>
+            <div class="relative-container">
+              <button id="speed-submenu-btn" class="btn submenu-btn">
+                속도 &#9654;
+              </button>
+              <div id="speed-submenu" class="submenu">
+                <button id="slow-speed-btn" class="btn">
+                  <span class="check">&check; </span>느리게
+                </button>
+                <button id="medium-speed-btn" class="btn selected">
+                  <span class="check">&check; </span>보통
+                </button>
+                <button id="fast-speed-btn" class="btn">
+                  <span class="check">&check; </span>빠르게
+                </button>
+              </div>
+            </div>
+            <div class="relative-container">
+              <button id="winning-score-submenu-btn" class="btn submenu-btn">
+                승리점수 &#9654;
+              </button>
+              <div id="winning-score-submenu" class="submenu">
+                <button id="winning-score-5-btn" class="btn">
+                  <span class="check">&check; </span>5점
+                </button>
+                <button id="winning-score-10-btn" class="btn">
+                  <span class="check">&check; </span>10점
+                </button>
+                <button id="winning-score-15-btn" class="btn selected">
+                  <span class="check">&check; </span>15점
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div id="game-canvas-container">
         <div id="player1-chat-box" class="chat-box"></div>
         <div id="player2-chat-box" class="chat-box"></div>
