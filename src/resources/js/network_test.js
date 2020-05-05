@@ -27,6 +27,9 @@ import { rtcConfiguration } from './rtc_configuration.js';
  * SOFTWARE.
  *********************************************
  */
+let peerConnection = null;
+let dataChannel = null;
+
 function parseCandidate(line) {
   var parts;
   // Parse both variants.
@@ -81,27 +84,36 @@ export async function testNetwork(
   callBackIfDidNotGetSrflx,
   callBackIfBehindSymmetricNat
 ) {
-  const pc = new RTCPeerConnection(rtcConfiguration);
+  peerConnection = new RTCPeerConnection(rtcConfiguration);
 
   let didNotGetSrflx = true;
   let isBehindSymmetricNat = null;
   const candidates = [];
 
-  pc.addEventListener('icecandidate', (event) => {
+  peerConnection.addEventListener('icecandidate', (event) => {
     if (!event.candidate) {
       console.log('Got final candidate!');
+      if (dataChannel) {
+        dataChannel.close();
+      }
+      if (peerConnection) {
+        peerConnection.close();
+      }
       if (Object.keys(candidates).length === 1) {
         var ports = candidates[Object.keys(candidates)[0]];
         isBehindSymmetricNat = ports.length === 1 ? false : true;
         console.log(isBehindSymmetricNat ? 'symmetric nat' : 'normal nat');
       }
       if (didNotGetSrflx) {
+        console.log('did not get srflx');
         callBackIfDidNotGetSrflx();
       }
       if (isBehindSymmetricNat) {
+        console.log('behind symmetric nat');
         callBackIfBehindSymmetricNat();
       }
       if (!didNotGetSrflx && !isBehindSymmetricNat) {
+        console.log('get srflx, not behind symmetric nat');
         callBackIfPassed();
       }
       callBack();
@@ -122,10 +134,10 @@ export async function testNetwork(
     console.log('Got candidate: ', event.candidate);
   });
 
-  pc.createDataChannel('test', {
+  dataChannel = peerConnection.createDataChannel('test', {
     ordered: true,
     maxRetransmits: 0,
   });
-  const offer = await pc.createOffer();
-  await pc.setLocalDescription(offer);
+  const offer = await peerConnection.createOffer();
+  await peerConnection.setLocalDescription(offer);
 }
