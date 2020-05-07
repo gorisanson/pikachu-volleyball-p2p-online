@@ -159,7 +159,7 @@ export async function createRoom(roomIdToCreate) {
     const data = snapshot.data();
     if (!peerConnection.currentRemoteDescription && data.answer) {
       printLog('Answer received');
-      console.log('Set remote description: ', data.answer);
+      console.log('Set remote description');
       const answer = data.answer;
       await peerConnection.setRemoteDescription(answer);
     }
@@ -216,7 +216,7 @@ export async function joinRoom(roomIdToJoin) {
   // Code for creating SDP answer below
   const offer = roomSnapshot.data().offer;
   await peerConnection.setRemoteDescription(offer);
-  console.log('Set remote description: ', offer);
+  console.log('Set remote description');
   printLog('Offer received');
   const answer = await peerConnection.createAnswer();
   await peerConnection.setLocalDescription(answer);
@@ -625,7 +625,7 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
       if (change.type === 'added') {
         const data = change.doc.data();
         await peerConnection.addIceCandidate(data);
-        console.log(`Got new remote ICE candidate: ${JSON.stringify(data)}`);
+        console.log('Got new remote ICE candidate');
       }
     });
   });
