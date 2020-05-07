@@ -354,8 +354,8 @@
         </button>
       </div>
     </div>
-    <div id="flex-container">
-      <!-- <div id="flex-container" class="hidden"> -->
+    <!-- <div id="flex-container"> -->
+    <div id="flex-container" class="hidden">
       <div id="menu-bar">
         <div class="relative-container">
           <button id="options-dropdown-btn" class="btn dropdown-btn">
@@ -455,6 +455,100 @@
             <p>핑이 100(ms)을 넘는 경우, 게임 플레이가 불안정할 수 있습니다.</p>
             <p>게임을 <span id="starts-in"></span>초 뒤에 시작합니다.</p>
           </div>
+        </div>
+        <div
+          class="fade-in-box notice hidden"
+          id="ask-options-change-send-to-peer"
+        >
+          <p id="options-change-to-send"></p>
+          <p>
+            위와 같이 게임 설정을 변경하려 합니다. 상대방에게 물어본 후,
+            상대방이 동의할 시에만 게임 설정이 변경됩니다. 계속 진행할까요?
+          </p>
+          <div class="grid-1-1 center">
+            <button
+              id="ask-options-change-send-to-peer-yes-btn"
+              class="btn-in-box"
+            >
+              진행해요
+            </button>
+            <button
+              id="ask-options-change-send-to-peer-no-btn"
+              class="btn-in-box"
+            >
+              아니요
+            </button>
+          </div>
+        </div>
+        <div
+          class="fade-in-box notice hidden"
+          id="ask-options-change-received-from-peer"
+        >
+          <p id="options-change-received"></p>
+          <p>
+            상대방이 위와 같이 게임 설정을 변경하기를 원합니다. 플레이어님이
+            동의할 시에만, 게임 설정이 변경됩니다. 동의할까요?
+          </p>
+          <div class="grid-1-1 center">
+            <button
+              id="ask-options-change-received-from-peer-yes-btn"
+              class="btn-in-box"
+            >
+              동의해요
+            </button>
+            <button
+              id="ask-options-change-received-from-peer-no-btn"
+              class="btn-in-box"
+            >
+              아니요
+            </button>
+          </div>
+        </div>
+        <div class="fade-in-box notice hidden" id="notice-peer-agreed">
+          <p>
+            상대방이 게임 설정 변경에 동의했습니다.
+          </p>
+          <button id="notice-peer-agreed-ok-btn" class="btn-in-box">
+            알겠어요
+          </button>
+        </div>
+        <div class="fade-in-box notice hidden" id="notice-peer-disagreed">
+          <p>
+            상대방이 게임 설정 변경에 동의하지 않았습니다.
+          </p>
+          <button id="notice-peer-disagreed-ok-btn" class="btn-in-box">
+            알겠어요
+          </button>
+        </div>
+        <div
+          class="fade-in-box notice hidden"
+          id="notice-speed-option-cannot-changed-if-game-in-progress"
+        >
+          <p>
+            속도 설정은 경기가 진행 중에는 변경할 수 없습니다. 현재 진행 중인
+            경기가 끝난 후 다시 시도해주세요.
+          </p>
+          <button
+            id="notice-speed-option-cannot-changed-if-game-in-progress-ok-btn"
+            class="btn-in-box"
+          >
+            알겠어요
+          </button>
+        </div>
+        <div
+          class="fade-in-box notice hidden"
+          id="notice-winning-score-option-cannot-changed-if-game-in-progress"
+        >
+          <p>
+            승리점수 설정은 경기가 진행 중에는 변경할 수 없습니다. 현재 진행
+            중인 경기가 끝난 후 다시 시도해주세요.
+          </p>
+          <button
+            id="notice-winning-score-option-cannot-changed-if-game-in-progress-ok-btn"
+            class="btn-in-box"
+          >
+            알겠어요
+          </button>
         </div>
         <div class="fade-in-box notice hidden" id="notice-disconnected">
           <p>
