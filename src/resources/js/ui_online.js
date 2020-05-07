@@ -84,6 +84,13 @@ export function setUpUI() {
         .getElementById('did-not-get-srflx-candidate')
         .classList.remove('hidden');
     };
+    const callBackIfDidNotGetSrflxAndHostAddressIsObfuscated = () => {
+      document
+        .getElementById(
+          'did-not-get-srflx-candidate-and-host-address-is-obfuscated'
+        )
+        .classList.remove('hidden');
+    };
     const callBackIfBehindSymmetricNat = () => {
       document
         .getElementById('behind-symmetric-nat')
@@ -93,6 +100,7 @@ export function setUpUI() {
       enableBtns,
       callBackIfPassed,
       callBackIfDidNotGetSrflx,
+      callBackIfDidNotGetSrflxAndHostAddressIsObfuscated,
       callBackIfBehindSymmetricNat
     );
   });
@@ -106,16 +114,25 @@ export function setUpUI() {
       if (!pressEnterToQuickMatch.classList.contains('hidden')) {
         pressEnterToQuickMatch.classList.add('hidden');
       }
-      document
-        .getElementById('quick-match-notice-box')
-        .classList.remove('hidden');
       const callBackIfPassed = () => {
+        document
+          .getElementById('quick-match-notice-box')
+          .classList.remove('hidden');
+
         const roomId = generatePushID();
         startQuickMatch(roomId);
       };
       const callBackIfDidNotGetSrflx = () => {
         document
           .getElementById('did-not-get-srflx-candidate')
+          .classList.remove('hidden');
+        enableBtns();
+      };
+      const callBackIfDidNotGetSrflxAndHostAddressIsObfuscated = () => {
+        document
+          .getElementById(
+            'did-not-get-srflx-candidate-and-host-address-is-obfuscated'
+          )
           .classList.remove('hidden');
         enableBtns();
       };
@@ -130,6 +147,7 @@ export function setUpUI() {
         () => {},
         callBackIfPassed,
         callBackIfDidNotGetSrflx,
+        callBackIfDidNotGetSrflxAndHostAddressIsObfuscated,
         callBackIfBehindSymmetricNat
       );
     }
@@ -142,7 +160,6 @@ export function setUpUI() {
       'press-enter-to-quick-match'
     );
     pressEnterToQuickMatch.classList.remove('hidden');
-    pressEnterToQuickMatch.scrollIntoView();
   });
   withYourFriendBtn.addEventListener('click', () => {
     const aboutWithYourFriend = document.getElementById(
@@ -214,6 +231,10 @@ export function setUpUI() {
   attachEventListenerToHideBtn(
     'did-not-get-srflx-candidate-ok-btn',
     'did-not-get-srflx-candidate'
+  );
+  attachEventListenerToHideBtn(
+    'did-not-get-srflx-candidate-and-host-address-is-obfuscated-ok-btn',
+    'did-not-get-srflx-candidate-and-host-address-is-obfuscated'
   );
   attachEventListenerToHideBtn(
     'behind-symmetric-nat-ok-btn',

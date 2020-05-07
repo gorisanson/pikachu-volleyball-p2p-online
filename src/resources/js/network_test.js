@@ -82,12 +82,15 @@ export async function testNetwork(
   callBack,
   callBackIfPassed,
   callBackIfDidNotGetSrflx,
+  callBackIfDidNotGetSrflxAndHostAddressIsObfuscated,
   callBackIfBehindSymmetricNat
 ) {
   peerConnection = new RTCPeerConnection(rtcConfiguration);
 
-  let didNotGetSrflx = true;
-  let isBehindSymmetricNat = null;
+  let isHostAddressObfuscated = false;
+  let isHostAddressPublicIP = false;
+  let gotSrflx = false;
+  let isBehindSymmetricNat = false;
   const candidates = [];
 
   peerConnection.addEventListener('icecandidate', (event) => {
@@ -104,24 +107,30 @@ export async function testNetwork(
         isBehindSymmetricNat = ports.length === 1 ? false : true;
         console.log(isBehindSymmetricNat ? 'symmetric nat' : 'normal nat');
       }
-      if (didNotGetSrflx) {
+      if (!gotSrflx && !isHostAddressPublicIP) {
         console.log('did not get srflx');
-        callBackIfDidNotGetSrflx();
-      }
-      if (isBehindSymmetricNat) {
+        if (isHostAddressObfuscated) {
+          console.log('host address is obfuscted');
+          callBackIfDidNotGetSrflxAndHostAddressIsObfuscated();
+        } else {
+          console.log('host address is not obfuscated');
+          callBackIfDidNotGetSrflx();
+        }
+      } else if (isBehindSymmetricNat) {
         console.log('behind symmetric nat');
         callBackIfBehindSymmetricNat();
-      }
-      if (!didNotGetSrflx && !isBehindSymmetricNat) {
-        console.log('get srflx, not behind symmetric nat');
+      } else if (isHostAddressPublicIP || (gotSrflx && !isBehindSymmetricNat)) {
+        console.log(
+          '"host address is public IP" or "got srflx, not behind symmetric nat"'
+        );
         callBackIfPassed();
       }
       callBack();
       return;
     }
-    if (event.candidate.candidate.includes('srflx')) {
-      didNotGetSrflx = false;
-      const cand = parseCandidate(event.candidate.candidate);
+    const cand = parseCandidate(event.candidate.candidate);
+    if (cand.type === 'srflx') {
+      gotSrflx = true;
       if (!candidates[cand.relatedPort]) {
         candidates[cand.relatedPort] = [cand.port];
         // this is for the Firefox browser
@@ -129,6 +138,17 @@ export async function testNetwork(
         // the same port after translation is received from another STUN server.
       } else if (candidates[cand.relatedPort][0] !== cand.port) {
         candidates[cand.relatedPort].push(cand.port);
+      }
+    } else if (cand.type === 'host') {
+      if (cand.ip.endsWith('.local')) {
+        isHostAddressObfuscated = true;
+      } else {
+        const privateIPReg = RegExp(
+          '(^127.)|(^10.)|(^172.1[6-9].)|(^172.2[0-9].)|(^172.3[0-1].)|(^192.168.)'
+        );
+        if (!privateIPReg.test(cand.ip)) {
+          isHostAddressPublicIP = true;
+        }
       }
     }
     console.log('Got candidate: ', event.candidate);
