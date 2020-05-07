@@ -31,8 +31,9 @@ export function setUpUI() {
   // game keyboard input needs to be unsubscribe for typing join room ID
   myKeyboard.unsubscribe();
 
-  setUpOptionsBtn();
-  setUpToShowDropdownsAndSubmenus();
+  const optionsDropdownBtn = document.getElementById('options-dropdown-btn');
+  // @ts-ignore
+  optionsDropdownBtn.disabled = true;
 
   const networkTestBtn = document.getElementById('network-test-btn');
   const quickMatchBtn = document.getElementById('quick-match-btn');
@@ -298,6 +299,11 @@ export function setUpUI() {
   disableChatBtns();
 }
 
+export function setUpUIAfterLoadingGameAssets(pikaVolley, ticker) {
+  setUpOptionsBtn(pikaVolley, ticker);
+  setUpToShowDropdownsAndSubmenus();
+}
+
 function printCurrentRoomID(roomId) {
   const prettyRoomId = `${roomId.slice(0, 5)}-${roomId.slice(
     5,
@@ -477,6 +483,12 @@ export function enableChatOpenBtn() {
   chatOpenBtn.disabled = false;
 }
 
+export function enableOptionsBtn() {
+  const optionsDropdownBtn = document.getElementById('options-dropdown-btn');
+  // @ts-ignore
+  optionsDropdownBtn.disabled = false;
+}
+
 function disableChatBtns() {
   // @ts-ignore
   chatInput.disabled = true;
@@ -627,8 +639,8 @@ function setUpOptionsBtn(pikaVolley, ticker) {
     }
     return false;
   }
-  const noticeBox2 = document.getElementById('notice-box-2');
-  const noticeOKBtn2 = document.getElementById('notice-ok-btn-2');
+  // const noticeBox2 = document.getElementById('notice-box-2');
+  // const noticeOKBtn2 = document.getElementById('notice-ok-btn-2');
   winningScore5Btn.addEventListener('click', () => {
     if (winningScore5Btn.classList.contains('selected')) {
       return;

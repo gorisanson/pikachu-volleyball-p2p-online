@@ -44,7 +44,7 @@ import 'pixi-sound';
 import { PikachuVolleyballOnline } from './pikavolley_online.js';
 import { ASSETS_PATH } from './offline_version_js/assets_path.js';
 import { channel } from './data_channel.js';
-import { setUpUI } from './ui_online.js';
+import { setUpUI, setUpUIAfterLoadingGameAssets } from './ui_online.js';
 import '../style.css';
 
 const TEXTURES = ASSETS_PATH.TEXTURES;
@@ -99,6 +99,7 @@ function setUpLoaderProgresBar() {
 
 function setup() {
   const pikaVolley = new PikachuVolleyballOnline(stage, loader.resources);
+  setUpUIAfterLoadingGameAssets(pikaVolley, ticker);
   start(pikaVolley);
 }
 
