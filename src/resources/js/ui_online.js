@@ -111,10 +111,11 @@ export function setUpUI() {
       if (!pressEnterToQuickMatch.classList.contains('hidden')) {
         pressEnterToQuickMatch.classList.add('hidden');
       }
-      document
-        .getElementById('quick-match-notice-box')
-        .classList.remove('hidden');
       const callBackIfPassed = () => {
+        document
+          .getElementById('quick-match-notice-box')
+          .classList.remove('hidden');
+
         const roomId = generatePushID();
         startQuickMatch(roomId);
       };
@@ -156,7 +157,6 @@ export function setUpUI() {
       'press-enter-to-quick-match'
     );
     pressEnterToQuickMatch.classList.remove('hidden');
-    pressEnterToQuickMatch.scrollIntoView();
   });
   withYourFriendBtn.addEventListener('click', () => {
     const aboutWithYourFriend = document.getElementById(
