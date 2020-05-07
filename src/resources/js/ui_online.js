@@ -81,6 +81,13 @@ export function setUpUI() {
         .getElementById('did-not-get-srflx-candidate')
         .classList.remove('hidden');
     };
+    const callBackIfDidNotGetSrflxAndHostAddressIsObfuscated = () => {
+      document
+        .getElementById(
+          'did-not-get-srflx-candidate-and-host-address-is-obfuscated'
+        )
+        .classList.remove('hidden');
+    };
     const callBackIfBehindSymmetricNat = () => {
       document
         .getElementById('behind-symmetric-nat')
@@ -90,6 +97,7 @@ export function setUpUI() {
       enableBtns,
       callBackIfPassed,
       callBackIfDidNotGetSrflx,
+      callBackIfDidNotGetSrflxAndHostAddressIsObfuscated,
       callBackIfBehindSymmetricNat
     );
   });
@@ -116,6 +124,14 @@ export function setUpUI() {
           .classList.remove('hidden');
         enableBtns();
       };
+      const callBackIfDidNotGetSrflxAndHostAddressIsObfuscated = () => {
+        document
+          .getElementById(
+            'did-not-get-srflx-candidate-and-host-address-is-obfuscated'
+          )
+          .classList.remove('hidden');
+        enableBtns();
+      };
       const callBackIfBehindSymmetricNat = () => {
         document
           .getElementById('behind-symmetric-nat')
@@ -127,6 +143,7 @@ export function setUpUI() {
         () => {},
         callBackIfPassed,
         callBackIfDidNotGetSrflx,
+        callBackIfDidNotGetSrflxAndHostAddressIsObfuscated,
         callBackIfBehindSymmetricNat
       );
     }
@@ -211,6 +228,10 @@ export function setUpUI() {
   attachEventListenerToHideBtn(
     'did-not-get-srflx-candidate-ok-btn',
     'did-not-get-srflx-candidate'
+  );
+  attachEventListenerToHideBtn(
+    'did-not-get-srflx-candidate-and-host-address-is-obfuscated-ok-btn',
+    'did-not-get-srflx-candidate-and-host-address-is-obfuscated'
   );
   attachEventListenerToHideBtn(
     'behind-symmetric-nat-ok-btn',
