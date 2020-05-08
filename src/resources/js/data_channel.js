@@ -28,6 +28,7 @@ import {
   printNotValidRoomIdMessage,
   printNoRoomMatchingMessage,
   disableCancelQuickMatchBtn,
+  askOptionsChangeReceivedFromPeer,
 } from './ui_online.js';
 import {
   setChatRngs,
@@ -72,27 +73,37 @@ const pingTestManager = {
   pingMesurementArray: [],
 };
 
-const chatManager = {
-  pendingMessage: '',
-  resendIntervalID: null,
-  _syncCounter: 0,
-  _peerSyncCounter: 1,
-  get syncCounter() {
-    return this._syncCounter;
-  },
-  set syncCounter(n) {
-    this._syncCounter = n % 2;
-  },
-  get peerSyncCounter() {
-    return this._peerSyncCounter;
-  },
-  set peerSyncCounter(n) {
-    this._peerSyncCounter = n % 2;
-  },
-  get nextPeerSyncCounter() {
-    return (this._peerSyncCounter + 1) % 2;
-  },
-};
+/**
+ * Return a message sync manager
+ * @param {number} offset syncCounter offset (even number)
+ */
+function createMessageSyncManager(offset) {
+  return {
+    pendingMessage: '',
+    resendIntervalID: null,
+    _syncCounter: offset,
+    _peerSyncCounter: offset + ((offset + 1) % 2),
+    get syncCounter() {
+      return this._syncCounter;
+    },
+    set syncCounter(n) {
+      this._syncCounter = offset + (n % 2);
+    },
+    get peerSyncCounter() {
+      return this._peerSyncCounter;
+    },
+    set peerSyncCounter(n) {
+      this._peerSyncCounter = offset + (n % 2);
+    },
+    get nextPeerSyncCounter() {
+      return offset + ((this._peerSyncCounter + 1) % 2);
+    },
+  };
+}
+
+const chatManager = createMessageSyncManager(0); // use 0, 1 for syncCounter
+const optionsChangeManager = createMessageSyncManager(2); // use 2, 3 for syncCounter
+const optionsChangeAgreeManager = createMessageSyncManager(4); // use 4, 5 for syncCounter
 
 let peerConnection = null;
 let dataChannel = null;
@@ -423,6 +434,71 @@ function receiveChatMessageFromPeer(chatMessage) {
 }
 
 /**
+ * Send options change message to peer
+ *
+ * speed: one of 'slow', 'medium', 'fast', null
+ * winningScore: one of 5, 10, 15, null
+ * @param {{speed: string, winningScore: number}} options
+ */
+export function sendOptionsChangeMessageToPeer(options) {
+  if (!options.speed && !options.winningScore) {
+    return;
+  }
+  let optionsChangeMessageToPeer = JSON.stringify(options);
+  // append syncCounter at the end of options change message;
+  optionsChangeMessageToPeer += String(optionsChangeManager.syncCounter);
+  dataChannel.send(optionsChangeMessageToPeer);
+  optionsChangeManager.resendIntervalID = setInterval(
+    () => dataChannel.send(optionsChangeMessageToPeer),
+    1000
+  );
+  return;
+}
+
+/**
+ * Receive options change message ACK(acknowledgment) array buffer from peer.
+ * @param {ArrayBuffer} data array buffer with length 1
+ */
+function receiveOptionsChangeMessageAckFromPeer(data) {
+  const dataView = new DataView(data);
+  const syncCounter = dataView.getInt8(0);
+  if (syncCounter === optionsChangeManager.syncCounter) {
+    optionsChangeManager.syncCounter++;
+    clearInterval(optionsChangeManager.resendIntervalID);
+  }
+}
+
+/**
+ * Receive options change meesage from the peer
+ * @param {string} optionsChangeMessage
+ */
+function receiveOptionsChangeMessageFromPeer(optionsChangeMessage) {
+  // Read syncCounter at the end of options change message
+  const peerSyncCounter = Number(optionsChangeMessage.slice(-1));
+  if (peerSyncCounter === optionsChangeManager.peerSyncCounter) {
+    // if peer resend prevMessage since peer did not recieve
+    // the message ACK(acknowledgment) array buffer with length 1
+    console.log(
+      'arraybuffer with length 1 for options change message ACK resent'
+    );
+  } else if (peerSyncCounter === optionsChangeManager.nextPeerSyncCounter) {
+    // if peer send new message
+    optionsChangeManager.peerSyncCounter++;
+    const options = JSON.parse(optionsChangeMessage.slice(0, -1));
+    askOptionsChangeReceivedFromPeer(options);
+  } else {
+    console.log('invalid options change message received.');
+    return;
+  }
+
+  // Send the message ACK array buffer with length 1.
+  const buffer = new ArrayBuffer(1);
+  const dataView = new DataView(buffer);
+  dataView.setInt8(0, peerSyncCounter);
+  dataChannel.send(buffer);
+}
+
+/**
  * Test average ping by sending ping test arraybuffers, then start the game
  */
 function startGameAfterPingTest() {
@@ -508,14 +584,26 @@ function recieveFromPeer(event) {
       }
     } else if (data.byteLength === 1) {
       const view = new DataView(data);
-      if (view.getInt8(0) >= 0) {
+      const value = view.getInt8(0);
+      if (value >= 4) {
+        //
+      } else if (value >= 2) {
+        receiveOptionsChangeMessageAckFromPeer(data);
+      } else if (value >= 0) {
         receiveChatMessageAckFromPeer(data);
-      } else {
+      } else if (value < 0) {
         respondToPingTest(data);
       }
     }
   } else if (typeof data === 'string') {
-    receiveChatMessageFromPeer(data);
+    const syncCounter = Number(data.slice(-1));
+    if (syncCounter >= 4) {
+      //
+    } else if (syncCounter >= 2) {
+      receiveOptionsChangeMessageFromPeer(data);
+    } else if (syncCounter >= 0) {
+      receiveChatMessageFromPeer(data);
+    }
   }
 }
 
