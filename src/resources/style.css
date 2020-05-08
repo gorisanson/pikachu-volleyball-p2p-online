@@ -171,6 +171,7 @@ canvas {
   position: absolute;
   display: grid;
 }
+#menu-bar.hidden,
 #chat-open-btn.hidden,
 #chat-input-and-send-btn-container.hidden {
   display: none;
