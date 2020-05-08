@@ -29,6 +29,7 @@ import {
   printNoRoomMatchingMessage,
   disableCancelQuickMatchBtn,
   askOptionsChangeReceivedFromPeer,
+  noticeAgreeMessageFromPeer,
 } from './ui_online.js';
 import {
   setChatRngs,
@@ -499,6 +500,66 @@ function receiveOptionsChangeMessageFromPeer(optionsChangeMessage) {
 }
 
 /**
+ * Send options change agree/disagree message to peer
+ * @param {boolean} agree agree (true) or disagree (false)
+ */
+export function sendOptionsChangeAgreeMessageToPeer(agree) {
+  let agreeMessageToPeer = String(agree);
+  agreeMessageToPeer += String(optionsChangeAgreeManager.syncCounter);
+  dataChannel.send(agreeMessageToPeer);
+  optionsChangeAgreeManager.resendIntervalID = setInterval(
+    () => dataChannel.send(agreeMessageToPeer),
+    1000
+  );
+  return;
+}
+
+/**
+ * Receive options change agree message ACK(acknowledgment) array buffer from peer.
+ * @param {ArrayBuffer} data array buffer with length 1
+ */
+function receiveOptionsChangeAgreeMessageAckFromPeer(data) {
+  const dataView = new DataView(data);
+  const syncCounter = dataView.getInt8(0);
+  if (syncCounter === optionsChangeAgreeManager.syncCounter) {
+    optionsChangeAgreeManager.syncCounter++;
+    clearInterval(optionsChangeAgreeManager.resendIntervalID);
+  }
+}
+
+/**
+ * Receive options change meesage from the peer
+ * @param {string} optionsChangeAgreeMessage
+ */
+function receiveOptionsChangeAgreeMessageFromPeer(optionsChangeAgreeMessage) {
+  // Read syncCounter at the end of options change agree message
+  const peerSyncCounter = Number(optionsChangeAgreeMessage.slice(-1));
+  if (peerSyncCounter === optionsChangeAgreeManager.peerSyncCounter) {
+    // if peer resend prevMessage since peer did not recieve
+    // the message ACK(acknowledgment) array buffer with length 1
+    console.log(
+      'arraybuffer with length 1 for options change message ACK resent'
+    );
+  } else if (
+    peerSyncCounter === optionsChangeAgreeManager.nextPeerSyncCounter
+  ) {
+    // if peer send new message
+    optionsChangeAgreeManager.peerSyncCounter++;
+    const agree = optionsChangeAgreeMessage.slice(0, -1) === 'true';
+    noticeAgreeMessageFromPeer(agree);
+  } else {
+    console.log('invalid options change message received.');
+    return;
+  }
+
+  // Send the message ACK array buffer with length 1.
+  const buffer = new ArrayBuffer(1);
+  const dataView = new DataView(buffer);
+  dataView.setInt8(0, peerSyncCounter);
+  dataChannel.send(buffer);
+}
+
+/**
  * Test average ping by sending ping test arraybuffers, then start the game
  */
 function startGameAfterPingTest() {
@@ -586,7 +647,7 @@ function recieveFromPeer(event) {
       const view = new DataView(data);
       const value = view.getInt8(0);
       if (value >= 4) {
-        //
+        receiveOptionsChangeAgreeMessageAckFromPeer(data);
       } else if (value >= 2) {
         receiveOptionsChangeMessageAckFromPeer(data);
       } else if (value >= 0) {
@@ -598,7 +659,7 @@ function recieveFromPeer(event) {
   } else if (typeof data === 'string') {
     const syncCounter = Number(data.slice(-1));
     if (syncCounter >= 4) {
-      //
+      receiveOptionsChangeAgreeMessageFromPeer(data);
     } else if (syncCounter >= 2) {
       receiveOptionsChangeMessageFromPeer(data);
     } else if (syncCounter >= 0) {
