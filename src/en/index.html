@@ -356,7 +356,78 @@
         </button>
       </div>
     </div>
+    <!-- <div id="flex-container"> -->
     <div id="flex-container" class="hidden">
+      <div id="menu-bar">
+        <div class="relative-container">
+          <button id="options-dropdown-btn" class="btn dropdown-btn">
+            Options
+          </button>
+          <div id="options-dropdown" class="dropdown">
+            <div class="relative-container">
+              <button id="bgm-submenu-btn" class="btn submenu-btn">
+                BGM &#9654;
+              </button>
+              <div id="bgm-submenu" class="submenu">
+                <button id="bgm-on-btn" class="btn selected">
+                  <span class="check">&check; </span>on
+                </button>
+                <button id="bgm-off-btn" class="btn">
+                  <span class="check">&check; </span>off
+                </button>
+              </div>
+            </div>
+            <div class="relative-container">
+              <button id="sfx-submenu-btn" class="btn submenu-btn">
+                SFX &#9654;
+              </button>
+              <div id="sfx-submenu" class="submenu">
+                <button id="stereo-btn" class="btn selected">
+                  <span class="check">&check; </span>stereo
+                </button>
+                <button id="mono-btn" class="btn">
+                  <span class="check">&check; </span>mono
+                </button>
+                <button id="sfx-off-btn" class="btn">
+                  <span class="check">&check; </span>off
+                </button>
+              </div>
+            </div>
+            <div class="relative-container">
+              <button id="speed-submenu-btn" class="btn submenu-btn">
+                Speed &#9654;
+              </button>
+              <div id="speed-submenu" class="submenu">
+                <button id="slow-speed-btn" class="btn">
+                  <span class="check">&check; </span>slow
+                </button>
+                <button id="medium-speed-btn" class="btn selected">
+                  <span class="check">&check; </span>medium
+                </button>
+                <button id="fast-speed-btn" class="btn">
+                  <span class="check">&check; </span>fast
+                </button>
+              </div>
+            </div>
+            <div class="relative-container">
+              <button id="winning-score-submenu-btn" class="btn submenu-btn">
+                Winning score &#9654;
+              </button>
+              <div id="winning-score-submenu" class="submenu">
+                <button id="winning-score-5-btn" class="btn">
+                  <span class="check">&check; </span>5 pts
+                </button>
+                <button id="winning-score-10-btn" class="btn">
+                  <span class="check">&check; </span>10 pts
+                </button>
+                <button id="winning-score-15-btn" class="btn selected">
+                  <span class="check">&check; </span>15 pts
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div id="game-canvas-container">
         <div id="player1-chat-box" class="chat-box"></div>
         <div id="player2-chat-box" class="chat-box"></div>
@@ -392,6 +463,100 @@
             <p>The game starts in <span id="starts-in"></span> seconds.</p>
           </div>
         </div>
+        <div
+          class="fade-in-box notice hidden"
+          id="ask-options-change-send-to-peer"
+        >
+          <p id="options-change-to-send"></p>
+          <p>
+            You want to change the option like above. After asking the peer
+            about the change, the option will be changed if only the peer
+            agrees. Do you want to proceed?
+          </p>
+          <div class="grid-1-1 center">
+            <button
+              id="ask-options-change-send-to-peer-yes-btn"
+              class="btn-in-box"
+            >
+              Proceed
+            </button>
+            <button
+              id="ask-options-change-send-to-peer-no-btn"
+              class="btn-in-box"
+            >
+              Nope
+            </button>
+          </div>
+        </div>
+        <div
+          class="fade-in-box notice hidden"
+          id="ask-options-change-received-from-peer"
+        >
+          <p id="options-change-received"></p>
+          <p>
+            The peer want to change the option like above. Only if you agree,
+            the option will be changed. Do you agree?
+          </p>
+          <div class="grid-1-1 center">
+            <button
+              id="ask-options-change-received-from-peer-yes-btn"
+              class="btn-in-box"
+            >
+              Agree
+            </button>
+            <button
+              id="ask-options-change-received-from-peer-no-btn"
+              class="btn-in-box"
+            >
+              Nope
+            </button>
+          </div>
+        </div>
+        <div class="fade-in-box notice hidden" id="notice-peer-agreed">
+          <p>
+            Peer agreed about changing the option.<br />
+            It was applied successfully.
+          </p>
+          <button id="notice-peer-agreed-ok-btn" class="btn-in-box">OK</button>
+        </div>
+        <div class="fade-in-box notice hidden" id="notice-peer-disagreed">
+          <p>
+            Peer did not agree about changing the option.
+          </p>
+          <button id="notice-peer-disagreed-ok-btn" class="btn-in-box">
+            OK
+          </button>
+        </div>
+        <div
+          class="fade-in-box notice hidden"
+          id="notice-speed-options-cannot-changed-if-game-in-progress"
+        >
+          <p>
+            Speed option cannot be changed when the game is in progress. Please
+            retry after the game is finished.
+          </p>
+          <button
+            id="notice-speed-options-cannot-changed-if-game-in-progress-ok-btn"
+            class="btn-in-box"
+          >
+            OK
+          </button>
+        </div>
+        <div
+          class="fade-in-box notice hidden"
+          id="notice-winning-score-options-cannot-changed-if-game-in-progress"
+        >
+          <p>
+            Winning score option cannot be changed when the game is in progress.
+            Please retry after the game is finished.
+          </p>
+          <button
+            id="notice-winning-score-options-cannot-changed-if-game-in-progress-ok-btn"
+            class="btn-in-box"
+          >
+            OK
+          </button>
+        </div>
         <div class="fade-in-box notice hidden" id="notice-disconnected">
           <p>
             Disconnected from the peer.
@@ -417,7 +582,7 @@
           <input type="text" id="chat-input" maxlength="50" />
           <button type="button" id="send-btn">send (Enter)</button>
         </div>
-        <button id="chat-open-btn">Chat (Esc)</button>
+        <button id="chat-open-btn">Chat (space bar)</button>
       </div>
     </div>
   </body>

@@ -354,7 +354,78 @@
         </button>
       </div>
     </div>
+    <!-- <div id="flex-container"> -->
     <div id="flex-container" class="hidden">
+      <div id="menu-bar">
+        <div class="relative-container">
+          <button id="options-dropdown-btn" class="btn dropdown-btn">
+            설정
+          </button>
+          <div id="options-dropdown" class="dropdown">
+            <div class="relative-container">
+              <button id="bgm-submenu-btn" class="btn submenu-btn">
+                배경음악 &#9654;
+              </button>
+              <div id="bgm-submenu" class="submenu">
+                <button id="bgm-on-btn" class="btn selected">
+                  <span class="check">&check; </span>켜기
+                </button>
+                <button id="bgm-off-btn" class="btn">
+                  <span class="check">&check; </span>끄기
+                </button>
+              </div>
+            </div>
+            <div class="relative-container">
+              <button id="sfx-submenu-btn" class="btn submenu-btn">
+                효과음 &#9654;
+              </button>
+              <div id="sfx-submenu" class="submenu">
+                <button id="stereo-btn" class="btn selected">
+                  <span class="check">&check; </span>스테레오
+                </button>
+                <button id="mono-btn" class="btn">
+                  <span class="check">&check; </span>모노
+                </button>
+                <button id="sfx-off-btn" class="btn">
+                  <span class="check">&check; </span>끄기
+                </button>
+              </div>
+            </div>
+            <div class="relative-container">
+              <button id="speed-submenu-btn" class="btn submenu-btn">
+                속도 &#9654;
+              </button>
+              <div id="speed-submenu" class="submenu">
+                <button id="slow-speed-btn" class="btn">
+                  <span class="check">&check; </span>느리게
+                </button>
+                <button id="medium-speed-btn" class="btn selected">
+                  <span class="check">&check; </span>보통
+                </button>
+                <button id="fast-speed-btn" class="btn">
+                  <span class="check">&check; </span>빠르게
+                </button>
+              </div>
+            </div>
+            <div class="relative-container">
+              <button id="winning-score-submenu-btn" class="btn submenu-btn">
+                승리점수 &#9654;
+              </button>
+              <div id="winning-score-submenu" class="submenu">
+                <button id="winning-score-5-btn" class="btn">
+                  <span class="check">&check; </span>5점
+                </button>
+                <button id="winning-score-10-btn" class="btn">
+                  <span class="check">&check; </span>10점
+                </button>
+                <button id="winning-score-15-btn" class="btn selected">
+                  <span class="check">&check; </span>15점
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div id="game-canvas-container">
         <div id="player1-chat-box" class="chat-box"></div>
         <div id="player2-chat-box" class="chat-box"></div>
@@ -390,6 +461,101 @@
             <p>게임을 <span id="starts-in"></span>초 뒤에 시작합니다.</p>
           </div>
         </div>
+        <div
+          class="fade-in-box notice hidden"
+          id="ask-options-change-send-to-peer"
+        >
+          <p id="options-change-to-send"></p>
+          <p>
+            위와 같이 게임 설정을 변경하려 합니다. 상대방에게 물어본 후,
+            상대방이 동의할 시에만 게임 설정이 변경됩니다. 계속 진행할까요?
+          </p>
+          <div class="grid-1-1 center">
+            <button
+              id="ask-options-change-send-to-peer-yes-btn"
+              class="btn-in-box"
+            >
+              진행해요
+            </button>
+            <button
+              id="ask-options-change-send-to-peer-no-btn"
+              class="btn-in-box"
+            >
+              아니요
+            </button>
+          </div>
+        </div>
+        <div
+          class="fade-in-box notice hidden"
+          id="ask-options-change-received-from-peer"
+        >
+          <p id="options-change-received"></p>
+          <p>
+            상대방이 위와 같이 게임 설정을 변경하기를 원합니다. 플레이어님이
+            동의할 시에만, 게임 설정이 변경됩니다. 동의할까요?
+          </p>
+          <div class="grid-1-1 center">
+            <button
+              id="ask-options-change-received-from-peer-yes-btn"
+              class="btn-in-box"
+            >
+              동의해요
+            </button>
+            <button
+              id="ask-options-change-received-from-peer-no-btn"
+              class="btn-in-box"
+            >
+              아니요
+            </button>
+          </div>
+        </div>
+        <div class="fade-in-box notice hidden" id="notice-peer-agreed">
+          <p>
+            상대방이 게임 설정 변경에 동의했습니다.<br />
+            게임 설정을 변경을 완료했습니다.
+          </p>
+          <button id="notice-peer-agreed-ok-btn" class="btn-in-box">
+            알겠어요
+          </button>
+        </div>
+        <div class="fade-in-box notice hidden" id="notice-peer-disagreed">
+          <p>
+            상대방이 게임 설정 변경에 동의하지 않았습니다.
+          </p>
+          <button id="notice-peer-disagreed-ok-btn" class="btn-in-box">
+            알겠어요
+          </button>
+        </div>
+        <div
+          class="fade-in-box notice hidden"
+          id="notice-speed-options-cannot-changed-if-game-in-progress"
+        >
+          <p>
+            속도 설정은 경기가 진행 중에는 변경할 수 없습니다. 현재 진행 중인
+            경기가 끝난 후 다시 시도해주세요.
+          </p>
+          <button
+            id="notice-speed-options-cannot-changed-if-game-in-progress-ok-btn"
+            class="btn-in-box"
+          >
+            알겠어요
+          </button>
+        </div>
+        <div
+          class="fade-in-box notice hidden"
+          id="notice-winning-score-options-cannot-changed-if-game-in-progress"
+        >
+          <p>
+            승리점수 설정은 경기가 진행 중에는 변경할 수 없습니다. 현재 진행
+            중인 경기가 끝난 후 다시 시도해주세요.
+          </p>
+          <button
+            id="notice-winning-score-options-cannot-changed-if-game-in-progress-ok-btn"
+            class="btn-in-box"
+          >
+            알겠어요
+          </button>
+        </div>
         <div class="fade-in-box notice hidden" id="notice-disconnected">
           <p>
             상대방과의 연결이 끊겼습니다.
@@ -415,9 +581,9 @@
       <div id="chat-input-here">
         <div id="chat-input-and-send-btn-container" class="hidden">
           <input type="text" id="chat-input" maxlength="50" />
-          <button type="button" id="send-btn">보내기 (Enter)</button>
+          <button type="button" id="send-btn">보내기 (엔터)</button>
         </div>
-        <button id="chat-open-btn">채팅 (Esc)</button>
+        <button id="chat-open-btn">채팅 (스페이스 바)</button>
       </div>
     </div>
   </body>
