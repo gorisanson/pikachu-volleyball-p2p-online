@@ -641,17 +641,20 @@ function askOptionsChangeSendToPeer(options) {
       case 'slow':
         optionsChangeBox.textContent += document
           .getElementById('slow-speed-btn')
-          .textContent.trim();
+          .textContent.replace('\u2713', '')
+          .trim();
         break;
       case 'medium':
         optionsChangeBox.textContent += document
           .getElementById('medium-speed-btn')
-          .textContent.trim();
+          .textContent.replace('\u2713', '')
+          .trim();
         break;
       case 'fast':
         optionsChangeBox.textContent += document
           .getElementById('fast-speed-btn')
-          .textContent.trim();
+          .textContent.replace('\u2713', '')
+          .trim();
         break;
     }
   } else if (options.winningScore) {
@@ -662,17 +665,20 @@ function askOptionsChangeSendToPeer(options) {
       case 5:
         optionsChangeBox.textContent += document
           .getElementById('winning-score-5-btn')
-          .textContent.trim();
+          .textContent.replace('\u2713', '')
+          .trim();
         break;
       case 10:
         optionsChangeBox.textContent += document
           .getElementById('winning-score-10-btn')
-          .textContent.trim();
+          .textContent.replace('\u2713', '')
+          .trim();
         break;
       case 15:
         optionsChangeBox.textContent += document
           .getElementById('winning-score-15-btn')
-          .textContent.trim();
+          .textContent.replace('\u2713', '')
+          .trim();
         break;
     }
   } else {
@@ -698,17 +704,20 @@ export function askOptionsChangeReceivedFromPeer(options) {
       case 'slow':
         optionsChangeBox.textContent += document
           .getElementById('slow-speed-btn')
-          .textContent.trim();
+          .textContent.replace('\u2713', '')
+          .trim();
         break;
       case 'medium':
         optionsChangeBox.textContent += document
           .getElementById('medium-speed-btn')
-          .textContent.trim();
+          .textContent.replace('\u2713', '')
+          .trim();
         break;
       case 'fast':
         optionsChangeBox.textContent += document
           .getElementById('fast-speed-btn')
-          .textContent.trim();
+          .textContent.replace('\u2713', '')
+          .trim();
         break;
     }
   } else if (options.winningScore) {
@@ -719,17 +728,20 @@ export function askOptionsChangeReceivedFromPeer(options) {
       case 5:
         optionsChangeBox.textContent += document
           .getElementById('winning-score-5-btn')
-          .textContent.trim();
+          .textContent.replace('\u2713', '')
+          .trim();
         break;
       case 10:
         optionsChangeBox.textContent += document
           .getElementById('winning-score-10-btn')
-          .textContent.trim();
+          .textContent.replace('\u2713', '')
+          .trim();
         break;
       case 15:
         optionsChangeBox.textContent += document
           .getElementById('winning-score-15-btn')
-          .textContent.trim();
+          .textContent.replace('\u2713', '')
+          .trim();
         break;
     }
   } else {
