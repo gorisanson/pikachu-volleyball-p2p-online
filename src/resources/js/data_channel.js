@@ -76,18 +76,21 @@ const chatManager = {
   pendingChatMessage: '',
   resendIntervalID: null,
   _syncCounter: 0,
-  _peerSyncCounter: 9,
+  _peerSyncCounter: 1,
   get syncCounter() {
     return this._syncCounter;
   },
   set syncCounter(n) {
-    this._syncCounter = n % 10;
+    this._syncCounter = n % 2;
   },
   get peerSyncCounter() {
     return this._peerSyncCounter;
   },
   set peerSyncCounter(n) {
-    this._peerSyncCounter = n % 10;
+    this._peerSyncCounter = n % 2;
+  },
+  get nextPeerSyncCounter() {
+    return (this._peerSyncCounter + 1) % 2;
   },
 };
 
@@ -403,7 +406,7 @@ function receiveChatMessageFromPeer(chatMessage) {
     // if peer resend prevMessage since peer did not recieve
     // the message ACK(acknowledgment) array buffer with length 1
     console.log('arraybuffer with length 1 for chat message ACK resent');
-  } else if (peerSyncCounter === (chatManager.peerSyncCounter + 1) % 10) {
+  } else if (peerSyncCounter === chatManager.nextPeerSyncCounter) {
     // if peer send new message
     chatManager.peerSyncCounter++;
     displayPeerChatMessage(chatMessage.slice(0, -1));
