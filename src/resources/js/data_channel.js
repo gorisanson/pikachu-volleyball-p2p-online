@@ -73,7 +73,7 @@ const pingTestManager = {
 };
 
 const chatManager = {
-  pendingChatMessage: '',
+  pendingMessage: '',
   resendIntervalID: null,
   _syncCounter: 0,
   _peerSyncCounter: 1,
@@ -369,7 +369,7 @@ function receiveInputQueueFromPeer(data) {
  * @param {string} chatMessage
  */
 export function sendChatMessageToPeer(chatMessage) {
-  chatManager.pendingChatMessage = chatMessage;
+  chatManager.pendingMessage = chatMessage;
   // append syncCounter at the end of chat message;
   const chatMessageToPeer = chatMessage + String(chatManager.syncCounter);
   dataChannel.send(chatMessageToPeer);
@@ -390,7 +390,7 @@ function receiveChatMessageAckFromPeer(data) {
   if (syncCounter === chatManager.syncCounter) {
     chatManager.syncCounter++;
     clearInterval(chatManager.resendIntervalID);
-    displayMyChatMessage(chatManager.pendingChatMessage);
+    displayMyChatMessage(chatManager.pendingMessage);
     enableChatOpenBtn();
   }
 }
