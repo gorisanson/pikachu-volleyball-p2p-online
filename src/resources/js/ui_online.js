@@ -209,33 +209,28 @@ export function setUpUI() {
       }
     });
   });
+
   chatOpenBtn.addEventListener('click', chatOpenBtnClicked);
   sendBtn.addEventListener('click', sendBtnClicked);
-  window.addEventListener('keydown', (event) => {
-    if (event.code === 'Escape') {
-      if (!chatOpenBtn.classList.contains('hidden')) {
-        chatOpenBtn.click();
-      } else {
-        // @ts-ignore
-        chatInput.value = '';
-        // This setTimeout is for Korean input weired thing which happens on Chrome..
-        // When Korean character typed on input element and press some key (for example, esc key),
-        // the key event occur twice on Chrome browser. (It was not the case on Firefox or Safari.)
-        // This setTimeout prevent the event occur twice.
-        window.setTimeout(() => sendBtn.click(), 0);
+  channel.callbackAfterDataChannelOpenedForUI = () => {
+    window.addEventListener('keydown', (event) => {
+      if (event.code === 'Space') {
+        if (!chatOpenBtn.classList.contains('hidden')) {
+          chatOpenBtn.click();
+          event.preventDefault();
+        }
+      } else if (event.code === 'Enter') {
+        event.preventDefault();
       }
-      event.preventDefault();
-    } else if (event.code === 'Enter') {
-      event.preventDefault();
-    }
-  });
-  window.addEventListener('keyup', (event) => {
-    if (event.code === 'Enter') {
-      if (!chatInputAndSendBtnContainer.classList.contains('hidden')) {
-        window.setTimeout(() => sendBtn.click(), 0);
+    });
+    window.addEventListener('keyup', (event) => {
+      if (event.code === 'Enter') {
+        if (!chatInputAndSendBtnContainer.classList.contains('hidden')) {
+          window.setTimeout(() => sendBtn.click(), 0);
+        }
       }
-    }
-  });
+    });
+  };
 
   attachEventListenerToHideBtn('test-passed-ok-btn', 'test-passed');
   attachEventListenerToHideBtn(

@@ -65,6 +65,7 @@ export const channel = {
   },
 
   callbackAfterDataChannelOpened: null,
+  callbackAfterDataChannelOpenedForUI: null,
   callbackAfterPeerInputQueueReceived: null,
 };
 
@@ -580,6 +581,7 @@ function startGameAfterPingTest() {
         `average ping: ${avg} ms, ping list: ${pingTestManager.pingMesurementArray}`
       );
       channel.callbackAfterDataChannelOpened();
+      channel.callbackAfterDataChannelOpenedForUI();
       showGameCanvas();
       enableChatOpenBtn();
 
