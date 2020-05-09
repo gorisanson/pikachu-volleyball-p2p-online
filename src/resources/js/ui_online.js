@@ -880,7 +880,8 @@ function setUpOptionsBtn(pikaVolley) {
   function isGameInProgress(pikaVolley) {
     return (
       pikaVolley.state !== pikaVolley.intro &&
-      pikaVolley.state !== pikaVolley.menu
+      pikaVolley.state !== pikaVolley.menu &&
+      !(pikaVolley.state === pikaVolley.round && pikaVolley.gameEnded)
     );
   }
 
