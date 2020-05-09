@@ -22,6 +22,9 @@ import {
 } from './quick_match.js';
 import '../style.css';
 
+/** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */
+/** @typedef {import('pixi.js-legacy').Ticker} Ticker */
+
 let applyOptions = null; // it is assigned a function after the game assets are loaded
 
 const pendingOptions = {
@@ -316,6 +319,11 @@ export function setUpUI() {
   disableChatBtns();
 }
 
+/**
+ * Set up UI which is appropriate to be set after loading game assets
+ * @param {PikachuVolleyballOnline} pikaVolley
+ * @param {Ticker} ticker
+ */
 export function setUpUIAfterLoadingGameAssets(pikaVolley, ticker) {
   setUpOptionsBtn(pikaVolley);
   setUpToShowDropdownsAndSubmenus();
@@ -838,6 +846,10 @@ function attachEventListenerToHideBtn(btnId, boxIdToHide) {
   });
 }
 
+/**
+ * Set up event listeners for options button
+ * @param {PikachuVolleyballOnline} pikaVolley
+ */
 function setUpOptionsBtn(pikaVolley) {
   const optionsDropdownBtn = document.getElementById('options-dropdown-btn');
   const bgmOnBtn = document.getElementById('bgm-on-btn');
@@ -877,6 +889,10 @@ function setUpOptionsBtn(pikaVolley) {
     pikaVolley.audio.turnSFXVolume(false);
   });
 
+  /**
+   * Return whether the game is in progress
+   * @param {PikachuVolleyballOnline} pikaVolley
+   */
   function isGameInProgress(pikaVolley) {
     return (
       pikaVolley.state !== pikaVolley.intro &&
