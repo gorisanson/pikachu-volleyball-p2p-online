@@ -100,11 +100,17 @@ canvas {
   top: 50%;
   color: white;
   background-color: transparent;
+  padding: 10px;
+  border-radius: 10px;
   font-size: calc(1.5 * var(--font-size));
   visibility: hidden;
   opacity: 0;
   animation-name: fade-inout;
   animation-duration: 5s;
+}
+.chat-box.in-speech-bubble {
+  color: black;
+  background-color: rgba(255, 255, 255, 0.95);
 }
 @keyframes fade-inout {
   0% {
