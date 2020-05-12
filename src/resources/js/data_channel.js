@@ -214,6 +214,7 @@ export async function joinRoom(roomIdToJoin) {
   const roomSnapshot = await roomRef.get();
   console.log('Got room:', roomSnapshot.exists);
   if (!roomSnapshot.exists) {
+    console.log('No room is mathing the ID');
     printNoRoomMatchingMessage();
     return false;
   }
