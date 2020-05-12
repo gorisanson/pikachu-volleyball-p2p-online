@@ -171,7 +171,7 @@ export async function createRoom(roomIdToCreate) {
   dataChannel.addEventListener('message', recieveFromPeer);
   dataChannel.addEventListener('close', dataChannelClosed);
 
-  roomRef.onSnapshot(async (snapshot) => {
+  const unsubscribe = roomRef.onSnapshot(async (snapshot) => {
     console.log('Got updated room:', snapshot.data());
     const data = snapshot.data();
     if (!peerConnection.currentRemoteDescription && data.answer) {
@@ -179,6 +179,7 @@ export async function createRoom(roomIdToCreate) {
       console.log('Set remote description');
       const answer = data.answer;
       await peerConnection.setRemoteDescription(answer);
+      unsubscribe();
     }
   });
 
