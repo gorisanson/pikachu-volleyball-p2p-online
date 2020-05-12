@@ -185,6 +185,7 @@ export async function createRoom(roomIdToCreate) {
   await peerConnection.setLocalDescription(offer);
   console.log('Created offer and set local description:', offer);
   const roomWithOffer = {
+    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     offer: {
       type: offer.type,
       sdp: offer.sdp,
@@ -207,7 +208,6 @@ export async function joinRoom(roomIdToJoin) {
   }
   console.log('Join room: ', roomId);
 
-  // eslint-disable-next-line no-undef
   const db = firebase.firestore();
   const roomRef = db.collection('rooms').doc(`${roomId}`);
   const roomSnapshot = await roomRef.get();
@@ -259,8 +259,7 @@ export async function closeAndCleaning() {
     peerConnection.close();
   }
   // Delete room on hangup
-  if (roomId) {
-    // eslint-disable-next-line no-undef
+  if (channel.amICreatedRoom && roomId) {
     const db = firebase.firestore();
     const roomRef = db.collection('rooms').doc(roomId);
     await roomRef.delete();
