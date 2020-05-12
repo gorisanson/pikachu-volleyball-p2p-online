@@ -475,6 +475,9 @@ span.check {
 .selected > span.check {
   display: inline;
 }
+.pre-wrap {
+  white-space: pre-wrap;
+}
 
 
-/*# sourceMappingURL=main.a8a1ad4c14153dd2168b.css.map*/
+/*# sourceMappingURL=main.3cc915e125ffb181c838.css.map*/
