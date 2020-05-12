@@ -587,6 +587,12 @@ export function printNoRoomMatchingMessage() {
   printLog(document.getElementById('no-room-matching-message').textContent);
 }
 
+export function printSomeoneElseAlreadyJoinedRoomMessage() {
+  printLog(
+    document.getElementById('someone-esle-already-joined-the-room').textContent
+  );
+}
+
 export function showGameCanvas() {
   const flexContainer = document.getElementById('flex-container');
   const beforeConnection = document.getElementById('before-connection');

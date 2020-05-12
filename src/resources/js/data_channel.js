@@ -27,6 +27,7 @@ import {
   printPeriodInLog,
   printNotValidRoomIdMessage,
   printNoRoomMatchingMessage,
+  printSomeoneElseAlreadyJoinedRoomMessage,
   disableCancelQuickMatchBtn,
   askOptionsChangeReceivedFromPeer,
   noticeAgreeMessageFromPeer,
@@ -213,7 +214,14 @@ export async function joinRoom(roomIdToJoin) {
   const roomSnapshot = await roomRef.get();
   console.log('Got room:', roomSnapshot.exists);
   if (!roomSnapshot.exists) {
+    console.log('No room is mathing the ID');
     printNoRoomMatchingMessage();
+    return false;
+  }
+  const data = roomSnapshot.data();
+  if (data.answer) {
+    console.log('The room is already joined by someone else');
+    printSomeoneElseAlreadyJoinedRoomMessage();
     return false;
   }
 
@@ -230,7 +238,7 @@ export async function joinRoom(roomIdToJoin) {
   );
 
   // Code for creating SDP answer below
-  const offer = roomSnapshot.data().offer;
+  const offer = data.offer;
   await peerConnection.setRemoteDescription(offer);
   console.log('Set remote description');
   printLog('Offer received');
