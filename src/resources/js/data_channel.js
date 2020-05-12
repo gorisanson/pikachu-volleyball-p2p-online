@@ -259,7 +259,7 @@ export async function closeAndCleaning() {
     peerConnection.close();
   }
   // Delete room on hangup
-  if (roomId) {
+  if (channel.amICreatedRoom && roomId) {
     const db = firebase.firestore();
     const roomRef = db.collection('rooms').doc(roomId);
     await roomRef.delete();
