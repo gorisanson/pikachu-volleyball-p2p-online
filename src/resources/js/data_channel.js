@@ -185,6 +185,7 @@ export async function createRoom(roomIdToCreate) {
   await peerConnection.setLocalDescription(offer);
   console.log('Created offer and set local description:', offer);
   const roomWithOffer = {
+    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     offer: {
       type: offer.type,
       sdp: offer.sdp,
