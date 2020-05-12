@@ -475,3 +475,6 @@ span.check {
 .selected > span.check {
   display: inline;
 }
+.pre-wrap {
+  white-space: pre-wrap;
+}
