@@ -208,7 +208,6 @@ export async function joinRoom(roomIdToJoin) {
   }
   console.log('Join room: ', roomId);
 
-  // eslint-disable-next-line no-undef
   const db = firebase.firestore();
   const roomRef = db.collection('rooms').doc(`${roomId}`);
   const roomSnapshot = await roomRef.get();
@@ -261,7 +260,6 @@ export async function closeAndCleaning() {
   }
   // Delete room on hangup
   if (roomId) {
-    // eslint-disable-next-line no-undef
     const db = firebase.firestore();
     const roomRef = db.collection('rooms').doc(roomId);
     await roomRef.delete();
