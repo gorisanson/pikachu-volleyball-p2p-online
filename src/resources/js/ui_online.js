@@ -280,7 +280,7 @@ export function setUpUI() {
   cancelQuickMatchBtn2.addEventListener('click', () => {
     sendCancelQuickMatchMessageToServer();
     cleanUpFirestoreRelevants();
-    location.reload();
+    window.setTimeout(() => location.reload(), 0);
   });
 
   const noticeDisconnectedOKBtn = document.getElementById(
@@ -288,7 +288,7 @@ export function setUpUI() {
   );
   noticeDisconnectedOKBtn.addEventListener('click', () => {
     cleanUpFirestoreRelevants();
-    location.reload();
+    window.setTimeout(() => location.reload(), 0);
   });
 
   const askOneMoreGameYesBtn = document.getElementById(
@@ -306,7 +306,7 @@ export function setUpUI() {
   );
   askOneMoreGameNoBtn.addEventListener('click', () => {
     cleanUpFirestoreRelevants();
-    location.reload();
+    window.setTimeout(() => location.reload(), 0);
   });
 
   window.addEventListener('unload', closeConnection);
