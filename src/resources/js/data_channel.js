@@ -269,6 +269,7 @@ export async function joinRoom(roomIdToJoin) {
 export function cleanUpFirestoreRelevants() {
   if (iceCandOnSnapshotUnsubscribe) {
     iceCandOnSnapshotUnsubscribe();
+    iceCandOnSnapshotUnsubscribe = null;
   }
 
   // Delete ice candidates documents
