@@ -287,7 +287,6 @@ export function setUpUI() {
     'notice-disconnected-ok-btn'
   );
   noticeDisconnectedOKBtn.addEventListener('click', () => {
-    cleanUpFirestoreRelevants();
     window.setTimeout(() => location.reload(), 0);
   });
 
@@ -305,7 +304,6 @@ export function setUpUI() {
     'ask-one-more-game-no-btn'
   );
   askOneMoreGameNoBtn.addEventListener('click', () => {
-    cleanUpFirestoreRelevants();
     window.setTimeout(() => location.reload(), 0);
   });
 
