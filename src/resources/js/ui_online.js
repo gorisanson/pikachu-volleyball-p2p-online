@@ -279,14 +279,16 @@ export function setUpUI() {
   );
   cancelQuickMatchBtn2.addEventListener('click', () => {
     sendCancelQuickMatchMessageToServer();
-    location.reload();
+    cleanUpFirestoreRelevants();
+    window.setTimeout(() => location.reload(), 0);
   });
 
   const noticeDisconnectedOKBtn = document.getElementById(
     'notice-disconnected-ok-btn'
   );
   noticeDisconnectedOKBtn.addEventListener('click', () => {
-    location.reload();
+    cleanUpFirestoreRelevants();
+    window.setTimeout(() => location.reload(), 0);
   });
 
   const askOneMoreGameYesBtn = document.getElementById(
@@ -303,7 +305,8 @@ export function setUpUI() {
     'ask-one-more-game-no-btn'
   );
   askOneMoreGameNoBtn.addEventListener('click', () => {
-    location.reload();
+    cleanUpFirestoreRelevants();
+    window.setTimeout(() => location.reload(), 0);
   });
 
   window.addEventListener('unload', closeConnection);
