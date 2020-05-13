@@ -715,6 +715,8 @@ function dataChannelOpened() {
   channel.isOpen = true;
   dataChannel.binaryType = 'arraybuffer';
 
+  cleanUpFirestoreRelevants();
+
   if (channel.isQuickMatch) {
     disableCancelQuickMatchBtn();
   }
