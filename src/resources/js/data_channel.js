@@ -113,6 +113,7 @@ let dataChannel = null;
 let roomId = null;
 let roomRef = null;
 const localICECandDocRefs = [];
+let roomSnapshotUnsubscribe = null;
 let iceCandOnSnapshotUnsubscribe = null;
 let isFirstInputQueueFromPeer = true;
 
@@ -174,7 +175,7 @@ export async function createRoom(roomIdToCreate) {
   dataChannel.addEventListener('message', recieveFromPeer);
   dataChannel.addEventListener('close', dataChannelClosed);
 
-  const unsubscribe = roomRef.onSnapshot(async (snapshot) => {
+  roomSnapshotUnsubscribe = roomRef.onSnapshot(async (snapshot) => {
     console.log('Got updated room:', snapshot.data());
     const data = snapshot.data();
     if (!peerConnection.currentRemoteDescription && data.answer) {
@@ -182,7 +183,8 @@ export async function createRoom(roomIdToCreate) {
       console.log('Set remote description');
       const answer = data.answer;
       await peerConnection.setRemoteDescription(answer);
-      unsubscribe();
+      roomSnapshotUnsubscribe();
+      roomSnapshotUnsubscribe = null;
     }
   });
 
@@ -267,6 +269,11 @@ export async function joinRoom(roomIdToJoin) {
  * Clean up the relevants of Cloud Firestore.
  */
 export function cleanUpFirestoreRelevants() {
+  if (roomSnapshotUnsubscribe) {
+    roomSnapshotUnsubscribe();
+    roomSnapshotUnsubscribe = null;
+  }
+
   if (iceCandOnSnapshotUnsubscribe) {
     iceCandOnSnapshotUnsubscribe();
     iceCandOnSnapshotUnsubscribe = null;
