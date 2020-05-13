@@ -8,7 +8,8 @@ import {
   createRoom,
   joinRoom,
   sendChatMessageToPeer,
-  closeAndCleaning,
+  cleanUpFirestoreRelevants,
+  closeConnection,
   sendOptionsChangeMessageToPeer,
   sendOptionsChangeAgreeMessageToPeer,
 } from './data_channel.js';
@@ -305,9 +306,10 @@ export function setUpUI() {
     location.reload();
   });
 
-  window.addEventListener('unload', closeAndCleaning);
+  window.addEventListener('unload', closeConnection);
 
   window.addEventListener('beforeunload', function (e) {
+    cleanUpFirestoreRelevants();
     if (channel.isOpen) {
       // Cancel the event
       e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown

@@ -111,6 +111,9 @@ const optionsChangeAgreeManager = createMessageSyncManager(4); // use 4, 5 for s
 let peerConnection = null;
 let dataChannel = null;
 let roomId = null;
+let roomRef = null;
+const localICECandDocRefs = [];
+let iceCandOnSnapshotUnsubscribe = null;
 let isFirstInputQueueFromPeer = true;
 
 /**
@@ -122,7 +125,7 @@ export async function createRoom(roomIdToCreate) {
   roomId = roomIdToCreate;
 
   const db = firebase.firestore();
-  const roomRef = db.collection('rooms').doc(roomId);
+  roomRef = db.collection('rooms').doc(roomId);
 
   console.log('Create PeerConnection with configuration: ', rtcConfiguration);
   peerConnection = new RTCPeerConnection(rtcConfiguration);
@@ -260,21 +263,36 @@ export async function joinRoom(roomIdToJoin) {
   return true;
 }
 
-export async function closeAndCleaning() {
+/**
+ * Clean up the relevants of Cloud Firestore.
+ */
+export function cleanUpFirestoreRelevants() {
+  if (iceCandOnSnapshotUnsubscribe) {
+    iceCandOnSnapshotUnsubscribe();
+  }
+
+  // Delete ice candidates documents
+  while (localICECandDocRefs.length > 0) {
+    localICECandDocRefs.pop().delete();
+    console.log('deleted an ICE candidate doc');
+  }
+
+  // Delete the room document
+  if (channel.amICreatedRoom && roomRef) {
+    roomRef.delete();
+    roomRef = null;
+    console.log('deleted the room');
+  }
+}
+
+export function closeConnection() {
   if (dataChannel) {
     dataChannel.close();
   }
   if (peerConnection) {
     peerConnection.close();
   }
-  // Delete room on hangup
-  if (channel.amICreatedRoom && roomId) {
-    const db = firebase.firestore();
-    const roomRef = db.collection('rooms').doc(roomId);
-    await roomRef.delete();
-    console.log('did room delete!');
-  }
-  console.log('Did close and Cleaning!');
+  console.log('Did close data channel and peer connection');
 }
 
 /**
@@ -778,17 +796,20 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
       return;
     }
     const json = event.candidate.toJSON();
-    candidatesCollection.add(json);
+    candidatesCollection.add(json).then((ref) => localICECandDocRefs.push(ref));
+
     console.log('Got candidate: ', event.candidate);
   });
 
-  roomRef.collection(remoteName).onSnapshot((snapshot) => {
-    snapshot.docChanges().forEach(async (change) => {
-      if (change.type === 'added') {
-        const data = change.doc.data();
-        await peerConnection.addIceCandidate(data);
-        console.log('Got new remote ICE candidate');
-      }
+  iceCandOnSnapshotUnsubscribe = roomRef
+    .collection(remoteName)
+    .onSnapshot((snapshot) => {
+      snapshot.docChanges().forEach(async (change) => {
+        if (change.type === 'added') {
+          const data = change.doc.data();
+          await peerConnection.addIceCandidate(data);
+          console.log('Got new remote ICE candidate');
+        }
+      });
     });
-  });
 }
