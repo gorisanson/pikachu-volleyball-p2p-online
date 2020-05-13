@@ -279,6 +279,7 @@ export function setUpUI() {
   );
   cancelQuickMatchBtn2.addEventListener('click', () => {
     sendCancelQuickMatchMessageToServer();
+    cleanUpFirestoreRelevants();
     location.reload();
   });
 
@@ -286,6 +287,7 @@ export function setUpUI() {
     'notice-disconnected-ok-btn'
   );
   noticeDisconnectedOKBtn.addEventListener('click', () => {
+    cleanUpFirestoreRelevants();
     location.reload();
   });
 
@@ -303,6 +305,7 @@ export function setUpUI() {
     'ask-one-more-game-no-btn'
   );
   askOneMoreGameNoBtn.addEventListener('click', () => {
+    cleanUpFirestoreRelevants();
     location.reload();
   });
 
