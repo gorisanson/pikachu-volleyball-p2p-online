@@ -24,7 +24,7 @@
 @media only screen and (max-aspect-ratio: 432/304) {
   :root {
     --canvas-width: 92vw;
-    --canvas-height: calc(92vw * var(--inverse-aspect-ratio));
+    --canvas-height: calc(var(--canvas-width) * var(--inverse-aspect-ratio));
   }
 }
 html {
