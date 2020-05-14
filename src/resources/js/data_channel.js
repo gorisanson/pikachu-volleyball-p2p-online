@@ -169,7 +169,7 @@ export async function createRoom(roomIdToCreate) {
     ordered: true,
     maxRetransmits: 0,
   });
-  console.log('Create DataChannel', dataChannel);
+  console.log('Created data channel', dataChannel);
 
   dataChannel.addEventListener('open', dataChannelOpened);
   dataChannel.addEventListener('message', recieveFromPeer);
