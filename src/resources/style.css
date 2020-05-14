@@ -47,7 +47,7 @@ html {
   justify-content: center;
   align-items: stretch;
   width: var(--canvas-width);
-  height: 100vh;
+  min-height: 100vh;
   margin-left: auto;
   margin-right: auto;
 }
