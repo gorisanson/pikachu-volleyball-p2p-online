@@ -24,7 +24,7 @@
 @media only screen and (max-aspect-ratio: 432/304) {
   :root {
     --canvas-width: 92vw;
-    --canvas-height: calc(92vw * var(--inverse-aspect-ratio));
+    --canvas-height: calc(var(--canvas-width) * var(--inverse-aspect-ratio));
   }
 }
 html {
@@ -47,7 +47,7 @@ html {
   justify-content: center;
   align-items: stretch;
   width: var(--canvas-width);
-  height: 100vh;
+  min-height: 100vh;
   margin-left: auto;
   margin-right: auto;
 }
@@ -480,4 +480,4 @@ span.check {
 }
 
 
-/*# sourceMappingURL=main.3cc915e125ffb181c838.css.map*/
+/*# sourceMappingURL=main.93cca4aa704f6bf8c2a3.css.map*/
