@@ -139,7 +139,6 @@ export async function createRoom(roomIdToCreate) {
     'answererCandidates'
   );
 
-  console.log('Create DataChannel', dataChannel);
   // Create an unreliable and ordered data channel.
   // An reliable and ordered data channel can be used but,
   // even if reliable channel is used, the sync brokes somehow after one of the peer,
@@ -170,6 +169,7 @@ export async function createRoom(roomIdToCreate) {
     ordered: true,
     maxRetransmits: 0,
   });
+  console.log('Create DataChannel', dataChannel);
 
   dataChannel.addEventListener('open', dataChannelOpened);
   dataChannel.addEventListener('message', recieveFromPeer);
@@ -789,7 +789,7 @@ function registerPeerConnectionListeners(peerConnection) {
   peerConnection.addEventListener('datachannel', (event) => {
     dataChannel = event.channel;
 
-    console.log('data channel received!');
+    console.log('data channel received!', dataChannel);
     printLog('data channel received!');
     dataChannel.addEventListener('open', dataChannelOpened);
     dataChannel.addEventListener('message', recieveFromPeer);
