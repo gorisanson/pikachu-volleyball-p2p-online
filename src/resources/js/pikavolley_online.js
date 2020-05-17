@@ -4,6 +4,7 @@ import { bufferLength, myKeyboard, OnlineKeyboard } from './keyboard_online.js';
 import { SYNC_DIVISOR, channel } from './data_channel';
 import { mod } from './mod.js';
 import { askOneMoreGame } from './ui_online.js';
+import { replaySaver } from './replay.js';
 
 /** @typedef GameState @type {function():void} */
 
@@ -32,6 +33,8 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     this.noInputFrameTotal.menu = Infinity;
 
     this.isFirstGame = true;
+
+    this.willSaveReplay = true;
   }
 
   /**
@@ -136,6 +139,21 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     this.peerOnlineKeyboard.getInput(this.syncCounter);
     this.myOnlineKeyboard.getInput(this.syncCounter);
     this.syncCounter++;
+
+    if (this.willSaveReplay) {
+      replaySaver.recordInputs(
+        [
+          this.keyboardArray[0].xDirection,
+          this.keyboardArray[0].yDirection,
+          this.keyboardArray[0].powerHit,
+        ],
+        [
+          this.keyboardArray[1].xDirection,
+          this.keyboardArray[1].yDirection,
+          this.keyboardArray[1].powerHit,
+        ]
+      );
+    }
 
     // slow-mo effect
     if (this.slowMotionFramesLeft > 0) {

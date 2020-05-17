@@ -21,6 +21,7 @@ import {
   startQuickMatch,
   sendCancelQuickMatchMessageToServer,
 } from './quick_match.js';
+import { replaySaver } from './replay.js';
 import '../style.css';
 
 /** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */
@@ -347,6 +348,11 @@ export function setUpUI() {
   setUpOptionsBtn();
   setUpToShowDropdownsAndSubmenus();
   setUpOptionsAskAndNoticeBoxes();
+
+  const saveReplayBtn = document.getElementById('save-replay-btn');
+  saveReplayBtn.addEventListener('click', () => {
+    replaySaver.saveAsFile();
+  });
 }
 
 /**
