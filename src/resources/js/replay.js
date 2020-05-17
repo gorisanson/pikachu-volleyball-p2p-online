@@ -65,9 +65,9 @@ class ReplaySaver {
   saveAsFile() {
     const pack = {
       roomID: this.roomID,
-      inputs: this.inputs,
-      options: this.options,
       chats: this.chats,
+      options: this.options,
+      inputs: this.inputs,
     };
     const blob = new Blob([JSON.stringify(pack)], {
       type: 'text/plain;charset=utf-8',
