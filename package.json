@@ -36,6 +36,7 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
+    "file-saver": "^2.0.2",
     "firebase": "^7.14.4",
     "pixi-sound": "3.0.4",
     "pixi.js-legacy": "5.2.4",
