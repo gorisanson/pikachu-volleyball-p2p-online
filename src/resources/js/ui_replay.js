@@ -24,6 +24,8 @@ function drop(e) {
   const dt = e.dataTransfer;
   const files = dt.files;
 
+  dropbox.classList.add('hidden');
+
   handleFiles(files);
 }
 

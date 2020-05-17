@@ -69,7 +69,7 @@ export function displayPeerChatMessage(message) {
   }
 }
 
-function displayChatMessageAt(message, whichPlayerSide) {
+export function displayChatMessageAt(message, whichPlayerSide) {
   replaySaver.recordChats(message, whichPlayerSide);
   if (whichPlayerSide === 1) {
     const newChatBox = player1ChatBox.cloneNode();
