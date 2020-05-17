@@ -8,8 +8,8 @@ import { saveAs } from 'file-saver';
 import { setCustomRng } from './offline_version_js/rand.js';
 import { PikachuVolleyball } from './offline_version_js/pikavolley.js';
 import { setChatRngs, displayChatMessageAt } from './chat_display.js';
-import '../style.css';
 import { noticeEndOfReplay } from './ui_replay.js';
+import '../style.css';
 
 let renderer = null;
 let stage = null;
@@ -104,6 +104,7 @@ class ReplayReader {
     for (const prop in ASSETS_PATH.SOUNDS) {
       loader.add(ASSETS_PATH.SOUNDS[prop]);
     }
+    setUpLoaderProgresBar();
     const reader = new FileReader();
     reader.onload = function (event) {
       // @ts-ignore
@@ -254,4 +255,21 @@ function start(pikaVolley) {
     pikaVolley.gameLoop();
   });
   ticker.start();
+}
+
+/**
+ * Set up the loader progress bar.
+ */
+function setUpLoaderProgresBar() {
+  const loadingBox = document.getElementById('loading-box');
+  const progressBar = document.getElementById('progress-bar');
+
+  loader.on('progress', () => {
+    progressBar.style.width = `${loader.progress}%`;
+  });
+  loader.on('complete', () => {
+    if (!loadingBox.classList.contains('hidden')) {
+      loadingBox.classList.add('hidden');
+    }
+  });
 }

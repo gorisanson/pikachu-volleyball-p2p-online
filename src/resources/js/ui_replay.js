@@ -32,6 +32,7 @@ export function setUpUI() {
     const dt = e.dataTransfer;
     const files = dt.files;
 
+    document.getElementById('loading-box').classList.remove('hidden');
     dropbox.classList.add('hidden');
 
     handleFiles(files);

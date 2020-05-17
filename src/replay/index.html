@@ -23,6 +23,21 @@
       <div id="game-canvas-container">
         <div id="player1-chat-box" class="chat-box pre-wrap"></div>
         <div id="player2-chat-box" class="chat-box pre-wrap"></div>
+        <div class="fade-in-box loading black hidden" id="loading-box">
+          <div>
+            <p>게임 스프라이트/사운드 로드 중...</p>
+            <div id="progress-bar-border">
+              <div id="progress-bar" style="width: 0%;"></div>
+            </div>
+          </div>
+          <div>
+            메뉴 설명<br /><br />
+            <span class="no-wrap">"둘이서 같이~"</span>(위) - 현재의 플레이 위치
+            유지<br />
+            <span class="no-wrap">"둘이서 같이~"</span>(아래) - 플레이 위치 서로
+            바꾸기
+          </div>
+        </div>
         <div id="dropbox" class="fade-in-box">
           <p>여기에 리플레이 파일을 끌어다 놓으세요</p>
         </div>
