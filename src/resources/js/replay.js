@@ -133,6 +133,7 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
   constructor(stage, resources, inputs, options, chats) {
     super(stage, resources);
     this.replayFrameCounter = 0;
+    this.chatCounter = 0;
     this.inputs = inputs;
     this.options = options;
     this.chats = chats;
@@ -164,6 +165,14 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
     this.player2Keyboard.xDirection = player2Input[0];
     this.player2Keyboard.yDirection = player2Input[1];
     this.player2Keyboard.powerHit = player2Input[2];
+
+    let chat = this.chats[this.chatCounter];
+    while (chat && chat[0] === this.replayFrameCounter) {
+      displayChatMessageAt(chat[2], chat[1]);
+      this.chatCounter++;
+      chat = this.chats[this.chatCounter];
+    }
+
     this.replayFrameCounter++;
     super.gameLoop();
   }
@@ -187,6 +196,8 @@ function setup(pack) {
     pack.options,
     pack.chats
   );
+  // @ts-ignore
+  setGetSpeechBubbleNeeded(pikaVolley);
   start(pikaVolley);
 }
 
