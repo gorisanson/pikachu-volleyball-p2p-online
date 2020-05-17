@@ -59,4 +59,23 @@ class ReplaySaver {
   }
 }
 
+class ReplayReader {
+  constructor() {
+    this.frameCounter = 0;
+    this.roomID = null;
+    this.inputs = null;
+    this.options = null;
+    this.chats = null;
+  }
+
+  readFile(filename) {
+    var reader = new FileReader();
+    reader.onload = function (event) {
+      console.log(event.target.result);
+    };
+    reader.readAsText(filename);
+  }
+}
+
 export const replaySaver = new ReplaySaver();
+export const replayReader = new ReplayReader();

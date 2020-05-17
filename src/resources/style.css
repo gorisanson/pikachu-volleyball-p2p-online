@@ -481,3 +481,8 @@ span.check {
 .pre-wrap {
   white-space: pre-wrap;
 }
+#dropbox {
+  border-style: solid;
+  border-color: black;
+  border-width: 2px;
+}
