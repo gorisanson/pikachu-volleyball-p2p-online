@@ -9,6 +9,7 @@ import { setCustomRng } from './offline_version_js/rand.js';
 import { PikachuVolleyball } from './offline_version_js/pikavolley.js';
 import { setChatRngs, displayChatMessageAt } from './chat_display.js';
 import '../style.css';
+import { noticeEndOfReplay } from './ui_replay.js';
 
 let renderer = null;
 let stage = null;
@@ -153,6 +154,11 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
    * This function should be called at regular intervals ( interval = (1 / FPS) second )
    */
   gameLoop() {
+    if (!this.inputs[this.replayFrameCounter]) {
+      noticeEndOfReplay();
+      return;
+    }
+
     const player1Input = this.inputs[this.replayFrameCounter][0];
     const player2Input = this.inputs[this.replayFrameCounter][1];
     this.player1Keyboard.xDirection = player1Input[0];

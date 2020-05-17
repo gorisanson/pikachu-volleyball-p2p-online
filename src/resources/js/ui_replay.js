@@ -7,6 +7,17 @@ dropbox.addEventListener('dragenter', dragenter, false);
 dropbox.addEventListener('dragover', dragover, false);
 dropbox.addEventListener('drop', drop, false);
 
+const noticeBoxEndOfReplay = document.getElementById('notice-end-of-replay');
+export function noticeEndOfReplay() {
+  noticeBoxEndOfReplay.classList.remove('hidden');
+}
+const noticeBoxEndOfReplayOKBtn = document.getElementById(
+  'notice-end-of-replay-ok-btn'
+);
+noticeBoxEndOfReplayOKBtn.addEventListener('click', () => {
+  location.reload();
+});
+
 function dragenter(e) {
   e.stopPropagation();
   e.preventDefault();
