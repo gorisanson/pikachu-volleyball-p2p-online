@@ -486,3 +486,8 @@ span.check {
   border-color: black;
   border-width: 2px;
 }
+.btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
