@@ -8,7 +8,7 @@ module.exports = {
   entry: {
     main: './src/resources/js/main_online.js',
     ko: './src/ko/ko.js',
-    ui_replay: './src/resources/js/ui_replay.js',
+    main_replay: './src/resources/js/main_replay.js',
   },
   output: {
     filename: '[name].[chunkhash].js',
@@ -63,7 +63,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'src/replay/index.html',
       filename: 'replay/index.html',
-      chunks: ['runtime', 'ko', 'ui_replay'],
+      chunks: ['runtime', 'ko', 'main_replay'],
       chunksSortMode: 'manual',
       minify: {
         collapseWhitespace: true,
