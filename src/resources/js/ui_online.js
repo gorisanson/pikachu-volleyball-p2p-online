@@ -43,11 +43,14 @@ let applyOptions = (options) => {
   setSelectedOptionsBtn(options);
   if (options.bgm) {
     optionsChangedBeforeLoadingGameAssets.bgm = options.bgm;
-  } else if (options.sfx) {
+  }
+  if (options.sfx) {
     optionsChangedBeforeLoadingGameAssets.sfx = options.sfx;
-  } else if (options.speed) {
+  }
+  if (options.speed) {
     optionsChangedBeforeLoadingGameAssets.speed = options.speed;
-  } else if (options.winningScore) {
+  }
+  if (options.winningScore) {
     optionsChangedBeforeLoadingGameAssets.winningScore = options.winningScore;
   }
 };
@@ -367,7 +370,8 @@ export function setUpUIAfterLoadingGameAssets(pikaVolley, ticker) {
           pikaVolley.audio.turnBGMVolume(false);
           break;
       }
-    } else if (options.sfx) {
+    }
+    if (options.sfx) {
       switch (options.sfx) {
         case 'stereo':
           pikaVolley.audio.turnSFXVolume(true);
@@ -381,7 +385,8 @@ export function setUpUIAfterLoadingGameAssets(pikaVolley, ticker) {
           pikaVolley.audio.turnSFXVolume(false);
           break;
       }
-    } else if (options.speed) {
+    }
+    if (options.speed) {
       switch (options.speed) {
         case 'slow':
           pikaVolley.normalFPS = 20;
@@ -396,7 +401,8 @@ export function setUpUIAfterLoadingGameAssets(pikaVolley, ticker) {
           ticker.maxFPS = pikaVolley.normalFPS;
           break;
       }
-    } else if (options.winningScore) {
+    }
+    if (options.winningScore) {
       switch (options.winningScore) {
         case 5:
           pikaVolley.winningScore = 5;
@@ -1040,7 +1046,8 @@ function setSelectedOptionsBtn(options) {
         bgmOffBtn.classList.add('selected');
         break;
     }
-  } else if (options.sfx) {
+  }
+  if (options.sfx) {
     const stereoBtn = document.getElementById('stereo-btn');
     const monoBtn = document.getElementById('mono-btn');
     const sfxOffBtn = document.getElementById('sfx-off-btn');
@@ -1061,7 +1068,8 @@ function setSelectedOptionsBtn(options) {
         sfxOffBtn.classList.add('selected');
         break;
     }
-  } else if (options.speed) {
+  }
+  if (options.speed) {
     const slowSpeedBtn = document.getElementById('slow-speed-btn');
     const mediumSpeedBtn = document.getElementById('medium-speed-btn');
     const fastSpeedBtn = document.getElementById('fast-speed-btn');
@@ -1082,7 +1090,8 @@ function setSelectedOptionsBtn(options) {
         fastSpeedBtn.classList.add('selected');
         break;
     }
-  } else if (options.winningScore) {
+  }
+  if (options.winningScore) {
     const winningScore5Btn = document.getElementById('winning-score-5-btn');
     const winningScore10Btn = document.getElementById('winning-score-10-btn');
     const winningScore15Btn = document.getElementById('winning-score-15-btn');
