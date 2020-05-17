@@ -22,7 +22,7 @@ class ReplaySaver {
     this.frameCounter = 0;
     this.roomID = null; // used for set RNGs
     this.inputs = []; // [[xDirection, yDirection, powerHit], [xDirection, yDirection, powerHit]][], left side is for player 1.
-    this.options = [];
+    this.options = []; // [frameCounter, options][];
     this.chats = []; // [frameCounter, playerIndex (1 or 2), chatMessage][]
   }
 
@@ -65,6 +65,7 @@ class ReplaySaver {
     const pack = {
       roomID: this.roomID,
       inputs: this.inputs,
+      options: this.options,
       chats: this.chats,
     };
     const blob = new Blob([JSON.stringify(pack)], {
@@ -75,14 +76,6 @@ class ReplaySaver {
 }
 
 class ReplayReader {
-  constructor() {
-    this.frameCounter = 0;
-    this.roomID = null;
-    this.inputs = null;
-    this.options = null;
-    this.chats = null;
-  }
-
   readFile(filename) {
     const TEXTURES = ASSETS_PATH.TEXTURES;
     TEXTURES.WITH_COMPUTER = TEXTURES.WITH_FRIEND;
@@ -132,8 +125,11 @@ export const replayReader = new ReplayReader();
 class PikachuVolleyballReplay extends PikachuVolleyball {
   constructor(stage, resources, inputs, options, chats) {
     super(stage, resources);
+    this.noInputFrameTotal.menu = Infinity;
+
     this.replayFrameCounter = 0;
     this.chatCounter = 0;
+    this.optionsCounter = 0;
     this.inputs = inputs;
     this.options = options;
     this.chats = chats;
@@ -166,6 +162,40 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
     this.player2Keyboard.yDirection = player2Input[1];
     this.player2Keyboard.powerHit = player2Input[2];
 
+    let options = this.options[this.optionsCounter];
+    while (options && options[0] === this.replayFrameCounter) {
+      if (options[1].speed) {
+        switch (options[1].speed) {
+          case 'slow':
+            this.normalFPS = 20;
+            ticker.maxFPS = this.normalFPS;
+            break;
+          case 'medium':
+            this.normalFPS = 25;
+            ticker.maxFPS = this.normalFPS;
+            break;
+          case 'fast':
+            this.normalFPS = 30;
+            ticker.maxFPS = this.normalFPS;
+            break;
+        }
+      } else if (options[1].winningScore) {
+        switch (options[1].winningScore) {
+          case 5:
+            this.winningScore = 5;
+            break;
+          case 10:
+            this.winningScore = 10;
+            break;
+          case 15:
+            this.winningScore = 15;
+            break;
+        }
+      }
+      this.optionsCounter++;
+      options = this.options[this.optionsCounter];
+    }
+
     let chat = this.chats[this.chatCounter];
     while (chat && chat[0] === this.replayFrameCounter) {
       displayChatMessageAt(chat[2], chat[1]);
@@ -174,6 +204,8 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
     }
 
     this.replayFrameCounter++;
+    this.physics.player1.isComputer = false;
+    this.physics.player2.isComputer = false;
     super.gameLoop();
   }
 }
