@@ -300,8 +300,11 @@ span.margin-left-right {
 .fade-in-box.peer-loading {
   z-index: 5;
 }
+.fade-in-box.loading {
+  z-index: 6;
+}
 .fade-in-box.ping {
-  z-index: 15;
+  z-index: 7;
 }
 #progress-bar-border {
   position: relative;
