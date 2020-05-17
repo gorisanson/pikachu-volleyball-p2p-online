@@ -364,6 +364,7 @@ export function setUpUIAfterLoadingGameAssets(pikaVolley, ticker) {
   pikaVolleyOnline = pikaVolley;
   applyOptions = (options) => {
     setSelectedOptionsBtn(options);
+    replaySaver.recordOptions(options);
     if (options.bgm) {
       switch (options.bgm) {
         case 'on':

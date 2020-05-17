@@ -7,6 +7,7 @@
  */
 'use strict';
 import { channel } from './data_channel.js';
+import { replaySaver } from './replay.js';
 
 /** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */
 
@@ -69,6 +70,7 @@ export function displayPeerChatMessage(message) {
 }
 
 function displayChatMessageAt(message, whichPlayerSide) {
+  replaySaver.recordChats(message, whichPlayerSide);
   if (whichPlayerSide === 1) {
     const newChatBox = player1ChatBox.cloneNode();
     newChatBox.textContent = message;

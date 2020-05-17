@@ -42,6 +42,7 @@ import {
   sendQuickMatchSuccessMessageToServer,
   sendWithFriendSuccessMessageToServer,
 } from './quick_match.js';
+import { replaySaver } from './replay.js';
 
 /** @typedef {{speed: string, winningScore: number}} Options */
 
@@ -730,6 +731,9 @@ function dataChannelOpened() {
       sendWithFriendSuccessMessageToServer();
     }
   }
+
+  // record roomId for RNG in replay
+  replaySaver.recordRoomID(roomId);
 
   // Set the same RNG (used for the game) for both peers
   const customRng = seedrandom.alea(roomId.slice(10));

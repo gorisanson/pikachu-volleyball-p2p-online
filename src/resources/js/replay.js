@@ -1,10 +1,13 @@
 import { saveAs } from 'file-saver';
 
+/** @typedef {{speed: string, winningScore: number}} Options options communicated with the peer */
+
 class ReplaySaver {
   constructor() {
     this.frameCounter = 0;
     this.roomID = null; // used for set RNGs
     this.inputs = []; // [[xDirection, yDirection, powerHit], [xDirection, yDirection, powerHit]][], left side is for player 1.
+    this.options = [];
     this.chats = []; // [frameCounter, playerIndex (1 or 2), chatMessage][]
   }
 
@@ -27,13 +30,20 @@ class ReplaySaver {
   }
 
   /**
+   * Record game options
+   * @param {Options} options
+   */
+  recordOptions(options) {
+    this.options.push([this.frameCounter, options]);
+  }
+
+  /**
    * Record a chat message
    * @param {string} chatMessage
-   * @param {boolean} isOfPlayer2 is the chat message of player 2
+   * @param {number} whichPlayerSide 1 or 2
    */
-  recordChats(chatMessage, isOfPlayer2) {
-    const playerIndex = isOfPlayer2 ? 2 : 1;
-    this.chats.push([this.frameCounter, playerIndex, chatMessage]);
+  recordChats(chatMessage, whichPlayerSide) {
+    this.chats.push([this.frameCounter, whichPlayerSide, chatMessage]);
   }
 
   saveAsFile() {
