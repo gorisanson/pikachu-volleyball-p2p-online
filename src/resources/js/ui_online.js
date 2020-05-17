@@ -25,13 +25,40 @@ import '../style.css';
 
 /** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */
 /** @typedef {import('pixi.js-legacy').Ticker} Ticker */
+/** @typedef {{speed: string, winningScore: number}} Options options communicated with the peer */
 
-let applyOptions = null; // it is assigned a function after the game assets are loaded
+/**
+ * This is for to enable changing game options event before loading the game assets.
+ * @type {{bgm: string, sfx: string, speed: string, winningScore: number}}
+ */
+const optionsChangedBeforeLoadingGameAssets = {
+  bgm: 'on', // local option i.e. not communicated with the peer
+  sfx: 'stereo', // local option i.e. not communicated with the peer
+  speed: 'medium',
+  winningScore: 15,
+};
 
+// This function is changed after the game assets are loaded
+let applyOptions = (options) => {
+  setSelectedOptionsBtn(options);
+  if (options.bgm) {
+    optionsChangedBeforeLoadingGameAssets.bgm = options.bgm;
+  } else if (options.sfx) {
+    optionsChangedBeforeLoadingGameAssets.sfx = options.sfx;
+  } else if (options.speed) {
+    optionsChangedBeforeLoadingGameAssets.speed = options.speed;
+  } else if (options.winningScore) {
+    optionsChangedBeforeLoadingGameAssets.winningScore = options.winningScore;
+  }
+};
+
+/** @type {{toSend: Options, received: Options}} */
 const pendingOptions = {
   toSend: null,
   received: null,
 };
+
+let pikaVolleyOnline = null; // it is set after loading the game assets
 
 const chatOpenBtn = document.getElementById('chat-open-btn');
 const chatInputAndSendBtnContainer = document.getElementById(
@@ -43,10 +70,6 @@ const sendBtn = document.getElementById('send-btn');
 export function setUpUI() {
   // game keyboard input needs to be unsubscribe for typing join room ID
   myKeyboard.unsubscribe();
-
-  const optionsDropdownBtn = document.getElementById('options-dropdown-btn');
-  // @ts-ignore
-  optionsDropdownBtn.disabled = true;
 
   const networkTestBtn = document.getElementById('network-test-btn');
   const quickMatchBtn = document.getElementById('quick-match-btn');
@@ -320,6 +343,10 @@ export function setUpUI() {
   });
 
   disableChatBtns();
+
+  setUpOptionsBtn();
+  setUpToShowDropdownsAndSubmenus();
+  setUpOptionsAskAndNoticeBoxes();
 }
 
 /**
@@ -328,132 +355,62 @@ export function setUpUI() {
  * @param {Ticker} ticker
  */
 export function setUpUIAfterLoadingGameAssets(pikaVolley, ticker) {
-  setUpOptionsBtn(pikaVolley);
-  setUpToShowDropdownsAndSubmenus();
+  pikaVolleyOnline = pikaVolley;
   applyOptions = (options) => {
-    if (options.speed) {
-      const slowSpeedBtn = document.getElementById('slow-speed-btn');
-      const mediumSpeedBtn = document.getElementById('medium-speed-btn');
-      const fastSpeedBtn = document.getElementById('fast-speed-btn');
+    setSelectedOptionsBtn(options);
+    if (options.bgm) {
+      switch (options.bgm) {
+        case 'on':
+          pikaVolley.audio.turnBGMVolume(true);
+          break;
+        case 'off':
+          pikaVolley.audio.turnBGMVolume(false);
+          break;
+      }
+    } else if (options.sfx) {
+      switch (options.sfx) {
+        case 'stereo':
+          pikaVolley.audio.turnSFXVolume(true);
+          pikaVolley.isStereoSound = true;
+          break;
+        case 'mono':
+          pikaVolley.audio.turnSFXVolume(true);
+          pikaVolley.isStereoSound = false;
+          break;
+        case 'off':
+          pikaVolley.audio.turnSFXVolume(false);
+          break;
+      }
+    } else if (options.speed) {
       switch (options.speed) {
         case 'slow':
-          mediumSpeedBtn.classList.remove('selected');
-          fastSpeedBtn.classList.remove('selected');
-          slowSpeedBtn.classList.add('selected');
           pikaVolley.normalFPS = 20;
           ticker.maxFPS = pikaVolley.normalFPS;
           break;
         case 'medium':
-          fastSpeedBtn.classList.remove('selected');
-          slowSpeedBtn.classList.remove('selected');
-          mediumSpeedBtn.classList.add('selected');
           pikaVolley.normalFPS = 25;
           ticker.maxFPS = pikaVolley.normalFPS;
           break;
         case 'fast':
-          slowSpeedBtn.classList.remove('selected');
-          mediumSpeedBtn.classList.remove('selected');
-          fastSpeedBtn.classList.add('selected');
           pikaVolley.normalFPS = 30;
           ticker.maxFPS = pikaVolley.normalFPS;
           break;
       }
     } else if (options.winningScore) {
-      const winningScore5Btn = document.getElementById('winning-score-5-btn');
-      const winningScore10Btn = document.getElementById('winning-score-10-btn');
-      const winningScore15Btn = document.getElementById('winning-score-15-btn');
       switch (options.winningScore) {
         case 5:
-          winningScore10Btn.classList.remove('selected');
-          winningScore15Btn.classList.remove('selected');
-          winningScore5Btn.classList.add('selected');
           pikaVolley.winningScore = 5;
           break;
         case 10:
-          winningScore15Btn.classList.remove('selected');
-          winningScore5Btn.classList.remove('selected');
-          winningScore10Btn.classList.add('selected');
           pikaVolley.winningScore = 10;
           break;
         case 15:
-          winningScore5Btn.classList.remove('selected');
-          winningScore10Btn.classList.remove('selected');
-          winningScore15Btn.classList.add('selected');
           pikaVolley.winningScore = 15;
           break;
       }
     }
   };
-
-  const askOptionsChangeSendToPeerBox = document.getElementById(
-    'ask-options-change-send-to-peer'
-  );
-  const askOptionsChangeSendToPeerBoxYesBtn = document.getElementById(
-    'ask-options-change-send-to-peer-yes-btn'
-  );
-  const askOptionsChangeSendToPeerBoxNoBtn = document.getElementById(
-    'ask-options-change-send-to-peer-no-btn'
-  );
-  askOptionsChangeSendToPeerBoxYesBtn.addEventListener('click', () => {
-    sendOptionsChangeMessageToPeer(pendingOptions.toSend);
-    if (!askOptionsChangeSendToPeerBox.classList.contains('hidden')) {
-      askOptionsChangeSendToPeerBox.classList.add('hidden');
-    }
-  });
-  askOptionsChangeSendToPeerBoxNoBtn.addEventListener('click', () => {
-    if (!askOptionsChangeSendToPeerBox.classList.contains('hidden')) {
-      askOptionsChangeSendToPeerBox.classList.add('hidden');
-    }
-    enableOptionsBtn();
-  });
-
-  const askOptionsChangeReceivedFromPeerBox = document.getElementById(
-    'ask-options-change-received-from-peer'
-  );
-  const askOptionsChangeReceivedFromPeerBoxYesBtn = document.getElementById(
-    'ask-options-change-received-from-peer-yes-btn'
-  );
-  const askOptionsChangeReceivedFromPeerBoxNoBtn = document.getElementById(
-    'ask-options-change-received-from-peer-no-btn'
-  );
-  askOptionsChangeReceivedFromPeerBoxYesBtn.addEventListener('click', () => {
-    if (!askOptionsChangeReceivedFromPeerBox.classList.contains('hidden')) {
-      askOptionsChangeReceivedFromPeerBox.classList.add('hidden');
-    }
-    sendOptionsChangeAgreeMessageToPeer(true);
-    applyOptions(pendingOptions.received);
-    enableOptionsBtn();
-  });
-  askOptionsChangeReceivedFromPeerBoxNoBtn.addEventListener('click', () => {
-    if (!askOptionsChangeReceivedFromPeerBox.classList.contains('hidden')) {
-      askOptionsChangeReceivedFromPeerBox.classList.add('hidden');
-    }
-    sendOptionsChangeAgreeMessageToPeer(false);
-    enableOptionsBtn();
-  });
-
-  const noticePeerAgreedBox = document.getElementById('notice-peer-agreed');
-  const noticePeerAgreedBoxOKBtn = document.getElementById(
-    'notice-peer-agreed-ok-btn'
-  );
-  noticePeerAgreedBoxOKBtn.addEventListener('click', () => {
-    if (!noticePeerAgreedBox.classList.contains('hidden')) {
-      noticePeerAgreedBox.classList.add('hidden');
-    }
-    enableOptionsBtn();
-  });
-  const noticePeerDisagreedBox = document.getElementById(
-    'notice-peer-disagreed'
-  );
-  const noticePeerDisagreedBoxOKBtn = document.getElementById(
-    'notice-peer-disagreed-ok-btn'
-  );
-  noticePeerDisagreedBoxOKBtn.addEventListener('click', () => {
-    if (!noticePeerDisagreedBox.classList.contains('hidden')) {
-      noticePeerDisagreedBox.classList.add('hidden');
-    }
-    enableOptionsBtn();
-  });
+  applyOptions(optionsChangedBeforeLoadingGameAssets);
 }
 
 function printCurrentRoomID(roomId) {
@@ -647,7 +604,7 @@ export function noticeAgreeMessageFromPeer(agree) {
 
 /**
  * Process options change to send to peer
- * @param {{speed: string, winningScore: number}} options
+ * @param {Options} options
  */
 function askOptionsChangeSendToPeer(options) {
   const optionsChangeBox = document.getElementById('options-change-to-send');
@@ -710,7 +667,7 @@ function askOptionsChangeSendToPeer(options) {
 
 /**
  * Process options change received from peer
- * @param {{speed: string, winningScore: number}} options
+ * @param {Options} options
  */
 export function askOptionsChangeReceivedFromPeer(options) {
   const optionsChangeBox = document.getElementById('options-change-received');
@@ -786,7 +743,7 @@ export function enableChatOpenBtn() {
   chatOpenBtn.disabled = false;
 }
 
-export function enableOptionsBtn() {
+function enableOptionsBtn() {
   const optionsDropdownBtn = document.getElementById('options-dropdown-btn');
   // @ts-ignore
   optionsDropdownBtn.disabled = false;
@@ -857,57 +814,45 @@ function attachEventListenerToHideBtn(btnId, boxIdToHide) {
 
 /**
  * Set up event listeners for options button
- * @param {PikachuVolleyballOnline} pikaVolley
  */
-function setUpOptionsBtn(pikaVolley) {
-  const optionsDropdownBtn = document.getElementById('options-dropdown-btn');
+function setUpOptionsBtn() {
   const bgmOnBtn = document.getElementById('bgm-on-btn');
   const bgmOffBtn = document.getElementById('bgm-off-btn');
   bgmOnBtn.addEventListener('click', () => {
-    bgmOffBtn.classList.remove('selected');
-    bgmOnBtn.classList.add('selected');
-    pikaVolley.audio.turnBGMVolume(true);
+    applyOptions({ bgm: 'on' });
   });
   bgmOffBtn.addEventListener('click', () => {
-    bgmOnBtn.classList.remove('selected');
-    bgmOffBtn.classList.add('selected');
-    pikaVolley.audio.turnBGMVolume(false);
+    applyOptions({ bgm: 'off' });
   });
 
   const stereoBtn = document.getElementById('stereo-btn');
   const monoBtn = document.getElementById('mono-btn');
   const sfxOffBtn = document.getElementById('sfx-off-btn');
   stereoBtn.addEventListener('click', () => {
-    monoBtn.classList.remove('selected');
-    sfxOffBtn.classList.remove('selected');
-    stereoBtn.classList.add('selected');
-    pikaVolley.audio.turnSFXVolume(true);
-    pikaVolley.isStereoSound = true;
+    applyOptions({ sfx: 'stereo' });
   });
   monoBtn.addEventListener('click', () => {
-    sfxOffBtn.classList.remove('selected');
-    stereoBtn.classList.remove('selected');
-    monoBtn.classList.add('selected');
-    pikaVolley.audio.turnSFXVolume(true);
-    pikaVolley.isStereoSound = false;
+    applyOptions({ sfx: 'mono' });
   });
   sfxOffBtn.addEventListener('click', () => {
-    stereoBtn.classList.remove('selected');
-    monoBtn.classList.remove('selected');
-    sfxOffBtn.classList.add('selected');
-    pikaVolley.audio.turnSFXVolume(false);
+    applyOptions({ sfx: 'off' });
   });
 
   /**
    * Return whether the game is in progress
-   * @param {PikachuVolleyballOnline} pikaVolley
    */
-  function isGameInProgress(pikaVolley) {
-    return (
-      pikaVolley.state !== pikaVolley.intro &&
-      pikaVolley.state !== pikaVolley.menu &&
-      !(pikaVolley.state === pikaVolley.round && pikaVolley.gameEnded)
-    );
+  function isGameInProgress() {
+    if (pikaVolleyOnline) {
+      return (
+        pikaVolleyOnline.state !== pikaVolleyOnline.intro &&
+        pikaVolleyOnline.state !== pikaVolleyOnline.menu &&
+        !(
+          pikaVolleyOnline.state === pikaVolleyOnline.round &&
+          pikaVolleyOnline.gameEnded
+        )
+      );
+    }
+    return false;
   }
 
   // Game speed:
@@ -927,10 +872,9 @@ function setUpOptionsBtn(pikaVolley) {
     if (slowSpeedBtn.classList.contains('selected')) {
       return;
     }
-    if (isGameInProgress(pikaVolley)) {
+    if (isGameInProgress()) {
       noticeBoxGameInProgressForSpeed.classList.remove('hidden');
-      // @ts-ignore
-      optionsDropdownBtn.disabled = true;
+      disableOptionsBtn();
       return;
     }
     askOptionsChangeSendToPeer({ speed: 'slow', winningScore: null });
@@ -939,10 +883,9 @@ function setUpOptionsBtn(pikaVolley) {
     if (mediumSpeedBtn.classList.contains('selected')) {
       return;
     }
-    if (isGameInProgress(pikaVolley)) {
+    if (isGameInProgress()) {
       noticeBoxGameInProgressForSpeed.classList.remove('hidden');
-      // @ts-ignore
-      optionsDropdownBtn.disabled = true;
+      disableOptionsBtn();
       return;
     }
     askOptionsChangeSendToPeer({ speed: 'medium', winningScore: null });
@@ -951,10 +894,9 @@ function setUpOptionsBtn(pikaVolley) {
     if (fastSpeedBtn.classList.contains('selected')) {
       return;
     }
-    if (isGameInProgress(pikaVolley)) {
+    if (isGameInProgress()) {
       noticeBoxGameInProgressForSpeed.classList.remove('hidden');
-      // @ts-ignore
-      optionsDropdownBtn.disabled = true;
+      disableOptionsBtn();
       return;
     }
     askOptionsChangeSendToPeer({ speed: 'fast', winningScore: null });
@@ -962,8 +904,7 @@ function setUpOptionsBtn(pikaVolley) {
   noticeBoxGameInProgressForSpeedOKBtn.addEventListener('click', () => {
     if (!noticeBoxGameInProgressForSpeed.classList.contains('hidden')) {
       noticeBoxGameInProgressForSpeed.classList.add('hidden');
-      // @ts-ignore
-      optionsDropdownBtn.disabled = false;
+      enableOptionsBtn();
     }
   });
 
@@ -983,10 +924,10 @@ function setUpOptionsBtn(pikaVolley) {
     if (winningScore5Btn.classList.contains('selected')) {
       return;
     }
-    if (isGameInProgress(pikaVolley)) {
+    if (isGameInProgress()) {
       noticeBoxGameInProgressForWinningScore.classList.remove('hidden');
       // @ts-ignore
-      optionsDropdownBtn.disabled = true;
+      disableOptionsBtn();
       return;
     }
     askOptionsChangeSendToPeer({ speed: null, winningScore: 5 });
@@ -995,10 +936,9 @@ function setUpOptionsBtn(pikaVolley) {
     if (winningScore10Btn.classList.contains('selected')) {
       return;
     }
-    if (isGameInProgress(pikaVolley)) {
+    if (isGameInProgress()) {
       noticeBoxGameInProgressForWinningScore.classList.remove('hidden');
-      // @ts-ignore
-      optionsDropdownBtn.disabled = true;
+      disableOptionsBtn();
       return;
     }
     askOptionsChangeSendToPeer({ speed: null, winningScore: 10 });
@@ -1007,10 +947,9 @@ function setUpOptionsBtn(pikaVolley) {
     if (winningScore15Btn.classList.contains('selected')) {
       return;
     }
-    if (isGameInProgress(pikaVolley)) {
+    if (isGameInProgress()) {
       noticeBoxGameInProgressForWinningScore.classList.remove('hidden');
-      // @ts-ignore
-      optionsDropdownBtn.disabled = true;
+      disableOptionsBtn();
       return;
     }
     askOptionsChangeSendToPeer({ speed: null, winningScore: 15 });
@@ -1018,8 +957,7 @@ function setUpOptionsBtn(pikaVolley) {
   noticeBoxGameInProgressForWinningScoreOKBtn.addEventListener('click', () => {
     if (!noticeBoxGameInProgressForWinningScore.classList.contains('hidden')) {
       noticeBoxGameInProgressForWinningScore.classList.add('hidden');
-      // @ts-ignore
-      optionsDropdownBtn.disabled = false;
+      enableOptionsBtn();
     }
   });
 }
@@ -1082,6 +1020,165 @@ function setUpToShowDropdownsAndSubmenus() {
     .addEventListener('click', () => {
       showSubmenu('winning-score-submenu-btn', 'winning-score-submenu');
     });
+}
+
+/**
+ * Set selected (checked) options btn fit to options
+ * @param {{bgm: string, sfx: string, speed: string, winningScore: number}} options
+ */
+function setSelectedOptionsBtn(options) {
+  if (options.bgm) {
+    const bgmOnBtn = document.getElementById('bgm-on-btn');
+    const bgmOffBtn = document.getElementById('bgm-off-btn');
+    switch (options.bgm) {
+      case 'on':
+        bgmOffBtn.classList.remove('selected');
+        bgmOnBtn.classList.add('selected');
+        break;
+      case 'off':
+        bgmOnBtn.classList.remove('selected');
+        bgmOffBtn.classList.add('selected');
+        break;
+    }
+  } else if (options.sfx) {
+    const stereoBtn = document.getElementById('stereo-btn');
+    const monoBtn = document.getElementById('mono-btn');
+    const sfxOffBtn = document.getElementById('sfx-off-btn');
+    switch (options.sfx) {
+      case 'stereo':
+        monoBtn.classList.remove('selected');
+        sfxOffBtn.classList.remove('selected');
+        stereoBtn.classList.add('selected');
+        break;
+      case 'mono':
+        sfxOffBtn.classList.remove('selected');
+        stereoBtn.classList.remove('selected');
+        monoBtn.classList.add('selected');
+        break;
+      case 'off':
+        stereoBtn.classList.remove('selected');
+        monoBtn.classList.remove('selected');
+        sfxOffBtn.classList.add('selected');
+        break;
+    }
+  } else if (options.speed) {
+    const slowSpeedBtn = document.getElementById('slow-speed-btn');
+    const mediumSpeedBtn = document.getElementById('medium-speed-btn');
+    const fastSpeedBtn = document.getElementById('fast-speed-btn');
+    switch (options.speed) {
+      case 'slow':
+        mediumSpeedBtn.classList.remove('selected');
+        fastSpeedBtn.classList.remove('selected');
+        slowSpeedBtn.classList.add('selected');
+        break;
+      case 'medium':
+        fastSpeedBtn.classList.remove('selected');
+        slowSpeedBtn.classList.remove('selected');
+        mediumSpeedBtn.classList.add('selected');
+        break;
+      case 'fast':
+        slowSpeedBtn.classList.remove('selected');
+        mediumSpeedBtn.classList.remove('selected');
+        fastSpeedBtn.classList.add('selected');
+        break;
+    }
+  } else if (options.winningScore) {
+    const winningScore5Btn = document.getElementById('winning-score-5-btn');
+    const winningScore10Btn = document.getElementById('winning-score-10-btn');
+    const winningScore15Btn = document.getElementById('winning-score-15-btn');
+    switch (options.winningScore) {
+      case 5:
+        winningScore10Btn.classList.remove('selected');
+        winningScore15Btn.classList.remove('selected');
+        winningScore5Btn.classList.add('selected');
+        break;
+      case 10:
+        winningScore15Btn.classList.remove('selected');
+        winningScore5Btn.classList.remove('selected');
+        winningScore10Btn.classList.add('selected');
+        break;
+      case 15:
+        winningScore5Btn.classList.remove('selected');
+        winningScore10Btn.classList.remove('selected');
+        winningScore15Btn.classList.add('selected');
+        break;
+    }
+  }
+}
+
+/**
+ * Attach event listeners to ask and notice boxes relevant to changing options
+ */
+function setUpOptionsAskAndNoticeBoxes() {
+  const askOptionsChangeSendToPeerBox = document.getElementById(
+    'ask-options-change-send-to-peer'
+  );
+  const askOptionsChangeSendToPeerBoxYesBtn = document.getElementById(
+    'ask-options-change-send-to-peer-yes-btn'
+  );
+  const askOptionsChangeSendToPeerBoxNoBtn = document.getElementById(
+    'ask-options-change-send-to-peer-no-btn'
+  );
+  askOptionsChangeSendToPeerBoxYesBtn.addEventListener('click', () => {
+    sendOptionsChangeMessageToPeer(pendingOptions.toSend);
+    if (!askOptionsChangeSendToPeerBox.classList.contains('hidden')) {
+      askOptionsChangeSendToPeerBox.classList.add('hidden');
+    }
+  });
+  askOptionsChangeSendToPeerBoxNoBtn.addEventListener('click', () => {
+    if (!askOptionsChangeSendToPeerBox.classList.contains('hidden')) {
+      askOptionsChangeSendToPeerBox.classList.add('hidden');
+    }
+    enableOptionsBtn();
+  });
+
+  const askOptionsChangeReceivedFromPeerBox = document.getElementById(
+    'ask-options-change-received-from-peer'
+  );
+  const askOptionsChangeReceivedFromPeerBoxYesBtn = document.getElementById(
+    'ask-options-change-received-from-peer-yes-btn'
+  );
+  const askOptionsChangeReceivedFromPeerBoxNoBtn = document.getElementById(
+    'ask-options-change-received-from-peer-no-btn'
+  );
+  askOptionsChangeReceivedFromPeerBoxYesBtn.addEventListener('click', () => {
+    if (!askOptionsChangeReceivedFromPeerBox.classList.contains('hidden')) {
+      askOptionsChangeReceivedFromPeerBox.classList.add('hidden');
+    }
+    sendOptionsChangeAgreeMessageToPeer(true);
+    applyOptions(pendingOptions.received);
+    enableOptionsBtn();
+  });
+  askOptionsChangeReceivedFromPeerBoxNoBtn.addEventListener('click', () => {
+    if (!askOptionsChangeReceivedFromPeerBox.classList.contains('hidden')) {
+      askOptionsChangeReceivedFromPeerBox.classList.add('hidden');
+    }
+    sendOptionsChangeAgreeMessageToPeer(false);
+    enableOptionsBtn();
+  });
+
+  const noticePeerAgreedBox = document.getElementById('notice-peer-agreed');
+  const noticePeerAgreedBoxOKBtn = document.getElementById(
+    'notice-peer-agreed-ok-btn'
+  );
+  noticePeerAgreedBoxOKBtn.addEventListener('click', () => {
+    if (!noticePeerAgreedBox.classList.contains('hidden')) {
+      noticePeerAgreedBox.classList.add('hidden');
+    }
+    enableOptionsBtn();
+  });
+  const noticePeerDisagreedBox = document.getElementById(
+    'notice-peer-disagreed'
+  );
+  const noticePeerDisagreedBoxOKBtn = document.getElementById(
+    'notice-peer-disagreed-ok-btn'
+  );
+  noticePeerDisagreedBoxOKBtn.addEventListener('click', () => {
+    if (!noticePeerDisagreedBox.classList.contains('hidden')) {
+      noticePeerDisagreedBox.classList.add('hidden');
+    }
+    enableOptionsBtn();
+  });
 }
 
 /**

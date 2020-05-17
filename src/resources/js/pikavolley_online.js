@@ -3,7 +3,7 @@ import { PikachuVolleyball } from './offline_version_js/pikavolley.js';
 import { bufferLength, myKeyboard, OnlineKeyboard } from './keyboard_online.js';
 import { SYNC_DIVISOR, channel } from './data_channel';
 import { mod } from './mod.js';
-import { enableOptionsBtn, askOneMoreGame } from './ui_online.js';
+import { askOneMoreGame } from './ui_online.js';
 
 /** @typedef GameState @type {function():void} */
 
@@ -71,7 +71,6 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     if (this.frameCounter === 0) {
       if (this.isFirstGame) {
         this.isFirstGame = false;
-        enableOptionsBtn();
         if (channel.amICreatedRoom) {
           this.amIPlayer2 = false;
         } else {

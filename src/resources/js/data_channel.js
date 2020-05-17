@@ -43,6 +43,8 @@ import {
   sendWithFriendSuccessMessageToServer,
 } from './quick_match.js';
 
+/** @typedef {{speed: string, winningScore: number}} Options */
+
 firebase.initializeApp(firebaseConfig);
 
 // It is set to (1 << 8) since syncCounter is to be sent as Uint8
@@ -474,7 +476,7 @@ function receiveChatMessageFromPeer(chatMessage) {
  *
  * speed: one of 'slow', 'medium', 'fast', null
  * winningScore: one of 5, 10, 15, null
- * @param {{speed: string, winningScore: number}} options
+ * @param {Options} options
  */
 export function sendOptionsChangeMessageToPeer(options) {
   if (!options.speed && !options.winningScore) {
