@@ -76,6 +76,8 @@ function displayChatMessageAt(message, whichPlayerSide) {
     newChatBox.style.top = `${20 + 30 * player1ChatRng()}%`;
     // @ts-ignore
     newChatBox.style.right = `${55 + 25 * player1ChatRng()}%`;
+    // @ts-ignore
+    newChatBox.classList.remove('hidden');
     if (getSpeechBubbleNeeded && !getSpeechBubbleNeeded()) {
       // If speech Bubble is not needed
 
@@ -100,6 +102,8 @@ function displayChatMessageAt(message, whichPlayerSide) {
     newChatBox.style.top = `${20 + 30 * player2ChatRng()}%`;
     // @ts-ignore
     newChatBox.style.left = `${55 + 25 * player2ChatRng()}%`;
+    // @ts-ignore
+    newChatBox.classList.remove('hidden');
     if (getSpeechBubbleNeeded && !getSpeechBubbleNeeded()) {
       // If speech Bubble is not needed
 
