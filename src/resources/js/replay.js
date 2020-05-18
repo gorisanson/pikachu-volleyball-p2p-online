@@ -186,7 +186,8 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
             ticker.maxFPS = this.normalFPS;
             break;
         }
-      } else if (options[1].winningScore) {
+      }
+      if (options[1].winningScore) {
         switch (options[1].winningScore) {
           case 5:
             this.winningScore = 5;
