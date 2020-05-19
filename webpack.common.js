@@ -8,7 +8,7 @@ module.exports = {
   entry: {
     main: './src/resources/js/main_online.js',
     ko: './src/ko/ko.js',
-    main_replay: './src/resources/js/main_replay.js',
+    main_replay: './src/resources/js/replay/main_replay.js',
   },
   output: {
     filename: '[name].[chunkhash].js',

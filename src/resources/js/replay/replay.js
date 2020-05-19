@@ -1,15 +1,15 @@
 'use strict';
 import * as PIXI from 'pixi.js-legacy';
 import 'pixi-sound';
-import { ASSETS_PATH } from './offline_version_js/assets_path.js';
-import { setGetSpeechBubbleNeeded } from './chat_display.js';
+import { ASSETS_PATH } from '../offline_version_js/assets_path.js';
+import { setGetSpeechBubbleNeeded } from '../chat_display.js';
 import seedrandom from 'seedrandom';
 import { saveAs } from 'file-saver';
-import { setCustomRng } from './offline_version_js/rand.js';
-import { PikachuVolleyball } from './offline_version_js/pikavolley.js';
-import { setChatRngs, displayChatMessageAt } from './chat_display.js';
+import { setCustomRng } from '../offline_version_js/rand.js';
+import { PikachuVolleyball } from '../offline_version_js/pikavolley.js';
+import { setChatRngs, displayChatMessageAt } from '../chat_display.js';
 import { noticeEndOfReplay } from './ui_replay.js';
-import '../style.css';
+import '../../style.css';
 
 let renderer = null;
 let stage = null;

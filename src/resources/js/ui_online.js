@@ -21,7 +21,7 @@ import {
   startQuickMatch,
   sendCancelQuickMatchMessageToServer,
 } from './quick_match.js';
-import { replaySaver } from './replay.js';
+import { replaySaver } from './replay/replay.js';
 import '../style.css';
 
 /** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */

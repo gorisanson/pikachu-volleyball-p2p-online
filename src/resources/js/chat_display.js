@@ -7,7 +7,7 @@
  */
 'use strict';
 import { channel } from './data_channel.js';
-import { replaySaver } from './replay.js';
+import { replaySaver } from './replay/replay.js';
 
 /** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */
 
