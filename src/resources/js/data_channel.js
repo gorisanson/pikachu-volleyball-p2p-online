@@ -47,8 +47,9 @@ import {
 
 firebase.initializeApp(firebaseConfig);
 
-// It is set to (1 << 8) since syncCounter is to be sent as Uint8
-export const SYNC_DIVISOR = 1 << 8; // 256
+// It is set to (1 << 16) since syncCounter is to be sent as Uint16
+// 1 << 16 === 65536 and it corresponds to about 1.5 hours in 30 FPS (fast game speed).
+export const SYNC_DIVISOR = 1 << 16; // 65536
 
 export const channel = {
   isOpen: false,
@@ -317,9 +318,9 @@ export function closeConnection() {
  * @param {PikaUserInputWithSync[]} inputQueue
  */
 export function sendInputQueueToPeer(inputQueue) {
-  const buffer = new ArrayBuffer(1 + inputQueue.length);
+  const buffer = new ArrayBuffer(2 + inputQueue.length);
   const dataView = new DataView(buffer);
-  dataView.setUint8(0, inputQueue[0].syncCounter);
+  dataView.setUint16(0, inputQueue[0].syncCounter, true);
   for (let i = 0; i < inputQueue.length; i++) {
     const input = inputQueue[i];
     let byte = 0;
@@ -344,7 +345,7 @@ export function sendInputQueueToPeer(inputQueue) {
         byte += 1 << 4;
         break;
     }
-    dataView.setUint8(1 + i, byte);
+    dataView.setUint8(2 + i, byte);
   }
   dataChannel.send(buffer);
 }
@@ -360,8 +361,8 @@ function receiveInputQueueFromPeer(data) {
   }
 
   const dataView = new DataView(data);
-  const syncCounter0 = dataView.getUint8(0);
-  for (let i = 0; i < data.byteLength - 1; i++) {
+  const syncCounter0 = dataView.getUint16(0, true);
+  for (let i = 0; i < data.byteLength - 2; i++) {
     const syncCounter = mod(syncCounter0 + i, SYNC_DIVISOR);
     // isInModeRange in the below if statement is
     // to prevent overflow of the queue by a corrupted peer code
@@ -375,7 +376,7 @@ function receiveInputQueueFromPeer(data) {
           SYNC_DIVISOR
         ))
     ) {
-      const byte = dataView.getUint8(1 + i);
+      const byte = dataView.getUint8(2 + i);
       let xDirection;
       switch (byte % (1 << 2)) {
         case 0:
@@ -674,7 +675,7 @@ function respondToPingTest(data) {
 function recieveFromPeer(event) {
   const data = event.data;
   if (data instanceof ArrayBuffer) {
-    if (data.byteLength > 1 && data.byteLength <= 1 + 2 * bufferLength) {
+    if (data.byteLength > 2 && data.byteLength <= 2 + 2 * bufferLength) {
       receiveInputQueueFromPeer(data);
       if (channel.callbackAfterPeerInputQueueReceived !== null) {
         const callback = channel.callbackAfterPeerInputQueueReceived;
