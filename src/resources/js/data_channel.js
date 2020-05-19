@@ -48,8 +48,9 @@ import { replaySaver } from './replay.js';
 
 firebase.initializeApp(firebaseConfig);
 
-// It is set to (1 << 8) since syncCounter is to be sent as Uint8
-export const SYNC_DIVISOR = 1 << 8; // 256
+// It is set to (1 << 16) since syncCounter is to be sent as Uint16
+// 1 << 16 === 65536 and it corresponds to about 1.5 hours in 30 FPS (fast game speed).
+export const SYNC_DIVISOR = 1 << 16; // 65536
 
 export const channel = {
   isOpen: false,
@@ -142,25 +143,15 @@ export async function createRoom(roomIdToCreate) {
     'answererCandidates'
   );
 
-  // Create an unreliable and ordered data channel.
+  // Create an unreliable and unordered data channel, which is UDP-like channel.
+  //
   // An reliable and ordered data channel can be used but,
   // even if reliable channel is used, the sync brokes somehow after one of the peer,
   // for example, stops the game a while by minimizing the browser window.
   // So, I decided to manage the transmission reliability on the application layer.
-  // I don't know how the "ordered" is implemented on "unreliable" data channel.
-  // But I think the guess in here https://jameshfisher.com/2017/01/17/webrtc-datachannel-reliability/
-  // would be right. The receiver may discard earlier messages if arriving after later ones.
-  // This guess seems right according to the last paragraph RFC3758 section 3.6 which is the following.
   //
-  // "Note that after receiving a FORWARD TSN and updating the cumulative
-  // acknowledgement point, if a TSN that was skipped does arrive (i.e.,
-  // due to network reordering), then the receiver will follow the normal
-  // rules defined in RFC 2960 [2] for handling duplicate data.  This
-  // implies that the receiver will drop the chunk and report it as a
-  // duplicate in the next outbound SACK chunk."
-  // (from https://tools.ietf.org/html/rfc3758#section-3.6
-  // which is refered by https://tools.ietf.org/html/draft-ietf-rtcweb-data-channel-13#section-5
-  // which is refered by https://www.w3.org/TR/webrtc/#bib-rtcweb-data)
+  // SYNC_DIVISOR is 1 << 16 === 65536 and it corresponds to about 1.5 hours in 30 FPS (fast game speed).
+  // So ordering is maintained since no packet would live hanging around more than 1.5 hours in the network.
   //
   // references:
   // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/createDataChannel
@@ -168,8 +159,10 @@ export async function createRoom(roomIdToCreate) {
   // https://www.w3.org/TR/webrtc/#methods-11
   // https://www.w3.org/TR/webrtc/#rtcdatachannel
   // https://www.w3.org/TR/webrtc/#dictionary-rtcdatachannelinit-members
+  // https://www.w3.org/TR/webrtc/#bib-rtcweb-data
+  // https://tools.ietf.org/html/draft-ietf-rtcweb-data-channel-13#section-6.1
   dataChannel = peerConnection.createDataChannel('pikavolley_p2p_channel', {
-    ordered: true,
+    ordered: false,
     maxRetransmits: 0,
   });
   console.log('Created data channel', dataChannel);
@@ -318,9 +311,9 @@ export function closeConnection() {
  * @param {PikaUserInputWithSync[]} inputQueue
  */
 export function sendInputQueueToPeer(inputQueue) {
-  const buffer = new ArrayBuffer(1 + inputQueue.length);
+  const buffer = new ArrayBuffer(2 + inputQueue.length);
   const dataView = new DataView(buffer);
-  dataView.setUint8(0, inputQueue[0].syncCounter);
+  dataView.setUint16(0, inputQueue[0].syncCounter, true);
   for (let i = 0; i < inputQueue.length; i++) {
     const input = inputQueue[i];
     let byte = 0;
@@ -345,7 +338,7 @@ export function sendInputQueueToPeer(inputQueue) {
         byte += 1 << 4;
         break;
     }
-    dataView.setUint8(1 + i, byte);
+    dataView.setUint8(2 + i, byte);
   }
   dataChannel.send(buffer);
 }
@@ -361,8 +354,8 @@ function receiveInputQueueFromPeer(data) {
   }
 
   const dataView = new DataView(data);
-  const syncCounter0 = dataView.getUint8(0);
-  for (let i = 0; i < data.byteLength - 1; i++) {
+  const syncCounter0 = dataView.getUint16(0, true);
+  for (let i = 0; i < data.byteLength - 2; i++) {
     const syncCounter = mod(syncCounter0 + i, SYNC_DIVISOR);
     // isInModeRange in the below if statement is
     // to prevent overflow of the queue by a corrupted peer code
@@ -376,7 +369,7 @@ function receiveInputQueueFromPeer(data) {
           SYNC_DIVISOR
         ))
     ) {
-      const byte = dataView.getUint8(1 + i);
+      const byte = dataView.getUint8(2 + i);
       let xDirection;
       switch (byte % (1 << 2)) {
         case 0:
@@ -675,7 +668,7 @@ function respondToPingTest(data) {
 function recieveFromPeer(event) {
   const data = event.data;
   if (data instanceof ArrayBuffer) {
-    if (data.byteLength > 1 && data.byteLength <= 1 + 2 * bufferLength) {
+    if (data.byteLength > 2 && data.byteLength <= 2 + 2 * bufferLength) {
       receiveInputQueueFromPeer(data);
       if (channel.callbackAfterPeerInputQueueReceived !== null) {
         const callback = channel.callbackAfterPeerInputQueueReceived;
