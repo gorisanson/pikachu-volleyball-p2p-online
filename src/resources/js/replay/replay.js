@@ -15,6 +15,9 @@ let renderer = null;
 let stage = null;
 let ticker = null;
 let loader = null;
+let pikaVolley = null;
+let pack = null;
+let isFirst = true;
 
 /** @typedef {{speed: string, winningScore: number}} Options options communicated with the peer */
 
@@ -108,9 +111,9 @@ class ReplayReader {
     const reader = new FileReader();
     reader.onload = function (event) {
       // @ts-ignore
-      const pack = JSON.parse(event.target.result);
+      pack = JSON.parse(event.target.result);
       loader.load(() => {
-        setup(pack);
+        setup(0);
       });
     };
     reader.readAsText(filename);
@@ -218,7 +221,9 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
   }
 }
 
-function setup(pack) {
+export function setup(startFrameNumber) {
+  ticker.stop();
+
   const roomId = pack.roomID;
   // Set the same RNG (used for the game) for both peers
   const customRng = seedrandom.alea(roomId.slice(10));
@@ -229,7 +234,7 @@ function setup(pack) {
   const rngForPlayer2Chat = seedrandom.alea(roomId.slice(15));
   setChatRngs(rngForPlayer1Chat, rngForPlayer2Chat);
 
-  const pikaVolley = new PikachuVolleyballReplay(
+  pikaVolley = new PikachuVolleyballReplay(
     stage,
     loader.resources,
     pack.inputs,
@@ -238,23 +243,31 @@ function setup(pack) {
   );
   // @ts-ignore
   setGetSpeechBubbleNeeded(pikaVolley);
-  start(pikaVolley);
+
+  for (let i = 0; i < startFrameNumber; i++) {
+    pikaVolley.gameLoop();
+  }
+
+  start();
 }
 
-function start(pikaVolley) {
+function start() {
   ticker.maxFPS = pikaVolley.normalFPS;
-  ticker.add(() => {
-    // Redering and gameLoop order is the opposite of
-    // the offline web version (refer: ./offline_version_js/main.js).
-    // It's for the smooth rendering for the online version
-    // which gameLoop can not always succeed right on this "ticker.add"ed code
-    // because of the transfer delay or connection status. (If gameLoop here fails,
-    // it is recovered by the callback gameLoop which is called after peer input received.)
-    // Now the rendering is delayed 40ms (when pikaVolley.normalFPS == 25)
-    // behind gameLoop.
-    renderer.render(stage);
-    pikaVolley.gameLoop();
-  });
+  if (isFirst) {
+    isFirst = false;
+    ticker.add(() => {
+      // Redering and gameLoop order is the opposite of
+      // the offline web version (refer: ./offline_version_js/main.js).
+      // It's for the smooth rendering for the online version
+      // which gameLoop can not always succeed right on this "ticker.add"ed code
+      // because of the transfer delay or connection status. (If gameLoop here fails,
+      // it is recovered by the callback gameLoop which is called after peer input received.)
+      // Now the rendering is delayed 40ms (when pikaVolley.normalFPS == 25)
+      // behind gameLoop.
+      renderer.render(stage);
+      pikaVolley.gameLoop();
+    });
+  }
   ticker.start();
 }
 

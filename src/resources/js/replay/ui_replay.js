@@ -1,4 +1,4 @@
-import { replayReader } from './replay.js';
+import { replayReader, setup } from './replay.js';
 import '../../style.css';
 
 export function setUpUI() {
@@ -13,6 +13,13 @@ export function setUpUI() {
   );
   noticeBoxEndOfReplayOKBtn.addEventListener('click', () => {
     location.reload();
+  });
+
+  const frameMoveBtn = document.getElementById('frame-move-btn');
+  frameMoveBtn.addEventListener('click', () => {
+    const frameNumberInput = document.getElementById('frame-number-input');
+    // @ts-ignore
+    setup(Number(frameNumberInput.value));
   });
 
   function dragenter(e) {
