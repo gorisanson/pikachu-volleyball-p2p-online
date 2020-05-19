@@ -20,7 +20,7 @@ import {
   MESSAGE_TO_CLIENT,
   startQuickMatch,
   sendCancelQuickMatchMessageToServer,
-} from './quick_match.js';
+} from './quick_match/quick_match.js';
 import { replaySaver } from './replay/replay.js';
 import '../style.css';
 

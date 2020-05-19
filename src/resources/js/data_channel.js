@@ -41,7 +41,7 @@ import { rtcConfiguration } from './rtc_configuration.js';
 import {
   sendQuickMatchSuccessMessageToServer,
   sendWithFriendSuccessMessageToServer,
-} from './quick_match.js';
+} from './quick_match/quick_match.js';
 import { replaySaver } from './replay/replay.js';
 
 /** @typedef {{speed: string, winningScore: number}} Options */

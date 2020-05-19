@@ -5,14 +5,14 @@
  */
 'use strict';
 import { serverURL } from './quick_match_server_url.js';
-import { createRoom, joinRoom } from './data_channel.js';
+import { createRoom, joinRoom } from '../data_channel.js';
 import {
   printCommunicationCount,
   printQuickMatchState,
   printQuickMatchLog,
   printFailedToConnectToQuickMatchServer,
   printNumberOfSuccessfulQuickMatches,
-} from './ui_online.js';
+} from '../ui_online.js';
 
 let roomIdToCreate = null;
 let communicationCount = null;
