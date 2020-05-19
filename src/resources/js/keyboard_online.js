@@ -6,7 +6,11 @@
 'use strict';
 import { PikaKeyboard } from './offline_version_js/keyboard.js';
 import { PikaUserInput } from './offline_version_js/physics.js';
-import { channel, SYNC_DIVISOR, sendInputQueueToPeer } from './data_channel.js';
+import {
+  channel,
+  SYNC_DIVISOR,
+  sendInputQueueToPeer,
+} from './data_channel/data_channel.js';
 import { mod, isInModRange } from './mod.js';
 
 /** @constant @type {number} communicated input queue buffer length */

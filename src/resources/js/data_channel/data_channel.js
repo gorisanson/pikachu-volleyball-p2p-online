@@ -12,9 +12,9 @@ import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import { firebaseConfig } from './firebase_config.js';
 import seedrandom from 'seedrandom';
-import { setCustomRng } from './offline_version_js/rand.js';
-import { mod, isInModRange } from './mod.js';
-import { bufferLength, PikaUserInputWithSync } from './keyboard_online.js';
+import { setCustomRng } from '../offline_version_js/rand.js';
+import { mod, isInModRange } from '../mod.js';
+import { bufferLength, PikaUserInputWithSync } from '../keyboard_online.js';
 import {
   noticeDisconnected,
   enableChatOpenBtn,
@@ -31,18 +31,18 @@ import {
   disableCancelQuickMatchBtn,
   askOptionsChangeReceivedFromPeer,
   noticeAgreeMessageFromPeer,
-} from './ui_online.js';
+} from '../ui_online.js';
 import {
   setChatRngs,
   displayMyChatMessage,
   displayPeerChatMessage,
-} from './chat_display.js';
+} from '../chat_display.js';
 import { rtcConfiguration } from './rtc_configuration.js';
 import {
   sendQuickMatchSuccessMessageToServer,
   sendWithFriendSuccessMessageToServer,
-} from './quick_match/quick_match.js';
-import { replaySaver } from './replay/replay.js';
+} from '../quick_match/quick_match.js';
+import { replaySaver } from '../replay/replay.js';
 
 /** @typedef {{speed: string, winningScore: number}} Options */
 

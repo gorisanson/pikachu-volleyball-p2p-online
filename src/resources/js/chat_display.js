@@ -6,7 +6,7 @@
  * It is achieved by setting the same RNG (random number generator) for each player's chat box.
  */
 'use strict';
-import { channel } from './data_channel.js';
+import { channel } from './data_channel/data_channel.js';
 import { replaySaver } from './replay/replay.js';
 
 /** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */

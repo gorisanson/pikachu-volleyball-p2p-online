@@ -12,10 +12,10 @@ import {
   closeConnection,
   sendOptionsChangeMessageToPeer,
   sendOptionsChangeAgreeMessageToPeer,
-} from './data_channel.js';
-import { generatePushID } from './generate_pushid.js';
+} from './data_channel/data_channel.js';
+import { generatePushID } from './data_channel/generate_pushid.js';
 import { myKeyboard } from './keyboard_online.js';
-import { testNetwork } from './network_test.js';
+import { testNetwork } from './data_channel/network_test.js';
 import {
   MESSAGE_TO_CLIENT,
   startQuickMatch,
