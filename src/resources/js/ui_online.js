@@ -21,6 +21,7 @@ import {
   startQuickMatch,
   sendCancelQuickMatchMessageToServer,
 } from './quick_match.js';
+import { enableChat } from './chat_display.js';
 import '../style.css';
 
 /** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */
@@ -63,7 +64,11 @@ const pendingOptions = {
 
 let pikaVolleyOnline = null; // it is set after loading the game assets
 
+const chatOpenBtnAndDisableChatCheckboxContainer = document.getElementById(
+  'chat-open-btn-and-disable-chat-checkbox'
+);
 const chatOpenBtn = document.getElementById('chat-open-btn');
+const disableChatCheckbox = document.getElementById('disable-chat-checkbox');
 const chatInputAndSendBtnContainer = document.getElementById(
   'chat-input-and-send-btn-container'
 );
@@ -274,6 +279,23 @@ export function setUpUI() {
       }
     });
   };
+
+  disableChatCheckbox.addEventListener('click', () => {
+    // @ts-ignore
+    if (disableChatCheckbox.checked) {
+      enableChat(false);
+      // @ts-ignore
+      chatOpenBtn.disabled = true;
+      // @ts-ignore
+      chatInput.disabled = true;
+      // @ts-ignore
+      sendBtn.disabled = true;
+    } else {
+      enableChat(true);
+      // @ts-ignore
+      chatOpenBtn.disabled = false;
+    }
+  });
 
   attachEventListenerToHideBtn('test-passed-ok-btn', 'test-passed');
   attachEventListenerToHideBtn(
@@ -744,9 +766,11 @@ export function askOneMoreGame() {
   document.getElementById('ask-one-more-game').classList.remove('hidden');
 }
 
-export function enableChatOpenBtn() {
+export function enableChatOpenBtnAndDisableChatCheckbox() {
   // @ts-ignore
   chatOpenBtn.disabled = false;
+  // @ts-ignore
+  disableChatCheckbox.disabled = false;
 }
 
 function enableOptionsBtn() {
@@ -763,9 +787,11 @@ function disableOptionsBtn() {
 
 function disableChatBtns() {
   // @ts-ignore
-  chatInput.disabled = true;
-  // @ts-ignore
   chatOpenBtn.disabled = true;
+  // @ts-ignore
+  disableChatCheckbox.disabled = true;
+  // @ts-ignore
+  chatInput.disabled = true;
   // @ts-ignore
   sendBtn.disabled = true;
 }
@@ -778,8 +804,10 @@ function chatOpenBtnClicked() {
   // @ts-ignore
   sendBtn.disabled = false;
   myKeyboard.unsubscribe();
-  if (!chatOpenBtn.classList.contains('hidden')) {
-    chatOpenBtn.classList.add('hidden');
+  if (
+    !chatOpenBtnAndDisableChatCheckboxContainer.classList.contains('hidden')
+  ) {
+    chatOpenBtnAndDisableChatCheckboxContainer.classList.add('hidden');
   }
   chatInputAndSendBtnContainer.classList.remove('hidden');
   chatInput.focus({ preventScroll: true });
@@ -791,11 +819,11 @@ function sendBtnClicked() {
   if (!chatInputAndSendBtnContainer.classList.contains('hidden')) {
     chatInputAndSendBtnContainer.classList.add('hidden');
   }
-  chatOpenBtn.classList.remove('hidden');
+  chatOpenBtnAndDisableChatCheckboxContainer.classList.remove('hidden');
   // @ts-ignore
   const message = chatInput.value;
   if (message === '') {
-    enableChatOpenBtn();
+    enableChatOpenBtnAndDisableChatCheckbox();
     return;
   }
   // @ts-ignore
