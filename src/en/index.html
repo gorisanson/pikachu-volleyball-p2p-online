@@ -582,7 +582,13 @@
           <input type="text" id="chat-input" maxlength="50" />
           <button type="button" id="send-btn">send (Enter)</button>
         </div>
-        <button id="chat-open-btn">Chat (space bar)</button>
+        <div id="chat-open-btn-and-disable-chat-checkbox">
+          <button id="chat-open-btn">Chat (space bar)</button>
+          <div id="check-box-container" class="flex-row strict-border">
+            <input type="checkbox" id="disable-chat-checkbox" />
+            <label id="disable-chat-label" for="checkbox">Disable chat</label>
+          </div>
+        </div>
       </div>
     </div>
   </body>
