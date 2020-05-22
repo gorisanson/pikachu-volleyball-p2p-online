@@ -263,8 +263,10 @@ export function setUpUI() {
   channel.callbackAfterDataChannelOpenedForUI = () => {
     window.addEventListener('keydown', (event) => {
       if (event.code === 'Space') {
-        event.preventDefault();
-        if (!chatOpenBtn.classList.contains('hidden')) {
+        if (
+          !chatOpenBtnAndChatDisablingBtnContainer.classList.contains('hidden')
+        ) {
+          event.preventDefault();
           chatOpenBtn.click();
         }
       } else if (event.code === 'Enter') {
