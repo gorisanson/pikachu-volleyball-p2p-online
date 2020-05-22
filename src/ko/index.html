@@ -583,12 +583,11 @@
           <input type="text" id="chat-input" maxlength="50" />
           <button type="button" id="send-btn">보내기 (엔터)</button>
         </div>
-        <div id="chat-open-btn-and-disable-chat-checkbox">
+        <div id="chat-open-btn-and-chat-disabling-btn-container">
           <button id="chat-open-btn">채팅 (스페이스 바)</button>
-          <div id="check-box-container" class="flex-row strict-border">
-            <input type="checkbox" id="disable-chat-checkbox" />
-            <label id="disable-chat-label" for="checkbox">채팅 끄기</label>
-          </div>
+          <button type="button" id="chat-disabling-btn">채팅 끄기</button>
+          <div id="text-disable-chat" class="hidden">채팅 끄기</div>
+          <div id="text-enable-chat" class="hidden">채팅 켜기</div>
         </div>
       </div>
     </div>

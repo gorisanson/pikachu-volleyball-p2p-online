@@ -137,7 +137,7 @@ canvas {
   width: var(--canvas-width);
 }
 #chat-input-and-send-btn-container,
-#chat-open-btn-and-disable-chat-checkbox,
+#chat-open-btn-and-chat-disabling-btn-container,
 #room-id-with-join-btn,
 #create-btn-with-created-room-id {
   display: grid;
@@ -155,6 +155,7 @@ canvas {
 #checkbox-container,
 #chat-open-btn,
 #chat-input,
+#chat-disabling-btn,
 #send-btn {
   width: 100%;
   height: 100%;
@@ -162,6 +163,7 @@ canvas {
 #chat-input {
   grid-column-start: 1;
 }
+#chat-disabling-btn,
 #send-btn {
   grid-column-start: 2;
   border-radius: 0;
@@ -173,19 +175,18 @@ canvas {
   border-width: 1px;
 }
 #chat-input-and-send-btn-container,
-#chat-open-btn-and-disable-chat-checkbox {
+#chat-open-btn-and-chat-disabling-btn-container {
   position: absolute;
   display: grid;
 }
 #menu-bar.hidden,
 #chat-input-and-send-btn-container.hidden,
-#chat-open-btn-and-disable-chat-checkbox.hidden {
+#chat-open-btn-and-chat-disabling-btn-container.hidden {
   display: none;
 }
 #chat-input-here,
 #chat-input-and-send-btn-container,
-#chat-open-btn-and-disable-chat-checkbox,
-#dev-here {
+#chat-open-btn-and-chat-disabling-btn-container {
   width: var(--canvas-width);
 }
 #network-test-btn,
@@ -202,13 +203,10 @@ canvas {
 #network-test-btn,
 #create-btn,
 #join-btn,
+#chat-disabling-btn,
 #send-btn,
-#chat-open-btn,
-#disable-chat-label {
+#chat-open-btn {
   font-size: calc(0.8 * var(--font-size));
-}
-#disable-chat-label {
-  text-align: center;
 }
 #created-room-id-container,
 #join-room-id-input,
@@ -485,15 +483,4 @@ span.check {
 }
 .pre-wrap {
   white-space: pre-wrap;
-}
-.flex-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.strict-border {
-  border-style: solid;
-  border-radius: 0;
-  border-width: 1px;
 }
