@@ -21,6 +21,7 @@ import {
   startQuickMatch,
   sendCancelQuickMatchMessageToServer,
 } from './quick_match/quick_match.js';
+import { enableChat } from './chat_display.js';
 import { replaySaver } from './replay/replay.js';
 import '../style.css';
 
@@ -64,7 +65,11 @@ const pendingOptions = {
 
 let pikaVolleyOnline = null; // it is set after loading the game assets
 
+const chatOpenBtnAndChatDisablingBtnContainer = document.getElementById(
+  'chat-open-btn-and-chat-disabling-btn-container'
+);
 const chatOpenBtn = document.getElementById('chat-open-btn');
+const chatDisablingBtn = document.getElementById('chat-disabling-btn');
 const chatInputAndSendBtnContainer = document.getElementById(
   'chat-input-and-send-btn-container'
 );
@@ -259,9 +264,9 @@ export function setUpUI() {
   channel.callbackAfterDataChannelOpenedForUI = () => {
     window.addEventListener('keydown', (event) => {
       if (event.code === 'Space') {
+        event.preventDefault();
         if (!chatOpenBtn.classList.contains('hidden')) {
           chatOpenBtn.click();
-          event.preventDefault();
         }
       } else if (event.code === 'Enter') {
         event.preventDefault();
@@ -275,6 +280,31 @@ export function setUpUI() {
       }
     });
   };
+
+  chatDisablingBtn.addEventListener('click', () => {
+    // @ts-ignore
+    if (!chatOpenBtn.disabled) {
+      enableChat(false);
+      // @ts-ignore
+      chatOpenBtn.disabled = true;
+      // @ts-ignore
+      chatInput.disabled = true;
+      // @ts-ignore
+      sendBtn.disabled = true;
+      chatDisablingBtn.textContent = document.getElementById(
+        'text-enable-chat'
+      ).textContent;
+      chatDisablingBtn.blur();
+    } else {
+      enableChat(true);
+      // @ts-ignore
+      chatOpenBtn.disabled = false;
+      chatDisablingBtn.textContent = document.getElementById(
+        'text-disable-chat'
+      ).textContent;
+      chatDisablingBtn.blur();
+    }
+  });
 
   attachEventListenerToHideBtn('test-passed-ok-btn', 'test-passed');
   attachEventListenerToHideBtn(
@@ -751,9 +781,11 @@ export function askOneMoreGame() {
   document.getElementById('ask-one-more-game').classList.remove('hidden');
 }
 
-export function enableChatOpenBtn() {
+export function enableChatOpenBtnAndDisableChatCheckbox() {
   // @ts-ignore
   chatOpenBtn.disabled = false;
+  // @ts-ignore
+  chatDisablingBtn.disabled = false;
 }
 
 function enableOptionsBtn() {
@@ -770,9 +802,11 @@ function disableOptionsBtn() {
 
 function disableChatBtns() {
   // @ts-ignore
-  chatInput.disabled = true;
-  // @ts-ignore
   chatOpenBtn.disabled = true;
+  // @ts-ignore
+  chatDisablingBtn.disabled = true;
+  // @ts-ignore
+  chatInput.disabled = true;
   // @ts-ignore
   sendBtn.disabled = true;
 }
@@ -785,8 +819,8 @@ function chatOpenBtnClicked() {
   // @ts-ignore
   sendBtn.disabled = false;
   myKeyboard.unsubscribe();
-  if (!chatOpenBtn.classList.contains('hidden')) {
-    chatOpenBtn.classList.add('hidden');
+  if (!chatOpenBtnAndChatDisablingBtnContainer.classList.contains('hidden')) {
+    chatOpenBtnAndChatDisablingBtnContainer.classList.add('hidden');
   }
   chatInputAndSendBtnContainer.classList.remove('hidden');
   chatInput.focus({ preventScroll: true });
@@ -798,11 +832,11 @@ function sendBtnClicked() {
   if (!chatInputAndSendBtnContainer.classList.contains('hidden')) {
     chatInputAndSendBtnContainer.classList.add('hidden');
   }
-  chatOpenBtn.classList.remove('hidden');
+  chatOpenBtnAndChatDisablingBtnContainer.classList.remove('hidden');
   // @ts-ignore
   const message = chatInput.value;
   if (message === '') {
-    enableChatOpenBtn();
+    enableChatOpenBtnAndDisableChatCheckbox();
     return;
   }
   // @ts-ignore

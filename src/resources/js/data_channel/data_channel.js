@@ -17,7 +17,7 @@ import { mod, isInModRange } from '../mod.js';
 import { bufferLength, PikaUserInputWithSync } from '../keyboard_online.js';
 import {
   noticeDisconnected,
-  enableChatOpenBtn,
+  enableChatOpenBtnAndDisableChatCheckbox,
   showGameCanvas,
   hideWatingPeerAssetsLoadingBox,
   hidePingBox,
@@ -434,7 +434,7 @@ function receiveChatMessageAckFromPeer(data) {
     chatManager.syncCounter++;
     clearInterval(chatManager.resendIntervalID);
     displayMyChatMessage(chatManager.pendingMessage);
-    enableChatOpenBtn();
+    enableChatOpenBtnAndDisableChatCheckbox();
   }
 }
 
@@ -613,7 +613,7 @@ function startGameAfterPingTest() {
       channel.callbackAfterDataChannelOpened();
       channel.callbackAfterDataChannelOpenedForUI();
       showGameCanvas();
-      enableChatOpenBtn();
+      enableChatOpenBtnAndDisableChatCheckbox();
 
       printAvgPing(avg);
 
