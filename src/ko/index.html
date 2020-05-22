@@ -583,7 +583,12 @@
           <input type="text" id="chat-input" maxlength="50" />
           <button type="button" id="send-btn">보내기 (엔터)</button>
         </div>
-        <button id="chat-open-btn">채팅 (스페이스 바)</button>
+        <div id="chat-open-btn-and-chat-disabling-btn-container">
+          <button id="chat-open-btn">채팅 (스페이스 바)</button>
+          <button type="button" id="chat-disabling-btn">채팅 끄기</button>
+          <div id="text-disable-chat" class="hidden">채팅 끄기</div>
+          <div id="text-enable-chat" class="hidden">채팅 켜기</div>
+        </div>
       </div>
     </div>
   </body>

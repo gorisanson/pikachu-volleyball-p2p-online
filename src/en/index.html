@@ -582,7 +582,12 @@
           <input type="text" id="chat-input" maxlength="50" />
           <button type="button" id="send-btn">send (Enter)</button>
         </div>
-        <button id="chat-open-btn">Chat (space bar)</button>
+        <div id="chat-open-btn-and-chat-disabling-btn-container">
+          <button id="chat-open-btn">Chat (space bar)</button>
+          <button type="button" id="chat-disabling-btn">Disable chat</button>
+          <div id="text-disable-chat" class="hidden">Disable chat</div>
+          <div id="text-enable-chat" class="hidden">Enable chat</div>
+        </div>
       </div>
     </div>
   </body>

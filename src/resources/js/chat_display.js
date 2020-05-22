@@ -15,6 +15,8 @@ let getSpeechBubbleNeeded = null; // it is assigned a function after the game as
 let player1ChatRng = null;
 let player2ChatRng = null;
 
+let isChatEnabled = true;
+
 const canvasContainer = document.getElementById('game-canvas-container');
 let player1ChatBox = document.getElementById('player1-chat-box');
 let player2ChatBox = document.getElementById('player2-chat-box');
@@ -38,6 +40,14 @@ export function setGetSpeechBubbleNeeded(pikaVolley) {
 export function setChatRngs(rngForPlayer1Chat, rngForPlayer2Chat) {
   player1ChatRng = rngForPlayer1Chat;
   player2ChatRng = rngForPlayer2Chat;
+}
+
+/**
+ * Enable/Disable chat
+ * @param {boolean} turnOn
+ */
+export function enableChat(turnOn) {
+  isChatEnabled = turnOn;
 }
 
 export function displayMyChatMessage(message) {
@@ -69,6 +79,10 @@ export function displayPeerChatMessage(message) {
 }
 
 function displayChatMessageAt(message, whichPlayerSide) {
+  if (!isChatEnabled) {
+    return;
+  }
+
   if (whichPlayerSide === 1) {
     const newChatBox = player1ChatBox.cloneNode();
     newChatBox.textContent = message;
