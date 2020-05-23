@@ -496,3 +496,7 @@ span.check {
   align-items: center;
   justify-content: flex-start;
 }
+/* CSS for replay is below */
+#scrubber-range-input {
+  width: var(--canvas-width);
+}

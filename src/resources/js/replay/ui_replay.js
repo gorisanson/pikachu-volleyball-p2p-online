@@ -1,5 +1,7 @@
-import { replayReader, setup } from './replay.js';
+import { replayReader, setup, setWillMoveScrubber } from './replay.js';
 import '../../style.css';
+
+const scrubberRangeInput = document.getElementById('scrubber-range-input');
 
 export function setUpUI() {
   // Dropbox code is from: https://developer.mozilla.org/en-US/docs/Web/API/File/Using_files_from_web_applications
@@ -15,11 +17,13 @@ export function setUpUI() {
     location.reload();
   });
 
-  const frameMoveBtn = document.getElementById('frame-move-btn');
-  frameMoveBtn.addEventListener('click', () => {
-    const frameNumberInput = document.getElementById('frame-number-input');
+  scrubberRangeInput.addEventListener('mousedown', () => {
+    setWillMoveScrubber(false);
+  });
+
+  scrubberRangeInput.addEventListener('change', (event) => {
     // @ts-ignore
-    setup(Number(frameNumberInput.value));
+    setup(Number(event.target.value));
   });
 
   function dragenter(e) {
@@ -53,4 +57,14 @@ export function setUpUI() {
 export function noticeEndOfReplay() {
   const noticeBoxEndOfReplay = document.getElementById('notice-end-of-replay');
   noticeBoxEndOfReplay.classList.remove('hidden');
+}
+
+export function setMaxForScrubberRange(max) {
+  // @ts-ignore
+  document.getElementById('scrubber-range-input').max = max;
+}
+
+export function moveScrubberTo(value) {
+  // @ts-ignore
+  scrubberRangeInput.value = value;
 }

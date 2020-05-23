@@ -8,7 +8,11 @@ import { saveAs } from 'file-saver';
 import { setCustomRng } from '../offline_version_js/rand.js';
 import { PikachuVolleyball } from '../offline_version_js/pikavolley.js';
 import { setChatRngs, displayChatMessageAt } from '../chat_display.js';
-import { noticeEndOfReplay } from './ui_replay.js';
+import {
+  noticeEndOfReplay,
+  setMaxForScrubberRange,
+  moveScrubberTo,
+} from './ui_replay.js';
 import '../../style.css';
 
 let renderer = null;
@@ -18,6 +22,7 @@ let loader = null;
 let pikaVolley = null;
 let pack = null;
 let isFirst = true;
+let willMoveScrubber = true;
 
 /** @typedef {{speed: string, winningScore: number}} Options options communicated with the peer */
 
@@ -113,6 +118,7 @@ class ReplayReader {
       // @ts-ignore
       pack = JSON.parse(event.target.result);
       loader.load(() => {
+        setMaxForScrubberRange(pack.inputs.length);
         setup(0);
       });
     };
@@ -161,6 +167,10 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
     if (!this.inputs[this.replayFrameCounter]) {
       noticeEndOfReplay();
       return;
+    }
+
+    if (willMoveScrubber) {
+      moveScrubberTo(this.replayFrameCounter);
     }
 
     const player1Input = this.inputs[this.replayFrameCounter][0];
@@ -219,6 +229,10 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
     this.physics.player2.isComputer = false;
     super.gameLoop();
   }
+}
+
+export function setWillMoveScrubber(bool) {
+  willMoveScrubber = bool;
 }
 
 export function setup(startFrameNumber) {
@@ -291,6 +305,7 @@ function start() {
     });
   }
   ticker.start();
+  setWillMoveScrubber(true);
 }
 
 /**
