@@ -2,7 +2,7 @@
 import * as PIXI from 'pixi.js-legacy';
 import 'pixi-sound';
 import { ASSETS_PATH } from '../offline_version_js/assets_path.js';
-import { setGetSpeechBubbleNeeded } from '../chat_display.js';
+import { setGetSpeechBubbleNeeded, hideChat } from '../chat_display.js';
 import seedrandom from 'seedrandom';
 import { saveAs } from 'file-saver';
 import { setCustomRng } from '../offline_version_js/rand.js';
@@ -23,6 +23,7 @@ let pikaVolley = null;
 let pack = null;
 let isFirst = true;
 let willMoveScrubber = true;
+let willDisplayChat = true;
 
 /** @typedef {{speed: string, winningScore: number}} Options options communicated with the peer */
 
@@ -101,13 +102,12 @@ class ReplayReader {
       backgroundColor: 0x000000,
       transparent: false,
     });
-    stage = new PIXI.Container();
     ticker = new PIXI.Ticker();
     loader = new PIXI.Loader();
 
     document.querySelector('#game-canvas-container').appendChild(renderer.view);
 
-    renderer.render(stage); // To make the initial canvas painting stable in the Firefox browser.
+    renderer.render(new PIXI.Container()); // To make the initial canvas painting stable in the Firefox browser.
     loader.add(ASSETS_PATH.SPRITE_SHEET);
     for (const prop in ASSETS_PATH.SOUNDS) {
       loader.add(ASSETS_PATH.SOUNDS[prop]);
@@ -219,7 +219,9 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
 
     let chat = this.chats[this.chatCounter];
     while (chat && chat[0] === this.replayFrameCounter) {
-      displayChatMessageAt(chat[2], chat[1]);
+      if (willDisplayChat) {
+        displayChatMessageAt(chat[2], chat[1]);
+      }
       this.chatCounter++;
       chat = this.chats[this.chatCounter];
     }
@@ -237,6 +239,7 @@ export function setWillMoveScrubber(bool) {
 
 export function setup(startFrameNumber) {
   ticker.stop();
+  stage = new PIXI.Container();
 
   const roomId = pack.roomID;
   // Set the same RNG (used for the game) for both peers
@@ -247,6 +250,12 @@ export function setup(startFrameNumber) {
   const rngForPlayer1Chat = seedrandom.alea(roomId.slice(10, 15));
   const rngForPlayer2Chat = seedrandom.alea(roomId.slice(15));
   setChatRngs(rngForPlayer1Chat, rngForPlayer2Chat);
+
+  // Cleanup previous pikaVolley
+  if (pikaVolley) {
+    pikaVolley.audio.sounds.bgm.stop();
+  }
+  hideChat();
 
   pikaVolley = new PikachuVolleyballReplay(
     stage,
@@ -278,9 +287,11 @@ export function setup(startFrameNumber) {
     const audio = pikaVolley.audio;
     // @ts-ignore
     pikaVolley.audio = fakeAudio;
+    willDisplayChat = false;
     for (let i = 0; i < startFrameNumber; i++) {
       pikaVolley.gameLoop();
     }
+    willDisplayChat = true;
     pikaVolley.audio = audio;
   }
 

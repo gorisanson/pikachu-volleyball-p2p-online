@@ -54,6 +54,15 @@ export function enableChat(turnOn) {
   isChatEnabled = turnOn;
 }
 
+export function hideChat() {
+  if (!player1ChatBox.classList.contains('hidden')) {
+    player1ChatBox.classList.add('hidden');
+  }
+  if (!player2ChatBox.classList.contains('hidden')) {
+    player2ChatBox.classList.add('hidden');
+  }
+}
+
 export function displayMyChatMessage(message) {
   if (channel.amIPlayer2 === null) {
     if (channel.amICreatedRoom) {
