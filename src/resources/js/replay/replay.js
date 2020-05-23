@@ -244,8 +244,30 @@ export function setup(startFrameNumber) {
   // @ts-ignore
   setGetSpeechBubbleNeeded(pikaVolley);
 
-  for (let i = 0; i < startFrameNumber; i++) {
-    pikaVolley.gameLoop();
+  if (startFrameNumber > 0) {
+    const fakeSound = {
+      play: () => {},
+      stop: () => {},
+    };
+    const fakeAudio = {
+      sounds: {
+        bgm: fakeSound,
+        pipikachu: fakeSound,
+        pika: fakeSound,
+        chu: fakeSound,
+        pi: fakeSound,
+        pikachu: fakeSound,
+        powerHit: fakeSound,
+        ballTouchesGround: fakeSound,
+      },
+    };
+    const audio = pikaVolley.audio;
+    // @ts-ignore
+    pikaVolley.audio = fakeAudio;
+    for (let i = 0; i < startFrameNumber; i++) {
+      pikaVolley.gameLoop();
+    }
+    pikaVolley.audio = audio;
   }
 
   start();
