@@ -601,6 +601,10 @@ export function printSomeoneElseAlreadyJoinedRoomMessage() {
 export function showGameCanvas() {
   const flexContainer = document.getElementById('flex-container');
   const beforeConnection = document.getElementById('before-connection');
+  const quickMatchNoticeBox = document.getElementById('quick-match-notice-box');
+  if (!quickMatchNoticeBox.classList.contains('hidden')) {
+    quickMatchNoticeBox.classList.add('hidden');
+  }
   if (!beforeConnection.classList.contains('hidden')) {
     beforeConnection.classList.add('hidden');
   }
