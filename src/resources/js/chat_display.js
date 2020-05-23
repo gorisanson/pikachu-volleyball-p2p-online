@@ -28,6 +28,9 @@ let player2ChatBox = document.getElementById('player2-chat-box');
  */
 export function setGetSpeechBubbleNeeded(pikaVolley) {
   getSpeechBubbleNeeded = () => {
+    if (document.querySelectorAll('.fade-in-box:not(.hidden)').length > 0) {
+      return true;
+    }
     if (
       pikaVolley.state === pikaVolley.intro ||
       pikaVolley.state === pikaVolley.menu
