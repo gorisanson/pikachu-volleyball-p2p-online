@@ -281,6 +281,8 @@ span.margin-left-right {
   visibility: visible;
   opacity: 1;
   background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   animation-name: fade-in;
   animation-duration: 1s;
 }
