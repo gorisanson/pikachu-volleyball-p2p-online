@@ -281,6 +281,7 @@ span.margin-left-right {
   visibility: visible;
   opacity: 1;
   background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
   animation-name: fade-in;
   animation-duration: 1s;
 }
@@ -486,4 +487,4 @@ span.check {
 }
 
 
-/*# sourceMappingURL=main.284a81661786cbbcf251.css.map*/
+/*# sourceMappingURL=main.90dfaed8e1323bb7edab.css.map*/
