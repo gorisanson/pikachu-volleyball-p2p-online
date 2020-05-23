@@ -17,6 +17,9 @@ export function setUpUI() {
     location.reload();
   });
 
+  // @ts-ignore
+  scrubberRangeInput.disabled = true;
+
   scrubberRangeInput.addEventListener('mousedown', () => {
     setWillMoveScrubber(false);
   });
@@ -59,9 +62,14 @@ export function noticeEndOfReplay() {
   noticeBoxEndOfReplay.classList.remove('hidden');
 }
 
+export function enableScrubber() {
+  // @ts-ignore
+  scrubberRangeInput.disabled = false;
+}
+
 export function setMaxForScrubberRange(max) {
   // @ts-ignore
-  document.getElementById('scrubber-range-input').max = max;
+  scrubberRangeInput.max = max;
 }
 
 export function moveScrubberTo(value) {

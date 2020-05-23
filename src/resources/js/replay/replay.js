@@ -12,6 +12,7 @@ import {
   noticeEndOfReplay,
   setMaxForScrubberRange,
   moveScrubberTo,
+  enableScrubber,
 } from './ui_replay.js';
 import '../../style.css';
 
@@ -119,6 +120,7 @@ class ReplayReader {
       pack = JSON.parse(event.target.result);
       loader.load(() => {
         setMaxForScrubberRange(pack.inputs.length);
+        enableScrubber();
         setup(0);
       });
     };
