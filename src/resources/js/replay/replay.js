@@ -20,6 +20,7 @@ import {
 import '../../style.css';
 
 export const ticker = new PIXI.Ticker();
+ticker.minFPS = 1;
 let renderer = null;
 let stage = null;
 let loader = null;
@@ -27,6 +28,8 @@ let pikaVolley = null;
 let pack = null;
 let willMoveScrubber = true;
 let willDisplayChat = true;
+let playBackSpeedTimes = 1;
+let playBackSpeedFPS = null;
 
 /** @typedef {{speed: string, winningScore: number}} Options options communicated with the peer */
 
@@ -209,16 +212,18 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
         switch (options[1].speed) {
           case 'slow':
             this.normalFPS = 20;
-            ticker.maxFPS = this.normalFPS;
             break;
           case 'medium':
             this.normalFPS = 25;
-            ticker.maxFPS = this.normalFPS;
             break;
           case 'fast':
             this.normalFPS = 30;
-            ticker.maxFPS = this.normalFPS;
             break;
+        }
+        if (playBackSpeedFPS) {
+          ticker.maxFPS = playBackSpeedFPS;
+        } else if (playBackSpeedTimes) {
+          ticker.maxFPS = this.normalFPS * playBackSpeedTimes;
         }
       }
       if (options[1].winningScore) {
@@ -316,6 +321,26 @@ export function setup(startFrameNumber) {
     renderer.render(stage);
   }
   showTimeCurrent(pikaVolley.timeCurrent);
+}
+
+/**
+ *
+ * @param {number} times
+ */
+export function adjustPlaybackSpeedTimes(times) {
+  playBackSpeedFPS = null;
+  playBackSpeedTimes = times;
+  ticker.maxFPS = pikaVolley.normalFPS * playBackSpeedTimes;
+}
+
+/**
+ *
+ * @param {number} fps
+ */
+export function adjustPlaybackSeeedFPS(fps) {
+  playBackSpeedTimes = null;
+  playBackSpeedFPS = fps;
+  ticker.maxFPS = playBackSpeedFPS;
 }
 
 /**

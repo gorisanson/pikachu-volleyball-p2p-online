@@ -1,18 +1,68 @@
-import { ticker, replayReader, setup } from './replay.js';
+import {
+  ticker,
+  replayReader,
+  setup,
+  adjustPlaybackSeeedFPS,
+  adjustPlaybackSpeedTimes,
+} from './replay.js';
 import '../../style.css';
 
 let pausedByBtn = false;
 
 const scrubberRangeInput = document.getElementById('scrubber-range-input');
+const playPauseBtn = document.getElementById('play-pause-btn');
+const speedBtn1FPS = document.getElementById('speed-btn-1-fps');
+const speedBtn2FPS = document.getElementById('speed-btn-2-fps');
+const speedBtn5FPS = document.getElementById('speed-btn-5-fps');
+const speedBtnHalfTimes = document.getElementById('speed-btn-half-times');
+const speedBtn1Times = document.getElementById('speed-btn-1-times');
+const speedBtn2Times = document.getElementById('speed-btn-2-times');
 
 export function setUpUI() {
+  disableReplayScrubberAndBtns();
+
   // Dropbox code is from: https://developer.mozilla.org/en-US/docs/Web/API/File/Using_files_from_web_applications
   const dropbox = document.getElementById('dropbox');
   dropbox.addEventListener('dragenter', dragenter, false);
   dropbox.addEventListener('dragover', dragover, false);
   dropbox.addEventListener('drop', drop, false);
+  function dragenter(e) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
+  function dragover(e) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
+  function drop(e) {
+    e.stopPropagation();
+    e.preventDefault();
 
-  const playPauseBtn = document.getElementById('play-pause-btn');
+    const dt = e.dataTransfer;
+    const files = dt.files;
+
+    document.getElementById('loading-box').classList.remove('hidden');
+    dropbox.classList.add('hidden');
+
+    handleFiles(files);
+  }
+  function handleFiles(files) {
+    replayReader.readFile(files[0]);
+  }
+
+  scrubberRangeInput.addEventListener('mousedown', () => {
+    ticker.stop();
+  });
+  scrubberRangeInput.addEventListener('mouseup', () => {
+    if (!pausedByBtn) {
+      ticker.start();
+    }
+  });
+  scrubberRangeInput.addEventListener('input', (e) => {
+    // @ts-ignore
+    setup(Number(e.currentTarget.value));
+  });
+
   // @ts-ignore
   playPauseBtn.disabled = true;
   playPauseBtn.addEventListener('click', () => {
@@ -27,57 +77,57 @@ export function setUpUI() {
     }
   });
 
+  speedBtn1FPS.addEventListener('click', (e) => {
+    processSelected(e);
+    adjustPlaybackSeeedFPS(1);
+  });
+  speedBtn2FPS.addEventListener('click', (e) => {
+    processSelected(e);
+    adjustPlaybackSeeedFPS(2);
+  });
+  speedBtn5FPS.addEventListener('click', (e) => {
+    processSelected(e);
+    adjustPlaybackSeeedFPS(5);
+  });
+  speedBtnHalfTimes.addEventListener('click', (e) => {
+    processSelected(e);
+    adjustPlaybackSpeedTimes(0.5);
+  });
+  speedBtn1Times.addEventListener('click', (e) => {
+    processSelected(e);
+    adjustPlaybackSpeedTimes(1);
+  });
+  speedBtn2Times.addEventListener('click', (e) => {
+    processSelected(e);
+    adjustPlaybackSpeedTimes(2);
+  });
+  function processSelected(e) {
+    unselectSpeedBtns();
+    // @ts-ignore
+    if (!e.currentTarget.classList.contains('selected')) {
+      // @ts-ignore
+      e.currentTarget.classList.add('selected');
+    }
+  }
+  function unselectSpeedBtns() {
+    for (const btn of [
+      speedBtn1FPS,
+      speedBtn2FPS,
+      speedBtn5FPS,
+      speedBtnHalfTimes,
+      speedBtn1Times,
+      speedBtn2Times,
+    ]) {
+      btn.classList.remove('selected');
+    }
+  }
+
   const noticeBoxEndOfReplayOKBtn = document.getElementById(
     'notice-end-of-replay-ok-btn'
   );
   noticeBoxEndOfReplayOKBtn.addEventListener('click', () => {
     location.reload();
   });
-
-  // @ts-ignore
-  scrubberRangeInput.disabled = true;
-
-  scrubberRangeInput.addEventListener('mousedown', () => {
-    ticker.stop();
-  });
-
-  scrubberRangeInput.addEventListener('mouseup', () => {
-    if (!pausedByBtn) {
-      ticker.start();
-    }
-  });
-
-  scrubberRangeInput.addEventListener('input', (event) => {
-    // @ts-ignore
-    setup(Number(event.target.value));
-  });
-
-  function dragenter(e) {
-    e.stopPropagation();
-    e.preventDefault();
-  }
-
-  function dragover(e) {
-    e.stopPropagation();
-    e.preventDefault();
-  }
-
-  function drop(e) {
-    e.stopPropagation();
-    e.preventDefault();
-
-    const dt = e.dataTransfer;
-    const files = dt.files;
-
-    document.getElementById('loading-box').classList.remove('hidden');
-    dropbox.classList.add('hidden');
-
-    handleFiles(files);
-  }
-
-  function handleFiles(files) {
-    replayReader.readFile(files[0]);
-  }
 }
 
 export function adjustPlayPauseBtnIcon() {
@@ -130,7 +180,38 @@ export function enableReplayScrubberAndBtns() {
   // @ts-ignore
   scrubberRangeInput.disabled = false;
   // @ts-ignore
-  document.getElementById('play-pause-btn').disabled = false;
+  playPauseBtn.disabled = false;
+  // @ts-ignore
+  speedBtn1FPS.disabled = false;
+  // @ts-ignore
+  speedBtn2FPS.disabled = false;
+  // @ts-ignore
+  speedBtn5FPS.disabled = false;
+  // @ts-ignore
+  speedBtnHalfTimes.disabled = false;
+  // @ts-ignore
+  speedBtn1Times.disabled = false;
+  // @ts-ignore
+  speedBtn2Times.disabled = false;
+}
+
+function disableReplayScrubberAndBtns() {
+  // @ts-ignore
+  scrubberRangeInput.disabled = true;
+  // @ts-ignore
+  playPauseBtn.disabled = true;
+  // @ts-ignore
+  speedBtn1FPS.disabled = true;
+  // @ts-ignore
+  speedBtn2FPS.disabled = true;
+  // @ts-ignore
+  speedBtn5FPS.disabled = true;
+  // @ts-ignore
+  speedBtnHalfTimes.disabled = true;
+  // @ts-ignore
+  speedBtn1Times.disabled = true;
+  // @ts-ignore
+  speedBtn2Times.disabled = true;
 }
 
 /**
