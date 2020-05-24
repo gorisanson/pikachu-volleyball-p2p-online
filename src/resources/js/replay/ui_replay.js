@@ -1,5 +1,7 @@
-import { replayReader, setup, startTicker, stopTicker } from './replay.js';
+import { ticker, replayReader, setup } from './replay.js';
 import '../../style.css';
+
+let pausedByBtn = false;
 
 const scrubberRangeInput = document.getElementById('scrubber-range-input');
 
@@ -9,6 +11,19 @@ export function setUpUI() {
   dropbox.addEventListener('dragenter', dragenter, false);
   dropbox.addEventListener('dragover', dragover, false);
   dropbox.addEventListener('drop', drop, false);
+
+  const playPauseBtn = document.getElementById('play-pause-btn');
+  playPauseBtn.addEventListener('click', () => {
+    if (ticker.started) {
+      ticker.stop();
+      pausedByBtn = true;
+      adjustPlayPauseBtnIcon();
+    } else {
+      ticker.start();
+      pausedByBtn = false;
+      adjustPlayPauseBtnIcon();
+    }
+  });
 
   const noticeBoxEndOfReplayOKBtn = document.getElementById(
     'notice-end-of-replay-ok-btn'
@@ -21,11 +36,13 @@ export function setUpUI() {
   scrubberRangeInput.disabled = true;
 
   scrubberRangeInput.addEventListener('mousedown', () => {
-    stopTicker();
+    ticker.stop();
   });
 
   scrubberRangeInput.addEventListener('mouseup', () => {
-    startTicker();
+    if (!pausedByBtn) {
+      ticker.start();
+    }
   });
 
   scrubberRangeInput.addEventListener('input', (event) => {
@@ -58,6 +75,17 @@ export function setUpUI() {
 
   function handleFiles(files) {
     replayReader.readFile(files[0]);
+  }
+}
+
+export function adjustPlayPauseBtnIcon() {
+  const playPauseBtn = document.getElementById('play-pause-btn');
+  if (ticker.started) {
+    playPauseBtn.textContent = document.getElementById(
+      'pause-mark'
+    ).textContent;
+  } else {
+    playPauseBtn.textContent = document.getElementById('play-mark').textContent;
   }
 }
 

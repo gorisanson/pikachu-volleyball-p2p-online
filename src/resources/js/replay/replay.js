@@ -13,16 +13,16 @@ import {
   setMaxForScrubberRange,
   moveScrubberTo,
   enableScrubber,
+  adjustPlayPauseBtnIcon,
 } from './ui_replay.js';
 import '../../style.css';
 
+export const ticker = new PIXI.Ticker();
 let renderer = null;
 let stage = null;
-let ticker = null;
 let loader = null;
 let pikaVolley = null;
 let pack = null;
-let isFirst = true;
 let willMoveScrubber = true;
 let willDisplayChat = true;
 
@@ -103,12 +103,24 @@ class ReplayReader {
       backgroundColor: 0x000000,
       transparent: false,
     });
-    ticker = new PIXI.Ticker();
     loader = new PIXI.Loader();
 
     document.querySelector('#game-canvas-container').appendChild(renderer.view);
 
     renderer.render(new PIXI.Container()); // To make the initial canvas painting stable in the Firefox browser.
+    ticker.add(() => {
+      // Redering and gameLoop order is the opposite of
+      // the offline web version (refer: ./offline_version_js/main.js).
+      // It's for the smooth rendering for the online version
+      // which gameLoop can not always succeed right on this "ticker.add"ed code
+      // because of the transfer delay or connection status. (If gameLoop here fails,
+      // it is recovered by the callback gameLoop which is called after peer input received.)
+      // Now the rendering is delayed 40ms (when pikaVolley.normalFPS == 25)
+      // behind gameLoop.
+      renderer.render(stage);
+      pikaVolley.gameLoop();
+    });
+
     loader.add(ASSETS_PATH.SPRITE_SHEET);
     for (const prop in ASSETS_PATH.SOUNDS) {
       loader.add(ASSETS_PATH.SOUNDS[prop]);
@@ -122,6 +134,8 @@ class ReplayReader {
         setMaxForScrubberRange(pack.inputs.length);
         enableScrubber();
         setup(0);
+        ticker.start();
+        adjustPlayPauseBtnIcon();
       });
     };
     reader.readAsText(filename);
@@ -235,18 +249,6 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
   }
 }
 
-export function stopTicker() {
-  if (ticker) {
-    ticker.stop();
-  }
-}
-
-export function startTicker() {
-  if (ticker) {
-    ticker.start();
-  }
-}
-
 export function setup(startFrameNumber) {
   ticker.stop();
   stage = new PIXI.Container();
@@ -307,29 +309,6 @@ export function setup(startFrameNumber) {
     pikaVolley.audio = audio;
     renderer.render(stage);
   }
-
-  start();
-}
-
-function start() {
-  ticker.maxFPS = pikaVolley.normalFPS;
-  if (isFirst) {
-    isFirst = false;
-    ticker.add(() => {
-      // Redering and gameLoop order is the opposite of
-      // the offline web version (refer: ./offline_version_js/main.js).
-      // It's for the smooth rendering for the online version
-      // which gameLoop can not always succeed right on this "ticker.add"ed code
-      // because of the transfer delay or connection status. (If gameLoop here fails,
-      // it is recovered by the callback gameLoop which is called after peer input received.)
-      // Now the rendering is delayed 40ms (when pikaVolley.normalFPS == 25)
-      // behind gameLoop.
-      renderer.render(stage);
-      pikaVolley.gameLoop();
-    });
-    ticker.start();
-  }
-  willMoveScrubber = true;
 }
 
 /**
