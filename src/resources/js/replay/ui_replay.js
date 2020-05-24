@@ -24,7 +24,7 @@ export function setUpUI() {
     setWillMoveScrubber(false);
   });
 
-  scrubberRangeInput.addEventListener('change', (event) => {
+  scrubberRangeInput.addEventListener('input', (event) => {
     // @ts-ignore
     setup(Number(event.target.value));
   });
