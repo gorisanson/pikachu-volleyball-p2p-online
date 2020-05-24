@@ -500,3 +500,25 @@ span.check {
 #scrubber-range-input {
   width: var(--canvas-width);
 }
+#play-pause-btn {
+  font-size: var(--font-size);
+  height: var(--btn-height);
+  width: calc(var(--btn-width) / 2);
+}
+span.margin-left-right {
+  margin-left: calc(var(--font-size) / 1.5);
+  margin-right: calc(var(--font-size) / 1.5);
+}
+button.playback-speed {
+  height: var(--btn-height);
+  width: calc(var(--btn-width) / 2);
+}
+button.playback-speed.selected {
+  background-color: rgb(50, 163, 255);
+  background-image: none;
+  color: white;
+  font-weight: bold;
+}
+div.inline {
+  display: inline;
+}
