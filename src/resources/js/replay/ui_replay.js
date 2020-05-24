@@ -13,6 +13,8 @@ export function setUpUI() {
   dropbox.addEventListener('drop', drop, false);
 
   const playPauseBtn = document.getElementById('play-pause-btn');
+  // @ts-ignore
+  playPauseBtn.disabled = true;
   playPauseBtn.addEventListener('click', () => {
     if (ticker.started) {
       ticker.stop();
@@ -94,11 +96,6 @@ export function noticeEndOfReplay() {
   noticeBoxEndOfReplay.classList.remove('hidden');
 }
 
-export function enableScrubber() {
-  // @ts-ignore
-  scrubberRangeInput.disabled = false;
-}
-
 export function setMaxForScrubberRange(max) {
   // @ts-ignore
   scrubberRangeInput.max = max;
@@ -107,4 +104,49 @@ export function setMaxForScrubberRange(max) {
 export function moveScrubberTo(value) {
   // @ts-ignore
   scrubberRangeInput.value = value;
+}
+
+/**
+ *
+ * @param {number} timeCurrent unit: second
+ */
+export function showTimeCurrent(timeCurrent) {
+  document.getElementById('time-current').textContent = getTimeText(
+    timeCurrent
+  );
+}
+
+/**
+ *
+ * @param {number} timeDuration unit: second
+ */
+export function showTotalTimeDuration(timeDuration) {
+  document.getElementById('time-duration').textContent = getTimeText(
+    timeDuration
+  );
+}
+
+export function enableReplayScrubberAndBtns() {
+  // @ts-ignore
+  scrubberRangeInput.disabled = false;
+  // @ts-ignore
+  document.getElementById('play-pause-btn').disabled = false;
+}
+
+/**
+ *
+ * @param {number} time unit: second
+ */
+function getTimeText(time) {
+  const seconds = Math.floor(time % 60);
+  const minutes = Math.floor(time / 60) % 60;
+  const hours = Math.floor(Math.floor(time / 60) / 60);
+
+  if (hours > 0) {
+    return `${String(hours)}:${('0' + minutes).slice(-2)}:${(
+      '0' + seconds
+    ).slice(-2)}`;
+  } else {
+    return `${String(minutes)}:${('0' + seconds).slice(-2)}`;
+  }
 }

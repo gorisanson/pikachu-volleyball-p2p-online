@@ -12,8 +12,10 @@ import {
   noticeEndOfReplay,
   setMaxForScrubberRange,
   moveScrubberTo,
-  enableScrubber,
   adjustPlayPauseBtnIcon,
+  showTotalTimeDuration,
+  showTimeCurrent,
+  enableReplayScrubberAndBtns,
 } from './ui_replay.js';
 import '../../style.css';
 
@@ -118,6 +120,7 @@ class ReplayReader {
       // Now the rendering is delayed 40ms (when pikaVolley.normalFPS == 25)
       // behind gameLoop.
       renderer.render(stage);
+      showTimeCurrent(pikaVolley.timeCurrent);
       pikaVolley.gameLoop();
     });
 
@@ -130,12 +133,13 @@ class ReplayReader {
     reader.onload = function (event) {
       // @ts-ignore
       pack = JSON.parse(event.target.result);
+      showTotalTimeDuration(getTotalTimeDuration(pack));
       loader.load(() => {
         setMaxForScrubberRange(pack.inputs.length);
-        enableScrubber();
         setup(0);
         ticker.start();
         adjustPlayPauseBtnIcon();
+        enableReplayScrubberAndBtns();
       });
     };
     reader.readAsText(filename);
@@ -154,6 +158,7 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
     super(stage, resources);
     this.noInputFrameTotal.menu = Infinity;
 
+    this.timeCurrent = 0; // unit: second
     this.replayFrameCounter = 0;
     this.chatCounter = 0;
     this.optionsCounter = 0;
@@ -232,6 +237,7 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
       this.optionsCounter++;
       options = this.options[this.optionsCounter];
     }
+    this.timeCurrent += 1 / this.normalFPS;
 
     let chat = this.chats[this.chatCounter];
     while (chat && chat[0] === this.replayFrameCounter) {
@@ -309,6 +315,7 @@ export function setup(startFrameNumber) {
     pikaVolley.audio = audio;
     renderer.render(stage);
   }
+  showTimeCurrent(pikaVolley.timeCurrent);
 }
 
 /**
@@ -326,4 +333,45 @@ function setUpLoaderProgresBar() {
       loadingBox.classList.add('hidden');
     }
   });
+}
+
+function getTotalTimeDuration(pack) {
+  const speedChangeRecord = [];
+
+  let optionsCounter = 0;
+  let options = pack.options[optionsCounter];
+  while (options) {
+    if (options[1].speed) {
+      let fpsFromNowOn = null;
+      switch (options[1].speed) {
+        case 'slow':
+          fpsFromNowOn = 20;
+          break;
+        case 'medium':
+          fpsFromNowOn = 25;
+          break;
+        case 'fast':
+          fpsFromNowOn = 30;
+          break;
+      }
+      const frameCounter = options[0];
+      speedChangeRecord.push([frameCounter, fpsFromNowOn]);
+    }
+    optionsCounter++;
+    options = pack.options[optionsCounter];
+  }
+
+  let timeDuration = 0; // unit: second
+  let currentFrameCounter = 0;
+  let currentFPS = 25;
+  for (let i = 0; i < speedChangeRecord.length; i++) {
+    const futureFrameCounter = speedChangeRecord[i][0];
+    const futureFPS = speedChangeRecord[i][1];
+    timeDuration += (futureFrameCounter - currentFrameCounter) / currentFPS;
+    currentFrameCounter = futureFrameCounter;
+    currentFPS = futureFPS;
+  }
+  timeDuration += (pack.inputs.length - currentFrameCounter) / currentFPS;
+
+  return timeDuration;
 }
