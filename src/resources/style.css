@@ -499,6 +499,7 @@ span.check {
 /* CSS for replay is below */
 #scrubber-range-input {
   width: var(--canvas-width);
+  height: var(--btn-height);
 }
 #play-pause-btn {
   font-size: var(--font-size);
