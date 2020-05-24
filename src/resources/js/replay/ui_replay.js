@@ -1,4 +1,4 @@
-import { replayReader, setup, setWillMoveScrubber } from './replay.js';
+import { replayReader, setup, startTicker, stopTicker } from './replay.js';
 import '../../style.css';
 
 const scrubberRangeInput = document.getElementById('scrubber-range-input');
@@ -21,7 +21,11 @@ export function setUpUI() {
   scrubberRangeInput.disabled = true;
 
   scrubberRangeInput.addEventListener('mousedown', () => {
-    setWillMoveScrubber(false);
+    stopTicker();
+  });
+
+  scrubberRangeInput.addEventListener('mouseup', () => {
+    startTicker();
   });
 
   scrubberRangeInput.addEventListener('input', (event) => {

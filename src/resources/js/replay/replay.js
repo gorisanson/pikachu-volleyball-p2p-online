@@ -235,8 +235,16 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
   }
 }
 
-export function setWillMoveScrubber(bool) {
-  willMoveScrubber = bool;
+export function stopTicker() {
+  if (ticker) {
+    ticker.stop();
+  }
+}
+
+export function startTicker() {
+  if (ticker) {
+    ticker.start();
+  }
 }
 
 export function setup(startFrameNumber) {
@@ -290,11 +298,14 @@ export function setup(startFrameNumber) {
     // @ts-ignore
     pikaVolley.audio = fakeAudio;
     willDisplayChat = false;
+    willMoveScrubber = false;
     for (let i = 0; i < startFrameNumber; i++) {
       pikaVolley.gameLoop();
     }
+    willMoveScrubber = true;
     willDisplayChat = true;
     pikaVolley.audio = audio;
+    renderer.render(stage);
   }
 
   start();
@@ -316,9 +327,9 @@ function start() {
       renderer.render(stage);
       pikaVolley.gameLoop();
     });
+    ticker.start();
   }
-  ticker.start();
-  setWillMoveScrubber(true);
+  willMoveScrubber = true;
 }
 
 /**
