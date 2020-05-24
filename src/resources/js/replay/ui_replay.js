@@ -21,6 +21,15 @@ const speedBtn2Times = document.getElementById('speed-btn-2-times');
 export function setUpUI() {
   disableReplayScrubberAndBtns();
 
+  // File input code is from: https://developer.mozilla.org/en-US/docs/Web/API/File/Using_files_from_web_applications
+  const fileInputElement = document.getElementById('file-input');
+  fileInputElement.addEventListener('change', (e) => {
+    document.getElementById('loading-box').classList.remove('hidden');
+    dropbox.classList.add('hidden');
+    // @ts-ignore
+    handleFiles(e.target.files);
+  });
+
   // Dropbox code is from: https://developer.mozilla.org/en-US/docs/Web/API/File/Using_files_from_web_applications
   const dropbox = document.getElementById('dropbox');
   dropbox.addEventListener('dragenter', dragenter, false);

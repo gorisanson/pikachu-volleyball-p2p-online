@@ -523,3 +523,21 @@ button.playback-speed.selected {
 div.inline {
   display: inline;
 }
+input[type='file'] {
+  display: none;
+}
+label.custom-file-upload {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid rgb(50, 50, 50);
+  margin: 0;
+  padding: 0;
+  background-color: rbg(210, 210, 210);
+  background-image: linear-gradient(rgb(250, 250, 250), rgb(230, 230, 230));
+  color: black;
+  border-radius: 5px;
+  width: var(--btn-width);
+  height: var(--btn-height);
+  cursor: pointer;
+}
