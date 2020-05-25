@@ -59,11 +59,23 @@ export function setUpUI() {
     replayReader.readFile(files[0]);
   }
 
+  scrubberRangeInput.addEventListener('touchstart', () => {
+    if (ticker.started) {
+      ticker.stop();
+    }
+  });
   scrubberRangeInput.addEventListener('mousedown', () => {
-    ticker.stop();
+    if (ticker.started) {
+      ticker.stop();
+    }
+  });
+  scrubberRangeInput.addEventListener('touchend', () => {
+    if (!pausedByBtn && !ticker.started) {
+      ticker.start();
+    }
   });
   scrubberRangeInput.addEventListener('mouseup', () => {
-    if (!pausedByBtn) {
+    if (!pausedByBtn && !ticker.started) {
       ticker.start();
     }
   });
