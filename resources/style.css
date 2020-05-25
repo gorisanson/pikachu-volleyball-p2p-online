@@ -262,6 +262,9 @@ p.update-history-on {
 span.no-wrap {
   white-space: nowrap;
 }
+span.bold {
+  font-weight: bold;
+}
 span.thick {
   font-weight: 900;
 }

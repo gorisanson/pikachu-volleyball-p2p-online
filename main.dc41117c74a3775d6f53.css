@@ -262,6 +262,9 @@ p.update-history-on {
 span.no-wrap {
   white-space: nowrap;
 }
+span.bold {
+  font-weight: bold;
+}
 span.thick {
   font-weight: 900;
 }
@@ -502,4 +505,4 @@ div.indent-minus {
 }
 
 
-/*# sourceMappingURL=main.fe33391ddc113729d990.css.map*/
+/*# sourceMappingURL=main.dc41117c74a3775d6f53.css.map*/
