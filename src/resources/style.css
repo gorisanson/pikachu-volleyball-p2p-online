@@ -39,7 +39,8 @@ html {
   font-family: Arial, Helvetica, sans-serif;
 }
 #flex-container,
-#before-connection {
+#before-connection,
+#update-history-container {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -51,7 +52,8 @@ html {
   margin-left: auto;
   margin-right: auto;
 }
-#before-connection {
+#before-connection,
+#update-history-container {
   justify-content: center;
   align-items: stretch;
   height: auto;
@@ -87,6 +89,9 @@ canvas {
   display: block;
   width: var(--canvas-width);
   height: var(--canvas-height);
+}
+#nicknames-container {
+  position: absolute;
 }
 #player1-chat-box {
   right: 70%;
@@ -240,7 +245,8 @@ p.reverse-engineered-by,
 p.source-code-on,
 p.release-date,
 p.game-last-updated,
-p.page-last-updated {
+p.page-last-updated,
+p.update-history-on {
   font-size: 0.8em;
   line-height: 150%;
 }
@@ -248,7 +254,8 @@ p.release-date {
   margin-block-end: 0;
 }
 p.game-last-updated,
-p.page-last-updated {
+p.page-last-updated,
+p.update-history-on {
   margin-block-start: 0;
   margin-block-end: 0;
 }
@@ -486,6 +493,14 @@ span.check {
 .pre-wrap {
   white-space: pre-wrap;
 }
+#update-history-container h1 {
+  font-size: calc(1.5 * var(--font-size));
+}
+div.indent-minus {
+  text-indent: calc(-5.4 * var(--font-size));
+  margin-left: calc(5.4 * var(--font-size));
+}
+/* CSS for replay is below */
 #dropbox {
   border-style: solid;
   border-color: black;
@@ -496,7 +511,6 @@ span.check {
   align-items: center;
   justify-content: flex-start;
 }
-/* CSS for replay is below */
 #scrubber-range-input {
   width: var(--canvas-width);
   height: var(--btn-height);

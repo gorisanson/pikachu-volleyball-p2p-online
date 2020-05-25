@@ -36,6 +36,18 @@ module.exports = {
         from: 'resources/assets/**/*.+(json|png|mp3|wav)',
       },
       { from: 'src/index.html', to: 'index.html' },
+      {
+        from: 'src/en/update-history/index.html',
+        to: 'en/update-history/index.html',
+      },
+      {
+        from: 'src/ko/update-history/index.html',
+        to: 'ko/update-history/index.html',
+      },
+      {
+        from: 'src/resources/style.css',
+        to: 'resources/style.css',
+      },
     ]),
     new MiniCssExtractPlugin({
       chunkFilename: '[name].[contenthash].css',
