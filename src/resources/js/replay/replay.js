@@ -33,6 +33,33 @@ let willDisplayChat = true;
 let playBackSpeedTimes = 1;
 let playBackSpeedFPS = null;
 
+const fakeSound = {
+  play: () => {},
+  stop: () => {},
+};
+const fakeBGM = {
+  fake: true,
+  playing: false,
+  play: function () {
+    this.playing = true;
+  },
+  stop: function () {
+    this.playing = false;
+  },
+};
+const fakeAudio = {
+  sounds: {
+    bgm: fakeBGM,
+    pipikachu: fakeSound,
+    pika: fakeSound,
+    chu: fakeSound,
+    pi: fakeSound,
+    pikachu: fakeSound,
+    powerHit: fakeSound,
+    ballTouchesGround: fakeSound,
+  },
+};
+
 /** @typedef {{speed: string, winningScore: number}} Options options communicated with the peer */
 
 class ReplaySaver {
@@ -200,6 +227,7 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
    */
   initilizeForReplay() {
     this.timeCurrent = 0; // unit: second
+    this.timeBGM = 0;
     this.replayFrameCounter = 0;
     this.chatCounter = 0;
     this.optionsCounter = 0;
@@ -307,6 +335,15 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
       options = this.options[this.optionsCounter];
     }
     this.timeCurrent += 1 / this.normalFPS;
+    // @ts-ignore
+    if (this.audio.sounds.bgm.fake) {
+      // @ts-ignore
+      if (this.audio.sounds.bgm.playing) {
+        this.timeBGM = (this.timeBGM + 1 / this.normalFPS) % 83; // 83 is total duration of bgm
+      } else {
+        this.timeBGM = 0;
+      }
+    }
 
     let chat = this.chats[this.chatCounter];
     while (chat && chat[0] === this.replayFrameCounter) {
@@ -335,22 +372,6 @@ export function setup(startFrameNumber) {
   pikaVolley.initilizeForReplay();
 
   if (startFrameNumber > 0) {
-    const fakeSound = {
-      play: () => {},
-      stop: () => {},
-    };
-    const fakeAudio = {
-      sounds: {
-        bgm: fakeSound,
-        pipikachu: fakeSound,
-        pika: fakeSound,
-        chu: fakeSound,
-        pi: fakeSound,
-        pikachu: fakeSound,
-        powerHit: fakeSound,
-        ballTouchesGround: fakeSound,
-      },
-    };
     const audio = pikaVolley.audio;
     // @ts-ignore
     pikaVolley.audio = fakeAudio;
@@ -365,6 +386,12 @@ export function setup(startFrameNumber) {
     renderer.render(stage);
   }
   showTimeCurrent(pikaVolley.timeCurrent);
+}
+
+export function playBGMProperlyAfterScrubbbing() {
+  if (fakeAudio.sounds.bgm.playing) {
+    pikaVolley.audio.sounds.bgm.center.play({ start: pikaVolley.timeBGM });
+  }
 }
 
 /**

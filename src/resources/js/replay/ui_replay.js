@@ -4,6 +4,7 @@ import {
   setup,
   adjustPlaybackSeeedFPS,
   adjustPlaybackSpeedTimes,
+  playBGMProperlyAfterScrubbbing,
 } from './replay.js';
 import '../../style.css';
 
@@ -72,11 +73,13 @@ export function setUpUI() {
   scrubberRangeInput.addEventListener('touchend', () => {
     if (!pausedByBtn && !ticker.started) {
       ticker.start();
+      playBGMProperlyAfterScrubbbing();
     }
   });
   scrubberRangeInput.addEventListener('mouseup', () => {
     if (!pausedByBtn && !ticker.started) {
       ticker.start();
+      playBGMProperlyAfterScrubbbing();
     }
   });
   scrubberRangeInput.addEventListener('input', (e) => {
