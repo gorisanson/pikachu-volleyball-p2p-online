@@ -388,6 +388,18 @@ export function setup(startFrameNumber) {
   showTimeCurrent(pikaVolley.timeCurrent);
 }
 
+export function stopBGM() {
+  pikaVolley.audio.sounds.bgm.center.stop();
+}
+
+export function pauseBGM() {
+  pikaVolley.audio.sounds.bgm.center.pause();
+}
+
+export function resumeBGM() {
+  pikaVolley.audio.sounds.bgm.center.resume();
+}
+
 export function playBGMProperlyAfterScrubbbing() {
   if (fakeAudio.sounds.bgm.playing) {
     pikaVolley.audio.sounds.bgm.center.play({ start: pikaVolley.timeBGM });

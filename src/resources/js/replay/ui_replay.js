@@ -5,6 +5,9 @@ import {
   adjustPlaybackSeeedFPS,
   adjustPlaybackSpeedTimes,
   playBGMProperlyAfterScrubbbing,
+  stopBGM,
+  resumeBGM,
+  pauseBGM,
 } from './replay.js';
 import '../../style.css';
 
@@ -63,11 +66,13 @@ export function setUpUI() {
   scrubberRangeInput.addEventListener('touchstart', () => {
     if (ticker.started) {
       ticker.stop();
+      stopBGM();
     }
   });
   scrubberRangeInput.addEventListener('mousedown', () => {
     if (ticker.started) {
       ticker.stop();
+      stopBGM();
     }
   });
   scrubberRangeInput.addEventListener('touchend', () => {
@@ -92,10 +97,12 @@ export function setUpUI() {
   playPauseBtn.addEventListener('click', () => {
     if (ticker.started) {
       ticker.stop();
+      pauseBGM();
       pausedByBtn = true;
       adjustPlayPauseBtnIcon();
     } else {
       ticker.start();
+      resumeBGM();
       pausedByBtn = false;
       adjustPlayPauseBtnIcon();
     }
