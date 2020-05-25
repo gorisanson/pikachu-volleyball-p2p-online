@@ -16,8 +16,10 @@ let pausedByBtn = false;
 
 const scrubberRangeInput = document.getElementById('scrubber-range-input');
 const playPauseBtn = document.getElementById('play-pause-btn');
-const seekBackwardBtn = document.getElementById('seek-backward');
-const seekForwardBtn = document.getElementById('seek-forward');
+const seekBackward1Btn = document.getElementById('seek-backward-1');
+const seekForward1Btn = document.getElementById('seek-forward-1');
+const seekBackward3Btn = document.getElementById('seek-backward-3');
+const seekForward3Btn = document.getElementById('seek-forward-3');
 const speedBtn1FPS = document.getElementById('speed-btn-1-fps');
 const speedBtn2FPS = document.getElementById('speed-btn-2-fps');
 const speedBtn5FPS = document.getElementById('speed-btn-5-fps');
@@ -111,14 +113,28 @@ export function setUpUI() {
     }
   });
 
-  seekBackwardBtn.addEventListener('click', () => {
+  seekBackward1Btn.addEventListener('click', () => {
+    seek(-1);
+    if (!pausedByBtn && !ticker.started) {
+      ticker.start();
+      playBGMProperlyAfterScrubbbing();
+    }
+  });
+  seekForward1Btn.addEventListener('click', () => {
+    seek(1);
+    if (!pausedByBtn && !ticker.started) {
+      ticker.start();
+      playBGMProperlyAfterScrubbbing();
+    }
+  });
+  seekBackward3Btn.addEventListener('click', () => {
     seek(-3);
     if (!pausedByBtn && !ticker.started) {
       ticker.start();
       playBGMProperlyAfterScrubbbing();
     }
   });
-  seekForwardBtn.addEventListener('click', () => {
+  seekForward3Btn.addEventListener('click', () => {
     seek(3);
     if (!pausedByBtn && !ticker.started) {
       ticker.start();
@@ -231,9 +247,13 @@ export function enableReplayScrubberAndBtns() {
   // @ts-ignore
   playPauseBtn.disabled = false;
   // @ts-ignore
-  seekBackwardBtn.disabled = false;
+  seekBackward1Btn.disabled = false;
   // @ts-ignore
-  seekForwardBtn.disabled = false;
+  seekForward1Btn.disabled = false;
+  // @ts-ignore
+  seekBackward3Btn.disabled = false;
+  // @ts-ignore
+  seekForward3Btn.disabled = false;
   // @ts-ignore
   speedBtn1FPS.disabled = false;
   // @ts-ignore
@@ -254,9 +274,13 @@ function disableReplayScrubberAndBtns() {
   // @ts-ignore
   playPauseBtn.disabled = true;
   // @ts-ignore
-  seekBackwardBtn.disabled = true;
+  seekBackward1Btn.disabled = true;
   // @ts-ignore
-  seekForwardBtn.disabled = true;
+  seekForward1Btn.disabled = true;
+  // @ts-ignore
+  seekBackward3Btn.disabled = true;
+  // @ts-ignore
+  seekForward3Btn.disabled = true;
   // @ts-ignore
   speedBtn1FPS.disabled = true;
   // @ts-ignore
