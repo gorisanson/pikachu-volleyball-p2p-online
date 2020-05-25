@@ -543,3 +543,6 @@ label.custom-file-upload {
   height: var(--btn-height);
   cursor: pointer;
 }
+.disable-dbl-tap-zoom {
+  touch-action: manipulation;
+}

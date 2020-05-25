@@ -52,6 +52,7 @@
       <div>
         <input
           id="scrubber-range-input"
+          class="disable-dbl-tap-zoom"
           type="range"
           min="0"
           max="100"
@@ -59,30 +60,59 @@
         />
       </div>
       <div>
-        <button id="play-pause-btn" class="btn-for-replay">&#x25b6;</button>
+        <button id="play-pause-btn" class="btn-for-replay disable-dbl-tap-zoom">
+          &#x25b6;
+        </button>
         <span class="margin-left-right"
           ><span id="time-current">0:00</span> /
           <span id="time-duration">0:00</span></span
         >
         <div class="inline">
-          <button id="seek-backward" class="btn-for-replay">
+          <button
+            id="seek-backward"
+            class="btn-for-replay disable-dbl-tap-zoom"
+          >
             &lt;&lt; 3
           </button>
-          <button id="seek-forward" class="btn-for-replay">
+          <button id="seek-forward" class="btn-for-replay disable-dbl-tap-zoom">
             3 &gt;&gt;
           </button>
         </div>
         <div class="margin-top-little">
-          <button id="speed-btn-1-fps" class="btn-for-replay">1 fps</button>
-          <button id="speed-btn-2-fps" class="btn-for-replay">2 fps</button>
-          <button id="speed-btn-5-fps" class="btn-for-replay">5 fps</button>
-          <button id="speed-btn-half-times" class="btn-for-replay">
+          <button
+            id="speed-btn-1-fps"
+            class="btn-for-replay disable-dbl-tap-zoom"
+          >
+            1 fps
+          </button>
+          <button
+            id="speed-btn-2-fps"
+            class="btn-for-replay disable-dbl-tap-zoom"
+          >
+            2 fps
+          </button>
+          <button
+            id="speed-btn-5-fps"
+            class="btn-for-replay disable-dbl-tap-zoom"
+          >
+            5 fps
+          </button>
+          <button
+            id="speed-btn-half-times"
+            class="btn-for-replay disable-dbl-tap-zoom"
+          >
             &times;0.5
           </button>
-          <button id="speed-btn-1-times" class="btn-for-replay selected">
+          <button
+            id="speed-btn-1-times"
+            class="btn-for-replay disable-dbl-tap-zoom selected"
+          >
             &times;1
           </button>
-          <button id="speed-btn-2-times" class="btn-for-replay">
+          <button
+            id="speed-btn-2-times"
+            class="btn-for-replay disable-dbl-tap-zoom"
+          >
             &times;2
           </button>
         </div>
