@@ -501,27 +501,29 @@ span.check {
   width: var(--canvas-width);
   height: var(--btn-height);
 }
-#play-pause-btn {
-  font-size: var(--font-size);
-  height: var(--btn-height);
-  width: calc(var(--btn-width) / 2);
-}
 span.margin-left-right {
   margin-left: calc(var(--font-size) / 1.5);
   margin-right: calc(var(--font-size) / 1.5);
 }
-button.playback-speed {
+button.btn-for-replay {
   height: var(--btn-height);
   width: calc(var(--btn-width) / 2);
+  font-size: calc(var(--font-size) / 1.2);
 }
-button.playback-speed.selected {
+button.btn-for-replay.selected {
   background-color: rgb(50, 163, 255);
   background-image: none;
   color: white;
   font-weight: bold;
 }
+#play-pause-btn {
+  font-size: var(--font-size);
+}
 div.inline {
   display: inline;
+}
+div.margin-top-little {
+  margin-top: calc(var(--font-size) / 1.5);
 }
 input[type='file'] {
   display: none;

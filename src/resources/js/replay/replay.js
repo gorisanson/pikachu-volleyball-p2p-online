@@ -408,6 +408,18 @@ export function playBGMProperlyAfterScrubbbing() {
 
 /**
  *
+ * @param {number} seconds
+ */
+export function seek(seconds) {
+  const seekFrameCounter = Math.max(
+    0,
+    pikaVolley.replayFrameCounter + seconds * pikaVolley.normalFPS
+  );
+  setup(seekFrameCounter);
+}
+
+/**
+ *
  * @param {number} times
  */
 export function adjustPlaybackSpeedTimes(times) {

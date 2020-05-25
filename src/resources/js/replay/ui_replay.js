@@ -8,6 +8,7 @@ import {
   stopBGM,
   resumeBGM,
   pauseBGM,
+  seek,
 } from './replay.js';
 import '../../style.css';
 
@@ -15,6 +16,8 @@ let pausedByBtn = false;
 
 const scrubberRangeInput = document.getElementById('scrubber-range-input');
 const playPauseBtn = document.getElementById('play-pause-btn');
+const seekBackwardBtn = document.getElementById('seek-backward');
+const seekForwardBtn = document.getElementById('seek-forward');
 const speedBtn1FPS = document.getElementById('speed-btn-1-fps');
 const speedBtn2FPS = document.getElementById('speed-btn-2-fps');
 const speedBtn5FPS = document.getElementById('speed-btn-5-fps');
@@ -105,6 +108,21 @@ export function setUpUI() {
       resumeBGM();
       pausedByBtn = false;
       adjustPlayPauseBtnIcon();
+    }
+  });
+
+  seekBackwardBtn.addEventListener('click', () => {
+    seek(-3);
+    if (!pausedByBtn && !ticker.started) {
+      ticker.start();
+      playBGMProperlyAfterScrubbbing();
+    }
+  });
+  seekForwardBtn.addEventListener('click', () => {
+    seek(3);
+    if (!pausedByBtn && !ticker.started) {
+      ticker.start();
+      playBGMProperlyAfterScrubbbing();
     }
   });
 
@@ -213,6 +231,10 @@ export function enableReplayScrubberAndBtns() {
   // @ts-ignore
   playPauseBtn.disabled = false;
   // @ts-ignore
+  seekBackwardBtn.disabled = false;
+  // @ts-ignore
+  seekForwardBtn.disabled = false;
+  // @ts-ignore
   speedBtn1FPS.disabled = false;
   // @ts-ignore
   speedBtn2FPS.disabled = false;
@@ -231,6 +253,10 @@ function disableReplayScrubberAndBtns() {
   scrubberRangeInput.disabled = true;
   // @ts-ignore
   playPauseBtn.disabled = true;
+  // @ts-ignore
+  seekBackwardBtn.disabled = true;
+  // @ts-ignore
+  seekForwardBtn.disabled = true;
   // @ts-ignore
   speedBtn1FPS.disabled = true;
   // @ts-ignore

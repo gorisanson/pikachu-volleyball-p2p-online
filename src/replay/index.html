@@ -59,22 +59,30 @@
         />
       </div>
       <div>
-        <button id="play-pause-btn">&#x25b6;</button>
+        <button id="play-pause-btn" class="btn-for-replay">&#x25b6;</button>
         <span class="margin-left-right"
           ><span id="time-current">0:00</span> /
           <span id="time-duration">0:00</span></span
         >
         <div class="inline">
-          <button id="speed-btn-1-fps" class="playback-speed">1 fps</button>
-          <button id="speed-btn-2-fps" class="playback-speed">2 fps</button>
-          <button id="speed-btn-5-fps" class="playback-speed">5 fps</button>
-          <button id="speed-btn-half-times" class="playback-speed">
+          <button id="seek-backward" class="btn-for-replay">
+            &lt;&lt; 3
+          </button>
+          <button id="seek-forward" class="btn-for-replay">
+            3 &gt;&gt;
+          </button>
+        </div>
+        <div class="margin-top-little">
+          <button id="speed-btn-1-fps" class="btn-for-replay">1 fps</button>
+          <button id="speed-btn-2-fps" class="btn-for-replay">2 fps</button>
+          <button id="speed-btn-5-fps" class="btn-for-replay">5 fps</button>
+          <button id="speed-btn-half-times" class="btn-for-replay">
             &times;0.5
           </button>
-          <button id="speed-btn-1-times" class="playback-speed selected">
+          <button id="speed-btn-1-times" class="btn-for-replay selected">
             &times;1
           </button>
-          <button id="speed-btn-2-times" class="playback-speed">
+          <button id="speed-btn-2-times" class="btn-for-replay">
             &times;2
           </button>
         </div>
