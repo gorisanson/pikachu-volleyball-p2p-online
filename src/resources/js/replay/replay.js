@@ -17,6 +17,8 @@ import {
   showTimeCurrent,
   enableReplayScrubberAndBtns,
 } from './ui_replay.js';
+import { Cloud, Wave } from '../offline_version_js/cloud_and_wave.js';
+import { PikaPhysics } from '../offline_version_js/physics.js';
 import '../../style.css';
 
 export const ticker = new PIXI.Ticker();
@@ -108,11 +110,12 @@ class ReplayReader {
       backgroundColor: 0x000000,
       transparent: false,
     });
+    stage = new PIXI.Container();
     loader = new PIXI.Loader();
 
     document.querySelector('#game-canvas-container').appendChild(renderer.view);
 
-    renderer.render(new PIXI.Container()); // To make the initial canvas painting stable in the Firefox browser.
+    renderer.render(stage); // To make the initial canvas painting stable in the Firefox browser.
     ticker.add(() => {
       // Redering and gameLoop order is the opposite of
       // the offline web version (refer: ./offline_version_js/main.js).
@@ -138,6 +141,16 @@ class ReplayReader {
       pack = JSON.parse(event.target.result);
       showTotalTimeDuration(getTotalTimeDuration(pack));
       loader.load(() => {
+        pikaVolley = new PikachuVolleyballReplay(
+          stage,
+          loader.resources,
+          pack.roomID,
+          pack.inputs,
+          pack.options,
+          pack.chats
+        );
+        // @ts-ignore
+        setGetSpeechBubbleNeeded(pikaVolley);
         setMaxForScrubberRange(pack.inputs.length);
         setup(0);
         ticker.start();
@@ -157,14 +170,11 @@ export const replayReader = new ReplayReader();
  */
 // @ts-ignore
 class PikachuVolleyballReplay extends PikachuVolleyball {
-  constructor(stage, resources, inputs, options, chats) {
+  constructor(stage, resources, roomId, inputs, options, chats) {
     super(stage, resources);
     this.noInputFrameTotal.menu = Infinity;
 
-    this.timeCurrent = 0; // unit: second
-    this.replayFrameCounter = 0;
-    this.chatCounter = 0;
-    this.optionsCounter = 0;
+    this.roomId = roomId;
     this.inputs = inputs;
     this.options = options;
     this.chats = chats;
@@ -181,6 +191,60 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
       getInput: () => {},
     };
     this.keyboardArray = [this.player1Keyboard, this.player2Keyboard];
+
+    this.initilizeForReplay();
+  }
+
+  /**
+   * This is mainly for reinitilization for reusing the PikachuVolleyballReplay object
+   */
+  initilizeForReplay() {
+    this.timeCurrent = 0; // unit: second
+    this.replayFrameCounter = 0;
+    this.chatCounter = 0;
+    this.optionsCounter = 0;
+
+    // Set the same RNG (used for the game) for both peers
+    const customRng = seedrandom.alea(this.roomId.slice(10));
+    setCustomRng(customRng);
+
+    // Set the same RNG (used for displaying chat messages) for both peers
+    const rngForPlayer1Chat = seedrandom.alea(this.roomId.slice(10, 15));
+    const rngForPlayer2Chat = seedrandom.alea(this.roomId.slice(15));
+    setChatRngs(rngForPlayer1Chat, rngForPlayer2Chat);
+
+    // Reinitilize things which needs exact RNG
+    this.view.game.cloudArray = [];
+    const NUM_OF_CLOUDS = 10;
+    for (let i = 0; i < NUM_OF_CLOUDS; i++) {
+      this.view.game.cloudArray.push(new Cloud());
+    }
+    this.view.game.wave = new Wave();
+    this.view.intro.visible = false;
+    this.view.menu.visible = false;
+    this.view.game.visible = false;
+    this.view.fadeInOut.visible = false;
+
+    this.physics = new PikaPhysics(true, true);
+
+    this.normalFPS = 25;
+    this.slowMotionFPS = 5;
+    this.SLOW_MOTION_FRAMES_NUM = 6;
+    this.slowMotionFramesLeft = 0;
+    this.slowMotionNumOfSkippedFrames = 0;
+    this.selectedWithWho = 0;
+    this.scores = [0, 0];
+    this.winningScore = 15;
+    this.gameEnded = false;
+    this.roundEnded = false;
+    this.isPlayer2Serve = false;
+    this.frameCounter = 0;
+    this.noInputFrameCounter = 0;
+
+    this.paused = false;
+    this.isStereoSound = true;
+    this._isPracticeMode = false;
+    this.state = this.intro;
   }
 
   /**
@@ -262,33 +326,13 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
 
 export function setup(startFrameNumber) {
   ticker.stop();
-  stage = new PIXI.Container();
-
-  const roomId = pack.roomID;
-  // Set the same RNG (used for the game) for both peers
-  const customRng = seedrandom.alea(roomId.slice(10));
-  setCustomRng(customRng);
-
-  // Set the same RNG (used for displaying chat messages) for both peers
-  const rngForPlayer1Chat = seedrandom.alea(roomId.slice(10, 15));
-  const rngForPlayer2Chat = seedrandom.alea(roomId.slice(15));
-  setChatRngs(rngForPlayer1Chat, rngForPlayer2Chat);
 
   // Cleanup previous pikaVolley
-  if (pikaVolley) {
-    pikaVolley.audio.sounds.bgm.stop();
-  }
   hideChat();
-
-  pikaVolley = new PikachuVolleyballReplay(
-    stage,
-    loader.resources,
-    pack.inputs,
-    pack.options,
-    pack.chats
-  );
-  // @ts-ignore
-  setGetSpeechBubbleNeeded(pikaVolley);
+  for (const prop in pikaVolley.audio.sounds) {
+    pikaVolley.audio.sounds[prop].stop();
+  }
+  pikaVolley.initilizeForReplay();
 
   if (startFrameNumber > 0) {
     const fakeSound = {
