@@ -73,6 +73,7 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
    */
   intro() {
     if (this.frameCounter === 0) {
+      this.selectedWithWho = 0;
       if (this.isFirstGame) {
         this.isFirstGame = false;
         if (channel.amICreatedRoom) {

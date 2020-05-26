@@ -17,7 +17,7 @@ import { mod, isInModRange } from './mod.js';
 import { bufferLength, PikaUserInputWithSync } from './keyboard_online.js';
 import {
   noticeDisconnected,
-  enableChatOpenBtnAndDisableChatCheckbox,
+  enableChatOpenBtnAndChatDisablingBtn,
   showGameCanvas,
   hideWatingPeerAssetsLoadingBox,
   hidePingBox,
@@ -33,6 +33,7 @@ import {
   noticeAgreeMessageFromPeer,
   displayNicknameFor,
   displayPartialIPFor,
+  MAX_NICKNAME_LENGTH,
 } from './ui_online.js';
 import {
   setChatRngs,
@@ -60,8 +61,8 @@ export const channel = {
   amICreatedRoom: false,
   amIPlayer2: null, // set from pikavolley_online.js
   isQuickMatch: null, // set from ui_online.js
-  myNickname: 'me',
-  peerNickname: 'peer',
+  myNickname: '', // set from ui_online.js
+  peerNickname: '',
   myPartialPublicIP: '*.*.*.*',
   peerPartialPublicIP: '*.*.*.*',
 
@@ -126,6 +127,9 @@ const localICECandDocRefs = [];
 let roomSnapshotUnsubscribe = null;
 let iceCandOnSnapshotUnsubscribe = null;
 let isFirstInputQueueFromPeer = true;
+// first chat message is used for nickname transmission
+let isFirstChatMessageToPeerUsedForNickname = true;
+let isFirstChatMessageFromPeerUsedForNickname = true;
 
 /**
  * Create a room
@@ -439,8 +443,12 @@ function receiveChatMessageAckFromPeer(data) {
   if (syncCounter === chatManager.syncCounter) {
     chatManager.syncCounter++;
     clearInterval(chatManager.resendIntervalID);
-    displayMyChatMessage(chatManager.pendingMessage);
-    enableChatOpenBtnAndDisableChatCheckbox();
+    if (isFirstChatMessageToPeerUsedForNickname) {
+      isFirstChatMessageToPeerUsedForNickname = false;
+    } else {
+      displayMyChatMessage(chatManager.pendingMessage);
+      enableChatOpenBtnAndChatDisablingBtn();
+    }
   }
 }
 
@@ -458,7 +466,16 @@ function receiveChatMessageFromPeer(chatMessage) {
   } else if (peerSyncCounter === chatManager.nextPeerSyncCounter) {
     // if peer send new message
     chatManager.peerSyncCounter++;
-    displayPeerChatMessage(chatMessage.slice(0, -1));
+    if (isFirstChatMessageFromPeerUsedForNickname) {
+      isFirstChatMessageFromPeerUsedForNickname = false;
+      channel.peerNickname = chatMessage
+        .slice(0, -1)
+        .trim()
+        .slice(0, MAX_NICKNAME_LENGTH);
+      displayNicknameFor(channel.peerNickname, channel.amICreatedRoom);
+    } else {
+      displayPeerChatMessage(chatMessage.slice(0, -1));
+    }
   } else {
     console.log('invalid chat message received.');
     return;
@@ -600,6 +617,12 @@ function receiveOptionsChangeAgreeMessageFromPeer(optionsChangeAgreeMessage) {
  * Test average ping by sending ping test arraybuffers, then start the game
  */
 function startGameAfterPingTest() {
+  // Send my nick name to peer
+  sendChatMessageToPeer(channel.myNickname);
+  displayNicknameFor(channel.myNickname, !channel.amICreatedRoom);
+  displayPartialIPFor(channel.myPartialPublicIP, !channel.amICreatedRoom);
+  displayPartialIPFor(channel.peerPartialPublicIP, channel.amICreatedRoom);
+
   printLog('start ping test');
   const buffer = new ArrayBuffer(1);
   const view = new DataView(buffer);
@@ -619,11 +642,7 @@ function startGameAfterPingTest() {
       channel.callbackAfterDataChannelOpened();
       channel.callbackAfterDataChannelOpenedForUI();
       showGameCanvas();
-      enableChatOpenBtnAndDisableChatCheckbox();
-      displayNicknameFor(channel.myNickname, !channel.amICreatedRoom);
-      displayNicknameFor(channel.peerNickname, channel.amICreatedRoom);
-      displayPartialIPFor(channel.myPartialPublicIP, !channel.amICreatedRoom);
-      displayPartialIPFor(channel.peerPartialPublicIP, channel.amICreatedRoom);
+      enableChatOpenBtnAndChatDisablingBtn();
 
       printAvgPing(avg);
 
