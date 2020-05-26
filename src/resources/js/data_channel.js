@@ -31,6 +31,8 @@ import {
   disableCancelQuickMatchBtn,
   askOptionsChangeReceivedFromPeer,
   noticeAgreeMessageFromPeer,
+  displayNicknameFor,
+  displayPartialIPFor,
 } from './ui_online.js';
 import {
   setChatRngs,
@@ -58,6 +60,8 @@ export const channel = {
   amICreatedRoom: false,
   amIPlayer2: null, // set from pikavolley_online.js
   isQuickMatch: null, // set from ui_online.js
+  myPartialPublicIP: '*.*.*.*',
+  peerPartialPublicIP: '*.*.*.*',
 
   /** @type {PikaUserInputWithSync[]} */
   peerInputQueue: [],
@@ -120,8 +124,6 @@ const localICECandDocRefs = [];
 let roomSnapshotUnsubscribe = null;
 let iceCandOnSnapshotUnsubscribe = null;
 let isFirstInputQueueFromPeer = true;
-let partOfMyPublicIP = '*.*.*.*';
-let partOfPeerPublicIP = '*.*.*.*';
 
 /**
  * Create a room
@@ -616,6 +618,8 @@ function startGameAfterPingTest() {
       channel.callbackAfterDataChannelOpenedForUI();
       showGameCanvas();
       enableChatOpenBtnAndDisableChatCheckbox();
+      displayPartialIPFor(channel.myPartialPublicIP, !channel.amICreatedRoom);
+      displayPartialIPFor(channel.peerPartialPublicIP, channel.amICreatedRoom);
 
       printAvgPing(avg);
 
@@ -810,8 +814,8 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
 
     const myPublicIP = parsePublicIPFromCandidate(event.candidate.candidate);
     if (myPublicIP !== null) {
-      partOfMyPublicIP = getPartialIP(myPublicIP);
-      console.log('part of my public IP address:', partOfMyPublicIP);
+      channel.myPartialPublicIP = getPartialIP(myPublicIP);
+      console.log('part of my public IP address:', channel.myPartialPublicIP);
     }
   });
 
@@ -826,10 +830,10 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
 
           const peerPublicIP = parsePublicIPFromCandidate(data.candidate);
           if (peerPublicIP !== null) {
-            partOfPeerPublicIP = getPartialIP(peerPublicIP);
+            channel.peerPartialPublicIP = getPartialIP(peerPublicIP);
             console.log(
               "part of the peer's public IP address:",
-              partOfPeerPublicIP
+              channel.peerPartialPublicIP
             );
           }
         }
