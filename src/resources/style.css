@@ -154,6 +154,7 @@ canvas {
 #create-btn-with-created-room-id {
   grid-template-columns: var(--btn-width) auto;
 }
+.nickname-input-container,
 #room-id-with-join-btn {
   margin-top: calc(var(--btn-height) / 2);
 }
@@ -197,6 +198,7 @@ canvas {
 #network-test-btn,
 #create-btn,
 #join-room-id-input,
+#nickname-input,
 #join-btn {
   width: 100%;
   height: var(--btn-height);
@@ -215,6 +217,7 @@ canvas {
 }
 #created-room-id-container,
 #join-room-id-input,
+#nickname-input,
 #chat-input {
   font-size: var(--font-size);
 }

@@ -142,6 +142,33 @@
             네트워크 검사하기
           </button>
         </div>
+        <div>
+          <p class="margin-top">
+            <span class="thick">닉네임:</span> 아래에서 닉네임을 설정할 수
+            있습니다. (기본 닉네임은 "플레이어"입니다.)<br />
+            <span class="bold">중복 검사가 없습니다!</span>
+            따라서
+            <span class="bold"
+              >같은 닉네임을 사용한다고 해서 같은 사람이라는 뜻은
+              아닙니다.</span
+            >
+            닉네임 아래 앞 부분 일부가 표시되는 공인 IP 주소를 보면, 퀵 매치에서
+            만나는 상대방들을 <span class="bold">어느 정도 대강은</span> 식별할
+            수 있습니다.
+          </p>
+          <div class="nickname-input-container">
+            <label for="input">닉네임</label>
+            <input
+              type="text"
+              id="nickname-input"
+              maxlength="10"
+              autocapitalize="none"
+              autocomplete="off"
+              autocorrect="off"
+              value="플레이어"
+            />
+          </div>
+        </div>
       </div>
       <div class="margin-top grid-1-1">
         <button id="quick-match-btn">퀵 매치</button>
