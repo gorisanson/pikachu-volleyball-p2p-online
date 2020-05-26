@@ -38,11 +38,11 @@ import {
   displayPeerChatMessage,
 } from './chat_display.js';
 import { rtcConfiguration } from './rtc_configuration.js';
+import { parsePublicIPFromCandidate, getPartialIP } from './parse_candidate.js';
 import {
   sendQuickMatchSuccessMessageToServer,
   sendWithFriendSuccessMessageToServer,
 } from './quick_match.js';
-import { parseCandidate } from './parse_candidate.js';
 
 /** @typedef {{speed: string, winningScore: number}} Options */
 
@@ -120,6 +120,7 @@ const localICECandDocRefs = [];
 let roomSnapshotUnsubscribe = null;
 let iceCandOnSnapshotUnsubscribe = null;
 let isFirstInputQueueFromPeer = true;
+let partOfMyPublicIP = '*.*.*.*';
 let partOfPeerPublicIP = '*.*.*.*';
 
 /**
@@ -806,6 +807,12 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
     candidatesCollection.add(json).then((ref) => localICECandDocRefs.push(ref));
 
     console.log('Got candidate: ', event.candidate);
+
+    const myPublicIP = parsePublicIPFromCandidate(event.candidate.candidate);
+    if (myPublicIP !== null) {
+      partOfMyPublicIP = getPartialIP(myPublicIP);
+      console.log('part of my public IP address:', partOfMyPublicIP);
+    }
   });
 
   iceCandOnSnapshotUnsubscribe = roomRef
@@ -817,34 +824,13 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
           await peerConnection.addIceCandidate(data);
           console.log('Got new remote ICE candidate');
 
-          // Parse the candidate
-          const cand = parseCandidate(data.candidate);
-          // Try to get the peer's public IP
-          let peerPublicIP = null;
-          if (cand.type === 'srflx') {
-            peerPublicIP = cand.ip;
-          } else if (cand.type === 'host') {
-            if (!cand.ip.endsWith('.local')) {
-              const privateIPReg = RegExp(
-                '(^127.)|(^10.)|(^172.1[6-9].)|(^172.2[0-9].)|(^172.3[0-1].)|(^192.168.)'
-              );
-              if (!privateIPReg.test(cand.ip)) {
-                peerPublicIP = cand.ip;
-              }
-            }
-          }
-          // If the peer's public IP was gotten
+          const peerPublicIP = parsePublicIPFromCandidate(data.candidate);
           if (peerPublicIP !== null) {
-            const index = peerPublicIP.indexOf(
-              '.',
-              peerPublicIP.indexOf('.') + 1
+            partOfPeerPublicIP = getPartialIP(peerPublicIP);
+            console.log(
+              "part of the peer's public IP address:",
+              partOfPeerPublicIP
             );
-            if (index === -1) {
-              partOfPeerPublicIP = peerPublicIP.slice(0, 7);
-            } else {
-              partOfPeerPublicIP = `${peerPublicIP.slice(0, index)}.*.*`;
-            }
-            console.log('parOfPeerPublicIP:', partOfPeerPublicIP);
           }
         }
       });

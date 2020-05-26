@@ -70,3 +70,42 @@ export function parseCandidate(line) {
   }
   return candidate;
 }
+
+/**
+ * Return public IP address extracted from the candidate.
+ * If the candidate does not contain public IP address, return null.
+ * @param {Object} candidate
+ */
+export function parsePublicIPFromCandidate(candidate) {
+  // Parse the candidate
+  const cand = parseCandidate(candidate);
+  // Try to get and return the peer's public IP
+  if (cand.type === 'srflx') {
+    return cand.ip;
+  } else if (cand.type === 'host') {
+    if (!cand.ip.endsWith('.local')) {
+      const privateIPReg = RegExp(
+        '(^127.)|(^10.)|(^172.1[6-9].)|(^172.2[0-9].)|(^172.3[0-1].)|(^192.168.)'
+      );
+      if (!privateIPReg.test(cand.ip)) {
+        return cand.ip;
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * Get partial public IP, for example, 123.222.*.*
+ * @param {string} ip ip address, for example, 123.222.111.123
+ */
+export function getPartialIP(ip) {
+  const index = ip.indexOf('.', ip.indexOf('.') + 1);
+  if (index === -1) {
+    // if ip is IPv6 address
+    return ip.slice(0, 7);
+  } else {
+    // if ip is IPv4 address
+    return `${ip.slice(0, index)}.*.*`;
+  }
+}
