@@ -144,6 +144,33 @@
             Test network
           </button>
         </div>
+        <div>
+          <p class="margin-top">
+            <span class="thick">Nickname:</span> You can set your nickname here.
+            (The default nickname is "Player".)<br />
+            <span class="bold">There's no uniqueness checking!</span>
+            So
+            <span class="bold"
+              >it does not mean you met the same peer even if they use the same
+              nickname.</span
+            >
+            You can <span class="bold">loosely</span> identify the peers you met
+            on Quick Match by the partial public IP address shown below the
+            nickname.
+          </p>
+          <div class="nickname-input-container">
+            <label for="input">Nickname (maximum 8 characters)</label>
+            <input
+              type="text"
+              id="nickname-input"
+              maxlength="8"
+              autocapitalize="none"
+              autocomplete="off"
+              autocorrect="off"
+              value="Player"
+            />
+          </div>
+        </div>
       </div>
       <div class="margin-top grid-1-1">
         <button id="quick-match-btn">Quick Match</button>
@@ -430,6 +457,16 @@
       <div id="game-canvas-container">
         <div id="player1-chat-box" class="chat-box pre-wrap hidden"></div>
         <div id="player2-chat-box" class="chat-box pre-wrap hidden"></div>
+        <div class="nicknames-container">
+          <div class="nickname-and-partial-ip left">
+            <span id="player1-nickname" class="nickname"></span>
+            <span id="player1-partial-ip" class="partial-ip"></span>
+          </div>
+          <div class="nickname-and-partial-ip right">
+            <span id="player2-nickname" class="nickname"></span>
+            <span id="player2-partial-ip" class="partial-ip"></span>
+          </div>
+        </div>
         <div class="fade-in-box loading black" id="loading-box">
           <div>
             <p>Loading the game assets...</p>

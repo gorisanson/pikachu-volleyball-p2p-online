@@ -28,6 +28,9 @@ import '../style.css';
 /** @typedef {import('pixi.js-legacy').Ticker} Ticker */
 /** @typedef {{speed: string, winningScore: number}} Options options communicated with the peer */
 
+/** @type {number} maximum nickname length */
+export const MAX_NICKNAME_LENGTH = 8;
+
 /**
  * This is for to enable changing game options event before loading the game assets.
  * @type {{bgm: string, sfx: string, speed: string, winningScore: number}}
@@ -149,6 +152,36 @@ export function setUpUI() {
       callBackIfBehindSymmetricNat
     );
   });
+
+  const nicknameInputElem = document.getElementById('nickname-input');
+  let myNickname = null;
+  try {
+    myNickname = window.localStorage.getItem('myNickname');
+  } catch (err) {
+    console.log(err);
+  }
+  if (myNickname !== null) {
+    channel.myNickname = myNickname.trim().slice(0, MAX_NICKNAME_LENGTH);
+    // @ts-ignore
+    nicknameInputElem.value = channel.myNickname;
+  } else {
+    // @ts-ignore
+    channel.myNickname = nicknameInputElem.value;
+  }
+  nicknameInputElem.addEventListener('input', (event) => {
+    // @ts-ignore
+    channel.myNickname = event.target.value
+      .trim()
+      .slice(0, MAX_NICKNAME_LENGTH);
+    // @ts-ignore
+    nicknameInputElem.value = channel.myNickname;
+    try {
+      window.localStorage.setItem('myNickname', channel.myNickname);
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
   const startQuickMatchIfPressEnter = (event) => {
     if (event.code === 'Enter') {
       event.preventDefault();
@@ -780,11 +813,41 @@ export function askOneMoreGame() {
   document.getElementById('ask-one-more-game').classList.remove('hidden');
 }
 
-export function enableChatOpenBtnAndDisableChatCheckbox() {
+export function enableChatOpenBtnAndChatDisablingBtn() {
   // @ts-ignore
   chatOpenBtn.disabled = false;
   // @ts-ignore
   chatDisablingBtn.disabled = false;
+}
+
+/**
+ * Display nickname for the player
+ * @param {boolean} isForPlayer2
+ * @param {string} nickname
+ */
+export function displayNicknameFor(nickname, isForPlayer2) {
+  let nicknameElm = null;
+  if (!isForPlayer2) {
+    nicknameElm = document.getElementById('player1-nickname');
+  } else {
+    nicknameElm = document.getElementById('player2-nickname');
+  }
+  nicknameElm.textContent = nickname;
+}
+
+/**
+ * Display partial ip for the player
+ * @param {boolean} isForPlayer2
+ * @param {string} partialIP
+ */
+export function displayPartialIPFor(partialIP, isForPlayer2) {
+  let partialIPElm = null;
+  if (!isForPlayer2) {
+    partialIPElm = document.getElementById('player1-partial-ip');
+  } else {
+    partialIPElm = document.getElementById('player2-partial-ip');
+  }
+  partialIPElm.textContent = partialIP;
 }
 
 function enableOptionsBtn() {
@@ -835,7 +898,7 @@ function sendBtnClicked() {
   // @ts-ignore
   const message = chatInput.value;
   if (message === '') {
-    enableChatOpenBtnAndDisableChatCheckbox();
+    enableChatOpenBtnAndChatDisablingBtn();
     return;
   }
   // @ts-ignore

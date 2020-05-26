@@ -142,6 +142,33 @@
             네트워크 검사하기
           </button>
         </div>
+        <div>
+          <p class="margin-top">
+            <span class="thick">닉네임:</span> 아래에서 닉네임을 설정할 수
+            있습니다. (기본 닉네임은 "플레이어"입니다.)<br />
+            <span class="bold">중복 검사가 없습니다!</span>
+            따라서
+            <span class="bold"
+              >같은 닉네임을 사용한다고 해서 같은 사람이라는 뜻은
+              아닙니다.</span
+            >
+            닉네임 아래 앞 부분 일부가 표시되는 공인 IP 주소를 보면, 퀵 매치에서
+            만나는 사람들을 <span class="bold">어느 정도는</span> 식별할 수
+            있습니다.
+          </p>
+          <div class="nickname-input-container">
+            <label for="input">닉네임 (최대 8글자)</label>
+            <input
+              type="text"
+              id="nickname-input"
+              maxlength="8"
+              autocapitalize="none"
+              autocomplete="off"
+              autocorrect="off"
+              value="플레이어"
+            />
+          </div>
+        </div>
       </div>
       <div class="margin-top grid-1-1">
         <button id="quick-match-btn">퀵 매치</button>
@@ -428,6 +455,16 @@
       <div id="game-canvas-container">
         <div id="player1-chat-box" class="chat-box pre-wrap hidden"></div>
         <div id="player2-chat-box" class="chat-box pre-wrap hidden"></div>
+        <div class="nicknames-container">
+          <div class="nickname-and-partial-ip left">
+            <span id="player1-nickname" class="nickname"></span>
+            <span id="player1-partial-ip" class="partial-ip"></span>
+          </div>
+          <div class="nickname-and-partial-ip right">
+            <span id="player2-nickname" class="nickname"></span>
+            <span id="player2-partial-ip" class="partial-ip"></span>
+          </div>
+        </div>
         <div class="fade-in-box loading black" id="loading-box">
           <div>
             <p>게임 스프라이트/사운드 로드 중...</p>

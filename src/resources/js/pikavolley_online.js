@@ -3,7 +3,11 @@ import { PikachuVolleyball } from './offline_version_js/pikavolley.js';
 import { bufferLength, myKeyboard, OnlineKeyboard } from './keyboard_online.js';
 import { SYNC_DIVISOR, channel } from './data_channel';
 import { mod } from './mod.js';
-import { askOneMoreGame } from './ui_online.js';
+import {
+  askOneMoreGame,
+  displayPartialIPFor,
+  displayNicknameFor,
+} from './ui_online.js';
 
 /** @typedef GameState @type {function():void} */
 
@@ -69,6 +73,7 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
    */
   intro() {
     if (this.frameCounter === 0) {
+      this.selectedWithWho = 0;
       if (this.isFirstGame) {
         this.isFirstGame = false;
         if (channel.amICreatedRoom) {
@@ -84,17 +89,20 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
   }
 
   /**
-   * Override the "beforeStartOfNewGame" method in the super class.
-   * It determines "am I player 1 or player 2" before super.beforeStartOfNewGame().
+   * Override the "menu" method in the super class.
+   * It changes "am I player 1 or player 2" setting accordingly.
    * @type {GameState}
    */
-  beforeStartOfNewGame() {
-    if (this.frameCounter === 0) {
-      if (this.selectedWithWho === 1) {
-        this.amIPlayer2 = !this.amIPlayer2;
-      }
+  menu() {
+    const selectedWithWho = this.selectedWithWho;
+    super.menu();
+    if (this.selectedWithWho !== selectedWithWho) {
+      this.amIPlayer2 = !this.amIPlayer2;
+      displayNicknameFor(channel.myNickname, this.amIPlayer2);
+      displayNicknameFor(channel.peerNickname, !this.amIPlayer2);
+      displayPartialIPFor(channel.myPartialPublicIP, this.amIPlayer2);
+      displayPartialIPFor(channel.peerPartialPublicIP, !this.amIPlayer2);
     }
-    super.beforeStartOfNewGame();
   }
 
   /**
