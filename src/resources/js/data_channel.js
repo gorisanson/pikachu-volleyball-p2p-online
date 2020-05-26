@@ -60,6 +60,8 @@ export const channel = {
   amICreatedRoom: false,
   amIPlayer2: null, // set from pikavolley_online.js
   isQuickMatch: null, // set from ui_online.js
+  myNickname: 'me',
+  peerNickname: 'peer',
   myPartialPublicIP: '*.*.*.*',
   peerPartialPublicIP: '*.*.*.*',
 
@@ -618,6 +620,8 @@ function startGameAfterPingTest() {
       channel.callbackAfterDataChannelOpenedForUI();
       showGameCanvas();
       enableChatOpenBtnAndDisableChatCheckbox();
+      displayNicknameFor(channel.myNickname, !channel.amICreatedRoom);
+      displayNicknameFor(channel.peerNickname, channel.amICreatedRoom);
       displayPartialIPFor(channel.myPartialPublicIP, !channel.amICreatedRoom);
       displayPartialIPFor(channel.peerPartialPublicIP, channel.amICreatedRoom);
 
