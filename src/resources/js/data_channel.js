@@ -42,6 +42,7 @@ import {
   sendQuickMatchSuccessMessageToServer,
   sendWithFriendSuccessMessageToServer,
 } from './quick_match.js';
+import { parseCandidate } from './parse_candidate.js';
 
 /** @typedef {{speed: string, winningScore: number}} Options */
 
@@ -119,6 +120,7 @@ const localICECandDocRefs = [];
 let roomSnapshotUnsubscribe = null;
 let iceCandOnSnapshotUnsubscribe = null;
 let isFirstInputQueueFromPeer = true;
+let partOfPeerPublicIP = '*.*.*.*';
 
 /**
  * Create a room
@@ -814,6 +816,36 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
           const data = change.doc.data();
           await peerConnection.addIceCandidate(data);
           console.log('Got new remote ICE candidate');
+
+          // Parse the candidate
+          const cand = parseCandidate(data.candidate);
+          // Try to get the peer's public IP
+          let peerPublicIP = null;
+          if (cand.type === 'srflx') {
+            peerPublicIP = cand.ip;
+          } else if (cand.type === 'host') {
+            if (!cand.ip.endsWith('.local')) {
+              const privateIPReg = RegExp(
+                '(^127.)|(^10.)|(^172.1[6-9].)|(^172.2[0-9].)|(^172.3[0-1].)|(^192.168.)'
+              );
+              if (!privateIPReg.test(cand.ip)) {
+                peerPublicIP = cand.ip;
+              }
+            }
+          }
+          // If the peer's public IP was gotten
+          if (peerPublicIP !== null) {
+            const index = peerPublicIP.indexOf(
+              '.',
+              peerPublicIP.indexOf('.') + 1
+            );
+            if (index === -1) {
+              partOfPeerPublicIP = peerPublicIP.slice(0, 7);
+            } else {
+              partOfPeerPublicIP = `${peerPublicIP.slice(0, index)}.*.*`;
+            }
+            console.log('parOfPeerPublicIP:', partOfPeerPublicIP);
+          }
         }
       });
     });
