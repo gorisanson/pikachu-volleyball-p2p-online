@@ -154,6 +154,7 @@ canvas {
 #create-btn-with-created-room-id {
   grid-template-columns: var(--btn-width) auto;
 }
+.nickname-input-container,
 #room-id-with-join-btn {
   margin-top: calc(var(--btn-height) / 2);
 }
@@ -197,6 +198,7 @@ canvas {
 #network-test-btn,
 #create-btn,
 #join-room-id-input,
+#nickname-input,
 #join-btn {
   width: 100%;
   height: var(--btn-height);
@@ -215,6 +217,7 @@ canvas {
 }
 #created-room-id-container,
 #join-room-id-input,
+#nickname-input,
 #chat-input {
   font-size: var(--font-size);
 }
@@ -261,6 +264,9 @@ p.update-history-on {
 }
 span.no-wrap {
   white-space: nowrap;
+}
+span.bold {
+  font-weight: bold;
 }
 span.thick {
   font-weight: 900;
@@ -499,6 +505,40 @@ span.check {
 div.indent-minus {
   text-indent: calc(-5.4 * var(--font-size));
   margin-left: calc(5.4 * var(--font-size));
+}
+div.nicknames-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin-left: -30%; /* half of width */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: calc(1.5 * var(--font-size));
+  width: 60%;
+  height: calc(4 * var(--font-size));
+  z-index: 9;
+}
+.nickname-and-partial-ip {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+}
+.nickname-and-partial-ip.left {
+  align-items: flex-end;
+}
+.nickname-and-partial-ip.right {
+  align-items: flex-start;
+}
+.nickname,
+.partial-ip {
+  color: white;
+}
+.nickname {
+  font-size: calc(1.1 * var(--font-size));
+}
+.partial-ip {
+  font-size: calc(0.8 * var(--font-size));
 }
 /* CSS for replay is below */
 #dropbox {

@@ -17,7 +17,7 @@ import { mod, isInModRange } from '../mod.js';
 import { bufferLength, PikaUserInputWithSync } from '../keyboard_online.js';
 import {
   noticeDisconnected,
-  enableChatOpenBtnAndDisableChatCheckbox,
+  enableChatOpenBtnAndChatDisablingBtn,
   showGameCanvas,
   hideWatingPeerAssetsLoadingBox,
   hidePingBox,
@@ -31,6 +31,9 @@ import {
   disableCancelQuickMatchBtn,
   askOptionsChangeReceivedFromPeer,
   noticeAgreeMessageFromPeer,
+  displayNicknameFor,
+  displayPartialIPFor,
+  MAX_NICKNAME_LENGTH,
 } from '../ui_online.js';
 import {
   setChatRngs,
@@ -38,6 +41,10 @@ import {
   displayPeerChatMessage,
 } from '../chat_display.js';
 import { rtcConfiguration } from './rtc_configuration.js';
+import {
+  parsePublicIPFromCandidate,
+  getPartialIP,
+} from '../parse_candidate.js';
 import {
   sendQuickMatchSuccessMessageToServer,
   sendWithFriendSuccessMessageToServer,
@@ -58,6 +65,10 @@ export const channel = {
   amICreatedRoom: false,
   amIPlayer2: null, // set from pikavolley_online.js
   isQuickMatch: null, // set from ui_online.js
+  myNickname: '', // set from ui_online.js
+  peerNickname: '',
+  myPartialPublicIP: '*.*.*.*',
+  peerPartialPublicIP: '*.*.*.*',
 
   /** @type {PikaUserInputWithSync[]} */
   peerInputQueue: [],
@@ -120,6 +131,9 @@ const localICECandDocRefs = [];
 let roomSnapshotUnsubscribe = null;
 let iceCandOnSnapshotUnsubscribe = null;
 let isFirstInputQueueFromPeer = true;
+// first chat message is used for nickname transmission
+let isFirstChatMessageToPeerUsedForNickname = true;
+let isFirstChatMessageFromPeerUsedForNickname = true;
 
 /**
  * Create a room
@@ -433,8 +447,12 @@ function receiveChatMessageAckFromPeer(data) {
   if (syncCounter === chatManager.syncCounter) {
     chatManager.syncCounter++;
     clearInterval(chatManager.resendIntervalID);
-    displayMyChatMessage(chatManager.pendingMessage);
-    enableChatOpenBtnAndDisableChatCheckbox();
+    if (isFirstChatMessageToPeerUsedForNickname) {
+      isFirstChatMessageToPeerUsedForNickname = false;
+    } else {
+      displayMyChatMessage(chatManager.pendingMessage);
+      enableChatOpenBtnAndChatDisablingBtn();
+    }
   }
 }
 
@@ -452,7 +470,16 @@ function receiveChatMessageFromPeer(chatMessage) {
   } else if (peerSyncCounter === chatManager.nextPeerSyncCounter) {
     // if peer send new message
     chatManager.peerSyncCounter++;
-    displayPeerChatMessage(chatMessage.slice(0, -1));
+    if (isFirstChatMessageFromPeerUsedForNickname) {
+      isFirstChatMessageFromPeerUsedForNickname = false;
+      channel.peerNickname = chatMessage
+        .slice(0, -1)
+        .trim()
+        .slice(0, MAX_NICKNAME_LENGTH);
+      displayNicknameFor(channel.peerNickname, channel.amICreatedRoom);
+    } else {
+      displayPeerChatMessage(chatMessage.slice(0, -1));
+    }
   } else {
     console.log('invalid chat message received.');
     return;
@@ -594,6 +621,12 @@ function receiveOptionsChangeAgreeMessageFromPeer(optionsChangeAgreeMessage) {
  * Test average ping by sending ping test arraybuffers, then start the game
  */
 function startGameAfterPingTest() {
+  // Send my nick name to peer
+  sendChatMessageToPeer(channel.myNickname);
+  displayNicknameFor(channel.myNickname, !channel.amICreatedRoom);
+  displayPartialIPFor(channel.myPartialPublicIP, !channel.amICreatedRoom);
+  displayPartialIPFor(channel.peerPartialPublicIP, channel.amICreatedRoom);
+
   printLog('start ping test');
   const buffer = new ArrayBuffer(1);
   const view = new DataView(buffer);
@@ -613,7 +646,7 @@ function startGameAfterPingTest() {
       channel.callbackAfterDataChannelOpened();
       channel.callbackAfterDataChannelOpenedForUI();
       showGameCanvas();
-      enableChatOpenBtnAndDisableChatCheckbox();
+      enableChatOpenBtnAndChatDisablingBtn();
 
       printAvgPing(avg);
 
@@ -808,6 +841,12 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
     candidatesCollection.add(json).then((ref) => localICECandDocRefs.push(ref));
 
     console.log('Got candidate: ', event.candidate);
+
+    const myPublicIP = parsePublicIPFromCandidate(event.candidate.candidate);
+    if (myPublicIP !== null) {
+      channel.myPartialPublicIP = getPartialIP(myPublicIP);
+      console.log('part of my public IP address:', channel.myPartialPublicIP);
+    }
   });
 
   iceCandOnSnapshotUnsubscribe = roomRef
@@ -818,6 +857,15 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
           const data = change.doc.data();
           await peerConnection.addIceCandidate(data);
           console.log('Got new remote ICE candidate');
+
+          const peerPublicIP = parsePublicIPFromCandidate(data.candidate);
+          if (peerPublicIP !== null) {
+            channel.peerPartialPublicIP = getPartialIP(peerPublicIP);
+            console.log(
+              "part of the peer's public IP address:",
+              channel.peerPartialPublicIP
+            );
+          }
         }
       });
     });
