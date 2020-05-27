@@ -41,10 +41,7 @@ import {
   displayPeerChatMessage,
 } from '../chat_display.js';
 import { rtcConfiguration } from './rtc_configuration.js';
-import {
-  parsePublicIPFromCandidate,
-  getPartialIP,
-} from '../parse_candidate.js';
+import { parsePublicIPFromCandidate, getPartialIP } from './parse_candidate.js';
 import {
   sendQuickMatchSuccessMessageToServer,
   sendWithFriendSuccessMessageToServer,
