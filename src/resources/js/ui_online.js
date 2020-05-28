@@ -22,6 +22,7 @@ import {
   sendCancelQuickMatchMessageToServer,
 } from './quick_match.js';
 import { enableChat } from './chat_display.js';
+import { ASSETS_PATH } from './offline_version_js/assets_path.js';
 import '../style.css';
 
 /** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */
@@ -30,6 +31,8 @@ import '../style.css';
 
 /** @type {number} maximum nickname length */
 export const MAX_NICKNAME_LENGTH = 8;
+
+const pikachuSound = new Audio(ASSETS_PATH.SOUNDS.PIKACHU);
 
 /**
  * This is for to enable changing game options event before loading the game assets.
@@ -848,6 +851,10 @@ export function displayPartialIPFor(partialIP, isForPlayer2) {
     partialIPElm = document.getElementById('player2-partial-ip');
   }
   partialIPElm.textContent = partialIP;
+}
+
+export function notifyBySound() {
+  pikachuSound.play();
 }
 
 function enableOptionsBtn() {

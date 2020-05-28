@@ -34,6 +34,7 @@ import {
   displayNicknameFor,
   displayPartialIPFor,
   MAX_NICKNAME_LENGTH,
+  notifyBySound,
 } from './ui_online.js';
 import {
   setChatRngs,
@@ -740,6 +741,7 @@ function dataChannelOpened() {
   channel.isOpen = true;
   dataChannel.binaryType = 'arraybuffer';
 
+  notifyBySound();
   cleanUpFirestoreRelevants();
 
   if (channel.isQuickMatch) {
@@ -794,6 +796,12 @@ function registerPeerConnectionListeners(peerConnection) {
     ) {
       channel.isOpen = false;
       noticeDisconnected();
+    }
+    if (
+      peerConnection.connectionState === 'failed' &&
+      channel.isOpen === false
+    ) {
+      notifyBySound();
     }
   });
 
