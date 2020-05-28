@@ -265,8 +265,6 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
     };
     this.keyboardArray = [this.player1Keyboard, this.player2Keyboard];
 
-    this.isRoomCreatorPlayer2 = false;
-
     this.initilizeForReplay();
   }
 
@@ -320,6 +318,7 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
     this.paused = false;
     this.isStereoSound = true;
     this._isPracticeMode = false;
+    this.isRoomCreatorPlayer2 = false;
     this.state = this.intro;
   }
 
