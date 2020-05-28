@@ -129,6 +129,7 @@ let roomRef = null;
 const localICECandDocRefs = [];
 let roomSnapshotUnsubscribe = null;
 let iceCandOnSnapshotUnsubscribe = null;
+let isDataChannelEverOpened = false;
 let isFirstInputQueueFromPeer = true;
 // first chat message is used for nickname transmission
 let isFirstChatMessageToPeerUsedForNickname = true;
@@ -745,8 +746,9 @@ function dataChannelOpened() {
   console.log('data channel opened!');
   console.log(`dataChannel.ordered: ${dataChannel.ordered}`);
   console.log(`dataChannel.maxRetransmits: ${dataChannel.maxRetransmits}`);
-  channel.isOpen = true;
   dataChannel.binaryType = 'arraybuffer';
+  channel.isOpen = true;
+  isDataChannelEverOpened = true;
 
   notifyBySound();
   cleanUpFirestoreRelevants();
@@ -806,7 +808,7 @@ function registerPeerConnectionListeners(peerConnection) {
     }
     if (
       peerConnection.connectionState === 'failed' &&
-      channel.isOpen === false
+      isDataChannelEverOpened === false
     ) {
       notifyBySound();
       printConnectionFailed();
