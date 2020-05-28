@@ -17,9 +17,15 @@ import {
   showTimeCurrent,
   enableReplayScrubberAndBtns,
 } from './ui_replay.js';
+import {
+  displayNicknameFor,
+  displayPartialIPFor,
+} from '../nickname_display.js';
 import { Cloud, Wave } from '../offline_version_js/cloud_and_wave.js';
 import { PikaPhysics } from '../offline_version_js/physics.js';
 import '../../style.css';
+
+/** @typedef GameState @type {function():void} */
 
 export const ticker = new PIXI.Ticker();
 ticker.minFPS = 1;
@@ -66,6 +72,8 @@ class ReplaySaver {
   constructor() {
     this.frameCounter = 0;
     this.roomID = null; // used for set RNGs
+    this.nicknames = ['', '']; // [0]: room creator's nickname, [1]: room joiner's nickname
+    this.partialPublicIPs = ['*.*.*.*', '*.*.*.*']; // [0]: room creator's partial public IP address, [1]: room joiner's partial public IP address
     this.inputs = []; // [[xDirection, yDirection, powerHit], [xDirection, yDirection, powerHit]][], left side is for player 1.
     this.options = []; // [frameCounter, options][];
     this.chats = []; // [frameCounter, playerIndex (1 or 2), chatMessage][]
@@ -77,6 +85,29 @@ class ReplaySaver {
    */
   recordRoomID(roomID) {
     this.roomID = roomID;
+  }
+
+  /**
+   * Record nicknames
+   * @param {string} roomCreatorNickname
+   * @param {string} roomJoinerNickname
+   */
+  recordNicknames(roomCreatorNickname, roomJoinerNickname) {
+    this.nicknames[0] = roomCreatorNickname;
+    this.nicknames[1] = roomJoinerNickname;
+  }
+
+  /**
+   * Record partial public ips
+   * @param {string} roomCreatorPartialPublicIP
+   * @param {string} roomJoinerPartialPublicIP
+   */
+  recordPartialPublicIPs(
+    roomCreatorPartialPublicIP,
+    roomJoinerPartialPublicIP
+  ) {
+    this.partialPublicIPs[0] = roomCreatorPartialPublicIP;
+    this.partialPublicIPs[1] = roomJoinerPartialPublicIP;
   }
 
   /**
@@ -109,6 +140,8 @@ class ReplaySaver {
   saveAsFile() {
     const pack = {
       roomID: this.roomID,
+      nicknames: this.nicknames,
+      partialPublicIPs: this.partialPublicIPs,
       chats: this.chats,
       options: this.options,
       inputs: this.inputs,
@@ -172,6 +205,8 @@ class ReplayReader {
           stage,
           loader.resources,
           pack.roomID,
+          pack.nicknames,
+          pack.partialPublicIPs,
           pack.inputs,
           pack.options,
           pack.chats
@@ -197,11 +232,22 @@ export const replayReader = new ReplayReader();
  */
 // @ts-ignore
 class PikachuVolleyballReplay extends PikachuVolleyball {
-  constructor(stage, resources, roomId, inputs, options, chats) {
+  constructor(
+    stage,
+    resources,
+    roomId,
+    nicknames,
+    partialPublicIPs,
+    inputs,
+    options,
+    chats
+  ) {
     super(stage, resources);
     this.noInputFrameTotal.menu = Infinity;
 
     this.roomId = roomId;
+    this.nicknames = nicknames;
+    this.partialPublicIPs = partialPublicIPs;
     this.inputs = inputs;
     this.options = options;
     this.chats = chats;
@@ -218,6 +264,8 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
       getInput: () => {},
     };
     this.keyboardArray = [this.player1Keyboard, this.player2Keyboard];
+
+    this.isRoomCreatorPlayer2 = false;
 
     this.initilizeForReplay();
   }
@@ -273,6 +321,63 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
     this.isStereoSound = true;
     this._isPracticeMode = false;
     this.state = this.intro;
+  }
+
+  /**
+   * Override the "intro" method in the super class.
+   * It is to ask for one more game with the peer after quick match game ends.
+   * @type {GameState}
+   */
+  intro() {
+    if (this.frameCounter === 0) {
+      this.selectedWithWho = 0;
+      if (this.nicknames) {
+        // TODO: remove backward compatibility by transforming
+        displayNicknameFor(this.nicknames[0], this.isRoomCreatorPlayer2);
+        displayNicknameFor(this.nicknames[1], !this.isRoomCreatorPlayer2);
+      }
+      if (this.partialPublicIPs) {
+        // TODO: remove backward compatibility by transforming
+        displayPartialIPFor(
+          this.partialPublicIPs[0],
+          this.isRoomCreatorPlayer2
+        );
+        displayPartialIPFor(
+          this.partialPublicIPs[1],
+          !this.isRoomCreatorPlayer2
+        );
+      }
+    }
+    super.intro();
+  }
+
+  /**
+   * Override the "menu" method in the super class.
+   * It changes "am I player 1 or player 2" setting accordingly.
+   * @type {GameState}
+   */
+  menu() {
+    const selectedWithWho = this.selectedWithWho;
+    super.menu();
+    if (this.selectedWithWho !== selectedWithWho) {
+      this.isRoomCreatorPlayer2 = !this.isRoomCreatorPlayer2;
+      if (this.nicknames) {
+        // TODO: remove backward compatibility by transforming
+        displayNicknameFor(this.nicknames[0], this.isRoomCreatorPlayer2);
+        displayNicknameFor(this.nicknames[1], !this.isRoomCreatorPlayer2);
+      }
+      if (this.partialPublicIPs) {
+        // TODO: remove backward compatibility by transforming
+        displayPartialIPFor(
+          this.partialPublicIPs[0],
+          this.isRoomCreatorPlayer2
+        );
+        displayPartialIPFor(
+          this.partialPublicIPs[1],
+          !this.isRoomCreatorPlayer2
+        );
+      }
+    }
   }
 
   /**

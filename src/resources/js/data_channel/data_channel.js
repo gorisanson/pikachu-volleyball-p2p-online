@@ -31,10 +31,12 @@ import {
   disableCancelQuickMatchBtn,
   askOptionsChangeReceivedFromPeer,
   noticeAgreeMessageFromPeer,
-  displayNicknameFor,
-  displayPartialIPFor,
   MAX_NICKNAME_LENGTH,
 } from '../ui_online.js';
+import {
+  displayNicknameFor,
+  displayPartialIPFor,
+} from '../nickname_display.js';
 import {
   setChatRngs,
   displayMyChatMessage,
@@ -474,6 +476,22 @@ function receiveChatMessageFromPeer(chatMessage) {
         .trim()
         .slice(0, MAX_NICKNAME_LENGTH);
       displayNicknameFor(channel.peerNickname, channel.amICreatedRoom);
+      displayNicknameFor(channel.myNickname, !channel.amICreatedRoom);
+      displayPartialIPFor(channel.peerPartialPublicIP, channel.amICreatedRoom);
+      displayPartialIPFor(channel.myPartialPublicIP, !channel.amICreatedRoom);
+      if (channel.amICreatedRoom) {
+        replaySaver.recordNicknames(channel.myNickname, channel.peerNickname);
+        replaySaver.recordPartialPublicIPs(
+          channel.myPartialPublicIP,
+          channel.peerPartialPublicIP
+        );
+      } else {
+        replaySaver.recordNicknames(channel.peerNickname, channel.myNickname);
+        replaySaver.recordPartialPublicIPs(
+          channel.peerPartialPublicIP,
+          channel.myPartialPublicIP
+        );
+      }
     } else {
       displayPeerChatMessage(chatMessage.slice(0, -1));
     }
@@ -620,9 +638,6 @@ function receiveOptionsChangeAgreeMessageFromPeer(optionsChangeAgreeMessage) {
 function startGameAfterPingTest() {
   // Send my nick name to peer
   sendChatMessageToPeer(channel.myNickname);
-  displayNicknameFor(channel.myNickname, !channel.amICreatedRoom);
-  displayPartialIPFor(channel.myPartialPublicIP, !channel.amICreatedRoom);
-  displayPartialIPFor(channel.peerPartialPublicIP, channel.amICreatedRoom);
 
   printLog('start ping test');
   const buffer = new ArrayBuffer(1);
