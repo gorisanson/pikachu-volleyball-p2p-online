@@ -621,10 +621,21 @@ export function printNoRoomMatchingMessage() {
   printLog(document.getElementById('no-room-matching-message').textContent);
 }
 
+export function printNoRoomMatchingMessageInQuickMatch() {
+  printLog(
+    document.getElementById('no-room-matching-message-in-quick-match')
+      .textContent
+  );
+}
+
 export function printSomeoneElseAlreadyJoinedRoomMessage() {
   printLog(
     document.getElementById('someone-esle-already-joined-the-room').textContent
   );
+}
+
+export function printConnectionFailed() {
+  printLog(document.getElementById('connection-failed').textContent);
 }
 
 export function showGameCanvas() {

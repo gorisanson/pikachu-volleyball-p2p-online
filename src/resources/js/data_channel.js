@@ -27,14 +27,16 @@ import {
   printPeriodInLog,
   printNotValidRoomIdMessage,
   printNoRoomMatchingMessage,
+  printNoRoomMatchingMessageInQuickMatch,
   printSomeoneElseAlreadyJoinedRoomMessage,
+  printConnectionFailed,
   disableCancelQuickMatchBtn,
   askOptionsChangeReceivedFromPeer,
   noticeAgreeMessageFromPeer,
   displayNicknameFor,
   displayPartialIPFor,
-  MAX_NICKNAME_LENGTH,
   notifyBySound,
+  MAX_NICKNAME_LENGTH,
 } from './ui_online.js';
 import {
   setChatRngs,
@@ -228,7 +230,12 @@ export async function joinRoom(roomIdToJoin) {
   console.log('Got room:', roomSnapshot.exists);
   if (!roomSnapshot.exists) {
     console.log('No room is mathing the ID');
-    printNoRoomMatchingMessage();
+    if (channel.isQuickMatch) {
+      printNoRoomMatchingMessageInQuickMatch();
+      printConnectionFailed();
+    } else {
+      printNoRoomMatchingMessage();
+    }
     return false;
   }
   const data = roomSnapshot.data();
@@ -802,6 +809,7 @@ function registerPeerConnectionListeners(peerConnection) {
       channel.isOpen === false
     ) {
       notifyBySound();
+      printConnectionFailed();
     }
   });
 
