@@ -23,6 +23,7 @@ import {
 } from './quick_match/quick_match.js';
 import { enableChat } from './chat_display.js';
 import { replaySaver } from './replay/replay.js';
+import { ASSETS_PATH } from './offline_version_js/assets_path.js';
 import '../style.css';
 
 /** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */
@@ -31,6 +32,8 @@ import '../style.css';
 
 /** @type {number} maximum nickname length */
 export const MAX_NICKNAME_LENGTH = 8;
+
+const pikachuSound = new Audio(ASSETS_PATH.SOUNDS.PIKACHU);
 
 /**
  * This is for to enable changing game options event before loading the game assets.
@@ -625,10 +628,21 @@ export function printNoRoomMatchingMessage() {
   printLog(document.getElementById('no-room-matching-message').textContent);
 }
 
+export function printNoRoomMatchingMessageInQuickMatch() {
+  printLog(
+    document.getElementById('no-room-matching-message-in-quick-match')
+      .textContent
+  );
+}
+
 export function printSomeoneElseAlreadyJoinedRoomMessage() {
   printLog(
     document.getElementById('someone-esle-already-joined-the-room').textContent
   );
+}
+
+export function printConnectionFailed() {
+  printLog(document.getElementById('connection-failed').textContent);
 }
 
 export function showGameCanvas() {
@@ -825,6 +839,40 @@ export function enableChatOpenBtnAndChatDisablingBtn() {
   chatOpenBtn.disabled = false;
   // @ts-ignore
   chatDisablingBtn.disabled = false;
+}
+
+/**
+ * Display nickname for the player
+ * @param {boolean} isForPlayer2
+ * @param {string} nickname
+ */
+export function displayNicknameFor(nickname, isForPlayer2) {
+  let nicknameElm = null;
+  if (!isForPlayer2) {
+    nicknameElm = document.getElementById('player1-nickname');
+  } else {
+    nicknameElm = document.getElementById('player2-nickname');
+  }
+  nicknameElm.textContent = nickname;
+}
+
+/**
+ * Display partial ip for the player
+ * @param {boolean} isForPlayer2
+ * @param {string} partialIP
+ */
+export function displayPartialIPFor(partialIP, isForPlayer2) {
+  let partialIPElm = null;
+  if (!isForPlayer2) {
+    partialIPElm = document.getElementById('player1-partial-ip');
+  } else {
+    partialIPElm = document.getElementById('player2-partial-ip');
+  }
+  partialIPElm.textContent = partialIP;
+}
+
+export function notifyBySound() {
+  pikachuSound.play();
 }
 
 function enableOptionsBtn() {

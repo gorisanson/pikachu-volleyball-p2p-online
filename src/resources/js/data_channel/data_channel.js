@@ -27,10 +27,13 @@ import {
   printPeriodInLog,
   printNotValidRoomIdMessage,
   printNoRoomMatchingMessage,
+  printNoRoomMatchingMessageInQuickMatch,
   printSomeoneElseAlreadyJoinedRoomMessage,
+  printConnectionFailed,
   disableCancelQuickMatchBtn,
   askOptionsChangeReceivedFromPeer,
   noticeAgreeMessageFromPeer,
+  notifyBySound,
   MAX_NICKNAME_LENGTH,
 } from '../ui_online.js';
 import {
@@ -129,6 +132,7 @@ let roomRef = null;
 const localICECandDocRefs = [];
 let roomSnapshotUnsubscribe = null;
 let iceCandOnSnapshotUnsubscribe = null;
+let isDataChannelEverOpened = false;
 let isFirstInputQueueFromPeer = true;
 // first chat message is used for nickname transmission
 let isFirstChatMessageToPeerUsedForNickname = true;
@@ -230,7 +234,12 @@ export async function joinRoom(roomIdToJoin) {
   console.log('Got room:', roomSnapshot.exists);
   if (!roomSnapshot.exists) {
     console.log('No room is mathing the ID');
-    printNoRoomMatchingMessage();
+    if (channel.isQuickMatch) {
+      printNoRoomMatchingMessageInQuickMatch();
+      printConnectionFailed();
+    } else {
+      printNoRoomMatchingMessage();
+    }
     return false;
   }
   const data = roomSnapshot.data();
@@ -753,9 +762,11 @@ function dataChannelOpened() {
   console.log('data channel opened!');
   console.log(`dataChannel.ordered: ${dataChannel.ordered}`);
   console.log(`dataChannel.maxRetransmits: ${dataChannel.maxRetransmits}`);
-  channel.isOpen = true;
   dataChannel.binaryType = 'arraybuffer';
+  channel.isOpen = true;
+  isDataChannelEverOpened = true;
 
+  notifyBySound();
   cleanUpFirestoreRelevants();
 
   if (channel.isQuickMatch) {
@@ -813,6 +824,13 @@ function registerPeerConnectionListeners(peerConnection) {
     ) {
       channel.isOpen = false;
       noticeDisconnected();
+    }
+    if (
+      peerConnection.connectionState === 'failed' &&
+      isDataChannelEverOpened === false
+    ) {
+      notifyBySound();
+      printConnectionFailed();
     }
   });
 
