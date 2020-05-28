@@ -797,6 +797,12 @@ function registerPeerConnectionListeners(peerConnection) {
       channel.isOpen = false;
       noticeDisconnected();
     }
+    if (
+      peerConnection.connectionState === 'failed' &&
+      channel.isOpen === false
+    ) {
+      notifyBySound();
+    }
   });
 
   peerConnection.addEventListener('signalingstatechange', () => {
