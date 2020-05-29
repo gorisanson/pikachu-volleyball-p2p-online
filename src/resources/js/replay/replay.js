@@ -24,7 +24,12 @@ import {
 import { Cloud, Wave } from '../offline_version_js/cloud_and_wave.js';
 import { PikaPhysics } from '../offline_version_js/physics.js';
 import '../../style.css';
+import {
+  convertUserInputTo5bitNumber,
+  convert5bitNumberToUserInput,
+} from '../input_conversion.js';
 
+/** @typedef {import('../offline_version_js/physics.js').PikaUserInput} PikaUserInput */
 /** @typedef GameState @type {function():void} */
 
 export const ticker = new PIXI.Ticker();
@@ -112,11 +117,14 @@ class ReplaySaver {
 
   /**
    * Record user inputs
-   * @param {number[]} player1Input [xDirection, yDirection, powerHit]
-   * @param {number[]} player2Input [xDirection, yDirection, powerHit]
+   * @param {PikaUserInput} player1Input
+   * @param {PikaUserInput} player2Input
    */
   recordInputs(player1Input, player2Input) {
-    this.inputs.push([player1Input, player2Input]);
+    this.inputs.push([
+      convertUserInputTo5bitNumber(player1Input),
+      convertUserInputTo5bitNumber(player2Input),
+    ]);
     this.frameCounter++;
   }
 
@@ -393,14 +401,15 @@ class PikachuVolleyballReplay extends PikachuVolleyball {
       moveScrubberTo(this.replayFrameCounter);
     }
 
-    const player1Input = this.inputs[this.replayFrameCounter][0];
-    const player2Input = this.inputs[this.replayFrameCounter][1];
-    this.player1Keyboard.xDirection = player1Input[0];
-    this.player1Keyboard.yDirection = player1Input[1];
-    this.player1Keyboard.powerHit = player1Input[2];
-    this.player2Keyboard.xDirection = player2Input[0];
-    this.player2Keyboard.yDirection = player2Input[1];
-    this.player2Keyboard.powerHit = player2Input[2];
+    const userInputNumbers = this.inputs[this.replayFrameCounter];
+    const player1Input = convert5bitNumberToUserInput(userInputNumbers[0]);
+    const player2Input = convert5bitNumberToUserInput(userInputNumbers[1]);
+    this.player1Keyboard.xDirection = player1Input.xDirection;
+    this.player1Keyboard.yDirection = player1Input.yDirection;
+    this.player1Keyboard.powerHit = player1Input.powerHit;
+    this.player2Keyboard.xDirection = player2Input.xDirection;
+    this.player2Keyboard.yDirection = player2Input.yDirection;
+    this.player2Keyboard.powerHit = player2Input.powerHit;
 
     let options = this.options[this.optionsCounter];
     while (options && options[0] === this.replayFrameCounter) {

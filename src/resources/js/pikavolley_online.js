@@ -6,6 +6,7 @@ import { mod } from './mod.js';
 import { askOneMoreGame } from './ui_online.js';
 import { displayPartialIPFor, displayNicknameFor } from './nickname_display.js';
 import { replaySaver } from './replay/replay.js';
+import { PikaUserInput } from './offline_version_js/physics.js';
 
 /** @typedef GameState @type {function():void} */
 
@@ -142,18 +143,15 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     this.syncCounter++;
 
     if (this.willSaveReplay) {
-      replaySaver.recordInputs(
-        [
-          this.keyboardArray[0].xDirection,
-          this.keyboardArray[0].yDirection,
-          this.keyboardArray[0].powerHit,
-        ],
-        [
-          this.keyboardArray[1].xDirection,
-          this.keyboardArray[1].yDirection,
-          this.keyboardArray[1].powerHit,
-        ]
-      );
+      const player1Input = new PikaUserInput();
+      player1Input.xDirection = this.keyboardArray[0].xDirection;
+      player1Input.yDirection = this.keyboardArray[0].yDirection;
+      player1Input.powerHit = this.keyboardArray[0].powerHit;
+      const player2Input = new PikaUserInput();
+      player2Input.xDirection = this.keyboardArray[1].xDirection;
+      player2Input.yDirection = this.keyboardArray[1].yDirection;
+      player2Input.powerHit = this.keyboardArray[1].powerHit;
+      replaySaver.recordInputs(player1Input, player2Input);
     }
 
     // slow-mo effect
