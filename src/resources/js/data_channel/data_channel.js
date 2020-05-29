@@ -48,6 +48,10 @@ import {
 import { rtcConfiguration } from './rtc_configuration.js';
 import { parsePublicIPFromCandidate, getPartialIP } from './parse_candidate.js';
 import {
+  convertUserInputTo5bitNumber,
+  convert5bitNumberToUserInput,
+} from '../input_conversion.js';
+import {
   sendQuickMatchSuccessMessageToServer,
   sendWithFriendSuccessMessageToServer,
 } from '../quick_match/quick_match.js';
@@ -325,10 +329,7 @@ export function closeConnection() {
  * Send my input queue to the peer.
  *
  * Input is transmitted by 5 bits (so fit in 1 byte = 8 bits).
- * input.xDirection: 2bits. 0: 00, 1: 01, -1: 11.
- * input.yDirection: 2bits. 0: 00, 1: 01, -1: 11.
- * input.powerHit: 1bits. 0: 0, 1: 1.
- * The bits order is input.powerHit, input.yDirection, input.xDirection.
+ * Refer: {@link convertUserInputTo5bitNumber}
  *
  * @param {PikaUserInputWithSync[]} inputQueue
  */
@@ -338,28 +339,7 @@ export function sendInputQueueToPeer(inputQueue) {
   dataView.setUint16(0, inputQueue[0].syncCounter, true);
   for (let i = 0; i < inputQueue.length; i++) {
     const input = inputQueue[i];
-    let byte = 0;
-    switch (input.xDirection) {
-      case 1:
-        byte += 1;
-        break;
-      case -1:
-        byte += (1 << 1) + 1;
-        break;
-    }
-    switch (input.yDirection) {
-      case 1:
-        byte += 1 << 2;
-        break;
-      case -1:
-        byte += (1 << 3) + (1 << 2);
-        break;
-    }
-    switch (input.powerHit) {
-      case 1:
-        byte += 1 << 4;
-        break;
-    }
+    const byte = convertUserInputTo5bitNumber(input);
     dataView.setUint8(2 + i, byte);
   }
   dataChannel.send(buffer);
@@ -392,36 +372,12 @@ function receiveInputQueueFromPeer(data) {
         ))
     ) {
       const byte = dataView.getUint8(2 + i);
-      let xDirection;
-      switch (byte % (1 << 2)) {
-        case 0:
-          xDirection = 0;
-          break;
-        case 1:
-          xDirection = 1;
-          break;
-        case 3:
-          xDirection = -1;
-          break;
-      }
-      let yDirection;
-      switch ((byte >>> 2) % (1 << 2)) {
-        case 0:
-          yDirection = 0;
-          break;
-        case 1:
-          yDirection = 1;
-          break;
-        case 3:
-          yDirection = -1;
-          break;
-      }
-      const powerHit = byte >>> 4;
+      const input = convert5bitNumberToUserInput(byte);
       const peerInputWithSync = new PikaUserInputWithSync(
         syncCounter,
-        xDirection,
-        yDirection,
-        powerHit
+        input.xDirection,
+        input.yDirection,
+        input.powerHit
       );
       channel.peerInputQueue.push(peerInputWithSync);
       channel.peerInputQueueSyncCounter++;
