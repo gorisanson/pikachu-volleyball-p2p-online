@@ -58,6 +58,10 @@ export async function testNetwork(
       callBack();
       return;
     }
+    if (event.candidate.candidate === '') {
+      // This if statement is for Firefox browser.
+      return;
+    }
     const cand = parseCandidate(event.candidate.candidate);
     if (cand.type === 'srflx') {
       gotSrflx = true;

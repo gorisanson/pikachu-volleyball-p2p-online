@@ -853,6 +853,10 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
 
     console.log('Got candidate: ', event.candidate);
 
+    if (event.candidate.candidate === '') {
+      // This if statement is for Firefox browser.
+      return;
+    }
     const myPublicIP = parsePublicIPFromCandidate(event.candidate.candidate);
     if (myPublicIP !== null) {
       channel.myPartialPublicIP = getPartialIP(myPublicIP);
@@ -869,6 +873,10 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
           await peerConnection.addIceCandidate(data);
           console.log('Got new remote ICE candidate');
 
+          if (data.candidate === '') {
+            // This if statement is for Firefox browser.
+            return;
+          }
           const peerPublicIP = parsePublicIPFromCandidate(data.candidate);
           if (peerPublicIP !== null) {
             channel.peerPartialPublicIP = getPartialIP(peerPublicIP);
