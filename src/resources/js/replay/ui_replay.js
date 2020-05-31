@@ -2,7 +2,7 @@ import {
   ticker,
   replayReader,
   setup,
-  adjustPlaybackSeeedFPS,
+  adjustPlaybackSpeedFPS,
   adjustPlaybackSpeedTimes,
   playBGMProperlyAfterScrubbbing,
   stopBGM,
@@ -144,15 +144,15 @@ export function setUpUI() {
 
   speedBtn1FPS.addEventListener('click', (e) => {
     processSelected(e);
-    adjustPlaybackSeeedFPS(1);
+    adjustPlaybackSpeedFPS(1);
   });
   speedBtn2FPS.addEventListener('click', (e) => {
     processSelected(e);
-    adjustPlaybackSeeedFPS(2);
+    adjustPlaybackSpeedFPS(2);
   });
   speedBtn5FPS.addEventListener('click', (e) => {
     processSelected(e);
-    adjustPlaybackSeeedFPS(5);
+    adjustPlaybackSpeedFPS(5);
   });
   speedBtnHalfTimes.addEventListener('click', (e) => {
     processSelected(e);
