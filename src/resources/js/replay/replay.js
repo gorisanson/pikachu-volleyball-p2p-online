@@ -73,13 +73,16 @@ const fakeAudio = {
 
 /** @typedef {{speed: string, winningScore: number}} Options options communicated with the peer */
 
+/**
+ * Classs representing replay saver
+ */
 class ReplaySaver {
   constructor() {
     this.frameCounter = 0;
     this.roomID = null; // used for set RNGs
     this.nicknames = ['', '']; // [0]: room creator's nickname, [1]: room joiner's nickname
     this.partialPublicIPs = ['*.*.*.*', '*.*.*.*']; // [0]: room creator's partial public IP address, [1]: room joiner's partial public IP address
-    this.inputs = []; // [[xDirection, yDirection, powerHit], [xDirection, yDirection, powerHit]][], left side is for player 1.
+    this.inputs = []; // [player1Input5bitNumber, player2Input5bitNumber][]
     this.options = []; // [frameCounter, options][];
     this.chats = []; // [frameCounter, playerIndex (1 or 2), chatMessage][]
   }
@@ -145,6 +148,9 @@ class ReplaySaver {
     this.chats.push([this.frameCounter, whichPlayerSide, chatMessage]);
   }
 
+  /**
+   * Save as a file
+   */
   saveAsFile() {
     const pack = {
       roomID: this.roomID,
@@ -157,6 +163,7 @@ class ReplaySaver {
     const blob = new Blob([JSON.stringify(pack)], {
       type: 'text/plain;charset=utf-8',
     });
+    // TODO: properly name the file
     saveAs(blob, 'replay.txt', { autoBom: true });
   }
 }
