@@ -22,7 +22,7 @@ import {
   sendCancelQuickMatchMessageToServer,
 } from './quick_match/quick_match.js';
 import { enableChat } from './chat_display.js';
-import { replaySaver } from './replay/replay.js';
+import { replaySaver } from './replay/replay_saver.js';
 import { ASSETS_PATH } from './offline_version_js/assets_path.js';
 import '../style.css';
 

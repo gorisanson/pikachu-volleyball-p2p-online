@@ -55,7 +55,7 @@ import {
   sendQuickMatchSuccessMessageToServer,
   sendWithFriendSuccessMessageToServer,
 } from '../quick_match/quick_match.js';
-import { replaySaver } from '../replay/replay.js';
+import { replaySaver } from '../replay/replay_saver.js';
 
 /** @typedef {{speed: string, winningScore: number}} Options */
 

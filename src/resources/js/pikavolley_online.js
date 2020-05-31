@@ -5,7 +5,7 @@ import { SYNC_DIVISOR, channel } from './data_channel/data_channel';
 import { mod } from './mod.js';
 import { askOneMoreGame } from './ui_online.js';
 import { displayPartialIPFor, displayNicknameFor } from './nickname_display.js';
-import { replaySaver } from './replay/replay.js';
+import { replaySaver } from './replay/replay_saver.js';
 import { PikaUserInput } from './offline_version_js/physics.js';
 
 /** @typedef GameState @type {function():void} */
