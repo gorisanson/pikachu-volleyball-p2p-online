@@ -1,6 +1,6 @@
 import {
   ticker,
-  replayReader,
+  replayPlayer,
   setup,
   adjustPlaybackSpeedFPS,
   adjustPlaybackSpeedTimes,
@@ -9,7 +9,7 @@ import {
   resumeBGM,
   pauseBGM,
   seek,
-} from './replay.js';
+} from './replay_player.js';
 import '../../style.css';
 
 let pausedByBtn = false;
@@ -65,7 +65,7 @@ export function setUpUI() {
     handleFiles(files);
   }
   function handleFiles(files) {
-    replayReader.readFile(files[0]);
+    replayPlayer.readFile(files[0]);
   }
 
   scrubberRangeInput.addEventListener('touchstart', () => {

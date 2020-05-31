@@ -24,7 +24,7 @@ let pack = null;
 let playBackSpeedTimes = 1;
 let playBackSpeedFPS = null;
 
-class ReplayReader {
+class ReplayPlayer {
   readFile(filename) {
     const TEXTURES = ASSETS_PATH.TEXTURES;
     TEXTURES.WITH_COMPUTER = TEXTURES.WITH_FRIEND;
@@ -95,7 +95,7 @@ class ReplayReader {
   }
 }
 
-export const replayReader = new ReplayReader();
+export const replayPlayer = new ReplayPlayer();
 
 export function setup(startFrameNumber) {
   ticker.stop();
