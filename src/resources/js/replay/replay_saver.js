@@ -110,16 +110,18 @@ class ReplaySaver {
     const blob = new Blob([JSON.stringify(packWithComment)], {
       type: 'text/plain;charset=utf-8',
     });
-    // TODO: properly name the file
     const d = new Date();
     // The code removing illegal characters in Windows by replace method is from:
     // https://stackoverflow.com/a/42210346/8581025
     const filename = `${d.getFullYear()}${('0' + d.getMonth()).slice(-2)}${(
       '0' + d.getDate()
-    ).slice(-2)}_${this.nicknames[0]}_vs_${this.nicknames[1]}.txt`.replace(
-      /[/\\?%*:|"<>]/g,
-      '_'
-    );
+    ).slice(-2)}_${this.nicknames[0]}_${this.partialPublicIPs[0].replace(
+      '.*.*',
+      ''
+    )}_vs_${this.nicknames[1]}_${this.partialPublicIPs[1].replace(
+      '.*.*',
+      ''
+    )}.txt`.replace(/[/\\?%*:|"<>]/g, '_');
     saveAs(blob, filename, { autoBom: true });
   }
 }
