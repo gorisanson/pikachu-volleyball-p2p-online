@@ -95,7 +95,16 @@ class ReplaySaver {
       type: 'text/plain;charset=utf-8',
     });
     // TODO: properly name the file
-    saveAs(blob, 'replay.txt', { autoBom: true });
+    const d = new Date();
+    // The code removing illegal characters in Windows by replace method is from:
+    // https://stackoverflow.com/a/42210346/8581025
+    const filename = `${d.getFullYear()}${('0' + d.getMonth()).slice(-2)}${(
+      '0' + d.getDate()
+    ).slice(-2)}_${this.nicknames[0]}_vs_${this.nicknames[1]}.txt`.replace(
+      /[/\\?%*:|"<>]/g,
+      '_'
+    );
+    saveAs(blob, filename, { autoBom: true });
   }
 }
 
