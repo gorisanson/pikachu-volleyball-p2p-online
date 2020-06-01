@@ -1,4 +1,6 @@
 import { saveAs } from 'file-saver';
+import { serialize } from './serialize.js';
+import { getHashCode } from './hash_code.js';
 import { convertUserInputTo5bitNumber } from '../input_conversion.js';
 
 /** @typedef {import('../offline_version_js/physics.js').PikaUserInput} PikaUserInput */
@@ -90,8 +92,22 @@ class ReplaySaver {
       chats: this.chats,
       options: this.options,
       inputs: this.inputs,
+      hash: 0,
     };
-    const blob = new Blob([JSON.stringify(pack)], {
+
+    // This is for making it annoying to modify/fabricate the replay file.
+    // I'm worried about fabricating the replay file and distributing it even if it is unlikely.
+    // I doubt about the effect of inserting a hash code. But It would be better than doing nothing.
+    const hash = getHashCode(serialize(pack));
+    pack.hash = hash;
+
+    const packWithComment = {
+      _comment:
+        'You can play this replay file at: https://gorisanson.github.io/pikachu-volleyball-p2p-online/en/replay/',
+      pack: pack,
+    };
+
+    const blob = new Blob([JSON.stringify(packWithComment)], {
       type: 'text/plain;charset=utf-8',
     });
     // TODO: properly name the file

@@ -12,6 +12,8 @@ import {
   enableReplayScrubberAndBtns,
 } from './ui_replay.js';
 import '../../style.css';
+import { serialize } from './serialize.js';
+import { getHashCode } from './hash_code.js';
 
 class ReplayPlayer {
   constructor() {
@@ -70,7 +72,14 @@ class ReplayPlayer {
     const reader = new FileReader();
     reader.onload = (event) => {
       // @ts-ignore
-      const pack = JSON.parse(event.target.result);
+      const packWithComment = JSON.parse(event.target.result);
+      const pack = packWithComment.pack;
+      const hash = pack.hash;
+      pack.hash = 0;
+      if (hash !== getHashCode(serialize(pack))) {
+        console.log('The file content is not matched with the hash code');
+        return;
+      }
       showTotalTimeDuration(getTotalTimeDuration(pack));
       this.loader.load(() => {
         this.pikaVolley = new PikachuVolleyballReplay(
