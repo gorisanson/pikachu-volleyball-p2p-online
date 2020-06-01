@@ -11,43 +11,43 @@ import {
   showTimeCurrent,
   enableReplayScrubberAndBtns,
 } from './ui_replay.js';
-
 import '../../style.css';
 
-export const ticker = new PIXI.Ticker();
-ticker.minFPS = 1;
-let renderer = null;
-let stage = null;
-let loader = null;
-let pikaVolley = null;
-let pack = null;
-let playBackSpeedTimes = 1;
-let playBackSpeedFPS = null;
-
 class ReplayPlayer {
-  readFile(filename) {
-    const TEXTURES = ASSETS_PATH.TEXTURES;
-    TEXTURES.WITH_COMPUTER = TEXTURES.WITH_FRIEND;
-
-    const settings = PIXI.settings;
-    settings.RESOLUTION = window.devicePixelRatio;
-    settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
-    settings.ROUND_PIXELS = true;
-
-    renderer = PIXI.autoDetectRenderer({
+  constructor() {
+    this.ticker = new PIXI.Ticker();
+    this.ticker.minFPS = 1;
+    this.renderer = PIXI.autoDetectRenderer({
       width: 432,
       height: 304,
       antialias: false,
       backgroundColor: 0x000000,
       transparent: false,
     });
-    stage = new PIXI.Container();
-    loader = new PIXI.Loader();
+    this.stage = new PIXI.Container();
+    this.loader = new PIXI.Loader();
+    this.pikaVolley = null;
+    this.playBackSpeedTimes = 1;
+    this.playBackSpeedFPS = null;
+  }
 
-    document.querySelector('#game-canvas-container').appendChild(renderer.view);
+  readFile(filename) {
+    // Adjust PIXI settings;
+    const settings = PIXI.settings;
+    settings.RESOLUTION = window.devicePixelRatio;
+    settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+    settings.ROUND_PIXELS = true;
 
-    renderer.render(stage); // To make the initial canvas painting stable in the Firefox browser.
-    ticker.add(() => {
+    // To show two "with friend" on the menu
+    const TEXTURES = ASSETS_PATH.TEXTURES;
+    TEXTURES.WITH_COMPUTER = TEXTURES.WITH_FRIEND;
+
+    document
+      .querySelector('#game-canvas-container')
+      .appendChild(this.renderer.view);
+
+    this.renderer.render(this.stage); // To make the initial canvas painting stable in the Firefox browser.
+    this.ticker.add(() => {
       // Redering and gameLoop order is the opposite of
       // the offline web version (refer: ./offline_version_js/main.js).
       // It's for the smooth rendering for the online version
@@ -56,25 +56,26 @@ class ReplayPlayer {
       // it is recovered by the callback gameLoop which is called after peer input received.)
       // Now the rendering is delayed 40ms (when pikaVolley.normalFPS == 25)
       // behind gameLoop.
-      renderer.render(stage);
-      showTimeCurrent(pikaVolley.timeCurrent);
-      pikaVolley.gameLoop();
+      this.renderer.render(this.stage);
+      showTimeCurrent(this.pikaVolley.timeCurrent);
+      this.pikaVolley.gameLoop();
     });
 
-    loader.add(ASSETS_PATH.SPRITE_SHEET);
+    this.loader.add(ASSETS_PATH.SPRITE_SHEET);
     for (const prop in ASSETS_PATH.SOUNDS) {
-      loader.add(ASSETS_PATH.SOUNDS[prop]);
+      this.loader.add(ASSETS_PATH.SOUNDS[prop]);
     }
-    setUpLoaderProgresBar();
+    setUpLoaderProgresBar(this.loader);
+
     const reader = new FileReader();
-    reader.onload = function (event) {
+    reader.onload = (event) => {
       // @ts-ignore
-      pack = JSON.parse(event.target.result);
+      const pack = JSON.parse(event.target.result);
       showTotalTimeDuration(getTotalTimeDuration(pack));
-      loader.load(() => {
-        pikaVolley = new PikachuVolleyballReplay(
-          stage,
-          loader.resources,
+      this.loader.load(() => {
+        this.pikaVolley = new PikachuVolleyballReplay(
+          this.stage,
+          this.loader.resources,
           pack.roomID,
           pack.nicknames,
           pack.partialPublicIPs,
@@ -83,105 +84,112 @@ class ReplayPlayer {
           pack.chats
         );
         // @ts-ignore
-        setGetSpeechBubbleNeeded(pikaVolley);
+        setGetSpeechBubbleNeeded(this.pikaVolley);
         setMaxForScrubberRange(pack.inputs.length);
-        setup(0);
-        ticker.start();
+        this.seekFrame(0);
+        this.ticker.start();
         adjustPlayPauseBtnIcon();
         enableReplayScrubberAndBtns();
       });
     };
     reader.readAsText(filename);
   }
+
+  /**
+   * Seek the specific frame
+   * @param {number} frameNumber
+   */
+  seekFrame(frameNumber) {
+    this.ticker.stop();
+
+    // Cleanup previous pikaVolley
+    hideChat();
+    for (const prop in this.pikaVolley.audio.sounds) {
+      this.pikaVolley.audio.sounds[prop].stop();
+    }
+    this.pikaVolley.initilizeForReplay();
+
+    if (frameNumber > 0) {
+      for (let i = 0; i < frameNumber; i++) {
+        this.pikaVolley.gameLoopSilent();
+      }
+      this.renderer.render(this.stage);
+    }
+    showTimeCurrent(this.pikaVolley.timeCurrent);
+  }
+
+  /**
+   * Seek forward/backward the relative time (seconds).
+   * @param {number} seconds plus value for seeking forward, minus value for seeking backward
+   */
+  seekRelativeTime(seconds) {
+    const seekFrameCounter = Math.max(
+      0,
+      this.pikaVolley.replayFrameCounter + seconds * this.pikaVolley.normalFPS
+    );
+    this.seekFrame(seekFrameCounter);
+  }
+
+  /**
+   * Adjust playback speed by times
+   * @param {number} times
+   */
+  adjustPlaybackSpeedTimes(times) {
+    this.playBackSpeedFPS = null;
+    this.playBackSpeedTimes = times;
+    this.ticker.maxFPS = this.pikaVolley.normalFPS * this.playBackSpeedTimes;
+  }
+
+  /**
+   * Adjust playback speed by fps
+   * @param {number} fps
+   */
+  adjustPlaybackSpeedFPS(fps) {
+    this.playBackSpeedTimes = null;
+    this.playBackSpeedFPS = fps;
+    this.ticker.maxFPS = this.playBackSpeedFPS;
+  }
+
+  stopBGM() {
+    this.pikaVolley.audio.sounds.bgm.center.stop();
+  }
+
+  pauseBGM() {
+    this.pikaVolley.audio.sounds.bgm.center.pause();
+  }
+
+  resumeBGM() {
+    this.pikaVolley.audio.sounds.bgm.center.resume();
+  }
+
+  playBGMProperlyAfterScrubbbing() {
+    if (this.pikaVolley.fakeAudio.sounds.bgm.playing) {
+      this.pikaVolley.audio.sounds.bgm.center.play({
+        start: this.pikaVolley.timeBGM,
+      });
+    }
+  }
 }
 
 export const replayPlayer = new ReplayPlayer();
-
-export function setup(startFrameNumber) {
-  ticker.stop();
-
-  // Cleanup previous pikaVolley
-  hideChat();
-  for (const prop in pikaVolley.audio.sounds) {
-    pikaVolley.audio.sounds[prop].stop();
-  }
-  pikaVolley.initilizeForReplay();
-
-  if (startFrameNumber > 0) {
-    for (let i = 0; i < startFrameNumber; i++) {
-      pikaVolley.gameLoopSilent();
-    }
-    renderer.render(stage);
-  }
-  showTimeCurrent(pikaVolley.timeCurrent);
-}
-
-export function stopBGM() {
-  pikaVolley.audio.sounds.bgm.center.stop();
-}
-
-export function pauseBGM() {
-  pikaVolley.audio.sounds.bgm.center.pause();
-}
-
-export function resumeBGM() {
-  pikaVolley.audio.sounds.bgm.center.resume();
-}
-
-export function playBGMProperlyAfterScrubbbing() {
-  if (pikaVolley.fakeAudio.sounds.bgm.playing) {
-    pikaVolley.audio.sounds.bgm.center.play({ start: pikaVolley.timeBGM });
-  }
-}
-
-/**
- *
- * @param {number} seconds
- */
-export function seek(seconds) {
-  const seekFrameCounter = Math.max(
-    0,
-    pikaVolley.replayFrameCounter + seconds * pikaVolley.normalFPS
-  );
-  setup(seekFrameCounter);
-}
-
-/**
- *
- * @param {number} times
- */
-export function adjustPlaybackSpeedTimes(times) {
-  playBackSpeedFPS = null;
-  playBackSpeedTimes = times;
-  ticker.maxFPS = pikaVolley.normalFPS * playBackSpeedTimes;
-}
-
-/**
- *
- * @param {number} fps
- */
-export function adjustPlaybackSpeedFPS(fps) {
-  playBackSpeedTimes = null;
-  playBackSpeedFPS = fps;
-  ticker.maxFPS = playBackSpeedFPS;
-}
 
 /**
  * Set ticker.maxFPS according to PikachuVolleyball object's normalFPS properly
  * @param {number} normalFPS
  */
 export function setTickerMaxFPSAccordingToNormalFPS(normalFPS) {
-  if (playBackSpeedFPS) {
-    ticker.maxFPS = playBackSpeedFPS;
-  } else if (playBackSpeedTimes) {
-    ticker.maxFPS = normalFPS * playBackSpeedTimes;
+  if (replayPlayer.playBackSpeedFPS) {
+    replayPlayer.ticker.maxFPS = replayPlayer.playBackSpeedFPS;
+  } else if (replayPlayer.playBackSpeedTimes) {
+    replayPlayer.ticker.maxFPS = normalFPS * replayPlayer.playBackSpeedTimes;
   }
 }
 
 /**
  * Set up the loader progress bar.
+ * @param {PIXI.Loader} loader
  */
-function setUpLoaderProgresBar() {
+function setUpLoaderProgresBar(loader) {
   const loadingBox = document.getElementById('loading-box');
   const progressBar = document.getElementById('progress-bar');
 
@@ -195,6 +203,10 @@ function setUpLoaderProgresBar() {
   });
 }
 
+/**
+ * Get total time duration for the pack
+ * @param {Object} pack
+ */
 function getTotalTimeDuration(pack) {
   const speedChangeRecord = [];
 

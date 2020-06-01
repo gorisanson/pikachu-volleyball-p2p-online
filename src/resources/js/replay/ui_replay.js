@@ -1,15 +1,4 @@
-import {
-  ticker,
-  replayPlayer,
-  setup,
-  adjustPlaybackSpeedFPS,
-  adjustPlaybackSpeedTimes,
-  playBGMProperlyAfterScrubbbing,
-  stopBGM,
-  resumeBGM,
-  pauseBGM,
-  seek,
-} from './replay_player.js';
+import { replayPlayer } from './replay_player.js';
 import '../../style.css';
 
 let pausedByBtn = false;
@@ -69,102 +58,102 @@ export function setUpUI() {
   }
 
   scrubberRangeInput.addEventListener('touchstart', () => {
-    if (ticker.started) {
-      ticker.stop();
-      stopBGM();
+    if (replayPlayer.ticker.started) {
+      replayPlayer.ticker.stop();
+      replayPlayer.stopBGM();
     }
   });
   scrubberRangeInput.addEventListener('mousedown', () => {
-    if (ticker.started) {
-      ticker.stop();
-      stopBGM();
+    if (replayPlayer.ticker.started) {
+      replayPlayer.ticker.stop();
+      replayPlayer.stopBGM();
     }
   });
   scrubberRangeInput.addEventListener('touchend', () => {
-    if (!pausedByBtn && !ticker.started) {
-      ticker.start();
-      playBGMProperlyAfterScrubbbing();
+    if (!pausedByBtn && !replayPlayer.ticker.started) {
+      replayPlayer.ticker.start();
+      replayPlayer.playBGMProperlyAfterScrubbbing();
     }
   });
   scrubberRangeInput.addEventListener('mouseup', () => {
-    if (!pausedByBtn && !ticker.started) {
-      ticker.start();
-      playBGMProperlyAfterScrubbbing();
+    if (!pausedByBtn && !replayPlayer.ticker.started) {
+      replayPlayer.ticker.start();
+      replayPlayer.playBGMProperlyAfterScrubbbing();
     }
   });
   scrubberRangeInput.addEventListener('input', (e) => {
     // @ts-ignore
-    setup(Number(e.currentTarget.value));
+    replayPlayer.seekFrame(Number(e.currentTarget.value));
   });
 
   // @ts-ignore
   playPauseBtn.disabled = true;
   playPauseBtn.addEventListener('click', () => {
-    if (ticker.started) {
-      ticker.stop();
-      pauseBGM();
+    if (replayPlayer.ticker.started) {
+      replayPlayer.ticker.stop();
+      replayPlayer.pauseBGM();
       pausedByBtn = true;
       adjustPlayPauseBtnIcon();
     } else {
-      ticker.start();
-      resumeBGM();
+      replayPlayer.ticker.start();
+      replayPlayer.resumeBGM();
       pausedByBtn = false;
       adjustPlayPauseBtnIcon();
     }
   });
 
   seekBackward1Btn.addEventListener('click', () => {
-    seek(-1);
-    if (!pausedByBtn && !ticker.started) {
-      ticker.start();
-      playBGMProperlyAfterScrubbbing();
+    replayPlayer.seekRelativeTime(-1);
+    if (!pausedByBtn && !replayPlayer.ticker.started) {
+      replayPlayer.ticker.start();
+      replayPlayer.playBGMProperlyAfterScrubbbing();
     }
   });
   seekForward1Btn.addEventListener('click', () => {
-    seek(1);
-    if (!pausedByBtn && !ticker.started) {
-      ticker.start();
-      playBGMProperlyAfterScrubbbing();
+    replayPlayer.seekRelativeTime(1);
+    if (!pausedByBtn && !replayPlayer.ticker.started) {
+      replayPlayer.ticker.start();
+      replayPlayer.playBGMProperlyAfterScrubbbing();
     }
   });
   seekBackward3Btn.addEventListener('click', () => {
-    seek(-3);
-    if (!pausedByBtn && !ticker.started) {
-      ticker.start();
-      playBGMProperlyAfterScrubbbing();
+    replayPlayer.seekRelativeTime(-3);
+    if (!pausedByBtn && !replayPlayer.ticker.started) {
+      replayPlayer.ticker.start();
+      replayPlayer.playBGMProperlyAfterScrubbbing();
     }
   });
   seekForward3Btn.addEventListener('click', () => {
-    seek(3);
-    if (!pausedByBtn && !ticker.started) {
-      ticker.start();
-      playBGMProperlyAfterScrubbbing();
+    replayPlayer.seekRelativeTime(3);
+    if (!pausedByBtn && !replayPlayer.ticker.started) {
+      replayPlayer.ticker.start();
+      replayPlayer.playBGMProperlyAfterScrubbbing();
     }
   });
 
   speedBtn1FPS.addEventListener('click', (e) => {
     processSelected(e);
-    adjustPlaybackSpeedFPS(1);
+    replayPlayer.adjustPlaybackSpeedFPS(1);
   });
   speedBtn2FPS.addEventListener('click', (e) => {
     processSelected(e);
-    adjustPlaybackSpeedFPS(2);
+    replayPlayer.adjustPlaybackSpeedFPS(2);
   });
   speedBtn5FPS.addEventListener('click', (e) => {
     processSelected(e);
-    adjustPlaybackSpeedFPS(5);
+    replayPlayer.adjustPlaybackSpeedFPS(5);
   });
   speedBtnHalfTimes.addEventListener('click', (e) => {
     processSelected(e);
-    adjustPlaybackSpeedTimes(0.5);
+    replayPlayer.adjustPlaybackSpeedTimes(0.5);
   });
   speedBtn1Times.addEventListener('click', (e) => {
     processSelected(e);
-    adjustPlaybackSpeedTimes(1);
+    replayPlayer.adjustPlaybackSpeedTimes(1);
   });
   speedBtn2Times.addEventListener('click', (e) => {
     processSelected(e);
-    adjustPlaybackSpeedTimes(2);
+    replayPlayer.adjustPlaybackSpeedTimes(2);
   });
   function processSelected(e) {
     unselectSpeedBtns();
@@ -197,7 +186,7 @@ export function setUpUI() {
 
 export function adjustPlayPauseBtnIcon() {
   const playPauseBtn = document.getElementById('play-pause-btn');
-  if (ticker.started) {
+  if (replayPlayer.ticker.started) {
     playPauseBtn.textContent = document.getElementById(
       'pause-mark'
     ).textContent;
