@@ -88,6 +88,11 @@ export class PikachuVolleyballReplay extends PikachuVolleyball {
    * This is mainly for reinitilization for reusing the PikachuVolleyballReplay object
    */
   initilizeForReplay() {
+    // Stop if sounds are playing
+    for (const prop in this.audio.sounds) {
+      this.audio.sounds[prop].stop();
+    }
+
     this.timeCurrent = 0; // unit: second
     this.timeBGM = 0;
     this.replayFrameCounter = 0;

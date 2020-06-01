@@ -200,6 +200,13 @@ export function noticeEndOfReplay() {
   noticeBoxEndOfReplay.classList.remove('hidden');
 }
 
+export function hideNoticeEndOfReplay() {
+  const noticeBoxEndOfReplay = document.getElementById('notice-end-of-replay');
+  if (!noticeBoxEndOfReplay.classList.contains('hidden')) {
+    noticeBoxEndOfReplay.classList.add('hidden');
+  }
+}
+
 export function setMaxForScrubberRange(max) {
   // @ts-ignore
   scrubberRangeInput.max = max;

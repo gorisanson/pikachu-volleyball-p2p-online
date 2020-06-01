@@ -10,6 +10,7 @@ import {
   showTotalTimeDuration,
   showTimeCurrent,
   enableReplayScrubberAndBtns,
+  hideNoticeEndOfReplay,
 } from './ui_replay.js';
 import '../../style.css';
 import { serialize } from './serialize.js';
@@ -109,13 +110,11 @@ class ReplayPlayer {
    * @param {number} frameNumber
    */
   seekFrame(frameNumber) {
+    hideChat();
+    hideNoticeEndOfReplay();
     this.ticker.stop();
 
     // Cleanup previous pikaVolley
-    hideChat();
-    for (const prop in this.pikaVolley.audio.sounds) {
-      this.pikaVolley.audio.sounds[prop].stop();
-    }
     this.pikaVolley.initilizeForReplay();
 
     if (frameNumber > 0) {
