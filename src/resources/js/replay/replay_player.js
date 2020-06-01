@@ -11,6 +11,7 @@ import {
   showTimeCurrent,
   enableReplayScrubberAndBtns,
   hideNoticeEndOfReplay,
+  noticeFileOpenError,
 } from './ui_replay.js';
 import '../../style.css';
 import { serialize } from './serialize.js';
@@ -72,13 +73,20 @@ class ReplayPlayer {
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      // @ts-ignore
-      const packWithComment = JSON.parse(event.target.result);
-      const pack = packWithComment.pack;
-      const hash = pack.hash;
-      pack.hash = 0;
-      if (hash !== getHashCode(serialize(pack))) {
-        console.log('The file content is not matched with the hash code');
+      let packWithComment;
+      let pack;
+      try {
+        // @ts-ignore
+        packWithComment = JSON.parse(event.target.result);
+        pack = packWithComment.pack;
+        const hash = pack.hash;
+        pack.hash = 0;
+        if (hash !== getHashCode(serialize(pack))) {
+          throw 'Error: The file content is not matching the hash code';
+        }
+      } catch (err) {
+        console.log(err);
+        noticeFileOpenError();
         return;
       }
       showTotalTimeDuration(getTotalTimeDuration(pack));
@@ -102,7 +110,13 @@ class ReplayPlayer {
         enableReplayScrubberAndBtns();
       });
     };
-    reader.readAsText(filename);
+    try {
+      reader.readAsText(filename);
+    } catch (err) {
+      console.log(err);
+      noticeFileOpenError();
+      return;
+    }
   }
 
   /**

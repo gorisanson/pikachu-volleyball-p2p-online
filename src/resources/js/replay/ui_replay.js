@@ -182,6 +182,13 @@ export function setUpUI() {
   noticeBoxEndOfReplayOKBtn.addEventListener('click', () => {
     location.reload();
   });
+
+  const noticeBoxFileErrorOKBtn = document.getElementById(
+    'notice-file-open-error-ok-btn'
+  );
+  noticeBoxFileErrorOKBtn.addEventListener('click', () => {
+    location.reload();
+  });
 }
 
 export function adjustPlayPauseBtnIcon() {
@@ -205,6 +212,13 @@ export function hideNoticeEndOfReplay() {
   if (!noticeBoxEndOfReplay.classList.contains('hidden')) {
     noticeBoxEndOfReplay.classList.add('hidden');
   }
+}
+
+export function noticeFileOpenError() {
+  const noticeBoxFileOpenError = document.getElementById(
+    'notice-file-open-error'
+  );
+  noticeBoxFileOpenError.classList.remove('hidden');
 }
 
 export function setMaxForScrubberRange(max) {
