@@ -216,7 +216,7 @@ export class PikachuVolleyballReplay extends PikachuVolleyball {
    * This function should be called at regular intervals ( interval = (1 / FPS) second )
    */
   gameLoop() {
-    if (!this.inputs[this.replayFrameCounter]) {
+    if (this.replayFrameCounter >= this.inputs.length) {
       noticeEndOfReplay();
       return;
     }
@@ -225,9 +225,11 @@ export class PikachuVolleyballReplay extends PikachuVolleyball {
       moveScrubberTo(this.replayFrameCounter);
     }
 
-    const userInputNumbers = this.inputs[this.replayFrameCounter];
-    const player1Input = convert5bitNumberToUserInput(userInputNumbers[0]);
-    const player2Input = convert5bitNumberToUserInput(userInputNumbers[1]);
+    const usersInputNumber = this.inputs[this.replayFrameCounter];
+    const player1Input = convert5bitNumberToUserInput(usersInputNumber >>> 5);
+    const player2Input = convert5bitNumberToUserInput(
+      usersInputNumber % (1 << 5)
+    );
     this.player1Keyboard.xDirection = player1Input.xDirection;
     this.player1Keyboard.yDirection = player1Input.yDirection;
     this.player1Keyboard.powerHit = player1Input.powerHit;

@@ -15,7 +15,7 @@ class ReplaySaver {
     this.roomID = null; // used for set RNGs
     this.nicknames = ['', '']; // [0]: room creator's nickname, [1]: room joiner's nickname
     this.partialPublicIPs = ['*.*.*.*', '*.*.*.*']; // [0]: room creator's partial public IP address, [1]: room joiner's partial public IP address
-    this.inputs = []; // [player1Input5bitNumber, player2Input5bitNumber][]
+    this.inputs = []; // number[], the number in the array represents player1, player2 input
     this.options = []; // [frameCounter, options][];
     this.chats = []; // [frameCounter, playerIndex (1 or 2), chatMessage][]
   }
@@ -57,10 +57,10 @@ class ReplaySaver {
    * @param {PikaUserInput} player2Input
    */
   recordInputs(player1Input, player2Input) {
-    this.inputs.push([
-      convertUserInputTo5bitNumber(player1Input),
-      convertUserInputTo5bitNumber(player2Input),
-    ]);
+    const usersInputNumber =
+      (convertUserInputTo5bitNumber(player1Input) << 5) +
+      convertUserInputTo5bitNumber(player2Input);
+    this.inputs.push(usersInputNumber);
     this.frameCounter++;
   }
 
