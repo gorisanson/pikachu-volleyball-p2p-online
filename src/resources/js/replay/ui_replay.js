@@ -222,7 +222,7 @@ export function noticeFileOpenError() {
 }
 
 export function getCommentText() {
-  return document.getElementById('you-can-play-replay-at').textContent;
+  return document.getElementById('replay-viewer-at').textContent;
 }
 
 export function setMaxForScrubberRange(max) {
