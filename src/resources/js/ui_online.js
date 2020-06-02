@@ -33,8 +33,6 @@ import '../style.css';
 /** @type {number} maximum nickname length */
 export const MAX_NICKNAME_LENGTH = 8;
 
-const pikachuSound = new Audio(ASSETS_PATH.SOUNDS.PIKACHU);
-
 /**
  * This is for to enable changing game options event before loading the game assets.
  * @type {{bgm: string, sfx: string, speed: string, winningScore: number}}
@@ -872,6 +870,7 @@ export function displayPartialIPFor(partialIP, isForPlayer2) {
 }
 
 export function notifyBySound() {
+  const pikachuSound = new Audio(ASSETS_PATH.SOUNDS.PIKACHU);
   pikachuSound.play();
 }
 
