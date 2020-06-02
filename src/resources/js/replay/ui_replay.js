@@ -221,6 +221,10 @@ export function noticeFileOpenError() {
   noticeBoxFileOpenError.classList.remove('hidden');
 }
 
+export function getCommentText() {
+  return document.getElementById('you-can-play-replay-at').textContent;
+}
+
 export function setMaxForScrubberRange(max) {
   // @ts-ignore
   scrubberRangeInput.max = max;

@@ -2,6 +2,7 @@ import { saveAs } from 'file-saver';
 import { serialize } from '../utils/serialize.js';
 import { getHashCode } from '../utils/hash_code.js';
 import { convertUserInputTo5bitNumber } from '../utils/input_conversion.js';
+import { getCommentText } from './ui_replay.js';
 
 /** @typedef {import('../offline_version_js/physics.js').PikaUserInput} PikaUserInput */
 /** @typedef {{speed: string, winningScore: number}} Options options communicated with the peer */
@@ -103,8 +104,7 @@ class ReplaySaver {
     pack.hash = hash;
 
     const packWithComment = {
-      _comment:
-        'You can play this replay file at: https://gorisanson.github.io/pikachu-volleyball-p2p-online/en/replay/',
+      _comment: getCommentText(),
       pack: pack,
     };
 
