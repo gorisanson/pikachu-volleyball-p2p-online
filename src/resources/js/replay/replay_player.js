@@ -35,7 +35,7 @@ class ReplayPlayer {
     this.playBackSpeedFPS = null;
   }
 
-  readFile(filename) {
+  readFile(file) {
     // Adjust PIXI settings;
     const settings = PIXI.settings;
     settings.RESOLUTION = window.devicePixelRatio;
@@ -111,7 +111,7 @@ class ReplayPlayer {
       });
     };
     try {
-      reader.readAsText(filename);
+      reader.readAsText(file);
     } catch (err) {
       console.log(err);
       noticeFileOpenError();
