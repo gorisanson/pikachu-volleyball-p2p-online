@@ -75,8 +75,18 @@ module.exports = {
       },
     }),
     new HtmlWebpackPlugin({
-      template: 'src/replay/index.html',
-      filename: 'replay/index.html',
+      template: 'src/en/replay/index.html',
+      filename: 'en/replay/index.html',
+      chunks: ['runtime', 'main_replay'],
+      chunksSortMode: 'manual',
+      minify: {
+        collapseWhitespace: true,
+        removeComments: true,
+      },
+    }),
+    new HtmlWebpackPlugin({
+      template: 'src/ko/replay/index.html',
+      filename: 'ko/replay/index.html',
       chunks: ['runtime', 'ko', 'main_replay'],
       chunksSortMode: 'manual',
       minify: {
