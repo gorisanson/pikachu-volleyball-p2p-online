@@ -1,4 +1,4 @@
-import { PikaUserInput } from './offline_version_js/physics.js';
+import { PikaUserInput } from '../offline_version_js/physics.js';
 
 /**
  * Convert PikaUserInput object to a 5-bit number.

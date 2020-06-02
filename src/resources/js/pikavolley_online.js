@@ -2,7 +2,7 @@
 import { PikachuVolleyball } from './offline_version_js/pikavolley.js';
 import { bufferLength, myKeyboard, OnlineKeyboard } from './keyboard_online.js';
 import { SYNC_DIVISOR, channel } from './data_channel/data_channel';
-import { mod } from './mod.js';
+import { mod } from './utils/mod.js';
 import { askOneMoreGame } from './ui_online.js';
 import { displayPartialIPFor, displayNicknameFor } from './nickname_display.js';
 import { replaySaver } from './replay/replay_saver.js';

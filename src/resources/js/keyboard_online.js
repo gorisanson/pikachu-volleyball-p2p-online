@@ -11,7 +11,7 @@ import {
   SYNC_DIVISOR,
   sendInputQueueToPeer,
 } from './data_channel/data_channel.js';
-import { mod, isInModRange } from './mod.js';
+import { mod, isInModRange } from './utils/mod.js';
 
 /** @constant @type {number} communicated input queue buffer length */
 export const bufferLength = 8;

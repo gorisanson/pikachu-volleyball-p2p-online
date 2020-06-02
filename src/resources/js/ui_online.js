@@ -13,7 +13,7 @@ import {
   sendOptionsChangeMessageToPeer,
   sendOptionsChangeAgreeMessageToPeer,
 } from './data_channel/data_channel.js';
-import { generatePushID } from './data_channel/generate_pushid.js';
+import { generatePushID } from './utils/generate_pushid.js';
 import { myKeyboard } from './keyboard_online.js';
 import { testNetwork } from './data_channel/network_test.js';
 import {

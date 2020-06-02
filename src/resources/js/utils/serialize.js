@@ -1,6 +1,6 @@
 // Copied from: https://github.com/fraunhoferfokus/JSum/blob/master/README.md
 // And just add the "export" keyword on the function definition
-// Liscence is below the code
+// The license is below the code.
 
 /**
  * Stringifies a JSON object (not any randon JS object).

@@ -8,7 +8,7 @@ import {
 } from '../nickname_display.js';
 import { Cloud, Wave } from '../offline_version_js/cloud_and_wave.js';
 import { PikaPhysics } from '../offline_version_js/physics.js';
-import { convert5bitNumberToUserInput } from '../input_conversion.js';
+import { convert5bitNumberToUserInput } from '../utils/input_conversion.js';
 import { noticeEndOfReplay, moveScrubberTo } from './ui_replay.js';
 import { setTickerMaxFPSAccordingToNormalFPS } from './replay_player.js';
 

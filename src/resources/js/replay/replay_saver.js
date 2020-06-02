@@ -1,7 +1,7 @@
 import { saveAs } from 'file-saver';
-import { serialize } from './serialize.js';
-import { getHashCode } from './hash_code.js';
-import { convertUserInputTo5bitNumber } from '../input_conversion.js';
+import { serialize } from '../utils/serialize.js';
+import { getHashCode } from '../utils/hash_code.js';
+import { convertUserInputTo5bitNumber } from '../utils/input_conversion.js';
 
 /** @typedef {import('../offline_version_js/physics.js').PikaUserInput} PikaUserInput */
 /** @typedef {{speed: string, winningScore: number}} Options options communicated with the peer */

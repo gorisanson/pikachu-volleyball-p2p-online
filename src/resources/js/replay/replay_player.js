@@ -14,8 +14,8 @@ import {
   noticeFileOpenError,
 } from './ui_replay.js';
 import '../../style.css';
-import { serialize } from './serialize.js';
-import { getHashCode } from './hash_code.js';
+import { serialize } from '../utils/serialize.js';
+import { getHashCode } from '../utils/hash_code.js';
 
 class ReplayPlayer {
   constructor() {

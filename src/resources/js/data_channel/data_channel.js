@@ -13,7 +13,7 @@ import 'firebase/firestore';
 import { firebaseConfig } from './firebase_config.js';
 import seedrandom from 'seedrandom';
 import { setCustomRng } from '../offline_version_js/rand.js';
-import { mod, isInModRange } from '../mod.js';
+import { mod, isInModRange } from '../utils/mod.js';
 import { bufferLength, PikaUserInputWithSync } from '../keyboard_online.js';
 import {
   noticeDisconnected,
@@ -50,7 +50,7 @@ import { parsePublicIPFromCandidate, getPartialIP } from './parse_candidate.js';
 import {
   convertUserInputTo5bitNumber,
   convert5bitNumberToUserInput,
-} from '../input_conversion.js';
+} from '../utils/input_conversion.js';
 import {
   sendQuickMatchSuccessMessageToServer,
   sendWithFriendSuccessMessageToServer,
