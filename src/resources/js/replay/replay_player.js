@@ -65,8 +65,10 @@ class ReplayPlayer {
       this.pikaVolley.gameLoop();
     });
 
+    ASSETS_PATH.SPRITE_SHEET = '../' + ASSETS_PATH.SPRITE_SHEET;
     this.loader.add(ASSETS_PATH.SPRITE_SHEET);
     for (const prop in ASSETS_PATH.SOUNDS) {
+      ASSETS_PATH.SOUNDS[prop] = '../' + ASSETS_PATH.SOUNDS[prop];
       this.loader.add(ASSETS_PATH.SOUNDS[prop]);
     }
     setUpLoaderProgresBar(this.loader);
