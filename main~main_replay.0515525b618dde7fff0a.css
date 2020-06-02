@@ -541,6 +541,66 @@ div.nicknames-container {
 .partial-ip {
   font-size: calc(0.8 * var(--font-size));
 }
+/* CSS for replay is below */
+#dropbox {
+  border-style: solid;
+  border-color: black;
+  border-width: 2px;
+}
+.btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+#scrubber-range-input {
+  width: var(--canvas-width);
+  height: var(--btn-height);
+}
+span.margin-left-right {
+  margin-left: calc(var(--font-size) / 1.5);
+  margin-right: calc(var(--font-size) / 1.5);
+}
+button.btn-for-replay {
+  height: var(--btn-height);
+  width: calc(var(--btn-width) / 2);
+  font-size: calc(var(--font-size) / 1.2);
+}
+button.btn-for-replay.selected {
+  background-color: rgb(50, 163, 255);
+  background-image: none;
+  color: white;
+  font-weight: bold;
+}
+#play-pause-btn {
+  font-size: var(--font-size);
+}
+div.inline {
+  display: inline;
+}
+div.margin-top-little {
+  margin-top: calc(var(--font-size) / 1.5);
+}
+input[type='file'] {
+  display: none;
+}
+label.custom-file-upload {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid rgb(50, 50, 50);
+  margin: 0;
+  padding: 0;
+  background-color: rbg(210, 210, 210);
+  background-image: linear-gradient(rgb(250, 250, 250), rgb(230, 230, 230));
+  color: black;
+  border-radius: 5px;
+  width: var(--btn-width);
+  height: var(--btn-height);
+  cursor: pointer;
+}
+.disable-dbl-tap-zoom {
+  touch-action: manipulation;
+}
 
 
-/*# sourceMappingURL=main.405820f020e855d86789.css.map*/
+/*# sourceMappingURL=main~main_replay.0515525b618dde7fff0a.css.map*/
