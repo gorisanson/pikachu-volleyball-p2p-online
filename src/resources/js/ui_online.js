@@ -12,16 +12,17 @@ import {
   closeConnection,
   sendOptionsChangeMessageToPeer,
   sendOptionsChangeAgreeMessageToPeer,
-} from './data_channel.js';
-import { generatePushID } from './generate_pushid.js';
+} from './data_channel/data_channel.js';
+import { generatePushID } from './utils/generate_pushid.js';
 import { myKeyboard } from './keyboard_online.js';
-import { testNetwork } from './network_test.js';
+import { testNetwork } from './data_channel/network_test.js';
 import {
   MESSAGE_TO_CLIENT,
   startQuickMatch,
   sendCancelQuickMatchMessageToServer,
-} from './quick_match.js';
+} from './quick_match/quick_match.js';
 import { enableChat } from './chat_display.js';
+import { replaySaver } from './replay/replay_saver.js';
 import { ASSETS_PATH } from './offline_version_js/assets_path.js';
 import '../style.css';
 
@@ -31,8 +32,6 @@ import '../style.css';
 
 /** @type {number} maximum nickname length */
 export const MAX_NICKNAME_LENGTH = 8;
-
-const pikachuSound = new Audio(ASSETS_PATH.SOUNDS.PIKACHU);
 
 /**
  * This is for to enable changing game options event before loading the game assets.
@@ -418,6 +417,11 @@ export function setUpUI() {
   setUpOptionsBtn();
   setUpToShowDropdownsAndSubmenus();
   setUpOptionsAskAndNoticeBoxes();
+
+  const saveReplayBtn = document.getElementById('save-replay-btn');
+  saveReplayBtn.addEventListener('click', () => {
+    replaySaver.saveAsFile();
+  });
 }
 
 /**
@@ -429,6 +433,7 @@ export function setUpUIAfterLoadingGameAssets(pikaVolley, ticker) {
   pikaVolleyOnline = pikaVolley;
   applyOptions = (options) => {
     setSelectedOptionsBtn(options);
+    replaySaver.recordOptions(options);
     if (options.bgm) {
       switch (options.bgm) {
         case 'on':
@@ -865,6 +870,7 @@ export function displayPartialIPFor(partialIP, isForPlayer2) {
 }
 
 export function notifyBySound() {
+  const pikachuSound = new Audio(ASSETS_PATH.SOUNDS.PIKACHU);
   pikachuSound.play();
 }
 

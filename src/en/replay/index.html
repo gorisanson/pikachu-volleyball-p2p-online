@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Pikachu Volleyball P2P Online Replay Viewer</title>
+    <meta
+      name="description"
+      content="Pikachu Volleyball P2P Online Replay Viewer"
+    />
+    <meta name="author" content="Lee, Kyutae" />
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="../../resources/assets/images/IDI_PIKAICON-0.png"
+    />
+  </head>
+  <body>
+    <div id="flex-container">
+      <div id="game-canvas-container">
+        <div id="player1-chat-box" class="chat-box pre-wrap"></div>
+        <div id="player2-chat-box" class="chat-box pre-wrap"></div>
+        <div class="nicknames-container">
+          <div class="nickname-and-partial-ip left">
+            <span id="player1-nickname" class="nickname"></span>
+            <span id="player1-partial-ip" class="partial-ip"></span>
+          </div>
+          <div class="nickname-and-partial-ip right">
+            <span id="player2-nickname" class="nickname"></span>
+            <span id="player2-partial-ip" class="partial-ip"></span>
+          </div>
+        </div>
+        <div class="fade-in-box loading black hidden" id="loading-box">
+          <div>
+            <p>Loading the game assets...</p>
+            <div id="progress-bar-border">
+              <div id="progress-bar" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+        <div id="dropbox" class="fade-in-box">
+          <label class="custom-file-upload">
+            Open File
+            <input id="file-input" type="file" />
+          </label>
+          <p>
+            Use "Open File" button or drag a replay file here
+          </p>
+        </div>
+        <div class="fade-in-box notice hidden" id="notice-end-of-replay">
+          <p>
+            Replay is over
+          </p>
+          <button id="notice-end-of-replay-ok-btn" class="btn-in-box">
+            OK
+          </button>
+        </div>
+        <div class="fade-in-box notice hidden" id="notice-file-open-error">
+          <p>
+            The file can't be opened.<br />It is not a replay file, or it is
+            damaged.
+          </p>
+          <button id="notice-file-open-error-ok-btn" class="btn-in-box">
+            OK
+          </button>
+        </div>
+      </div>
+      <div>
+        <input
+          id="scrubber-range-input"
+          class="disable-dbl-tap-zoom"
+          type="range"
+          min="0"
+          max="100"
+          value="0"
+        />
+      </div>
+      <div>
+        <button id="play-pause-btn" class="btn-for-replay disable-dbl-tap-zoom">
+          &#x25b6;
+        </button>
+        <span class="margin-left-right"
+          ><span id="time-current">0:00</span> /
+          <span id="time-duration">0:00</span></span
+        >
+        <div class="inline">
+          <button
+            id="seek-backward-3"
+            class="btn-for-replay disable-dbl-tap-zoom"
+          >
+            &lt;&lt; 3
+          </button>
+          <button
+            id="seek-backward-1"
+            class="btn-for-replay disable-dbl-tap-zoom"
+          >
+            &lt;&lt; 1
+          </button>
+          <button
+            id="seek-forward-1"
+            class="btn-for-replay disable-dbl-tap-zoom"
+          >
+            1 &gt;&gt;
+          </button>
+          <button
+            id="seek-forward-3"
+            class="btn-for-replay disable-dbl-tap-zoom"
+          >
+            3 &gt;&gt;
+          </button>
+        </div>
+        <div class="margin-top-little">
+          <button
+            id="speed-btn-1-fps"
+            class="btn-for-replay disable-dbl-tap-zoom"
+          >
+            1 fps
+          </button>
+          <button
+            id="speed-btn-2-fps"
+            class="btn-for-replay disable-dbl-tap-zoom"
+          >
+            2 fps
+          </button>
+          <button
+            id="speed-btn-5-fps"
+            class="btn-for-replay disable-dbl-tap-zoom"
+          >
+            5 fps
+          </button>
+          <button
+            id="speed-btn-half-times"
+            class="btn-for-replay disable-dbl-tap-zoom"
+          >
+            &times;0.5
+          </button>
+          <button
+            id="speed-btn-1-times"
+            class="btn-for-replay disable-dbl-tap-zoom selected"
+          >
+            &times;1
+          </button>
+          <button
+            id="speed-btn-2-times"
+            class="btn-for-replay disable-dbl-tap-zoom"
+          >
+            &times;2
+          </button>
+        </div>
+      </div>
+      <div id="play-mark" class="hidden">&#x25b6;</div>
+      <div id="pause-mark" class="hidden">&#x275a;&#x275a;</div>
+    </div>
+  </body>
+</html>

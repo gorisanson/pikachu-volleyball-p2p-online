@@ -12,9 +12,9 @@ import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import { firebaseConfig } from './firebase_config.js';
 import seedrandom from 'seedrandom';
-import { setCustomRng } from './offline_version_js/rand.js';
-import { mod, isInModRange } from './mod.js';
-import { bufferLength, PikaUserInputWithSync } from './keyboard_online.js';
+import { setCustomRng } from '../offline_version_js/rand.js';
+import { mod, isInModRange } from '../utils/mod.js';
+import { bufferLength, PikaUserInputWithSync } from '../keyboard_online.js';
 import {
   noticeDisconnected,
   enableChatOpenBtnAndChatDisablingBtn,
@@ -33,22 +33,29 @@ import {
   disableCancelQuickMatchBtn,
   askOptionsChangeReceivedFromPeer,
   noticeAgreeMessageFromPeer,
-  displayNicknameFor,
-  displayPartialIPFor,
   notifyBySound,
   MAX_NICKNAME_LENGTH,
-} from './ui_online.js';
+} from '../ui_online.js';
+import {
+  displayNicknameFor,
+  displayPartialIPFor,
+} from '../nickname_display.js';
 import {
   setChatRngs,
   displayMyChatMessage,
   displayPeerChatMessage,
-} from './chat_display.js';
+} from '../chat_display.js';
 import { rtcConfiguration } from './rtc_configuration.js';
 import { parsePublicIPFromCandidate, getPartialIP } from './parse_candidate.js';
 import {
+  convertUserInputTo5bitNumber,
+  convert5bitNumberToUserInput,
+} from '../utils/input_conversion.js';
+import {
   sendQuickMatchSuccessMessageToServer,
   sendWithFriendSuccessMessageToServer,
-} from './quick_match.js';
+} from '../quick_match/quick_match.js';
+import { replaySaver } from '../replay/replay_saver.js';
 
 /** @typedef {{speed: string, winningScore: number}} Options */
 
@@ -322,10 +329,7 @@ export function closeConnection() {
  * Send my input queue to the peer.
  *
  * Input is transmitted by 5 bits (so fit in 1 byte = 8 bits).
- * input.xDirection: 2bits. 0: 00, 1: 01, -1: 11.
- * input.yDirection: 2bits. 0: 00, 1: 01, -1: 11.
- * input.powerHit: 1bits. 0: 0, 1: 1.
- * The bits order is input.powerHit, input.yDirection, input.xDirection.
+ * Refer: {@link convertUserInputTo5bitNumber}
  *
  * @param {PikaUserInputWithSync[]} inputQueue
  */
@@ -335,28 +339,7 @@ export function sendInputQueueToPeer(inputQueue) {
   dataView.setUint16(0, inputQueue[0].syncCounter, true);
   for (let i = 0; i < inputQueue.length; i++) {
     const input = inputQueue[i];
-    let byte = 0;
-    switch (input.xDirection) {
-      case 1:
-        byte += 1;
-        break;
-      case -1:
-        byte += (1 << 1) + 1;
-        break;
-    }
-    switch (input.yDirection) {
-      case 1:
-        byte += 1 << 2;
-        break;
-      case -1:
-        byte += (1 << 3) + (1 << 2);
-        break;
-    }
-    switch (input.powerHit) {
-      case 1:
-        byte += 1 << 4;
-        break;
-    }
+    const byte = convertUserInputTo5bitNumber(input);
     dataView.setUint8(2 + i, byte);
   }
   dataChannel.send(buffer);
@@ -389,36 +372,12 @@ function receiveInputQueueFromPeer(data) {
         ))
     ) {
       const byte = dataView.getUint8(2 + i);
-      let xDirection;
-      switch (byte % (1 << 2)) {
-        case 0:
-          xDirection = 0;
-          break;
-        case 1:
-          xDirection = 1;
-          break;
-        case 3:
-          xDirection = -1;
-          break;
-      }
-      let yDirection;
-      switch ((byte >>> 2) % (1 << 2)) {
-        case 0:
-          yDirection = 0;
-          break;
-        case 1:
-          yDirection = 1;
-          break;
-        case 3:
-          yDirection = -1;
-          break;
-      }
-      const powerHit = byte >>> 4;
+      const input = convert5bitNumberToUserInput(byte);
       const peerInputWithSync = new PikaUserInputWithSync(
         syncCounter,
-        xDirection,
-        yDirection,
-        powerHit
+        input.xDirection,
+        input.yDirection,
+        input.powerHit
       );
       channel.peerInputQueue.push(peerInputWithSync);
       channel.peerInputQueueSyncCounter++;
@@ -482,6 +441,22 @@ function receiveChatMessageFromPeer(chatMessage) {
         .trim()
         .slice(0, MAX_NICKNAME_LENGTH);
       displayNicknameFor(channel.peerNickname, channel.amICreatedRoom);
+      displayNicknameFor(channel.myNickname, !channel.amICreatedRoom);
+      displayPartialIPFor(channel.peerPartialPublicIP, channel.amICreatedRoom);
+      displayPartialIPFor(channel.myPartialPublicIP, !channel.amICreatedRoom);
+      if (channel.amICreatedRoom) {
+        replaySaver.recordNicknames(channel.myNickname, channel.peerNickname);
+        replaySaver.recordPartialPublicIPs(
+          channel.myPartialPublicIP,
+          channel.peerPartialPublicIP
+        );
+      } else {
+        replaySaver.recordNicknames(channel.peerNickname, channel.myNickname);
+        replaySaver.recordPartialPublicIPs(
+          channel.peerPartialPublicIP,
+          channel.myPartialPublicIP
+        );
+      }
     } else {
       displayPeerChatMessage(chatMessage.slice(0, -1));
     }
@@ -628,9 +603,6 @@ function receiveOptionsChangeAgreeMessageFromPeer(optionsChangeAgreeMessage) {
 function startGameAfterPingTest() {
   // Send my nick name to peer
   sendChatMessageToPeer(channel.myNickname);
-  displayNicknameFor(channel.myNickname, !channel.amICreatedRoom);
-  displayPartialIPFor(channel.myPartialPublicIP, !channel.amICreatedRoom);
-  displayPartialIPFor(channel.peerPartialPublicIP, channel.amICreatedRoom);
 
   printLog('start ping test');
   const buffer = new ArrayBuffer(1);
@@ -764,6 +736,9 @@ function dataChannelOpened() {
       sendWithFriendSuccessMessageToServer();
     }
   }
+
+  // record roomId for RNG in replay
+  replaySaver.recordRoomID(roomId);
 
   // Set the same RNG (used for the game) for both peers
   const customRng = seedrandom.alea(roomId.slice(10));

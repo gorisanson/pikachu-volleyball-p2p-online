@@ -1,13 +1,12 @@
 'use strict';
 import { PikachuVolleyball } from './offline_version_js/pikavolley.js';
 import { bufferLength, myKeyboard, OnlineKeyboard } from './keyboard_online.js';
-import { SYNC_DIVISOR, channel } from './data_channel';
-import { mod } from './mod.js';
-import {
-  askOneMoreGame,
-  displayPartialIPFor,
-  displayNicknameFor,
-} from './ui_online.js';
+import { SYNC_DIVISOR, channel } from './data_channel/data_channel';
+import { mod } from './utils/mod.js';
+import { askOneMoreGame } from './ui_online.js';
+import { displayPartialIPFor, displayNicknameFor } from './nickname_display.js';
+import { replaySaver } from './replay/replay_saver.js';
+import { PikaUserInput } from './offline_version_js/physics.js';
 
 /** @typedef GameState @type {function():void} */
 
@@ -36,6 +35,8 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     this.noInputFrameTotal.menu = Infinity;
 
     this.isFirstGame = true;
+
+    this.willSaveReplay = true;
   }
 
   /**
@@ -76,11 +77,7 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
       this.selectedWithWho = 0;
       if (this.isFirstGame) {
         this.isFirstGame = false;
-        if (channel.amICreatedRoom) {
-          this.amIPlayer2 = false;
-        } else {
-          this.amIPlayer2 = true;
-        }
+        this.amIPlayer2 = !channel.amICreatedRoom;
       } else if (channel.isQuickMatch) {
         askOneMoreGame();
       }
@@ -144,6 +141,18 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
     this.peerOnlineKeyboard.getInput(this.syncCounter);
     this.myOnlineKeyboard.getInput(this.syncCounter);
     this.syncCounter++;
+
+    if (this.willSaveReplay) {
+      const player1Input = new PikaUserInput();
+      player1Input.xDirection = this.keyboardArray[0].xDirection;
+      player1Input.yDirection = this.keyboardArray[0].yDirection;
+      player1Input.powerHit = this.keyboardArray[0].powerHit;
+      const player2Input = new PikaUserInput();
+      player2Input.xDirection = this.keyboardArray[1].xDirection;
+      player2Input.yDirection = this.keyboardArray[1].yDirection;
+      player2Input.powerHit = this.keyboardArray[1].powerHit;
+      replaySaver.recordInputs(player1Input, player2Input);
+    }
 
     // slow-mo effect
     if (this.slowMotionFramesLeft > 0) {

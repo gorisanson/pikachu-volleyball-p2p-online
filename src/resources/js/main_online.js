@@ -43,7 +43,7 @@ import * as PIXI from 'pixi.js-legacy';
 import 'pixi-sound';
 import { PikachuVolleyballOnline } from './pikavolley_online.js';
 import { ASSETS_PATH } from './offline_version_js/assets_path.js';
-import { channel } from './data_channel.js';
+import { channel } from './data_channel/data_channel.js';
 import { setUpUI, setUpUIAfterLoadingGameAssets } from './ui_online.js';
 import { setGetSpeechBubbleNeeded } from './chat_display.js';
 import '../style.css';

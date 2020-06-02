@@ -6,7 +6,8 @@
  * It is achieved by setting the same RNG (random number generator) for each player's chat box.
  */
 'use strict';
-import { channel } from './data_channel.js';
+import { channel } from './data_channel/data_channel.js';
+import { replaySaver } from './replay/replay_saver.js';
 
 /** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */
 
@@ -53,6 +54,15 @@ export function enableChat(turnOn) {
   isChatEnabled = turnOn;
 }
 
+export function hideChat() {
+  if (!player1ChatBox.classList.contains('hidden')) {
+    player1ChatBox.classList.add('hidden');
+  }
+  if (!player2ChatBox.classList.contains('hidden')) {
+    player2ChatBox.classList.add('hidden');
+  }
+}
+
 export function displayMyChatMessage(message) {
   if (channel.amIPlayer2 === null) {
     if (channel.amICreatedRoom) {
@@ -81,10 +91,12 @@ export function displayPeerChatMessage(message) {
   }
 }
 
-function displayChatMessageAt(message, whichPlayerSide) {
+export function displayChatMessageAt(message, whichPlayerSide) {
   if (!isChatEnabled) {
     return;
   }
+
+  replaySaver.recordChats(message, whichPlayerSide);
 
   if (whichPlayerSide === 1) {
     const newChatBox = player1ChatBox.cloneNode();
