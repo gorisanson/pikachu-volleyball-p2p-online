@@ -86,6 +86,7 @@ class ReplaySaver {
    */
   saveAsFile() {
     const pack = {
+      version: 'p2p-online',
       roomID: this.roomID,
       nicknames: this.nicknames,
       partialPublicIPs: this.partialPublicIPs,
