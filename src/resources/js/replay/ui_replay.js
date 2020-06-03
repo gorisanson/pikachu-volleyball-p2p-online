@@ -191,6 +191,23 @@ export function setUpUI() {
   noticeBoxFileErrorOKBtn.addEventListener('click', () => {
     location.reload();
   });
+
+  const keyboardContainer = document.getElementById('keyboard-container');
+  const showHideKeyboardBtn = document.getElementById('show-hide-keyboard-btn');
+  const showOrHideSpan = document.getElementById('show-or-hide-span');
+  showHideKeyboardBtn.addEventListener('click', () => {
+    if (!keyboardContainer.classList.contains('hidden')) {
+      keyboardContainer.classList.add('hidden');
+      showOrHideSpan.textContent = document.getElementById(
+        'show-text'
+      ).textContent;
+    } else {
+      keyboardContainer.classList.remove('hidden');
+      showOrHideSpan.textContent = document.getElementById(
+        'hide-text'
+      ).textContent;
+    }
+  });
 }
 
 export function adjustPlayPauseBtnIcon() {
