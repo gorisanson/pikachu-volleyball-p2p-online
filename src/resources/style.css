@@ -601,3 +601,52 @@ label.custom-file-upload {
 .disable-dbl-tap-zoom {
   touch-action: manipulation;
 }
+.flex-for-keyboards {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+.grid-for-keyboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 5px;
+  width: calc(5 * var(--btn-height));
+  height: calc(2.3 * var(--btn-height));
+}
+#z-key,
+#enter-key {
+  grid-row-start: 1;
+  grid-column-start: 1;
+}
+#r-key,
+#up-key {
+  grid-row-start: 1;
+  grid-column-start: 3;
+}
+#d-key,
+#left-key {
+  grid-row-start: 2;
+  grid-column-start: 2;
+}
+#v-key,
+#down-key {
+  grid-row-start: 2;
+  grid-column-start: 3;
+}
+#g-key,
+#right-key {
+  grid-row-start: 2;
+  grid-column-start: 4;
+}
+.keyboard-key {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid rgb(50, 50, 50);
+}
+.keyboard-key.pressed {
+  background-color: rgb(255, 0, 0);
+  color: white;
+}
