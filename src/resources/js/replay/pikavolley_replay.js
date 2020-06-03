@@ -9,7 +9,11 @@ import {
 import { Cloud, Wave } from '../offline_version_js/cloud_and_wave.js';
 import { PikaPhysics } from '../offline_version_js/physics.js';
 import { convert5bitNumberToUserInput } from '../utils/input_conversion.js';
-import { noticeEndOfReplay, moveScrubberTo } from './ui_replay.js';
+import {
+  noticeEndOfReplay,
+  moveScrubberTo,
+  showKeyboardInputs,
+} from './ui_replay.js';
 import { setTickerMaxFPSAccordingToNormalFPS } from './replay_player.js';
 
 /** @typedef GameState @type {function():void} */
@@ -236,6 +240,7 @@ export class PikachuVolleyballReplay extends PikachuVolleyball {
     this.player2Keyboard.xDirection = player2Input.xDirection;
     this.player2Keyboard.yDirection = player2Input.yDirection;
     this.player2Keyboard.powerHit = player2Input.powerHit;
+    showKeyboardInputs(player1Input, player2Input);
 
     let options = this.options[this.optionsCounter];
     while (options && options[0] === this.replayFrameCounter) {
