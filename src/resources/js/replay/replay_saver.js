@@ -114,9 +114,9 @@ class ReplaySaver {
     const d = new Date();
     // The code removing illegal characters in Windows by replace method is from:
     // https://stackoverflow.com/a/42210346/8581025
-    const filename = `${d.getFullYear()}${('0' + d.getMonth()).slice(-2)}${(
-      '0' + d.getDate()
-    ).slice(-2)}_${('0' + d.getHours()).slice(-2)}${(
+    const filename = `${d.getFullYear()}${('0' + (d.getMonth() + 1)).slice(
+      -2
+    )}${('0' + d.getDate()).slice(-2)}_${('0' + d.getHours()).slice(-2)}${(
       '0' + d.getMinutes()
     ).slice(-2)}_${this.nicknames[0]}_${this.partialPublicIPs[0].replace(
       '.*.*',
