@@ -23,7 +23,6 @@ import {
 } from './quick_match/quick_match.js';
 import { enableChat } from './chat_display.js';
 import { replaySaver } from './replay/replay_saver.js';
-import { ASSETS_PATH } from './offline_version_js/assets_path.js';
 import '../style.css';
 
 /** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */
@@ -870,7 +869,8 @@ export function displayPartialIPFor(partialIP, isForPlayer2) {
 }
 
 export function notifyBySound() {
-  const pikachuSound = new Audio(ASSETS_PATH.SOUNDS.PIKACHU);
+  const pikachuSound = document.getElementById('audio-pikachu-sound');
+  // @ts-ignore
   pikachuSound.play();
 }
 
