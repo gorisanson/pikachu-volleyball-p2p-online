@@ -394,7 +394,8 @@ img.screenshot {
 img.controls {
   max-width: 950px;
 }
-div.hidden {
+div.hidden,
+audio.hidden {
   display: none;
 }
 div.margin-top,
@@ -656,4 +657,4 @@ label.custom-file-upload {
 }
 
 
-/*# sourceMappingURL=main~main_replay.a4b9e0bdeab8708d4c34.css.map*/
+/*# sourceMappingURL=main~main_replay.d9fd6073f074d80141e7.css.map*/

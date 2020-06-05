@@ -394,7 +394,8 @@ img.screenshot {
 img.controls {
   max-width: 950px;
 }
-div.hidden {
+div.hidden,
+audio.hidden {
   display: none;
 }
 div.margin-top,
