@@ -183,6 +183,37 @@ export function setUpUI() {
     }
   });
 
+  const autoFastSpeedCheckboxElem = document.getElementById(
+    'auto-fast-speed-checkbox'
+  );
+  let willAskFastAutomatically = null;
+  try {
+    willAskFastAutomatically =
+      'true' === window.localStorage.getItem('willAskFastAutomatically');
+  } catch (err) {
+    console.log(err);
+  }
+  if (willAskFastAutomatically !== null) {
+    channel.willAskFastAutomatically = willAskFastAutomatically;
+    // @ts-ignore
+    autoFastSpeedCheckboxElem.checked = willAskFastAutomatically;
+  } else {
+    // @ts-ignore
+    channel.willAskFastAutomatically = autoFastSpeedCheckboxElem.checked;
+  }
+  autoFastSpeedCheckboxElem.addEventListener('change', () => {
+    // @ts-ignore
+    channel.willAskFastAutomatically = autoFastSpeedCheckboxElem.checked;
+    try {
+      window.localStorage.setItem(
+        'willAskFastAutomatically',
+        String(channel.willAskFastAutomatically)
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
   const startQuickMatchIfPressEnter = (event) => {
     if (event.code === 'Enter') {
       event.preventDefault();

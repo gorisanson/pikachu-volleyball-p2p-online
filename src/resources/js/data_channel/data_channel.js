@@ -75,6 +75,7 @@ export const channel = {
   peerNickname: '',
   myPartialPublicIP: '*.*.*.*',
   peerPartialPublicIP: '*.*.*.*',
+  willAskFastAutomatically: false,
 
   /** @type {PikaUserInputWithSync[]} */
   peerInputQueue: [],
