@@ -935,10 +935,16 @@ export function notifyBySound() {
   pikachuSound.play();
 }
 
-export function autoAskChangingToFastSpeed() {
+/**
+ * Ask changing to fast speed to the peer (for automatic option)
+ * @param {boolean} shouldDisableOptionsBtn
+ */
+export function autoAskChangingToFastSpeedToPeer(shouldDisableOptionsBtn) {
   // @ts-ignore
   pendingOptions.toSend = { auto: true, speed: 'fast', winningScore: null };
-  disableOptionsBtn();
+  if (shouldDisableOptionsBtn) {
+    disableOptionsBtn();
+  }
   sendOptionsChangeMessageToPeer(pendingOptions.toSend);
 }
 
