@@ -34,7 +34,7 @@ import {
   askOptionsChangeReceivedFromPeer,
   noticeAgreeMessageFromPeer,
   notifyBySound,
-  autoAskChangingToFastSpeed,
+  autoAskChangingToFastSpeedToPeer,
   applyAutoAskChangingToFastSpeedWhenBothPeerDo,
   MAX_NICKNAME_LENGTH,
 } from '../ui_online.js';
@@ -144,6 +144,7 @@ let isFirstInputQueueFromPeer = true;
 // first chat message is used for nickname transmission
 let isFirstChatMessageToPeerUsedForNickname = true;
 let isFirstChatMessageFromPeerUsedForNickname = true;
+let isAutoAskingFastWhenBothPeerDoApplied = false;
 
 /**
  * Create a room
@@ -533,6 +534,7 @@ function receiveOptionsChangeMessageFromPeer(optionsChangeMessage) {
       channel.willAskFastAutomatically
     ) {
       applyAutoAskChangingToFastSpeedWhenBothPeerDo();
+      isAutoAskingFastWhenBothPeerDoApplied = true;
       return;
     }
     askOptionsChangeReceivedFromPeer(options);
@@ -615,7 +617,7 @@ function startGameAfterPingTest() {
   // Send my nick name to peer
   sendChatMessageToPeer(channel.myNickname);
   if (channel.willAskFastAutomatically) {
-    autoAskChangingToFastSpeed();
+    autoAskChangingToFastSpeedToPeer(!isAutoAskingFastWhenBothPeerDoApplied);
   }
 
   printLog('start ping test');
