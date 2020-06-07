@@ -214,6 +214,26 @@ export function setUpUI() {
     }
   });
 
+  let bgmSetting = null;
+  try {
+    bgmSetting = window.localStorage.getItem('bgm');
+  } catch (err) {
+    console.log(err);
+  }
+  if (bgmSetting !== null) {
+    applyOptions({ bgm: bgmSetting });
+  }
+
+  let sfxSetting = null;
+  try {
+    sfxSetting = window.localStorage.getItem('sfx');
+  } catch (err) {
+    console.log(err);
+  }
+  if (sfxSetting !== null) {
+    applyOptions({ sfx: sfxSetting });
+  }
+
   const startQuickMatchIfPressEnter = (event) => {
     if (event.code === 'Enter') {
       event.preventDefault();
@@ -473,6 +493,11 @@ export function setUpUIAfterLoadingGameAssets(pikaVolley, ticker) {
           pikaVolley.audio.turnBGMVolume(false);
           break;
       }
+      try {
+        window.localStorage.setItem('bgm', options.bgm);
+      } catch (err) {
+        console.log(err);
+      }
     }
     if (options.sfx) {
       switch (options.sfx) {
@@ -487,6 +512,11 @@ export function setUpUIAfterLoadingGameAssets(pikaVolley, ticker) {
         case 'off':
           pikaVolley.audio.turnSFXVolume(false);
           break;
+      }
+      try {
+        window.localStorage.setItem('sfx', options.sfx);
+      } catch (err) {
+        console.log(err);
       }
     }
     if (options.speed) {
