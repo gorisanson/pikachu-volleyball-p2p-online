@@ -905,6 +905,18 @@ export function notifyBySound() {
   pikachuSound.play();
 }
 
+export function autoAskChangingToFastSpeed() {
+  // @ts-ignore
+  pendingOptions.toSend = { auto: true, speed: 'fast', winningScore: null };
+  disableOptionsBtn();
+  sendOptionsChangeMessageToPeer(pendingOptions.toSend);
+}
+
+export function applyAutoAskChangingToFastSpeedWhenBothPeerDo() {
+  applyOptions({ speed: 'fast', winningScore: null });
+  enableOptionsBtn();
+}
+
 function enableOptionsBtn() {
   const optionsDropdownBtn = document.getElementById('options-dropdown-btn');
   // @ts-ignore

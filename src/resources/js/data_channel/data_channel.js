@@ -34,6 +34,8 @@ import {
   askOptionsChangeReceivedFromPeer,
   noticeAgreeMessageFromPeer,
   notifyBySound,
+  autoAskChangingToFastSpeed,
+  applyAutoAskChangingToFastSpeedWhenBothPeerDo,
   MAX_NICKNAME_LENGTH,
 } from '../ui_online.js';
 import {
@@ -525,6 +527,14 @@ function receiveOptionsChangeMessageFromPeer(optionsChangeMessage) {
     // if peer send new message
     optionsChangeManager.peerSyncCounter++;
     const options = JSON.parse(optionsChangeMessage.slice(0, -1));
+    if (
+      options.auto &&
+      options.speed === 'fast' &&
+      channel.willAskFastAutomatically
+    ) {
+      applyAutoAskChangingToFastSpeedWhenBothPeerDo();
+      return;
+    }
     askOptionsChangeReceivedFromPeer(options);
   } else {
     console.log('invalid options change message received.');
@@ -604,6 +614,9 @@ function receiveOptionsChangeAgreeMessageFromPeer(optionsChangeAgreeMessage) {
 function startGameAfterPingTest() {
   // Send my nick name to peer
   sendChatMessageToPeer(channel.myNickname);
+  if (channel.willAskFastAutomatically) {
+    autoAskChangingToFastSpeed();
+  }
 
   printLog('start ping test');
   const buffer = new ArrayBuffer(1);
