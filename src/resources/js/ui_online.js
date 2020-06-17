@@ -472,6 +472,11 @@ export function setUpUI() {
   saveReplayBtn.addEventListener('click', () => {
     replaySaver.saveAsFile();
   });
+
+  const exitBtn = document.getElementById('exit-btn');
+  exitBtn.addEventListener('click', () => {
+    location.reload();
+  });
 }
 
 /**
