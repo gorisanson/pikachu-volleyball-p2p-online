@@ -23,7 +23,6 @@ import {
 } from './quick_match/quick_match.js';
 import { enableChat } from './chat_display.js';
 import { replaySaver } from './replay/replay_saver.js';
-import { ASSETS_PATH } from './offline_version_js/assets_path.js';
 import '../style.css';
 
 /** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */
@@ -183,6 +182,57 @@ export function setUpUI() {
       console.log(err);
     }
   });
+
+  const autoFastSpeedCheckboxElem = document.getElementById(
+    'auto-fast-speed-checkbox'
+  );
+  let willAskFastAutomatically = null;
+  try {
+    willAskFastAutomatically =
+      'true' === window.localStorage.getItem('willAskFastAutomatically');
+  } catch (err) {
+    console.log(err);
+  }
+  if (willAskFastAutomatically !== null) {
+    channel.willAskFastAutomatically = willAskFastAutomatically;
+    // @ts-ignore
+    autoFastSpeedCheckboxElem.checked = willAskFastAutomatically;
+  } else {
+    // @ts-ignore
+    channel.willAskFastAutomatically = autoFastSpeedCheckboxElem.checked;
+  }
+  autoFastSpeedCheckboxElem.addEventListener('change', () => {
+    // @ts-ignore
+    channel.willAskFastAutomatically = autoFastSpeedCheckboxElem.checked;
+    try {
+      window.localStorage.setItem(
+        'willAskFastAutomatically',
+        String(channel.willAskFastAutomatically)
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  let bgmSetting = null;
+  try {
+    bgmSetting = window.localStorage.getItem('bgm');
+  } catch (err) {
+    console.log(err);
+  }
+  if (bgmSetting !== null) {
+    applyOptions({ bgm: bgmSetting });
+  }
+
+  let sfxSetting = null;
+  try {
+    sfxSetting = window.localStorage.getItem('sfx');
+  } catch (err) {
+    console.log(err);
+  }
+  if (sfxSetting !== null) {
+    applyOptions({ sfx: sfxSetting });
+  }
 
   const startQuickMatchIfPressEnter = (event) => {
     if (event.code === 'Enter') {
@@ -422,6 +472,11 @@ export function setUpUI() {
   saveReplayBtn.addEventListener('click', () => {
     replaySaver.saveAsFile();
   });
+
+  const exitBtn = document.getElementById('exit-btn');
+  exitBtn.addEventListener('click', () => {
+    location.reload();
+  });
 }
 
 /**
@@ -443,6 +498,11 @@ export function setUpUIAfterLoadingGameAssets(pikaVolley, ticker) {
           pikaVolley.audio.turnBGMVolume(false);
           break;
       }
+      try {
+        window.localStorage.setItem('bgm', options.bgm);
+      } catch (err) {
+        console.log(err);
+      }
     }
     if (options.sfx) {
       switch (options.sfx) {
@@ -457,6 +517,11 @@ export function setUpUIAfterLoadingGameAssets(pikaVolley, ticker) {
         case 'off':
           pikaVolley.audio.turnSFXVolume(false);
           break;
+      }
+      try {
+        window.localStorage.setItem('sfx', options.sfx);
+      } catch (err) {
+        console.log(err);
       }
     }
     if (options.speed) {
@@ -870,8 +935,27 @@ export function displayPartialIPFor(partialIP, isForPlayer2) {
 }
 
 export function notifyBySound() {
-  const pikachuSound = new Audio(ASSETS_PATH.SOUNDS.PIKACHU);
+  const pikachuSound = document.getElementById('audio-pikachu-sound');
+  // @ts-ignore
   pikachuSound.play();
+}
+
+/**
+ * Ask changing to fast speed to the peer (for automatic option)
+ * @param {boolean} shouldDisableOptionsBtn
+ */
+export function autoAskChangingToFastSpeedToPeer(shouldDisableOptionsBtn) {
+  // @ts-ignore
+  pendingOptions.toSend = { auto: true, speed: 'fast', winningScore: null };
+  if (shouldDisableOptionsBtn) {
+    disableOptionsBtn();
+  }
+  sendOptionsChangeMessageToPeer(pendingOptions.toSend);
+}
+
+export function applyAutoAskChangingToFastSpeedWhenBothPeerDo() {
+  applyOptions({ speed: 'fast', winningScore: null });
+  enableOptionsBtn();
 }
 
 function enableOptionsBtn() {

@@ -34,6 +34,8 @@ import {
   askOptionsChangeReceivedFromPeer,
   noticeAgreeMessageFromPeer,
   notifyBySound,
+  autoAskChangingToFastSpeedToPeer,
+  applyAutoAskChangingToFastSpeedWhenBothPeerDo,
   MAX_NICKNAME_LENGTH,
 } from '../ui_online.js';
 import {
@@ -75,6 +77,7 @@ export const channel = {
   peerNickname: '',
   myPartialPublicIP: '*.*.*.*',
   peerPartialPublicIP: '*.*.*.*',
+  willAskFastAutomatically: false,
 
   /** @type {PikaUserInputWithSync[]} */
   peerInputQueue: [],
@@ -141,6 +144,7 @@ let isFirstInputQueueFromPeer = true;
 // first chat message is used for nickname transmission
 let isFirstChatMessageToPeerUsedForNickname = true;
 let isFirstChatMessageFromPeerUsedForNickname = true;
+let isAutoAskingFastWhenBothPeerDoApplied = false;
 
 /**
  * Create a room
@@ -524,6 +528,15 @@ function receiveOptionsChangeMessageFromPeer(optionsChangeMessage) {
     // if peer send new message
     optionsChangeManager.peerSyncCounter++;
     const options = JSON.parse(optionsChangeMessage.slice(0, -1));
+    if (
+      options.auto &&
+      options.speed === 'fast' &&
+      channel.willAskFastAutomatically
+    ) {
+      applyAutoAskChangingToFastSpeedWhenBothPeerDo();
+      isAutoAskingFastWhenBothPeerDoApplied = true;
+      return;
+    }
     askOptionsChangeReceivedFromPeer(options);
   } else {
     console.log('invalid options change message received.');
@@ -603,6 +616,9 @@ function receiveOptionsChangeAgreeMessageFromPeer(optionsChangeAgreeMessage) {
 function startGameAfterPingTest() {
   // Send my nick name to peer
   sendChatMessageToPeer(channel.myNickname);
+  if (channel.willAskFastAutomatically) {
+    autoAskChangingToFastSpeedToPeer(!isAutoAskingFastWhenBothPeerDoApplied);
+  }
 
   printLog('start ping test');
   const buffer = new ArrayBuffer(1);

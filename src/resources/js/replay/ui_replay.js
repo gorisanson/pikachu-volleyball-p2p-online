@@ -1,6 +1,8 @@
 import { replayPlayer } from './replay_player.js';
 import '../../style.css';
 
+/** @typedef {import('../offline_version_js/physics.js').PikaUserInput} PikaUserInput */
+
 let pausedByBtn = false;
 
 const scrubberRangeInput = document.getElementById('scrubber-range-input');
@@ -189,6 +191,23 @@ export function setUpUI() {
   noticeBoxFileErrorOKBtn.addEventListener('click', () => {
     location.reload();
   });
+
+  const keyboardContainer = document.getElementById('keyboard-container');
+  const showHideKeyboardBtn = document.getElementById('show-hide-keyboard-btn');
+  const showOrHideSpan = document.getElementById('show-or-hide-span');
+  showHideKeyboardBtn.addEventListener('click', () => {
+    if (!keyboardContainer.classList.contains('hidden')) {
+      keyboardContainer.classList.add('hidden');
+      showOrHideSpan.textContent = document.getElementById(
+        'show-text'
+      ).textContent;
+    } else {
+      keyboardContainer.classList.remove('hidden');
+      showOrHideSpan.textContent = document.getElementById(
+        'hide-text'
+      ).textContent;
+    }
+  });
 }
 
 export function adjustPlayPauseBtnIcon() {
@@ -253,6 +272,109 @@ export function showTotalTimeDuration(timeDuration) {
   document.getElementById('time-duration').textContent = getTimeText(
     timeDuration
   );
+}
+
+/**
+ * Show Keyboard inputs
+ * @param {PikaUserInput} player1Input
+ * @param {PikaUserInput} player2Input
+ */
+export function showKeyboardInputs(player1Input, player2Input) {
+  const zKey = document.getElementById('z-key');
+  const rKey = document.getElementById('r-key');
+  const vKey = document.getElementById('v-key');
+  const dKey = document.getElementById('d-key');
+  const gKey = document.getElementById('g-key');
+
+  const enterKey = document.getElementById('enter-key');
+  const upKey = document.getElementById('up-key');
+  const downKey = document.getElementById('down-key');
+  const leftKey = document.getElementById('left-key');
+  const rightKey = document.getElementById('right-key');
+
+  function pressKeyElm(keyElm) {
+    if (!keyElm.classList.contains('pressed')) {
+      keyElm.classList.add('pressed');
+    }
+  }
+
+  function unpressKeyElm(keyElm) {
+    keyElm.classList.remove('pressed');
+  }
+
+  switch (player1Input.xDirection) {
+    case 0:
+      unpressKeyElm(dKey);
+      unpressKeyElm(gKey);
+      break;
+    case -1:
+      pressKeyElm(dKey);
+      unpressKeyElm(gKey);
+      break;
+    case 1:
+      unpressKeyElm(dKey);
+      pressKeyElm(gKey);
+      break;
+  }
+  switch (player1Input.yDirection) {
+    case 0:
+      unpressKeyElm(rKey);
+      unpressKeyElm(vKey);
+      break;
+    case -1:
+      pressKeyElm(rKey);
+      unpressKeyElm(vKey);
+      break;
+    case 1:
+      unpressKeyElm(rKey);
+      pressKeyElm(vKey);
+      break;
+  }
+  switch (player1Input.powerHit) {
+    case 0:
+      unpressKeyElm(zKey);
+      break;
+    case 1:
+      pressKeyElm(zKey);
+      break;
+  }
+
+  switch (player2Input.xDirection) {
+    case 0:
+      unpressKeyElm(leftKey);
+      unpressKeyElm(rightKey);
+      break;
+    case -1:
+      pressKeyElm(leftKey);
+      unpressKeyElm(rightKey);
+      break;
+    case 1:
+      unpressKeyElm(leftKey);
+      pressKeyElm(rightKey);
+      break;
+  }
+  switch (player2Input.yDirection) {
+    case 0:
+      unpressKeyElm(upKey);
+      unpressKeyElm(downKey);
+      break;
+    case -1:
+      pressKeyElm(upKey);
+      unpressKeyElm(downKey);
+      break;
+    case 1:
+      unpressKeyElm(upKey);
+      pressKeyElm(downKey);
+      break;
+  }
+  switch (player2Input.powerHit) {
+    case 0:
+      unpressKeyElm(enterKey);
+      break;
+    case 1:
+      pressKeyElm(enterKey);
+      break;
+  }
 }
 
 export function enableReplayScrubberAndBtns() {

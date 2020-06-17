@@ -60,10 +60,10 @@
           Release Date: 2020-04-08
         </p>
         <p class="game-last-updated">
-          Game Last Updated: 2020-05-26
+          Game Last Updated: 2020-06-02
         </p>
         <p class="page-last-updated">
-          Page Last Updated: 2020-05-30
+          Page Last Updated: 2020-06-07
         </p>
         <p class="update-history-on">
           <a href="./update-history/" target="_self">Update history</a>
@@ -170,6 +170,21 @@
               autocorrect="off"
               value="Player"
             />
+          </div>
+        </div>
+        <div>
+          <p class="margin-top">
+            <span class="thick">Options:</span> You can check the options you
+            want.
+          </p>
+          <div>
+            <input id="auto-fast-speed-checkbox" type="checkbox" />
+            <label for="auto-fast-speed"
+              >Automatically ask each peer about changing speed options to
+              "fast". (If you and the peer both check this option, the game
+              speed will be changed to "fast" without any additional
+              message.)</label
+            >
           </div>
         </div>
       </div>
@@ -315,6 +330,12 @@
         Replay Viewer at:
         https://gorisanson.github.io/pikachu-volleyball-p2p-online/en/replay/
       </div>
+      <audio
+        id="audio-pikachu-sound"
+        class="hidden"
+        preload="auto"
+        src="../resources/assets/sounds/WAVE144_1.wav"
+      ></audio>
       <div id="test-passed" class="fade-in-box notice fixed hidden">
         No issues are detected.<br /><br />
         (1) The necessary server reflexive candidate can be gotten, or your
@@ -468,6 +489,9 @@
           <div class="relative-container">
             <button id="save-replay-btn" class="btn">Save replay</button>
           </div>
+        </div>
+        <div class="btn-container right">
+          <button id="exit-btn" class="btn">Exit</button>
         </div>
       </div>
       <div id="game-canvas-container">
