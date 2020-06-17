@@ -553,6 +553,14 @@ div.nicknames-container {
   align-items: center;
   justify-content: flex-start;
 }
+.btn-container.left {
+  grid-column-start: 1;
+  justify-content: flex-start;
+}
+.btn-container.right {
+  grid-column-start: 2;
+  justify-content: flex-end;
+}
 #scrubber-range-input {
   width: var(--canvas-width);
   height: var(--btn-height);
@@ -657,4 +665,4 @@ label.custom-file-upload {
 }
 
 
-/*# sourceMappingURL=main~main_replay.d9fd6073f074d80141e7.css.map*/
+/*# sourceMappingURL=main~main_replay.721fc106c91c0b2ad232.css.map*/
