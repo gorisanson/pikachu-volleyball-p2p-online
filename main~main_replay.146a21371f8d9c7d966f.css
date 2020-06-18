@@ -402,6 +402,9 @@ div.margin-top,
 p.margin-top {
   margin-top: calc(2.5 * var(--font-size));
 }
+div.margin-top-a-little {
+  margin-top: var(--font-size);
+}
 ul {
   margin-top: var(--font-size);
   margin-bottom: var(--font-size);
@@ -665,4 +668,4 @@ label.custom-file-upload {
 }
 
 
-/*# sourceMappingURL=main~main_replay.721fc106c91c0b2ad232.css.map*/
+/*# sourceMappingURL=main~main_replay.146a21371f8d9c7d966f.css.map*/
