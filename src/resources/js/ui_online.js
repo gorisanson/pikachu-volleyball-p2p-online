@@ -68,6 +68,7 @@ const pendingOptions = {
 
 let pikaVolleyOnline = null; // it is set after loading the game assets
 let willSaveReplayAutomatically = null;
+let alreadySaved = false;
 
 const chatOpenBtnAndChatDisablingBtnContainer = document.getElementById(
   'chat-open-btn-and-chat-disabling-btn-container'
@@ -926,8 +927,9 @@ export function askOptionsChangeReceivedFromPeer(options) {
 }
 
 export function noticeDisconnected() {
-  if (willSaveReplayAutomatically) {
+  if (willSaveReplayAutomatically && !alreadySaved) {
     replaySaver.saveAsFile();
+    alreadySaved = true;
   }
   document.getElementById('notice-disconnected').classList.remove('hidden');
 }
