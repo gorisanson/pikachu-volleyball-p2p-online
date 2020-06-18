@@ -23,10 +23,10 @@
   "homepage": "https://github.com/gorisanson/pikachu-volleyball-p2p-online#readme",
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^6.0.1",
-    "css-loader": "^3.5.1",
-    "eslint": "^7.1.0",
-    "eslint-plugin-prettier": "^3.1.2",
+    "copy-webpack-plugin": "^6.0.2",
+    "css-loader": "^3.6.0",
+    "eslint": "^7.2.0",
+    "eslint-plugin-prettier": "^3.1.4",
     "html-webpack-plugin": "^4.2.2",
     "mini-css-extract-plugin": "^0.9.0",
     "prettier": "^2.0.4",
@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "file-saver": "^2.0.2",
-    "firebase": "^7.14.5",
+    "firebase": "^7.15.1",
     "pixi-sound": "3.0.4",
     "pixi.js-legacy": "5.2.4",
     "seedrandom": "3.0.5"
