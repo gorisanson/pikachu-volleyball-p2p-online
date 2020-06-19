@@ -489,7 +489,10 @@ export function setUpUI() {
     // This is for exiting the window by the browser exit button while being connected with quick match server
     cleanUpFirestoreRelevants();
     if (channel.isOpen) {
-      if (willSaveReplayAutomatically) {
+      if (
+        willSaveReplayAutomatically &&
+        !document.getElementById('flex-container').classList.contains('hidden')
+      ) {
         replaySaver.saveAsFile();
       }
       // Cancel the event
@@ -927,7 +930,11 @@ export function askOptionsChangeReceivedFromPeer(options) {
 }
 
 export function noticeDisconnected() {
-  if (willSaveReplayAutomatically && !alreadySaved) {
+  if (
+    willSaveReplayAutomatically &&
+    !document.getElementById('flex-container').classList.contains('hidden') &&
+    !alreadySaved
+  ) {
     replaySaver.saveAsFile();
     alreadySaved = true;
   }
