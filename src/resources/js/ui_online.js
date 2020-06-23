@@ -324,20 +324,16 @@ export function setUpUI() {
     );
     pressEnterToQuickMatch.classList.remove('hidden');
   });
-  withYourFriendBtn.addEventListener('click', () => {
-    const aboutWithYourFriend = document.getElementById(
-      'about-with-your-friend'
-    );
-    if (aboutWithYourFriend.classList.contains('hidden')) {
-      aboutWithYourFriend.classList.remove('hidden');
-      // @ts-ignore
-      quickMatchBtn.disabled = true;
-    } else {
-      aboutWithYourFriend.classList.add('hidden');
-      // @ts-ignore
-      quickMatchBtn.disabled = false;
+
+  const clickQuickMatchBtnByPressingEnter = (event) => {
+    if (event.code === 'Enter') {
+      event.preventDefault();
+      window.removeEventListener('keydown', clickQuickMatchBtnByPressingEnter);
+      quickMatchBtn.click();
     }
-  });
+  };
+  window.addEventListener('keydown', clickQuickMatchBtnByPressingEnter);
+
   createBtn.addEventListener('click', () => {
     disableBtns();
     // @ts-ignore
@@ -349,6 +345,13 @@ export function setUpUI() {
       printCurrentRoomID(roomId);
     });
   });
+  const clickJoinBtnByPressingEnter = (event) => {
+    if (event.code === 'Enter') {
+      event.preventDefault();
+      window.removeEventListener('keydown', clickJoinBtnByPressingEnter);
+      joinBtn.click();
+    }
+  };
   joinBtn.addEventListener('click', () => {
     disableBtns();
     channel.isQuickMatch = false;
@@ -359,8 +362,25 @@ export function setUpUI() {
         printCurrentRoomID(roomId);
       } else {
         enableBtns();
+        window.addEventListener('keydown', clickJoinBtnByPressingEnter);
       }
     });
+  });
+  withYourFriendBtn.addEventListener('click', () => {
+    const aboutWithYourFriend = document.getElementById(
+      'about-with-your-friend'
+    );
+    if (aboutWithYourFriend.classList.contains('hidden')) {
+      aboutWithYourFriend.classList.remove('hidden');
+      // @ts-ignore
+      quickMatchBtn.disabled = true;
+      window.addEventListener('keydown', clickJoinBtnByPressingEnter);
+    } else {
+      aboutWithYourFriend.classList.add('hidden');
+      // @ts-ignore
+      quickMatchBtn.disabled = false;
+      window.removeEventListener('keydown', clickJoinBtnByPressingEnter);
+    }
   });
 
   // hide or show menubar if the user presses the "esc" key
