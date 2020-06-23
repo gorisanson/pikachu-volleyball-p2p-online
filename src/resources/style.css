@@ -402,6 +402,9 @@ div.margin-top,
 p.margin-top {
   margin-top: calc(2.5 * var(--font-size));
 }
+div.margin-top-a-little {
+  margin-top: var(--font-size);
+}
 ul {
   margin-top: var(--font-size);
   margin-bottom: var(--font-size);

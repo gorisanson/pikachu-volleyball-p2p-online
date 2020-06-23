@@ -67,6 +67,8 @@ const pendingOptions = {
 };
 
 let pikaVolleyOnline = null; // it is set after loading the game assets
+let willSaveReplayAutomatically = null;
+let alreadySaved = false;
 
 const chatOpenBtnAndChatDisablingBtnContainer = document.getElementById(
   'chat-open-btn-and-chat-disabling-btn-container'
@@ -183,6 +185,7 @@ export function setUpUI() {
     }
   });
 
+  // For auto-fast-speed-checkbox
   const autoFastSpeedCheckboxElem = document.getElementById(
     'auto-fast-speed-checkbox'
   );
@@ -208,6 +211,36 @@ export function setUpUI() {
       window.localStorage.setItem(
         'willAskFastAutomatically',
         String(channel.willAskFastAutomatically)
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  // For auto-save-replay-checkbox
+  const autoSaveReplayCheckbox = document.getElementById(
+    'auto-save-replay-checkbox'
+  );
+  try {
+    willSaveReplayAutomatically =
+      'true' === window.localStorage.getItem('willSaveReplayAutomatically');
+  } catch (err) {
+    console.log(err);
+  }
+  if (willSaveReplayAutomatically !== null) {
+    // @ts-ignore
+    autoSaveReplayCheckbox.checked = willSaveReplayAutomatically;
+  } else {
+    // @ts-ignore
+    willSaveReplayAutomatically = autoSaveReplayCheckbox.checked;
+  }
+  autoSaveReplayCheckbox.addEventListener('change', () => {
+    // @ts-ignore
+    willSaveReplayAutomatically = autoSaveReplayCheckbox.checked;
+    try {
+      window.localStorage.setItem(
+        'willSaveReplayAutomatically',
+        String(willSaveReplayAutomatically)
       );
     } catch (err) {
       console.log(err);
@@ -453,8 +486,15 @@ export function setUpUI() {
   window.addEventListener('unload', closeConnection);
 
   window.addEventListener('beforeunload', function (e) {
+    // This is for exiting the window by the browser exit button while being connected with quick match server
     cleanUpFirestoreRelevants();
     if (channel.isOpen) {
+      if (
+        willSaveReplayAutomatically &&
+        !document.getElementById('flex-container').classList.contains('hidden')
+      ) {
+        replaySaver.saveAsFile();
+      }
       // Cancel the event
       e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
       // Chrome requires returnValue to be set
@@ -890,6 +930,14 @@ export function askOptionsChangeReceivedFromPeer(options) {
 }
 
 export function noticeDisconnected() {
+  if (
+    willSaveReplayAutomatically &&
+    !document.getElementById('flex-container').classList.contains('hidden') &&
+    !alreadySaved
+  ) {
+    replaySaver.saveAsFile();
+    alreadySaved = true;
+  }
   document.getElementById('notice-disconnected').classList.remove('hidden');
 }
 
