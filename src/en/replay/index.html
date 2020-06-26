@@ -68,7 +68,7 @@
           </button>
         </div>
       </div>
-      <div id="keyboard-container" class="flex-for-keyboard hidden">
+      <div id="keyboard-container" class="flex-for-keyboard">
         <div class="grid-for-keyboard">
           <div id="z-key" class="keyboard-key">Z</div>
           <div id="r-key" class="keyboard-key">R</div>
@@ -167,15 +167,15 @@
           </button>
         </div>
         <div class="margin-top-little">
-          <button
-            id="show-hide-keyboard-btn"
-            class="btn-for-replay disable-dbl-tap-zoom"
-          >
-            <span id="show-or-hide-span">Show</span> keyboard
-          </button>
+          <input id="show-keyboard-checkbox" type="checkbox" checked />
+          <label for="show-keyboard-checkbox">Keyboard</label>
+          <input id="show-chat-checkbox" type="checkbox" checked />
+          <label for="show-chat-checkbox">Chat</label>
+          <input id="show-nicknames-checkbox" type="checkbox" checked />
+          <label for="show-nicknames-checkbox">Nicknames</label>
+          <input id="show-ip-addresses-checkbox" type="checkbox" checked />
+          <label for="show-ip-addresses-checkbox">IPs</label>
         </div>
-        <div id="show-text" class="hidden">Show</div>
-        <div id="hide-text" class="hidden">Hide</div>
       </div>
       <div id="play-mark" class="hidden">&#x25b6;&#xfe0e;</div>
       <div id="pause-mark" class="hidden">&#x275a;&#x275a;</div>
