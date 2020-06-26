@@ -65,7 +65,7 @@
           </button>
         </div>
       </div>
-      <div id="keyboard-container" class="flex-for-keyboard hidden">
+      <div id="keyboard-container" class="flex-for-keyboard">
         <div class="grid-for-keyboard">
           <div id="z-key" class="keyboard-key">Z</div>
           <div id="r-key" class="keyboard-key">R</div>
@@ -163,16 +163,16 @@
             &times;2
           </button>
         </div>
-        <div class="margin-top-little">
-          <button
-            id="show-hide-keyboard-btn"
-            class="btn-for-replay disable-dbl-tap-zoom"
-          >
-            키보드 <span id="show-or-hide-span">보기</span>
-          </button>
+        <div class="margin-top-little show-checkboxes-container">
+          <input id="show-keyboard-checkbox" type="checkbox" checked />
+          <label for="show-keyboard-checkbox">키보드</label>
+          <input id="show-chat-checkbox" type="checkbox" checked />
+          <label for="show-chat-checkbox">채팅</label>
+          <input id="show-nicknames-checkbox" type="checkbox" checked />
+          <label for="show-nicknames-checkbox">닉네임</label>
+          <input id="show-ip-addresses-checkbox" type="checkbox" checked />
+          <label for="show-ip-addresses-checkbox">IP</label>
         </div>
-        <div id="show-text" class="hidden">보기</div>
-        <div id="hide-text" class="hidden">숨기기</div>
       </div>
       <div id="play-mark" class="hidden">&#x25b6;&#xfe0e;</div>
       <div id="pause-mark" class="hidden">&#x275a;&#x275a;</div>
