@@ -395,6 +395,7 @@ img.controls {
   max-width: 950px;
 }
 div.hidden,
+span.hidden,
 audio.hidden {
   display: none;
 }
@@ -668,4 +669,4 @@ label.custom-file-upload {
 }
 
 
-/*# sourceMappingURL=main~main_replay.146a21371f8d9c7d966f.css.map*/
+/*# sourceMappingURL=main~main_replay.73aa128f8a3a859484f9.css.map*/

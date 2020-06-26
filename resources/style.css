@@ -395,6 +395,7 @@ img.controls {
   max-width: 950px;
 }
 div.hidden,
+span.hidden,
 audio.hidden {
   display: none;
 }
