@@ -658,6 +658,7 @@ label.custom-file-upload {
   justify-content: center;
   align-items: center;
   border: 2px solid rgb(50, 50, 50);
+  font-size: var(--font-size);
 }
 .keyboard-key.pressed {
   background-color: rgb(255, 0, 0);
@@ -667,6 +668,9 @@ label.custom-file-upload {
   font-size: calc(var(--font-size) / 1.3);
   width: var(--btn-width);
 }
+div.show-checkboxes-container {
+  font-size: calc(var(--font-size) / 1.2);
+}
 
 
-/*# sourceMappingURL=main~main_replay.73aa128f8a3a859484f9.css.map*/
+/*# sourceMappingURL=main~main_replay.2ee3aa89d7acc62cbaea.css.map*/
