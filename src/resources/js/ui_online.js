@@ -89,6 +89,7 @@ export function setUpUI() {
   const quickMatchBtn = document.getElementById('quick-match-btn');
   const withYourFriendBtn = document.getElementById('with-your-friend-btn');
   const createBtn = document.getElementById('create-btn');
+  const copyBtn = document.getElementById('copy-btn');
   const joinBtn = document.getElementById('join-btn');
   const joinRoomIdInput = document.getElementById('join-room-id-input');
   const disableBtns = () => {
@@ -343,8 +344,32 @@ export function setUpUI() {
     const roomId = generatePushID();
     createRoom(roomId).then(() => {
       printCurrentRoomID(roomId);
+      copyBtn.style.visibility = 'visible';
     });
   });
+
+  copyBtn.addEventListener('click', () => {
+    const prettyRoomID = document.getElementById('current-room-id').textContent;
+    const language = getCurruntLanguage();
+
+    copyBtn.innerText = language == 'en' ? 'Copied!' : '복사됨!';
+    setTimeout(() => {
+      copyBtn.innerText = language == 'en' ? 'Copy' : '복사';
+    }, 500);
+
+    navigator.clipboard.writeText(prettyRoomID);
+  });
+
+  const getCurruntLanguage = () => {
+    const languageTag = document.getElementsByClassName('languages').item(0)
+      .children[0];
+
+    // change state because selected anchor tag represent reverse state
+    const currentLanguage = languageTag.textContent == 'English' ? 'ko' : 'en';
+
+    return currentLanguage;
+  };
+
   const clickJoinBtnByPressingEnter = (event) => {
     if (event.code === 'Enter') {
       event.preventDefault();
