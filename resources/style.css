@@ -203,6 +203,14 @@ canvas {
   width: 100%;
   height: var(--btn-height);
 }
+#copy-btn {
+  width: calc(var(--btn-width) / 1.5);
+  height: var(--btn-height);
+  background-image: none;
+  background-color: white;
+  color: black;
+  margin-left: 20px;
+}
 #join-room-id-input,
 #create-btn {
   grid-column-start: 1;
@@ -212,7 +220,8 @@ canvas {
 #join-btn,
 #chat-disabling-btn,
 #send-btn,
-#chat-open-btn {
+#chat-open-btn,
+#copy-btn {
   font-size: calc(0.8 * var(--font-size));
 }
 #created-room-id-container,
@@ -392,6 +401,7 @@ img.controls {
 }
 div.hidden,
 span.hidden,
+button.hidden,
 audio.hidden {
   display: none;
 }
