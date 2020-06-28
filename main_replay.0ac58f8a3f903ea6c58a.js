@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[5],{70:function(n,S,a){"use strict";a.r(S);var o=a(9),c=a(38);!function(){o.a.SPRITE_SHEET="../"+o.a.SPRITE_SHEET;for(const n in o.a.SOUNDS)o.a.SOUNDS[n]="../"+o.a.SOUNDS[n]}(),Object(c.i)()}},[[70,0,2,1]]]);
+//# sourceMappingURL=main_replay.0ac58f8a3f903ea6c58a.js.map
