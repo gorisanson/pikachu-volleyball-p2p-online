@@ -349,7 +349,7 @@ export function setUpUI() {
   });
 
   copyBtn.addEventListener('click', () => {
-    copyBtn.textContent = document.getElementById('copied').textContent;
+    copyBtn.innerHTML = document.getElementById('copied').innerHTML;
     setTimeout(() => {
       copyBtn.textContent = document.getElementById('copy').textContent;
     }, 500);

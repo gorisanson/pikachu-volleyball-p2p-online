@@ -204,9 +204,12 @@ canvas {
   height: var(--btn-height);
 }
 #copy-btn {
-  width: 128px;
+  width: calc(var(--btn-width) / 1.5);
   height: var(--btn-height);
-  margin-left: 5%;
+  background-image: none;
+  background-color: white;
+  color: black;
+  margin-left: 20px;
 }
 #join-room-id-input,
 #create-btn {
