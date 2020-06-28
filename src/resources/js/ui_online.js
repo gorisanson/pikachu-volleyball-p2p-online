@@ -349,26 +349,15 @@ export function setUpUI() {
   });
 
   copyBtn.addEventListener('click', () => {
-    const prettyRoomID = document.getElementById('current-room-id').textContent;
-    const language = getCurruntLanguage();
-
-    copyBtn.innerText = language == 'en' ? 'Copied!' : '복사됨!';
+    copyBtn.textContent = document.getElementById('copied').textContent;
     setTimeout(() => {
-      copyBtn.innerText = language == 'en' ? 'Copy' : '복사';
+      copyBtn.textContent = document.getElementById('copy').textContent;
     }, 500);
 
-    navigator.clipboard.writeText(prettyRoomID);
+    navigator.clipboard.writeText(
+      document.getElementById('current-room-id').textContent
+    );
   });
-
-  const getCurruntLanguage = () => {
-    const languageTag = document.getElementsByClassName('languages').item(0)
-      .children[0];
-
-    // change state because selected anchor tag represent reverse state
-    const currentLanguage = languageTag.textContent == 'English' ? 'ko' : 'en';
-
-    return currentLanguage;
-  };
 
   const clickJoinBtnByPressingEnter = (event) => {
     if (event.code === 'Enter') {
