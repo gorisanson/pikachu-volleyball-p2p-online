@@ -89,6 +89,7 @@ export function setUpUI() {
   const quickMatchBtn = document.getElementById('quick-match-btn');
   const withYourFriendBtn = document.getElementById('with-your-friend-btn');
   const createBtn = document.getElementById('create-btn');
+  const copyBtn = document.getElementById('copy-btn');
   const joinBtn = document.getElementById('join-btn');
   const joinRoomIdInput = document.getElementById('join-room-id-input');
   const disableBtns = () => {
@@ -343,8 +344,21 @@ export function setUpUI() {
     const roomId = generatePushID();
     createRoom(roomId).then(() => {
       printCurrentRoomID(roomId);
+      copyBtn.classList.remove('hidden');
     });
   });
+
+  copyBtn.addEventListener('click', () => {
+    copyBtn.textContent = document.getElementById('copied').textContent;
+    setTimeout(() => {
+      copyBtn.textContent = document.getElementById('copy').textContent;
+    }, 500);
+
+    navigator.clipboard.writeText(
+      document.getElementById('current-room-id').textContent
+    );
+  });
+
   const clickJoinBtnByPressingEnter = (event) => {
     if (event.code === 'Enter') {
       event.preventDefault();

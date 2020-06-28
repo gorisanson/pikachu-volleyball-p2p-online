@@ -203,6 +203,11 @@ canvas {
   width: 100%;
   height: var(--btn-height);
 }
+#copy-btn {
+  width: 128px;
+  height: var(--btn-height);
+  margin-left: 5%;
+}
 #join-room-id-input,
 #create-btn {
   grid-column-start: 1;
@@ -212,7 +217,8 @@ canvas {
 #join-btn,
 #chat-disabling-btn,
 #send-btn,
-#chat-open-btn {
+#chat-open-btn,
+#copy-btn {
   font-size: calc(0.8 * var(--font-size));
 }
 #created-room-id-container,
@@ -392,6 +398,7 @@ img.controls {
 }
 div.hidden,
 span.hidden,
+button.hidden,
 audio.hidden {
   display: none;
 }
