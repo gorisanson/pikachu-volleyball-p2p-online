@@ -352,7 +352,7 @@ export function setUpUI() {
     copyBtn.innerHTML = document.getElementById('copied').innerHTML;
     setTimeout(() => {
       copyBtn.textContent = document.getElementById('copy').textContent;
-    }, 500);
+    }, 700);
 
     navigator.clipboard.writeText(
       document.getElementById('current-room-id').textContent
