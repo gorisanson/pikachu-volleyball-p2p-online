@@ -177,6 +177,7 @@ export function setUpUI() {
       value = 60;
     }
     replayPlayer.adjustPlaybackSpeedFPS(value);
+    unselectSpeedBtns();
   });
 
   const noticeBoxEndOfReplayOKBtn = document.getElementById(
