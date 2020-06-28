@@ -12,8 +12,6 @@ const seekBackward1Btn = document.getElementById('seek-backward-1');
 const seekForward1Btn = document.getElementById('seek-forward-1');
 const seekBackward3Btn = document.getElementById('seek-backward-3');
 const seekForward3Btn = document.getElementById('seek-forward-3');
-const speedBtn1FPS = document.getElementById('speed-btn-1-fps');
-const speedBtn2FPS = document.getElementById('speed-btn-2-fps');
 const speedBtn5FPS = document.getElementById('speed-btn-5-fps');
 const speedBtnHalfTimes = document.getElementById('speed-btn-half-times');
 const speedBtn1Times = document.getElementById('speed-btn-1-times');
@@ -134,14 +132,6 @@ export function setUpUI() {
     }
   });
 
-  speedBtn1FPS.addEventListener('click', (e) => {
-    processSelected(e);
-    replayPlayer.adjustPlaybackSpeedFPS(1);
-  });
-  speedBtn2FPS.addEventListener('click', (e) => {
-    processSelected(e);
-    replayPlayer.adjustPlaybackSpeedFPS(2);
-  });
   speedBtn5FPS.addEventListener('click', (e) => {
     processSelected(e);
     replayPlayer.adjustPlaybackSpeedFPS(5);
@@ -168,8 +158,6 @@ export function setUpUI() {
   }
   function unselectSpeedBtns() {
     for (const btn of [
-      speedBtn1FPS,
-      speedBtn2FPS,
       speedBtn5FPS,
       speedBtnHalfTimes,
       speedBtn1Times,
@@ -178,6 +166,19 @@ export function setUpUI() {
       btn.classList.remove('selected');
     }
   }
+
+  const fpsInput = document.getElementById('fps-input');
+  fpsInput.addEventListener('change', (e) => {
+    // @ts-ignore
+    let value = e.target.value;
+    if (value < 0) {
+      value = 0;
+    } else if (value > 60) {
+      value = 60;
+    }
+    replayPlayer.adjustPlaybackSpeedFPS(value);
+    unselectSpeedBtns();
+  });
 
   const noticeBoxEndOfReplayOKBtn = document.getElementById(
     'notice-end-of-replay-ok-btn'
@@ -254,6 +255,12 @@ export function setUpUI() {
       }
     }
   });
+}
+
+export function adjustFPSInputValue() {
+  const fpsInput = document.getElementById('fps-input');
+  // @ts-ignore
+  fpsInput.value = replayPlayer.ticker.maxFPS;
 }
 
 export function adjustPlayPauseBtnIcon() {
@@ -437,10 +444,6 @@ export function enableReplayScrubberAndBtns() {
   // @ts-ignore
   seekForward3Btn.disabled = false;
   // @ts-ignore
-  speedBtn1FPS.disabled = false;
-  // @ts-ignore
-  speedBtn2FPS.disabled = false;
-  // @ts-ignore
   speedBtn5FPS.disabled = false;
   // @ts-ignore
   speedBtnHalfTimes.disabled = false;
@@ -463,10 +466,6 @@ function disableReplayScrubberAndBtns() {
   seekBackward3Btn.disabled = true;
   // @ts-ignore
   seekForward3Btn.disabled = true;
-  // @ts-ignore
-  speedBtn1FPS.disabled = true;
-  // @ts-ignore
-  speedBtn2FPS.disabled = true;
   // @ts-ignore
   speedBtn5FPS.disabled = true;
   // @ts-ignore

@@ -130,18 +130,6 @@
         </div>
         <div class="margin-top-little">
           <button
-            id="speed-btn-1-fps"
-            class="btn-for-replay disable-dbl-tap-zoom"
-          >
-            1 fps
-          </button>
-          <button
-            id="speed-btn-2-fps"
-            class="btn-for-replay disable-dbl-tap-zoom"
-          >
-            2 fps
-          </button>
-          <button
             id="speed-btn-5-fps"
             class="btn-for-replay disable-dbl-tap-zoom"
           >
@@ -165,6 +153,14 @@
           >
             &times;2
           </button>
+          <label for="fps-input">FPS:</label>
+          <input
+            id="fps-input"
+            type="number"
+            inputmode="numeric"
+            min="1"
+            max="60"
+          />
         </div>
         <div class="margin-top-little show-checkboxes-container">
           <input id="show-keyboard-checkbox" type="checkbox" checked />
