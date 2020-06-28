@@ -12,6 +12,7 @@ import {
   enableReplayScrubberAndBtns,
   hideNoticeEndOfReplay,
   noticeFileOpenError,
+  adjustFPSInputValue,
 } from './ui_replay.js';
 import '../../style.css';
 import { serialize } from '../utils/serialize.js';
@@ -160,6 +161,7 @@ class ReplayPlayer {
     this.playBackSpeedFPS = null;
     this.playBackSpeedTimes = times;
     this.ticker.maxFPS = this.pikaVolley.normalFPS * this.playBackSpeedTimes;
+    adjustFPSInputValue();
   }
 
   /**
@@ -170,6 +172,7 @@ class ReplayPlayer {
     this.playBackSpeedTimes = null;
     this.playBackSpeedFPS = fps;
     this.ticker.maxFPS = this.playBackSpeedFPS;
+    adjustFPSInputValue();
   }
 
   stopBGM() {
@@ -202,8 +205,10 @@ export const replayPlayer = new ReplayPlayer();
 export function setTickerMaxFPSAccordingToNormalFPS(normalFPS) {
   if (replayPlayer.playBackSpeedFPS) {
     replayPlayer.ticker.maxFPS = replayPlayer.playBackSpeedFPS;
+    adjustFPSInputValue();
   } else if (replayPlayer.playBackSpeedTimes) {
     replayPlayer.ticker.maxFPS = normalFPS * replayPlayer.playBackSpeedTimes;
+    adjustFPSInputValue();
   }
 }
 

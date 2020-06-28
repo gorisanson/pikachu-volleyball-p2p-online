@@ -256,6 +256,12 @@ export function setUpUI() {
   });
 }
 
+export function adjustFPSInputValue() {
+  const fpsInput = document.getElementById('fps-input');
+  // @ts-ignore
+  fpsInput.value = replayPlayer.ticker.maxFPS;
+}
+
 export function adjustPlayPauseBtnIcon() {
   const playPauseBtn = document.getElementById('play-pause-btn');
   if (replayPlayer.ticker.started) {
