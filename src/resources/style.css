@@ -398,6 +398,7 @@ img.controls {
 }
 div.hidden,
 span.hidden,
+button.hidden,
 audio.hidden {
   display: none;
 }
@@ -672,7 +673,4 @@ label.custom-file-upload {
 }
 div.show-checkboxes-container {
   font-size: calc(var(--font-size) / 1.2);
-}
-.hide {
-  display: none;
 }
