@@ -7,3 +7,5 @@ analytics.html
 .firebaserc
 firebase.json
 .firebase/
+yarn.lock
+

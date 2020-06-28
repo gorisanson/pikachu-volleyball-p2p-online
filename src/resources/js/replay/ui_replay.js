@@ -1,4 +1,5 @@
 import { replayPlayer } from './replay_player.js';
+import { enableChat, hideChat } from '../chat_display';
 import '../../style.css';
 
 /** @typedef {import('../offline_version_js/physics.js').PikaUserInput} PikaUserInput */
@@ -193,19 +194,64 @@ export function setUpUI() {
   });
 
   const keyboardContainer = document.getElementById('keyboard-container');
-  const showHideKeyboardBtn = document.getElementById('show-hide-keyboard-btn');
-  const showOrHideSpan = document.getElementById('show-or-hide-span');
-  showHideKeyboardBtn.addEventListener('click', () => {
-    if (!keyboardContainer.classList.contains('hidden')) {
-      keyboardContainer.classList.add('hidden');
-      showOrHideSpan.textContent = document.getElementById(
-        'show-text'
-      ).textContent;
-    } else {
+  const showKeyboardCheckbox = document.getElementById(
+    'show-keyboard-checkbox'
+  );
+  showKeyboardCheckbox.addEventListener('change', () => {
+    // @ts-ignore
+    if (showKeyboardCheckbox.checked) {
       keyboardContainer.classList.remove('hidden');
-      showOrHideSpan.textContent = document.getElementById(
-        'hide-text'
-      ).textContent;
+    } else {
+      keyboardContainer.classList.add('hidden');
+    }
+  });
+
+  const showChatCheckbox = document.getElementById('show-chat-checkbox');
+  showChatCheckbox.addEventListener('change', () => {
+    // @ts-ignore
+    if (showChatCheckbox.checked) {
+      enableChat(true);
+    } else {
+      enableChat(false);
+      hideChat();
+    }
+  });
+
+  const showNicknamesCheckbox = document.getElementById(
+    'show-nicknames-checkbox'
+  );
+  const player1NicknameElem = document.getElementById('player1-nickname');
+  const player2NicknameElem = document.getElementById('player2-nickname');
+  showNicknamesCheckbox.addEventListener('change', () => {
+    // @ts-ignore
+    if (showNicknamesCheckbox.checked) {
+      player1NicknameElem.classList.remove('hidden');
+      player2NicknameElem.classList.remove('hidden');
+    } else {
+      if (!player1NicknameElem.classList.contains('hidden')) {
+        player1NicknameElem.classList.add('hidden');
+      }
+      if (!player2NicknameElem.classList.contains('hidden')) {
+        player2NicknameElem.classList.add('hidden');
+      }
+    }
+  });
+
+  const showIPsCheckbox = document.getElementById('show-ip-addresses-checkbox');
+  const player1IPElem = document.getElementById('player1-partial-ip');
+  const player2IPElem = document.getElementById('player2-partial-ip');
+  showIPsCheckbox.addEventListener('change', () => {
+    // @ts-ignore
+    if (showIPsCheckbox.checked) {
+      player1IPElem.classList.remove('hidden');
+      player2IPElem.classList.remove('hidden');
+    } else {
+      if (!player1IPElem.classList.contains('hidden')) {
+        player1IPElem.classList.add('hidden');
+      }
+      if (!player2IPElem.classList.contains('hidden')) {
+        player2IPElem.classList.add('hidden');
+      }
     }
   });
 }

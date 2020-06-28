@@ -59,12 +59,6 @@
         <p class="release-date">
           Release Date: 2020-04-08
         </p>
-        <p class="game-last-updated">
-          Game Last Updated: 2020-06-02
-        </p>
-        <p class="page-last-updated">
-          Page Last Updated: 2020-06-19
-        </p>
         <p class="update-history-on">
           <a href="./update-history/" target="_self">Update history</a>
         </p>
@@ -239,6 +233,7 @@
           <div id="created-room-id-container">
             <span class="margin-left-right">Room ID:</span>
             <span id="current-room-id"></span>
+            <button type="button" id="copy-btn" class="hidden">Copy</button>
           </div>
         </div>
         <div id="room-id-with-join-btn">
@@ -347,6 +342,12 @@
       <div id="replay-viewer-at" class="hidden">
         Replay Viewer at:
         https://gorisanson.github.io/pikachu-volleyball-p2p-online/en/replay/
+      </div>
+      <div id="copy" class="hidden">
+        Copy
+      </div>
+      <div id="copied" class="hidden">
+        Copied!
       </div>
       <audio
         id="audio-pikachu-sound"
