@@ -206,7 +206,6 @@ canvas {
 #copy-btn {
   width: 128px;
   height: var(--btn-height);
-  visibility: hidden;
   margin-left: 5%;
 }
 #join-room-id-input,
@@ -673,4 +672,7 @@ label.custom-file-upload {
 }
 div.show-checkboxes-container {
   font-size: calc(var(--font-size) / 1.2);
+}
+.hide {
+  display: none;
 }
