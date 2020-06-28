@@ -179,6 +179,18 @@ export function setUpUI() {
     }
   }
 
+  const fpsInput = document.getElementById('fps-input');
+  fpsInput.addEventListener('change', (e) => {
+    // @ts-ignore
+    let value = e.target.value;
+    if (value < 0) {
+      value = 0;
+    } else if (value > 60) {
+      value = 60;
+    }
+    replayPlayer.adjustPlaybackSpeedFPS(value);
+  });
+
   const noticeBoxEndOfReplayOKBtn = document.getElementById(
     'notice-end-of-replay-ok-btn'
   );
