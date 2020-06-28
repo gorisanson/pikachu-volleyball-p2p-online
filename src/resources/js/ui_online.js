@@ -344,7 +344,7 @@ export function setUpUI() {
     const roomId = generatePushID();
     createRoom(roomId).then(() => {
       printCurrentRoomID(roomId);
-      copyBtn.style.visibility = 'visible';
+      copyBtn.classList.remove('hide');
     });
   });
 
