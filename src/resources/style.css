@@ -674,6 +674,12 @@ label.custom-file-upload {
   font-size: calc(var(--font-size) / 1.3);
   width: var(--btn-width);
 }
-div.show-checkboxes-container {
+div.show-checkboxes-container,
+div.fps-input-container {
+  font-size: calc(var(--font-size) / 1.2);
+}
+#fps-input {
+  height: var(--btn-height);
+  width: calc(var(--btn-width) / 2);
   font-size: calc(var(--font-size) / 1.2);
 }
