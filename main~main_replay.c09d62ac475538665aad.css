@@ -384,11 +384,6 @@ button.large {
   height: calc(3 * var(--font-size));
   width: calc(7 * var(--font-size));
 }
-div.align-center-horizontally {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 img.screenshot,
 img.controls {
   width: 100%;
@@ -411,6 +406,11 @@ p.margin-top {
 }
 div.margin-top-a-little {
   margin-top: var(--font-size);
+}
+div.limit-width {
+  max-width: 864px;
+  margin-left: auto;
+  margin-right: auto;
 }
 ul {
   margin-top: var(--font-size);
@@ -687,4 +687,4 @@ label[for='fps-input'] {
 }
 
 
-/*# sourceMappingURL=main~main_replay.4d404e8227aad17de7c5.css.map*/
+/*# sourceMappingURL=main~main_replay.c09d62ac475538665aad.css.map*/
