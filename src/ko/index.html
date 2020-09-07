@@ -58,22 +58,18 @@
             >GitHub</a
           >에서 볼 수 있습니다.
         </p>
-        <p class="release-date">
-          공개한 날: 2020-04-08
-        </p>
+        <p class="release-date">공개한 날: 2020-04-08</p>
         <p class="update-history-on">
           <a href="./update-history/" target="_self">업데이트 기록</a>
         </p>
       </div>
-      <div class="margin-top">
+      <div class="margin-top limit-width">
         <div>
-          <div class="align-center-horizontally">
-            <img
-              class="screenshot"
-              src="../resources/assets/images/screenshot.png"
-              alt="Pikachu Volleyball game screenshot"
-            />
-          </div>
+          <img
+            class="screenshot"
+            src="../resources/assets/images/screenshot.png"
+            alt="Pikachu Volleyball game screenshot"
+          />
           <p>
             피카츄 배구는 일본에서 1997년에 만들어진 윈도우용 게임입니다. 이 웹
             페이지에서 다른 사람과 P2P 연결을 맺어 피카츄 배구를 온라인으로
@@ -122,22 +118,18 @@
             아래의 "네트워크 검사하기" 버튼을 눌러, 위 두 가지 사항의 해당
             여부를 확인할 수 있습니다.
           </p>
-          <button type="button" id="network-test-btn">
-            네트워크 검사하기
-          </button>
+          <button type="button" id="network-test-btn">네트워크 검사하기</button>
         </div>
         <div>
           <p class="margin-top">
             <span class="thick">조작법:</span> 다음 중 편한 쪽을 사용하면
             됩니다. (스마트폰이나 태블릿의 경우, 블루투스 키보드가 필요합니다.)
           </p>
-          <div class="align-center-horizontally">
-            <img
-              class="controls"
-              src="../resources/assets/images/controls_online_ko.png"
-              alt="game controls"
-            />
-          </div>
+          <img
+            class="controls"
+            src="../resources/assets/images/controls_online_ko.png"
+            alt="game controls"
+          />
         </div>
         <div>
           <p class="margin-top">
@@ -198,11 +190,11 @@
           </div>
         </div>
       </div>
-      <div class="margin-top grid-1-1">
+      <div class="margin-top limit-width grid-1-1">
         <button id="quick-match-btn">퀵 매치 (엔터)</button>
         <button id="with-your-friend-btn">친구와 함께</button>
       </div>
-      <div id="about-with-your-friend" class="margin-top hidden">
+      <div id="about-with-your-friend" class="margin-top limit-width hidden">
         <div>
           <p>
             <span class="thick">친구와 함께 온라인으로 플레이하는 방법:</span>
@@ -335,16 +327,12 @@
       <div id="someone-esle-already-joined-the-room" class="hidden">
         입력한 방 ID에 해당하는 방에 다른 사람이 이미 들어갔습니다.
       </div>
-      <div id="connection-failed" class="hidden">
-        연결에 실패했습니다.
-      </div>
+      <div id="connection-failed" class="hidden">연결에 실패했습니다.</div>
       <div id="replay-viewer-at" class="hidden">
         리플레이 재생기 주소:
         https://gorisanson.github.io/pikachu-volleyball-p2p-online/ko/replay/
       </div>
-      <div id="copy" class="hidden">
-        복사
-      </div>
+      <div id="copy" class="hidden">복사</div>
       <div id="copied" class="hidden">
         복사 <span class="no-wrap">완료!</span>
       </div>
@@ -359,9 +347,7 @@
         (1) 필요한 server reflexive candidate를 얻을 수 있거나, 컴퓨터에 공인 IP
         주소가 할당되어 있습니다. (UDP 포트가 열려 있습니다.)<br /><br />
         (2) 네트워크가 symmetric NAT 하에 있지 않습니다.
-        <button id="test-passed-ok-btn" class="btn-in-box">
-          알겠어요
-        </button>
+        <button id="test-passed-ok-btn" class="btn-in-box">알겠어요</button>
       </div>
       <div
         id="did-not-get-srflx-candidate"
@@ -530,7 +516,7 @@
           <div>
             <p>게임 스프라이트/사운드 로드 중...</p>
             <div id="progress-bar-border">
-              <div id="progress-bar" style="width: 0%;"></div>
+              <div id="progress-bar" style="width: 0%"></div>
             </div>
           </div>
           <div>
@@ -620,9 +606,7 @@
           </button>
         </div>
         <div class="fade-in-box notice hidden" id="notice-peer-disagreed">
-          <p>
-            상대방이 게임 설정 변경에 동의하지 않았습니다.
-          </p>
+          <p>상대방이 게임 설정 변경에 동의하지 않았습니다.</p>
           <button id="notice-peer-disagreed-ok-btn" class="btn-in-box">
             알겠어요
           </button>
@@ -658,17 +642,13 @@
           </button>
         </div>
         <div class="fade-in-box notice hidden" id="notice-disconnected">
-          <p>
-            상대방과의 연결이 끊겼습니다.
-          </p>
+          <p>상대방과의 연결이 끊겼습니다.</p>
           <button id="notice-disconnected-ok-btn" class="btn-in-box">
             알겠어요
           </button>
         </div>
         <div class="fade-in-box notice hidden" id="ask-one-more-game">
-          <p>
-            상대방과 한 판 더 할까요?
-          </p>
+          <p>상대방과 한 판 더 할까요?</p>
           <div class="grid-1-1 center">
             <button id="ask-one-more-game-yes-btn" class="btn-in-box">
               한 판 더!
