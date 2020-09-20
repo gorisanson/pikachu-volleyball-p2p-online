@@ -269,7 +269,7 @@ export function setUpUI() {
   }
 
   const startQuickMatchIfPressEnter = (event) => {
-    if (event.code === 'Enter') {
+    if (event.code === 'Enter' || event.code === 'KeyZ') {
       event.preventDefault();
       window.removeEventListener('keydown', startQuickMatchIfPressEnter);
       const pressEnterToQuickMatch = document.getElementById(
