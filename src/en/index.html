@@ -353,7 +353,7 @@
         id="did-not-get-srflx-candidate"
         class="fade-in-box notice fixed hidden"
       >
-        <div>
+        <div class="limit-width">
           This P2P online version is not going to work on your network.<br /><br />
           The necessary server reflexive candidate can't be gotten. Maybe the
           reason is that the necessary UDP ports are blocked. If you connected
@@ -362,15 +362,11 @@
           If you see this message after following the troubleshooting in the
           case of your public IP address being obfuscated by the browser,
           there's no more to do if you are not an administrator of the corporate
-          network. It is recommended that, on the Chrome browser, visit the page
-          <a
-            href="chrome://flags/#enable-webrtc-hide-local-ips-with-mdns"
-            target="_blank"
-            rel="noopener"
-            >chrome://flags/#enable-webrtc-hide-local-ips-with-mdns</a
-          >
+          network. It is recommended that, in your Firefox browser, visit the
+          page
+          <a href="about:config" target="_blank" rel="noopener">about:config</a>
           (by copying and pasting the address) and turn back the setting of
-          "Anonymize local IPs exposed by WebRTC" to "Default".
+          "media.peerconnection.ice.obfuscate_host_addresses" to "true".
         </div>
         <button id="did-not-get-srflx-candidate-ok-btn" class="btn-in-box">
           OK
@@ -380,7 +376,7 @@
         id="did-not-get-srflx-candidate-and-host-address-is-obfuscated"
         class="fade-in-box notice fixed hidden"
       >
-        <div>
+        <div class="limit-width">
           This P2P online version is not going to work on your network. It is
           one of the following two cases. It is recommended that, first, do the
           troubleshooting on (2).<br /><br />
@@ -392,17 +388,12 @@
           computer is connected directly to the internet without a router), the
           server reflexive candidate is not necessary. But it can be the case
           the public IP address is obfuscated to mDNS by the web browser since
-          it is somehow treated as a local IP address. In this case, on the
-          Chrome browser, visit the page
-          <a
-            href="chrome://flags/#enable-webrtc-hide-local-ips-with-mdns"
-            target="_blank"
-            rel="noopener"
-            >chrome://flags/#enable-webrtc-hide-local-ips-with-mdns</a
-          >
+          it is somehow treated as a local IP address. In this case, you can use
+          Firefox to play this game. In your Firefox browser, visit the page
+          <a href="about:config" target="_blank" rel="noopener">about:config</a>
           (by copying and pasting the address) and change the setting of
-          "Anonymize local IPs exposed by WebRTC" to "Disabled". Then, this P2P
-          online version would work.
+          "media.peerconnection.ice.obfuscate_host_addresses" to "false". Then,
+          this P2P online version would work.
         </div>
         <button
           id="did-not-get-srflx-candidate-and-host-address-is-obfuscated-ok-btn"
