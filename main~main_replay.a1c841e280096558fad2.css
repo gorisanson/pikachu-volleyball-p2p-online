@@ -38,6 +38,9 @@ html {
 * {
   font-family: Arial, Helvetica, sans-serif;
 }
+body {
+  color: #202124;
+}
 #flex-container,
 #before-connection,
 #update-history-container {
@@ -687,4 +690,4 @@ label[for='fps-input'] {
 }
 
 
-/*# sourceMappingURL=main~main_replay.c09d62ac475538665aad.css.map*/
+/*# sourceMappingURL=main~main_replay.a1c841e280096558fad2.css.map*/
