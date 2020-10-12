@@ -362,16 +362,11 @@
           만약 공인 IP 주소가 브라우저에 의해 mDNS로 바뀌게 된 경우에 해당하는
           해결 방법을 실행한 후 이 메시지를 보시게 된 경우라면, 해당 기관의
           네트워크 관리자가 아닌 이상 더 이상 할 수 있는 것이 없는 것으로
-          보입니다. 크롬 브라우저에서
-          <a
-            href="chrome://flags/#enable-webrtc-hide-local-ips-with-mdns"
-            target="_blank"
-            rel="noopener"
-            >chrome://flags/#enable-webrtc-hide-local-ips-with-mdns</a
-          >
-          페이지로 접속해 (주소를 복사 붙여넣기 하면 편리합니다), "Anonymize
-          local IPs exposed by WebRTC" 설정을 다시 원래대로 "Default"로
-          바꾸어주는 것을 권장합니다.
+          보입니다. 파이어폭스 브라우저에서
+          <a href="about:config" target="_blank" rel="noopener">about:config</a>
+          페이지로 접속해 (주소를 복사 붙여넣기 하면 편리합니다),
+          "media.peerconnection.ice.obfuscate_host_addresses" 설정을 다시
+          원래대로 "true"로 바꾸어주는 것을 권장합니다.
         </div>
         <button id="did-not-get-srflx-candidate-ok-btn" class="btn-in-box">
           알겠어요
@@ -391,17 +386,14 @@
           (2) 컴퓨터가 (라우터의 중개 없이 인터넷에 접속하여) 공인 IP 주소가
           할당되어 있는 경우에는 server reflexive candidate가 필요 없습니다.
           그러나 이 공인 IP 주소가 어떤 이유로인가 사설 IP 주소로 인식되어
-          브라우저에 의해 mDNS로 바뀌게 된 경우일 수 있습니다. 이 경우에는, 크롬
-          브라우저에서
-          <a
-            href="chrome://flags/#enable-webrtc-hide-local-ips-with-mdns"
-            target="_blank"
-            rel="noopener"
-            >chrome://flags/#enable-webrtc-hide-local-ips-with-mdns</a
-          >
-          페이지로 접속해 (주소를 복사 붙여넣기 하면 편리합니다), "Anonymize
-          local IPs exposed by WebRTC" 설정을 "Disabled"로 바꾸어주고나서
-          브라우저를 재시작하면 이 P2P 온라인 버전의 이용이 가능합니다.
+          브라우저에 의해 mDNS로 바뀌게 된 경우일 수 있습니다. 이 경우에는,
+          파이어폭스(Firefox) 브라우저를 이용하면 플레이가 가능합니다.
+          파이어폭스 브라우저에서
+          <a href="about:config" target="_blank" rel="noopener">about:config</a>
+          페이지로 접속해 (주소를 복사 붙여넣기 하면 편리합니다),
+          "media.peerconnection.ice.obfuscate_host_addresses" 설정을 "false"로
+          바꾸어주고나서 브라우저를 재시작하면 이 P2P 온라인 버전의 이용이
+          가능합니다.
         </div>
         <button
           id="did-not-get-srflx-candidate-and-host-address-is-obfuscated-ok-btn"
