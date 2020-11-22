@@ -19,7 +19,7 @@
     />
   </head>
   <body>
-    <div id="before-connection">
+    <div id="before-connection" class="limit-width">
       <div id="about-box-head">
         <h1>피카츄 배구 <span class="no-wrap">P2P 온라인</span></h1>
         <p class="languages">
@@ -63,7 +63,7 @@
           <a href="./update-history/" target="_self">업데이트 기록</a>
         </p>
       </div>
-      <div class="margin-top limit-width">
+      <div class="margin-top">
         <div>
           <img
             class="screenshot"
@@ -190,11 +190,24 @@
           </div>
         </div>
       </div>
-      <div class="margin-top limit-width grid-1-1">
+      <div class="margin-top grid-1-1">
         <button id="quick-match-btn">퀵 매치 (엔터)</button>
         <button id="with-your-friend-btn">친구와 함께</button>
       </div>
-      <div id="about-with-your-friend" class="margin-top limit-width hidden">
+      <div class="margin-top">
+        <div>
+          피카츄 배구 팬을 위한 카카오톡 오픈 채팅방이 있습니다.
+          <span class="no-wrap"
+            >"<a
+              href="https://open.kakao.com/o/gpXfHM9b"
+              target="_blank"
+              rel="noopener"
+              >피카츄 배구 ON</a
+            >"</span
+          >입니다!
+        </div>
+      </div>
+      <div id="about-with-your-friend" class="margin-top hidden">
         <div>
           <p>
             <span class="thick">친구와 함께 온라인으로 플레이하는 방법:</span>
@@ -353,7 +366,7 @@
         id="did-not-get-srflx-candidate"
         class="fade-in-box notice fixed hidden"
       >
-        <div class="limit-width">
+        <div>
           이 P2P 온라인 버전을 이용할 수 없습니다.<br /><br />
           필요한 server reflexive candidate를 얻을 수 없습니다. UDP 포트들이
           막혀있는 것이 원인일 가능성이 높습니다. 만약 회사, 학교, 또는
@@ -376,7 +389,7 @@
         id="did-not-get-srflx-candidate-and-host-address-is-obfuscated"
         class="fade-in-box notice fixed hidden"
       >
-        <div class="limit-width">
+        <div>
           이 P2P 온라인 버전을 이용할 수 없습니다. 다음 두 가지 경우 중 하나에
           해당합니다. 일단 (2)에 해당하는 조치를 취할 수 있습니다.<br /><br />
           (1) 필요한 server reflexive candidate를 얻을 수 없습니다. UDP 포트들이
