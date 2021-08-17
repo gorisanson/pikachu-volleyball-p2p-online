@@ -155,7 +155,7 @@ canvas {
   grid-template-columns: auto var(--btn-width);
 }
 #create-btn-with-created-room-id {
-  grid-template-columns: var(--btn-width) auto;
+  grid-template-columns: var(--btn-width) auto var(--btn-width);
 }
 .nickname-input-container,
 #room-id-with-join-btn {
@@ -200,6 +200,7 @@ canvas {
 }
 #network-test-btn,
 #create-btn,
+#exit-room-btn,
 #join-room-id-input,
 #nickname-input,
 #join-btn {
@@ -220,6 +221,7 @@ canvas {
 }
 #network-test-btn,
 #create-btn,
+#exit-room-btn,
 #join-btn,
 #chat-disabling-btn,
 #send-btn,

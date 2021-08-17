@@ -90,8 +90,12 @@ export function setUpUI() {
   const withYourFriendBtn = document.getElementById('with-your-friend-btn');
   const createBtn = document.getElementById('create-btn');
   const copyBtn = document.getElementById('copy-btn');
+  const exitRoomBtn = document.getElementById('exit-room-btn');
   const joinBtn = document.getElementById('join-btn');
   const joinRoomIdInput = document.getElementById('join-room-id-input');
+  // @ts-ignore
+  exitRoomBtn.disabled = true;
+
   const disableBtns = () => {
     // @ts-ignore
     networkTestBtn.disabled = true;
@@ -345,6 +349,8 @@ export function setUpUI() {
     createRoom(roomId).then(() => {
       printCurrentRoomID(roomId);
       copyBtn.classList.remove('hidden');
+      // @ts-ignore
+      exitRoomBtn.disabled = false;
     });
   });
 
@@ -357,6 +363,11 @@ export function setUpUI() {
     navigator.clipboard.writeText(
       document.getElementById('current-room-id').textContent
     );
+  });
+
+  exitRoomBtn.addEventListener('click', () => {
+    cleanUpFirestoreRelevants();
+    location.reload();
   });
 
   const clickJoinBtnByPressingEnter = (event) => {
@@ -374,6 +385,8 @@ export function setUpUI() {
     joinRoom(roomId).then((joined) => {
       if (joined) {
         printCurrentRoomID(roomId);
+        // @ts-ignore
+        exitRoomBtn.disabled = false;
       } else {
         enableBtns();
         window.addEventListener('keydown', clickJoinBtnByPressingEnter);
