@@ -31,6 +31,7 @@ const pauseResumeManager = {
    * @param {number} precedence PauseResumePrecedence enum
    */
   pause: function (pikaVolley, precedence) {
+    // @ts-ignore
     if (precedence > this._precedence) {
       pikaVolley.paused = true;
       this._precedence = precedence;
@@ -68,6 +69,11 @@ export function setUpUI(pikaVolley, ticker) {
         menuBar.classList.add('hidden');
       }
       event.preventDefault();
+    } else if (event.code === 'Space') {
+      const aboutBox = document.getElementById('about-box');
+      if (aboutBox.classList.contains('hidden')) {
+        event.preventDefault();
+      }
     }
   });
 }
