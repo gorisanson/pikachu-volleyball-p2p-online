@@ -153,9 +153,10 @@ canvas {
   height: 100%;
   z-index: 1;
   grid-template-columns: auto var(--btn-width);
+  align-items: center;
 }
 #create-btn-with-created-room-id {
-  grid-template-columns: var(--btn-width) auto;
+  grid-template-columns: var(--btn-width) auto var(--btn-width);
 }
 .nickname-input-container,
 #room-id-with-join-btn {
@@ -200,6 +201,7 @@ canvas {
 }
 #network-test-btn,
 #create-btn,
+#exit-room-btn,
 #join-room-id-input,
 #nickname-input,
 #join-btn {
@@ -213,6 +215,7 @@ canvas {
   background-color: white;
   color: black;
   margin-left: 20px;
+  margin-right: 10px;
 }
 #join-room-id-input,
 #create-btn {
@@ -220,6 +223,7 @@ canvas {
 }
 #network-test-btn,
 #create-btn,
+#exit-room-btn,
 #join-btn,
 #chat-disabling-btn,
 #send-btn,
@@ -690,4 +694,4 @@ label[for='fps-input'] {
 }
 
 
-/*# sourceMappingURL=main~main_replay.92002f48bf525ae63407.css.map*/
+/*# sourceMappingURL=main_replay.css.map*/
