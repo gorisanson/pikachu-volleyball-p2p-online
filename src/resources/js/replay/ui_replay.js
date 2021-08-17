@@ -266,9 +266,8 @@ export function adjustFPSInputValue() {
 export function adjustPlayPauseBtnIcon() {
   const playPauseBtn = document.getElementById('play-pause-btn');
   if (replayPlayer.ticker.started) {
-    playPauseBtn.textContent = document.getElementById(
-      'pause-mark'
-    ).textContent;
+    playPauseBtn.textContent =
+      document.getElementById('pause-mark').textContent;
   } else {
     playPauseBtn.textContent = document.getElementById('play-mark').textContent;
   }
@@ -312,9 +311,8 @@ export function moveScrubberTo(value) {
  * @param {number} timeCurrent unit: second
  */
 export function showTimeCurrent(timeCurrent) {
-  document.getElementById('time-current').textContent = getTimeText(
-    timeCurrent
-  );
+  document.getElementById('time-current').textContent =
+    getTimeText(timeCurrent);
 }
 
 /**
@@ -322,9 +320,8 @@ export function showTimeCurrent(timeCurrent) {
  * @param {number} timeDuration unit: second
  */
 export function showTotalTimeDuration(timeDuration) {
-  document.getElementById('time-duration').textContent = getTimeText(
-    timeDuration
-  );
+  document.getElementById('time-duration').textContent =
+    getTimeText(timeDuration);
 }
 
 /**

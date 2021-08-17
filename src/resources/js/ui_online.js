@@ -444,17 +444,15 @@ export function setUpUI() {
       chatInput.disabled = true;
       // @ts-ignore
       sendBtn.disabled = true;
-      chatDisablingBtn.textContent = document.getElementById(
-        'text-enable-chat'
-      ).textContent;
+      chatDisablingBtn.textContent =
+        document.getElementById('text-enable-chat').textContent;
       chatDisablingBtn.blur();
     } else {
       enableChat(true);
       // @ts-ignore
       chatOpenBtn.disabled = false;
-      chatDisablingBtn.textContent = document.getElementById(
-        'text-disable-chat'
-      ).textContent;
+      chatDisablingBtn.textContent =
+        document.getElementById('text-disable-chat').textContent;
       chatDisablingBtn.blur();
     }
   });
@@ -676,12 +674,14 @@ export function printQuickMatchState(state) {
     case MESSAGE_TO_CLIENT.keepWait:
       return;
     case MESSAGE_TO_CLIENT.waitPeerConnection:
-      log = document.getElementById('waiting-peer-to-connect-message')
-        .textContent;
+      log = document.getElementById(
+        'waiting-peer-to-connect-message'
+      ).textContent;
       break;
     case MESSAGE_TO_CLIENT.connectToPeerAfterAWhile:
-      log = document.getElementById('connect-to-peer-after-a-while-message')
-        .textContent;
+      log = document.getElementById(
+        'connect-to-peer-after-a-while-message'
+      ).textContent;
       break;
     case MESSAGE_TO_CLIENT.connectToPeer:
       log = document.getElementById('connect-to-peer-message').textContent;
@@ -696,8 +696,9 @@ export function printQuickMatchState(state) {
 }
 
 export function printFailedToConnectToQuickMatchServer() {
-  const log = document.getElementById('failed-to-connect-to-server')
-    .textContent;
+  const log = document.getElementById(
+    'failed-to-connect-to-server'
+  ).textContent;
   printQuickMatchLog(log);
 }
 
@@ -722,15 +723,12 @@ export function printNumberOfSuccessfulQuickMatches(
   withinLast1hour,
   withinLast10minutes
 ) {
-  document.getElementById('within-24-hours').textContent = String(
-    withinLast24hours
-  );
-  document.getElementById('within-1-hour').textContent = String(
-    withinLast1hour
-  );
-  document.getElementById('within-10-minutes').textContent = String(
-    withinLast10minutes
-  );
+  document.getElementById('within-24-hours').textContent =
+    String(withinLast24hours);
+  document.getElementById('within-1-hour').textContent =
+    String(withinLast1hour);
+  document.getElementById('within-10-minutes').textContent =
+    String(withinLast10minutes);
 }
 
 /**
