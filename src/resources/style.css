@@ -153,6 +153,7 @@ canvas {
   height: 100%;
   z-index: 1;
   grid-template-columns: auto var(--btn-width);
+  align-items: center;
 }
 #create-btn-with-created-room-id {
   grid-template-columns: var(--btn-width) auto var(--btn-width);
@@ -214,6 +215,7 @@ canvas {
   background-color: white;
   color: black;
   margin-left: 20px;
+  margin-right: 10px;
 }
 #join-room-id-input,
 #create-btn {
