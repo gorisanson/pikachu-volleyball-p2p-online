@@ -699,6 +699,9 @@ label[for='fps-input'] {
 .open-chat-list li {
   margin-top: 10px;
 }
+.no-margin-top {
+  margin-top: 0;
+}
 
 
 /*# sourceMappingURL=main_replay.css.map*/
