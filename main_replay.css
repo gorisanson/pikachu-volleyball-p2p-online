@@ -692,6 +692,13 @@ label[for='fps-input'] {
   width: calc(var(--btn-width) / 2);
   font-size: calc(var(--font-size) / 1.2);
 }
+.open-chat-list {
+  margin-block-start: 1em;
+  margin-block-end: 0;
+}
+.open-chat-list li {
+  margin-top: 10px;
+}
 
 
 /*# sourceMappingURL=main_replay.css.map*/
