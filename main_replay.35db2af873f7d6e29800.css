@@ -393,6 +393,7 @@ button.large {
 }
 img.screenshot,
 img.controls {
+  height: auto;
   width: 100%;
 }
 img.screenshot {
@@ -704,4 +705,4 @@ label[for='fps-input'] {
 }
 
 
-/*# sourceMappingURL=main_replay.21486c943ab2cf361c21.css.map*/
+/*# sourceMappingURL=main_replay.35db2af873f7d6e29800.css.map*/
