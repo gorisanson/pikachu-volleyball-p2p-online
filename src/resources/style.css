@@ -393,6 +393,7 @@ button.large {
 }
 img.screenshot,
 img.controls {
+  height: auto;
   width: 100%;
 }
 img.screenshot {
