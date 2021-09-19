@@ -43,17 +43,14 @@ body {
   color: var(--color-black);
 }
 a {
-  color: #0074cc;
+  color: #0969da;
   text-decoration: none;
 }
-a:visited {
-  color: #0063bf;
-}
 a:hover {
-  color: #0a95ff;
+  text-decoration: underline;
 }
 a:active {
-  color: #0a95ff;
+  text-decoration: underline;
 }
 #flex-container,
 #before-connection,
