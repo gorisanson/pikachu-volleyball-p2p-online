@@ -703,3 +703,16 @@ label[for='fps-input'] {
 .no-margin-top {
   margin-top: 0;
 }
+a {
+  color: #0074cc;
+  text-decoration: none;
+}
+a:visited {
+  color: #0063bf;
+}
+a:hover {
+  color: #0a95ff;
+}
+a:active {
+  color: #0a95ff;
+}
