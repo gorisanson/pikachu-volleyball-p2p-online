@@ -7,6 +7,7 @@
   --font-size: 18px;
   --btn-width: calc(5 * var(--font-size));
   --btn-height: calc(2 * var(--font-size));
+  --color-black: #232629;
 }
 /* size of iPad screen is 768px x 1024px in portrait mode */
 @media only screen and (min-width: 768px) and (min-height: 768px) {
@@ -39,7 +40,20 @@ html {
   font-family: Arial, Helvetica, sans-serif;
 }
 body {
-  color: #232629;
+  color: var(--color-black);
+}
+a {
+  color: #0074cc;
+  text-decoration: none;
+}
+a:visited {
+  color: #0063bf;
+}
+a:hover {
+  color: #0a95ff;
+}
+a:active {
+  color: #0a95ff;
 }
 #flex-container,
 #before-connection,
@@ -117,7 +131,7 @@ canvas {
   animation-duration: 5s;
 }
 .chat-box.in-speech-bubble {
-  color: black;
+  color: var(--color-black);
   background-color: rgba(255, 255, 255, 0.95);
 }
 @keyframes fade-inout {
@@ -213,7 +227,7 @@ canvas {
   height: var(--btn-height);
   background-image: none;
   background-color: white;
-  color: black;
+  color: var(--color-black);
   margin-left: 20px;
   margin-right: 10px;
 }
@@ -359,13 +373,13 @@ button {
   padding: 0;
   background-color: rbg(210, 210, 210);
   background-image: linear-gradient(rgb(250, 250, 250), rgb(230, 230, 230));
-  color: black;
+  color: var(--color-black);
   text-align: center;
   text-decoration: none;
   border-radius: 5px;
 }
 input {
-  border-color: black;
+  border-color: var(--color-black);
 }
 button:disabled,
 input:disabled {
@@ -563,7 +577,7 @@ div.nicknames-container {
 /* CSS for replay is below */
 #dropbox {
   border-style: solid;
-  border-color: black;
+  border-color: var(--color-black);
   border-width: 2px;
 }
 .btn-container {
@@ -619,7 +633,7 @@ label.custom-file-upload {
   padding: 0;
   background-color: rbg(210, 210, 210);
   background-image: linear-gradient(rgb(250, 250, 250), rgb(230, 230, 230));
-  color: black;
+  color: var(--color-black);
   border-radius: 5px;
   width: var(--btn-width);
   height: var(--btn-height);
@@ -702,17 +716,4 @@ label[for='fps-input'] {
 }
 .no-margin-top {
   margin-top: 0;
-}
-a {
-  color: #0074cc;
-  text-decoration: none;
-}
-a:visited {
-  color: #0063bf;
-}
-a:hover {
-  color: #0a95ff;
-}
-a:active {
-  color: #0a95ff;
 }
