@@ -7,7 +7,7 @@
   --font-size: 18px;
   --btn-width: calc(5 * var(--font-size));
   --btn-height: calc(2 * var(--font-size));
-  --color-black: #24292f;
+  --color-black: #232629;
 }
 /* size of iPad screen is 768px x 1024px in portrait mode */
 @media only screen and (min-width: 768px) and (min-height: 768px) {
@@ -45,14 +45,14 @@ body {
 a,
 a:link,
 a:visited {
-  color: #0969da;
+  color: #0074cc;
   text-decoration: none;
 }
 a:hover {
-  text-decoration: underline;
+  color: #0a95ff;
 }
 a:active {
-  text-decoration: underline;
+  color: #0a95ff;
 }
 #flex-container,
 #before-connection,
@@ -718,4 +718,4 @@ label[for='fps-input'] {
 }
 
 
-/*# sourceMappingURL=main_replay.b44ac49a9045694969d6.css.map*/
+/*# sourceMappingURL=main_replay.a51d3eeef01f8a895fd6.css.map*/
