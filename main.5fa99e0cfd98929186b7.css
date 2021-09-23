@@ -716,6 +716,24 @@ label[for='fps-input'] {
 .no-margin-top {
   margin-top: 0;
 }
+.if-embedded-in-other-website {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: calc(var(--font-size) - 10px);
+  font-size: calc(0.8 * var(--font-size));
+  margin-bottom: var(--font-size);
+  padding: var(--font-size);
+  border: solid;
+  border-width: 3px;
+}
+.if-embedded-in-other-website .limit-width {
+  max-width: calc(23 * var(--font-size));
+}
+.original-address {
+  margin-top: var(--font-size);
+}
 
 
-/*# sourceMappingURL=main_replay.a51d3eeef01f8a895fd6.css.map*/
+/*# sourceMappingURL=main.5fa99e0cfd98929186b7.css.map*/
