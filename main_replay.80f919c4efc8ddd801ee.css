@@ -725,15 +725,24 @@ label[for='fps-input'] {
   font-size: calc(0.8 * var(--font-size));
   margin-bottom: var(--font-size);
   padding: var(--font-size);
-  border: solid;
-  border-width: 3px;
+  border: 3px solid;
+  border-radius: 10px;
 }
 .if-embedded-in-other-website .limit-width {
   max-width: calc(23 * var(--font-size));
+}
+.if-embedded-in-other-website button {
+  margin-top: var(--font-size);
+  background-color: white;
+  color: var(--color-black);
+  font-size: calc(0.8 * var(--font-size));
+  border: 3px solid;
+  height: calc(1.6 * var(--font-size));
+  width: calc(4 * var(--font-size));
 }
 .original-address {
   margin-top: var(--font-size);
 }
 
 
-/*# sourceMappingURL=main.5fa99e0cfd98929186b7.css.map*/
+/*# sourceMappingURL=main_replay.80f919c4efc8ddd801ee.css.map*/
