@@ -731,6 +731,15 @@ label[for='fps-input'] {
 .if-embedded-in-other-website .limit-width {
   max-width: calc(23 * var(--font-size));
 }
+.if-embedded-in-other-website button {
+  margin-top: var(--font-size);
+  background-color: white;
+  color: var(--color-black);
+  font-size: calc(0.8 * var(--font-size));
+  border: 3px solid;
+  height: calc(1.6 * var(--font-size));
+  width: calc(4 * var(--font-size));
+}
 .original-address {
   margin-top: var(--font-size);
 }
