@@ -2,7 +2,8 @@
  * This code is originated from a gist https://gist.github.com/mikelehen/3596a30bd69384624c11
  * I found the gist link at https://firebase.googleblog.com/2015/02/the-2120-ways-to-ensure-unique_68.html
  *
- * Modified the origianl code somewhat so that the generated id can be easilly distinguishable by human eye.
+ * Modified the origianl code somewhat so that the generated id can be easilly distinguishable by human eye
+ * and Web Crypto API is used instead of Math.random if available.
  */
 'use strict';
 
@@ -44,10 +45,19 @@ export const generatePushID = (function () {
       throw new Error('We should have converted the entire timestamp.');
 
     let id = timeStampChars.join('');
-
     if (!duplicateTime) {
+      let array;
+      if (
+        typeof window.crypto !== 'undefined' &&
+        window.crypto.getRandomValues
+      ) {
+        array = new Uint32Array(10);
+        window.crypto.getRandomValues(array);
+      }
       for (let i = 0; i < 10; i++) {
-        lastRandChars[i] = Math.floor(Math.random() * 32);
+        lastRandChars[i] = array
+          ? array[i] % 32
+          : Math.floor(Math.random() * 32);
       }
     } else {
       // If the timestamp hasn't changed since last push, use the same random number, except incremented by 1.
