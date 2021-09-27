@@ -36,7 +36,7 @@
                 >https://gorisanson.github.io/pikachu-volleyball-p2p-online/en/</a
               >
             </div>
-            <button class="btn-in-box">
+            <button type="button" class="btn-in-box">
               <span>close</span>
             </button>
           </div>
@@ -220,8 +220,10 @@
         </div>
       </div>
       <div class="margin-top limit-width grid-1-1">
-        <button id="quick-match-btn">Quick Match (Enter)</button>
-        <button id="with-your-friend-btn">With one of your friends</button>
+        <button type="button" id="quick-match-btn">Quick Match (Enter)</button>
+        <button type="button" id="with-your-friend-btn">
+          With one of your friends
+        </button>
       </div>
       <div id="about-with-your-friend" class="margin-top limit-width hidden">
         <div>
@@ -285,7 +287,11 @@
           (It is for preventing devices without a keyboard from doing quick
           match.)
         </p>
-        <button id="cancel-quick-match-btn" class="btn-in-box large">
+        <button
+          type="button"
+          id="cancel-quick-match-btn"
+          class="btn-in-box large"
+        >
           cancel <span class="no-wrap">Quick Match</span>
         </button>
       </div>
@@ -320,7 +326,11 @@
           </p>
           <div id="connection-log-quick-match" class="pre-wrap"></div>
         </div>
-        <button id="cancel-quick-match-btn-2" class="btn-in-box large">
+        <button
+          type="button"
+          id="cancel-quick-match-btn-2"
+          class="btn-in-box large"
+        >
           cancel <span class="no-wrap">Quick Match</span>
         </button>
       </div>
@@ -375,7 +385,9 @@
         (1) The necessary server reflexive candidate can be gotten, or your
         computer is assigned a public IP address. (UDP ports are open.)<br /><br />
         (2) Your network is not behind a symmetric NAT.
-        <button id="test-passed-ok-btn" class="btn-in-box">OK</button>
+        <button type="button" id="test-passed-ok-btn" class="btn-in-box">
+          OK
+        </button>
       </div>
       <div
         id="did-not-get-srflx-candidate"
@@ -396,7 +408,11 @@
           (by copying and pasting the address) and turn back the setting of
           "media.peerconnection.ice.obfuscate_host_addresses" to "true".
         </div>
-        <button id="did-not-get-srflx-candidate-ok-btn" class="btn-in-box">
+        <button
+          type="button"
+          id="did-not-get-srflx-candidate-ok-btn"
+          class="btn-in-box"
+        >
           OK
         </button>
       </div>
@@ -424,6 +440,7 @@
           this P2P online version would work.
         </div>
         <button
+          type="button"
           id="did-not-get-srflx-candidate-and-host-address-is-obfuscated-ok-btn"
           class="btn-in-box"
         >
@@ -433,74 +450,108 @@
       <div id="behind-symmetric-nat" class="fade-in-box notice fixed hidden">
         This P2P online version is not going to work on your network.<br /><br />
         Your network is behind a symmetric NAT.
-        <button id="behind-symmetric-nat-ok-btn" class="btn-in-box">OK</button>
+        <button
+          type="button"
+          id="behind-symmetric-nat-ok-btn"
+          class="btn-in-box"
+        >
+          OK
+        </button>
       </div>
     </div>
     <div id="flex-container" class="hidden">
       <div id="menu-bar">
         <div class="btn-container left">
           <div class="relative-container">
-            <button id="options-dropdown-btn" class="btn dropdown-btn">
+            <button
+              type="button"
+              id="options-dropdown-btn"
+              class="btn dropdown-btn"
+            >
               Options
             </button>
             <div id="options-dropdown" class="dropdown">
               <div class="relative-container">
-                <button id="bgm-submenu-btn" class="btn submenu-btn">
+                <button
+                  type="button"
+                  id="bgm-submenu-btn"
+                  class="btn submenu-btn"
+                >
                   BGM &#9654;
                 </button>
                 <div id="bgm-submenu" class="submenu">
-                  <button id="bgm-on-btn" class="btn selected">
+                  <button type="button" id="bgm-on-btn" class="btn selected">
                     <span class="check">&check; </span>on
                   </button>
-                  <button id="bgm-off-btn" class="btn">
+                  <button type="button" id="bgm-off-btn" class="btn">
                     <span class="check">&check; </span>off
                   </button>
                 </div>
               </div>
               <div class="relative-container">
-                <button id="sfx-submenu-btn" class="btn submenu-btn">
+                <button
+                  type="button"
+                  id="sfx-submenu-btn"
+                  class="btn submenu-btn"
+                >
                   SFX &#9654;
                 </button>
                 <div id="sfx-submenu" class="submenu">
-                  <button id="stereo-btn" class="btn selected">
+                  <button type="button" id="stereo-btn" class="btn selected">
                     <span class="check">&check; </span>stereo
                   </button>
-                  <button id="mono-btn" class="btn">
+                  <button type="button" id="mono-btn" class="btn">
                     <span class="check">&check; </span>mono
                   </button>
-                  <button id="sfx-off-btn" class="btn">
+                  <button type="button" id="sfx-off-btn" class="btn">
                     <span class="check">&check; </span>off
                   </button>
                 </div>
               </div>
               <div class="relative-container">
-                <button id="speed-submenu-btn" class="btn submenu-btn">
+                <button
+                  type="button"
+                  id="speed-submenu-btn"
+                  class="btn submenu-btn"
+                >
                   Speed &#9654;
                 </button>
                 <div id="speed-submenu" class="submenu">
-                  <button id="slow-speed-btn" class="btn">
+                  <button type="button" id="slow-speed-btn" class="btn">
                     <span class="check">&check; </span>slow
                   </button>
-                  <button id="medium-speed-btn" class="btn selected">
+                  <button
+                    type="button"
+                    id="medium-speed-btn"
+                    class="btn selected"
+                  >
                     <span class="check">&check; </span>medium
                   </button>
-                  <button id="fast-speed-btn" class="btn">
+                  <button type="button" id="fast-speed-btn" class="btn">
                     <span class="check">&check; </span>fast
                   </button>
                 </div>
               </div>
               <div class="relative-container">
-                <button id="winning-score-submenu-btn" class="btn submenu-btn">
+                <button
+                  type="button"
+                  id="winning-score-submenu-btn"
+                  class="btn submenu-btn"
+                >
                   Winning score &#9654;
                 </button>
                 <div id="winning-score-submenu" class="submenu">
-                  <button id="winning-score-5-btn" class="btn">
+                  <button type="button" id="winning-score-5-btn" class="btn">
                     <span class="check">&check; </span>5 pts
                   </button>
-                  <button id="winning-score-10-btn" class="btn">
+                  <button type="button" id="winning-score-10-btn" class="btn">
                     <span class="check">&check; </span>10 pts
                   </button>
-                  <button id="winning-score-15-btn" class="btn selected">
+                  <button
+                    type="button"
+                    id="winning-score-15-btn"
+                    class="btn selected"
+                  >
                     <span class="check">&check; </span>15 pts
                   </button>
                 </div>
@@ -508,11 +559,13 @@
             </div>
           </div>
           <div class="relative-container">
-            <button id="save-replay-btn" class="btn">Save replay</button>
+            <button type="button" id="save-replay-btn" class="btn">
+              Save replay
+            </button>
           </div>
         </div>
         <div class="btn-container right">
-          <button id="exit-btn" class="btn">Exit</button>
+          <button type="button" id="exit-btn" class="btn">Exit</button>
         </div>
       </div>
       <div class="if-embedded-in-other-website hidden">
@@ -529,7 +582,7 @@
               >https://gorisanson.github.io/pikachu-volleyball-p2p-online/en/</a
             >
           </div>
-          <button class="btn-in-box">
+          <button type="button" class="btn-in-box">
             <span>close</span>
           </button>
         </div>
@@ -593,12 +646,14 @@
           </div>
           <div class="grid-1-1 center">
             <button
+              type="button"
               id="ask-options-change-send-to-peer-yes-btn"
               class="btn-in-box"
             >
               Proceed
             </button>
             <button
+              type="button"
               id="ask-options-change-send-to-peer-no-btn"
               class="btn-in-box"
             >
@@ -619,12 +674,14 @@
           </div>
           <div class="grid-1-1 center">
             <button
+              type="button"
               id="ask-options-change-received-from-peer-yes-btn"
               class="btn-in-box"
             >
               Agree
             </button>
             <button
+              type="button"
               id="ask-options-change-received-from-peer-no-btn"
               class="btn-in-box"
             >
@@ -637,11 +694,21 @@
             Peer agreed about changing the option.<br />
             It was applied successfully.
           </p>
-          <button id="notice-peer-agreed-ok-btn" class="btn-in-box">OK</button>
+          <button
+            type="button"
+            id="notice-peer-agreed-ok-btn"
+            class="btn-in-box"
+          >
+            OK
+          </button>
         </div>
         <div class="fade-in-box notice hidden" id="notice-peer-disagreed">
           <p>Peer did not agree about changing the option.</p>
-          <button id="notice-peer-disagreed-ok-btn" class="btn-in-box">
+          <button
+            type="button"
+            id="notice-peer-disagreed-ok-btn"
+            class="btn-in-box"
+          >
             OK
           </button>
         </div>
@@ -654,6 +721,7 @@
             retry after the game is finished.
           </p>
           <button
+            type="button"
             id="notice-speed-options-cannot-changed-if-game-in-progress-ok-btn"
             class="btn-in-box"
           >
@@ -669,6 +737,7 @@
             Please retry after the game is finished.
           </p>
           <button
+            type="button"
             id="notice-winning-score-options-cannot-changed-if-game-in-progress-ok-btn"
             class="btn-in-box"
           >
@@ -677,15 +746,29 @@
         </div>
         <div class="fade-in-box notice hidden" id="notice-disconnected">
           <p>Disconnected from the peer.</p>
-          <button id="notice-disconnected-ok-btn" class="btn-in-box">OK</button>
+          <button
+            type="button"
+            id="notice-disconnected-ok-btn"
+            class="btn-in-box"
+          >
+            OK
+          </button>
         </div>
         <div class="fade-in-box notice hidden" id="ask-one-more-game">
           <p>Play one more game with the peer?</p>
           <div class="grid-1-1 center">
-            <button id="ask-one-more-game-yes-btn" class="btn-in-box">
+            <button
+              type="button"
+              id="ask-one-more-game-yes-btn"
+              class="btn-in-box"
+            >
               One more!
             </button>
-            <button id="ask-one-more-game-no-btn" class="btn-in-box">
+            <button
+              type="button"
+              id="ask-one-more-game-no-btn"
+              class="btn-in-box"
+            >
               Nope
             </button>
           </div>
@@ -704,7 +787,7 @@
           <button type="button" id="send-btn">send (Enter)</button>
         </div>
         <div id="chat-open-btn-and-chat-disabling-btn-container">
-          <button id="chat-open-btn">Chat (space bar)</button>
+          <button type="button" id="chat-open-btn">Chat (space bar)</button>
           <button type="button" id="chat-disabling-btn">Disable chat</button>
           <div id="text-disable-chat" class="hidden">Disable chat</div>
           <div id="text-enable-chat" class="hidden">Enable chat</div>
