@@ -36,7 +36,7 @@
                 >https://gorisanson.github.io/pikachu-volleyball-p2p-online/ko/</a
               >
             </div>
-            <button class="btn-in-box">
+            <button type="button" class="btn-in-box">
               <span>닫기</span>
             </button>
           </div>
@@ -215,8 +215,8 @@
         </div>
       </div>
       <div class="margin-top grid-1-1">
-        <button id="quick-match-btn">퀵 매치 (엔터)</button>
-        <button id="with-your-friend-btn">친구와 함께</button>
+        <button type="button" id="quick-match-btn">퀵 매치 (엔터)</button>
+        <button type="button" id="with-your-friend-btn">친구와 함께</button>
       </div>
       <div class="margin-top">
         <div>
@@ -308,7 +308,11 @@
           <span class="thick">엔터(Enter) 키 또는 Z 키를 누르세요.</span><br />
           (키보드가 연결되지 않은 장치의 퀵 매치 참가를 방지하기 위한 것입니다.)
         </p>
-        <button id="cancel-quick-match-btn" class="btn-in-box large">
+        <button
+          type="button"
+          id="cancel-quick-match-btn"
+          class="btn-in-box large"
+        >
           <span class="no-wrap">퀵 매치</span> 취소
         </button>
       </div>
@@ -340,7 +344,11 @@
           </p>
           <div id="connection-log-quick-match" class="pre-wrap"></div>
         </div>
-        <button id="cancel-quick-match-btn-2" class="btn-in-box large">
+        <button
+          type="button"
+          id="cancel-quick-match-btn-2"
+          class="btn-in-box large"
+        >
           <span class="no-wrap">퀵 매치</span> 취소
         </button>
       </div>
@@ -397,7 +405,9 @@
         (1) 필요한 server reflexive candidate를 얻을 수 있거나, 컴퓨터에 공인 IP
         주소가 할당되어 있습니다. (UDP 포트가 열려 있습니다.)<br /><br />
         (2) 네트워크가 symmetric NAT 하에 있지 않습니다.
-        <button id="test-passed-ok-btn" class="btn-in-box">알겠어요</button>
+        <button type="button" id="test-passed-ok-btn" class="btn-in-box">
+          알겠어요
+        </button>
       </div>
       <div
         id="did-not-get-srflx-candidate"
@@ -418,7 +428,11 @@
           "media.peerconnection.ice.obfuscate_host_addresses" 설정을 다시
           원래대로 "true"로 바꾸어주는 것을 권장합니다.
         </div>
-        <button id="did-not-get-srflx-candidate-ok-btn" class="btn-in-box">
+        <button
+          type="button"
+          id="did-not-get-srflx-candidate-ok-btn"
+          class="btn-in-box"
+        >
           알겠어요
         </button>
       </div>
@@ -446,6 +460,7 @@
           가능합니다.
         </div>
         <button
+          type="button"
           id="did-not-get-srflx-candidate-and-host-address-is-obfuscated-ok-btn"
           class="btn-in-box"
         >
@@ -455,7 +470,11 @@
       <div id="behind-symmetric-nat" class="fade-in-box notice fixed hidden">
         이 P2P 온라인 버전을 이용할 수 없습니다.<br /><br />
         네트워크가 symmetric NAT 하에 있습니다.
-        <button id="behind-symmetric-nat-ok-btn" class="btn-in-box">
+        <button
+          type="button"
+          id="behind-symmetric-nat-ok-btn"
+          class="btn-in-box"
+        >
           알겠어요
         </button>
       </div>
@@ -464,67 +483,95 @@
       <div id="menu-bar">
         <div class="btn-container left">
           <div class="relative-container">
-            <button id="options-dropdown-btn" class="btn dropdown-btn">
+            <button
+              type="button"
+              id="options-dropdown-btn"
+              class="btn dropdown-btn"
+            >
               설정
             </button>
             <div id="options-dropdown" class="dropdown">
               <div class="relative-container">
-                <button id="bgm-submenu-btn" class="btn submenu-btn">
+                <button
+                  type="button"
+                  id="bgm-submenu-btn"
+                  class="btn submenu-btn"
+                >
                   배경음악 &#9654;
                 </button>
                 <div id="bgm-submenu" class="submenu">
-                  <button id="bgm-on-btn" class="btn selected">
+                  <button type="button" id="bgm-on-btn" class="btn selected">
                     <span class="check">&check; </span>켜기
                   </button>
-                  <button id="bgm-off-btn" class="btn">
+                  <button type="button" id="bgm-off-btn" class="btn">
                     <span class="check">&check; </span>끄기
                   </button>
                 </div>
               </div>
               <div class="relative-container">
-                <button id="sfx-submenu-btn" class="btn submenu-btn">
+                <button
+                  type="button"
+                  id="sfx-submenu-btn"
+                  class="btn submenu-btn"
+                >
                   효과음 &#9654;
                 </button>
                 <div id="sfx-submenu" class="submenu">
-                  <button id="stereo-btn" class="btn selected">
+                  <button type="button" id="stereo-btn" class="btn selected">
                     <span class="check">&check; </span>스테레오
                   </button>
-                  <button id="mono-btn" class="btn">
+                  <button type="button" id="mono-btn" class="btn">
                     <span class="check">&check; </span>모노
                   </button>
-                  <button id="sfx-off-btn" class="btn">
+                  <button type="button" id="sfx-off-btn" class="btn">
                     <span class="check">&check; </span>끄기
                   </button>
                 </div>
               </div>
               <div class="relative-container">
-                <button id="speed-submenu-btn" class="btn submenu-btn">
+                <button
+                  type="button"
+                  id="speed-submenu-btn"
+                  class="btn submenu-btn"
+                >
                   속도 &#9654;
                 </button>
                 <div id="speed-submenu" class="submenu">
-                  <button id="slow-speed-btn" class="btn">
+                  <button type="button" id="slow-speed-btn" class="btn">
                     <span class="check">&check; </span>느리게
                   </button>
-                  <button id="medium-speed-btn" class="btn selected">
+                  <button
+                    type="button"
+                    id="medium-speed-btn"
+                    class="btn selected"
+                  >
                     <span class="check">&check; </span>보통
                   </button>
-                  <button id="fast-speed-btn" class="btn">
+                  <button type="button" id="fast-speed-btn" class="btn">
                     <span class="check">&check; </span>빠르게
                   </button>
                 </div>
               </div>
               <div class="relative-container">
-                <button id="winning-score-submenu-btn" class="btn submenu-btn">
+                <button
+                  type="button"
+                  id="winning-score-submenu-btn"
+                  class="btn submenu-btn"
+                >
                   승리점수 &#9654;
                 </button>
                 <div id="winning-score-submenu" class="submenu">
-                  <button id="winning-score-5-btn" class="btn">
+                  <button type="button" id="winning-score-5-btn" class="btn">
                     <span class="check">&check; </span>5점
                   </button>
-                  <button id="winning-score-10-btn" class="btn">
+                  <button type="button" id="winning-score-10-btn" class="btn">
                     <span class="check">&check; </span>10점
                   </button>
-                  <button id="winning-score-15-btn" class="btn selected">
+                  <button
+                    type="button"
+                    id="winning-score-15-btn"
+                    class="btn selected"
+                  >
                     <span class="check">&check; </span>15점
                   </button>
                 </div>
@@ -532,13 +579,13 @@
             </div>
           </div>
           <div class="relative-container">
-            <button id="save-replay-btn" class="btn">
+            <button type="button" id="save-replay-btn" class="btn">
               리플레이 <span class="no-wrap">저장</span>
             </button>
           </div>
         </div>
         <div class="btn-container right">
-          <button id="exit-btn" class="btn">나가기</button>
+          <button type="button" id="exit-btn" class="btn">나가기</button>
         </div>
       </div>
       <div class="if-embedded-in-other-website hidden">
@@ -555,7 +602,7 @@
               >https://gorisanson.github.io/pikachu-volleyball-p2p-online/ko/</a
             >
           </div>
-          <button class="btn-in-box">
+          <button type="button" class="btn-in-box">
             <span>닫기</span>
           </button>
         </div>
@@ -618,12 +665,14 @@
           </div>
           <div class="grid-1-1 center">
             <button
+              type="button"
               id="ask-options-change-send-to-peer-yes-btn"
               class="btn-in-box"
             >
               진행해요
             </button>
             <button
+              type="button"
               id="ask-options-change-send-to-peer-no-btn"
               class="btn-in-box"
             >
@@ -644,12 +693,14 @@
           </div>
           <div class="grid-1-1 center">
             <button
+              type="button"
               id="ask-options-change-received-from-peer-yes-btn"
               class="btn-in-box"
             >
               동의해요
             </button>
             <button
+              type="button"
               id="ask-options-change-received-from-peer-no-btn"
               class="btn-in-box"
             >
@@ -662,13 +713,21 @@
             상대방이 게임 설정 변경에 동의했습니다.<br />
             게임 설정을 변경을 완료했습니다.
           </p>
-          <button id="notice-peer-agreed-ok-btn" class="btn-in-box">
+          <button
+            type="button"
+            id="notice-peer-agreed-ok-btn"
+            class="btn-in-box"
+          >
             알겠어요
           </button>
         </div>
         <div class="fade-in-box notice hidden" id="notice-peer-disagreed">
           <p>상대방이 게임 설정 변경에 동의하지 않았습니다.</p>
-          <button id="notice-peer-disagreed-ok-btn" class="btn-in-box">
+          <button
+            type="button"
+            id="notice-peer-disagreed-ok-btn"
+            class="btn-in-box"
+          >
             알겠어요
           </button>
         </div>
@@ -681,6 +740,7 @@
             경기가 끝난 후 다시 시도해주세요.
           </p>
           <button
+            type="button"
             id="notice-speed-options-cannot-changed-if-game-in-progress-ok-btn"
             class="btn-in-box"
           >
@@ -696,6 +756,7 @@
             중인 경기가 끝난 후 다시 시도해주세요.
           </p>
           <button
+            type="button"
             id="notice-winning-score-options-cannot-changed-if-game-in-progress-ok-btn"
             class="btn-in-box"
           >
@@ -704,17 +765,29 @@
         </div>
         <div class="fade-in-box notice hidden" id="notice-disconnected">
           <p>상대방과의 연결이 끊겼습니다.</p>
-          <button id="notice-disconnected-ok-btn" class="btn-in-box">
+          <button
+            type="button"
+            id="notice-disconnected-ok-btn"
+            class="btn-in-box"
+          >
             알겠어요
           </button>
         </div>
         <div class="fade-in-box notice hidden" id="ask-one-more-game">
           <p>상대방과 한 판 더 할까요?</p>
           <div class="grid-1-1 center">
-            <button id="ask-one-more-game-yes-btn" class="btn-in-box">
+            <button
+              type="button"
+              id="ask-one-more-game-yes-btn"
+              class="btn-in-box"
+            >
               한 판 더!
             </button>
-            <button id="ask-one-more-game-no-btn" class="btn-in-box">
+            <button
+              type="button"
+              id="ask-one-more-game-no-btn"
+              class="btn-in-box"
+            >
               아니요
             </button>
           </div>
@@ -733,7 +806,7 @@
           <button type="button" id="send-btn">보내기 (엔터)</button>
         </div>
         <div id="chat-open-btn-and-chat-disabling-btn-container">
-          <button id="chat-open-btn">채팅 (스페이스 바)</button>
+          <button type="button" id="chat-open-btn">채팅 (스페이스 바)</button>
           <button type="button" id="chat-disabling-btn">채팅 끄기</button>
           <div id="text-disable-chat" class="hidden">채팅 끄기</div>
           <div id="text-enable-chat" class="hidden">채팅 켜기</div>
