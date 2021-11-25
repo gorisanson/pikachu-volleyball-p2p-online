@@ -219,7 +219,7 @@ export async function createRoom(roomIdToCreate) {
       sdp: offer.sdp,
     },
   };
-  roomRef.set(roomWithOffer);
+  await roomRef.set(roomWithOffer);
   console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
   printLog('Offer sent');
 }
