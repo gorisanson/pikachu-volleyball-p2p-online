@@ -169,10 +169,12 @@ const callback = (data) => {
  * Create an object to send to server by json
  * @param {string} message
  * @param {string} roomIdToCreate
+ * @param {string[]} blockedIPs
  */
-function objectToSendToServer(message, roomIdToCreate) {
+function objectToSendToServer(message, roomIdToCreate, blockedIPs = []) {
   return {
     message: message,
     roomId: roomIdToCreate,
+    blockedIPs: blockedIPs,
   };
 }
