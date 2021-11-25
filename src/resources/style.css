@@ -743,3 +743,9 @@ label[for='fps-input'] {
 .original-address {
   margin-top: var(--font-size);
 }
+#blocked-ip-addresses-container td {
+  cursor: default;
+}
+#blocked-ip-addresses-container td.selected {
+  background-color: #0a95ff;
+}
