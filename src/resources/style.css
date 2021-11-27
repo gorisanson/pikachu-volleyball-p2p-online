@@ -743,9 +743,34 @@ label[for='fps-input'] {
 .original-address {
   margin-top: var(--font-size);
 }
-#blocked-ip-addresses-container td {
+table.blocked-ip-addresses-table {
+  border-collapse: collapse;
+  border: 2px solid rgb(200, 200, 200);
+  width: 100%;
+}
+table.blocked-ip-addresses-table th,
+table.blocked-ip-addresses-table td {
+  border: 1px solid rgb(190, 190, 190);
+  padding: 5px;
+  text-align: center;
+}
+table.blocked-ip-addresses-table tbody td {
   cursor: default;
 }
-#blocked-ip-addresses-container td.selected {
+table.blocked-ip-addresses-table tfoot td {
+  padding: 0;
+}
+table.blocked-ip-addresses-table tr.selected {
   background-color: #0a95ff;
+}
+table.blocked-ip-addresses-table input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  font-size: var(--font-size);
+}
+table.blocked-ip-addresses-table .delete-btn {
+  height: 100%;
+  width: 100%;
+  font-size: var(--font-size);
 }

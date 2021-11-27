@@ -219,32 +219,25 @@
         <button type="button" id="with-your-friend-btn">친구와 함께</button>
       </div>
       <div class="margin-top">
-        <table>
+        <table class="blocked-ip-addresses-table">
+          <caption>
+            퀵매치 차단 목록 (최대 50명까지 등록 가능)
+          </caption>
           <thead>
             <tr>
-              <td>퀵 매치 차단 IP 주소 (최대 30개 등록 가능)</td>
+              <th>차단 IP 주소</th>
+              <th>차단 시각</th>
+              <th>메모(영어로는 Remarks)</th>
             </tr>
           </thead>
-          <tbody id="blocked-ip-addresses-container">
+          <tbody></tbody>
+          <tfoot>
             <tr>
-              <td>142.124.*.*</td>
-            </tr>
-            <tr>
-              <td>152.33.*.*</td>
-            </tr>
-          </tbody>
-          <tfood>
-            <tr>
-              <td>
-                <button
-                  type="button"
-                  id="delete-selected-player-from-blocked-list"
-                >
-                  목록에서 삭제
-                </button>
+              <td colspan="3">
+                <button type="button" class="delete-btn">목록에서 삭제</button>
               </td>
             </tr>
-          </tfood>
+          </tfoot>
         </table>
       </div>
       <div class="margin-top">
