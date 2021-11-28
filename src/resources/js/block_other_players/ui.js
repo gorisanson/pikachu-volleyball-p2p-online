@@ -4,20 +4,21 @@
 'use strict';
 
 import { getPartialIP } from '../data_channel/parse_candidate';
+import { blockedIPList } from './blocked_ip_list';
 
-const blockedIPs = [
+blockedIPList.readArrayViewAndUpdate([
   ['123.123.234.123', 1638021842754, ''],
   ['123.223.412.123', 1638021842756, ''],
   ['124.241.221.124', 16380218427556, ''],
   ['122.142.124.123', 1638021842754, ''],
-];
+]);
 
 const blockedIPAddressesContainer = document.querySelector(
   'table.blocked-ip-addresses-table tbody'
 );
 
 export function setUpUIForBlockingOtherUsers() {
-  displayBlockedIPs(blockedIPs);
+  displayBlockedIPs(blockedIPList.createArrayView());
   blockedIPAddressesContainer.addEventListener('click', (event) => {
     const target = event.target;
     // @ts-ignore
@@ -39,14 +40,14 @@ export function setUpUIForBlockingOtherUsers() {
       const selectedTRElement =
         blockedIPAddressesContainer.querySelector('.selected');
       // @ts-ignore
-      blockedIPs.splice(Number(selectedTRElement.dataset.index), 1);
-      displayBlockedIPs(blockedIPs);
+      blockedIPList.removeAt(Number(selectedTRElement.dataset.index));
+      displayBlockedIPs(blockedIPList.createArrayView());
     });
 }
 
 /**
- * Display the given blocked IP addresses list.
- * @param {any[][]} blockedIPs
+ * Display the given blocked IP list array view.
+ * @param {[string, number, string][]} blockedIPs
  */
 function displayBlockedIPs(blockedIPs) {
   // Clear the current displaying
