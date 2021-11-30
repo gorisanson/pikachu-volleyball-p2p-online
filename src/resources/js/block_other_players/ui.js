@@ -130,7 +130,7 @@ export function setUpUIForBlockingOtherUsers() {
     });
   document
     .getElementById(
-      'notice-adding-this-peer-to-blocked-list-is-completed-ok-btn'
+      'notice-adding-this-peer-to-blocked-list-is-completed-do-not-exit-game-btn'
     )
     .addEventListener('click', () => {
       noticeAddingThisPeerToBlockedListIsCompletedBox.classList.add('hidden');
