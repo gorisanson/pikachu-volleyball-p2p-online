@@ -138,13 +138,17 @@ export function setUpUIForBlockingOtherUsers() {
 }
 
 /**
- * Show blockThisPeerBtn
+ * Show blockThisPeerBtn and enable it if a peer's full public IP is available.
  */
 export function showBlockThisPeerBtn() {
   if (!isLocalStorageAvailable) {
     return;
   }
   blockThisPeerBtn.classList.remove('hidden');
+  if (channel.peerFullPublicIP) {
+    // @ts-ignore
+    blockThisPeerBtn.disabled = false;
+  }
 }
 
 /**
