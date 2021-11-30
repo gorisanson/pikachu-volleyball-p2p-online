@@ -6,6 +6,7 @@
 'use strict';
 import { serverURL } from './quick_match_server_url.js';
 import { createRoom, joinRoom } from '../data_channel/data_channel.js';
+import { blockedIPList } from '../block_other_players/blocked_ip_list.js';
 import {
   printCommunicationCount,
   printQuickMatchState,
@@ -43,7 +44,11 @@ export function startQuickMatch(roomIdToCreateIfNeeded) {
   communicationCount = 0;
   postData(
     serverURL,
-    objectToSendToServer(MESSAGE_TO_SERVER.initial, roomIdToCreate)
+    objectToSendToServer(
+      MESSAGE_TO_SERVER.initial,
+      roomIdToCreate,
+      blockedIPList.createIPArray()
+    )
   ).then(callback);
 }
 

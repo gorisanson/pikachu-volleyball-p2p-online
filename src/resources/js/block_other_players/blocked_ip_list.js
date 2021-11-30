@@ -62,6 +62,15 @@ class BlockedIPList {
       (value) => new BlockedIP(value[0], value[1], value[2])
     );
   }
+
+  /**
+   * Create a read-only 1D array whose elements are blocked IP addresses.
+   * @returns {[string]}
+   */
+  createIPArray() {
+    // @ts-ignore
+    return this._blockedIPs.map((blockedIP) => blockedIP.ip);
+  }
 }
 
 export const blockedIPList = new BlockedIPList();
