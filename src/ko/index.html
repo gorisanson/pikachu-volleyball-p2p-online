@@ -608,7 +608,7 @@
             </button>
           </div>
           <div class="relative-container">
-            <button type="button" id="block-this-peer-btn" class="btn">
+            <button type="button" id="block-this-peer-btn" class="btn hidden">
               상대방 <span class="no-wrap">차단</span>
             </button>
           </div>
@@ -819,6 +819,31 @@
               class="btn-in-box"
             >
               안해요
+            </button>
+          </div>
+        </div>
+        <div
+          class="fade-in-box notice hidden"
+          id="notice-adding-this-peer-to-blocked-list-is-completed"
+        >
+          <p>
+            상대방의 IP를 퀵매치 차단 리스트에 추가했습니다. 상대방과의 게임을
+            그만두고 나갈까요?
+          </p>
+          <div class="grid-1-1 center">
+            <button
+              type="button"
+              id="notice-adding-this-peer-to-blocked-list-is-completed-exit-game-btn"
+              class="btn-in-box"
+            >
+              나갈래요
+            </button>
+            <button
+              type="button"
+              id="notice-adding-this-peer-to-blocked-list-is-completed-ok-btn"
+              class="btn-in-box"
+            >
+              게임 계속 할래요
             </button>
           </div>
         </div>

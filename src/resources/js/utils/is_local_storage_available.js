@@ -11,7 +11,7 @@
  * Check if local storage is available
  * @returns {boolean}
  */
-export function isLocalStorageAvailable() {
+export function getIfLocalStorageIsAvailable() {
   try {
     localStorage.setItem('__test', 'test');
     localStorage.removeItem('__test');

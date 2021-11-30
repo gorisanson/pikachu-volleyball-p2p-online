@@ -2,7 +2,7 @@
  * Manages UI relavant to blocking other players
  */
 'use strict';
-import { isLocalStorageAvailable } from '../utils/is_local_storage_available';
+import { getIfLocalStorageIsAvailable } from '../utils/is_local_storage_available';
 import { blockedIPList } from './blocked_ip_list';
 import { channel } from '../data_channel/data_channel';
 import { getPartialIP } from '../data_channel/parse_candidate';
@@ -10,9 +10,11 @@ import { getPartialIP } from '../data_channel/parse_candidate';
 const blockedIPAddressesContainer = document.querySelector(
   'table.blocked-ip-addresses-table tbody'
 );
+const blockThisPeerBtn = document.getElementById('block-this-peer-btn');
+const isLocalStorageAvailable = getIfLocalStorageIsAvailable();
 
 export function setUpUIForBlockingOtherUsers() {
-  if (!isLocalStorageAvailable()) {
+  if (!isLocalStorageAvailable) {
     // TODO: do something
     // local storage가 활성화되어 있지 않아 ip 차단 기능 이용이 불가능합니다.
     return;
@@ -75,7 +77,6 @@ export function setUpUIForBlockingOtherUsers() {
     displayBlockedIPs(blockedIPList.createArrayView());
   });
 
-  const blockThisPeerBtn = document.getElementById('block-this-peer-btn');
   const askAddThisPeerToBlockedListBox = document.getElementById(
     'ask-add-this-peer-to-blocked-list'
   );
@@ -85,6 +86,10 @@ export function setUpUIForBlockingOtherUsers() {
   const askAddThisPeerToBlockedListNoBtn = document.getElementById(
     'ask-add-this-peer-to-blocked-list-no-btn'
   );
+  const noticeAddingThisPeerToBlockedListIsCompletedBox =
+    document.getElementById(
+      'notice-adding-this-peer-to-blocked-list-is-completed'
+    );
   // TODO: localstorage 사용가능한지 디텍트해서 블락킹 사용 못한다고 메시지 띄우기
   // TODO: 클릭후 정말 추가할거냐는 메시지 띄우고 추가하고 나서는 버튼 비활성화
   blockThisPeerBtn.addEventListener('click', () => {
@@ -106,10 +111,35 @@ export function setUpUIForBlockingOtherUsers() {
       console.log(err);
     }
     askAddThisPeerToBlockedListBox.classList.add('hidden');
+    noticeAddingThisPeerToBlockedListIsCompletedBox.classList.remove('hidden');
   });
   askAddThisPeerToBlockedListNoBtn.addEventListener('click', () => {
     askAddThisPeerToBlockedListBox.classList.add('hidden');
   });
+  document
+    .getElementById(
+      'notice-adding-this-peer-to-blocked-list-is-completed-exit-game-btn'
+    )
+    .addEventListener('click', () => {
+      location.reload();
+    });
+  document
+    .getElementById(
+      'notice-adding-this-peer-to-blocked-list-is-completed-ok-btn'
+    )
+    .addEventListener('click', () => {
+      noticeAddingThisPeerToBlockedListIsCompletedBox.classList.add('hidden');
+    });
+}
+
+/**
+ * Show blockThisPeerBtn
+ */
+export function showBlockThisPeerBtn() {
+  if (!isLocalStorageAvailable) {
+    return;
+  }
+  blockThisPeerBtn.classList.remove('hidden');
 }
 
 /**

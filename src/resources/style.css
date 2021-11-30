@@ -499,6 +499,9 @@ button.btn {
 button.btn:disabled {
   background-color: #cccccc;
 }
+button.btn.hidden {
+  display: none;
+}
 .relative-container {
   position: relative;
 }
