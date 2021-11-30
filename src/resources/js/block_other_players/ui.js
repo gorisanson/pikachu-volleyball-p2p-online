@@ -7,6 +7,8 @@ import { blockedIPList } from './blocked_ip_list';
 import { channel } from '../data_channel/data_channel';
 import { getPartialIP } from '../data_channel/parse_candidate';
 
+const MAX_REMARK_LENGTH = 20;
+
 const blockedIPAddressesContainer = document.querySelector(
   'table.blocked-ip-addresses-table tbody'
 );
@@ -177,6 +179,20 @@ function displayBlockedIPs(blockedIPs) {
     tdElementForIP.textContent = getPartialIP(blockedIP[0]);
     tdElementForTime.textContent = new Date(blockedIP[1]).toLocaleString();
     inputElement.value = blockedIP[2];
+    inputElement.addEventListener('input', (event) => {
+      // @ts-ignore
+      const newRemark = event.target.value.slice(0, MAX_REMARK_LENGTH);
+      inputElement.value = newRemark;
+      blockedIPList.editRemarkAt(index, newRemark);
+      try {
+        window.localStorage.setItem(
+          'stringifiedBlockedIPListArrayView',
+          JSON.stringify(blockedIPList.createArrayView())
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    });
     blockedIPAddressesContainer.appendChild(trElement);
   });
 }

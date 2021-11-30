@@ -40,6 +40,15 @@ class BlockedIPList {
   }
 
   /**
+   * Edit remark of a BlockedIP object at index
+   * @param {number} index
+   * @param {string} newRemark
+   */
+  editRemarkAt(index, newRemark) {
+    this._blockedIPs[index].remark = newRemark;
+  }
+
+  /**
    * Create a read-only 2D array whose elements have a structure of [ip, blockedTime, remark].
    * And the elements have same indices as in the this._blockedIPs.
    * @returns {[string, number, string][]}
