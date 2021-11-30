@@ -36,8 +36,6 @@ export function setUpUIForBlockingOtherUsers() {
   const deleteBtn = document.querySelector(
     'table.blocked-ip-addresses-table .delete-btn'
   );
-  // @ts-ignore
-  deleteBtn.disabled = true;
   document.body.addEventListener('click', (event) => {
     Array.from(
       // @ts-ignore
