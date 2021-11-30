@@ -44,6 +44,7 @@ export function setUpUIForBlockingOtherUsers() {
     );
   }
   displayBlockedIPs(blockedIPList.createArrayView());
+  displayNumberOfBlockedIPAddresses();
 
   document.body.addEventListener('click', (event) => {
     Array.from(
@@ -82,6 +83,7 @@ export function setUpUIForBlockingOtherUsers() {
       console.log(err);
     }
     displayBlockedIPs(blockedIPList.createArrayView());
+    displayNumberOfBlockedIPAddresses();
   });
 
   const askAddThisPeerToBlockedListBox = document.getElementById(
@@ -147,7 +149,7 @@ export function showBlockThisPeerBtn() {
     return;
   }
   blockThisPeerBtn.classList.remove('hidden');
-  if (channel.peerFullPublicIP) {
+  if (channel.peerFullPublicIP && !blockedIPList.isFull()) {
     // @ts-ignore
     blockThisPeerBtn.disabled = false;
   }
@@ -195,4 +197,12 @@ function displayBlockedIPs(blockedIPs) {
     });
     blockedIPAddressesContainer.appendChild(trElement);
   });
+}
+
+/**
+ * Display the number of blocked IPs in the list
+ */
+function displayNumberOfBlockedIPAddresses() {
+  document.getElementById('number-of-blocked-ip-addresses').textContent =
+    String(blockedIPList.length);
 }

@@ -19,8 +19,25 @@ class BlockedIP {
  * Class reperesenting a list of blocked IPs
  */
 class BlockedIPList {
-  constructor() {
+  /**
+   * Create a BlockedIPLIst obejct
+   * @param {number} maxLength
+   */
+  constructor(maxLength) {
     this._blockedIPs = [];
+    this.maxLength = maxLength;
+  }
+
+  get length() {
+    return this._blockedIPs.length;
+  }
+
+  /**
+   * Return if the list is full
+   * @returns {boolean}
+   */
+  isFull() {
+    return this.length >= this.maxLength;
   }
 
   /**
@@ -28,6 +45,9 @@ class BlockedIPList {
    * @param {string} ip
    */
   add(ip) {
+    if (this.isFull()) {
+      return;
+    }
     this._blockedIPs.push(new BlockedIP(ip));
   }
 
@@ -67,6 +87,7 @@ class BlockedIPList {
    * @param {[string, number, string][]} arrayView
    */
   readArrayViewAndUpdate(arrayView) {
+    arrayView.slice(0, this.maxLength);
     this._blockedIPs = arrayView.map(
       (value) => new BlockedIP(value[0], value[1], value[2])
     );
@@ -82,4 +103,4 @@ class BlockedIPList {
   }
 }
 
-export const blockedIPList = new BlockedIPList();
+export const blockedIPList = new BlockedIPList(50);
