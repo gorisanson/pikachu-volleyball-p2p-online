@@ -2,47 +2,116 @@
  * Manages UI relavant to blocking other players
  */
 'use strict';
-
-import { getPartialIP } from '../data_channel/parse_candidate';
+import { isLocalStorageAvailable } from '../utils/is_local_storage_available';
 import { blockedIPList } from './blocked_ip_list';
-
-blockedIPList.readArrayViewAndUpdate([
-  ['123.123.234.123', 1638021842754, ''],
-  ['123.223.412.123', 1638021842756, ''],
-  ['124.241.221.124', 16380218427556, ''],
-  ['122.142.124.123', 1638021842754, ''],
-]);
+import { channel } from '../data_channel/data_channel';
+import { getPartialIP } from '../data_channel/parse_candidate';
 
 const blockedIPAddressesContainer = document.querySelector(
   'table.blocked-ip-addresses-table tbody'
 );
 
 export function setUpUIForBlockingOtherUsers() {
+  if (!isLocalStorageAvailable()) {
+    // TODO: do something
+    // local storage가 활성화되어 있지 않아 ip 차단 기능 이용이 불가능합니다.
+    return;
+  }
+
+  let stringifiedBlockedIPListArrayView = null;
+  try {
+    stringifiedBlockedIPListArrayView = window.localStorage.getItem(
+      'stringifiedBlockedIPListArrayView'
+    );
+  } catch (err) {
+    console.log(err);
+  }
+  if (stringifiedBlockedIPListArrayView !== null) {
+    blockedIPList.readArrayViewAndUpdate(
+      JSON.parse(stringifiedBlockedIPListArrayView)
+    );
+  }
   displayBlockedIPs(blockedIPList.createArrayView());
-  blockedIPAddressesContainer.addEventListener('click', (event) => {
-    const target = event.target;
+
+  const deleteBtn = document.querySelector(
+    'table.blocked-ip-addresses-table .delete-btn'
+  );
+  // @ts-ignore
+  deleteBtn.disabled = true;
+  document.body.addEventListener('click', (event) => {
+    Array.from(
+      // @ts-ignore
+      blockedIPAddressesContainer.getElementsByTagName('tr')
+    ).forEach((elem) => {
+      elem.classList.remove('selected');
+    });
     // @ts-ignore
-    if (target.tagName === 'TD') {
-      Array.from(
-        // @ts-ignore
-        blockedIPAddressesContainer.getElementsByTagName('tr')
-      ).forEach((elem) => {
-        elem.classList.remove('selected');
-      });
+    deleteBtn.disabled = true;
+    const target = event.target;
+    if (
+      // @ts-ignore
+      blockedIPAddressesContainer.contains(target) &&
+      // @ts-ignore
+      target.tagName === 'TD'
+    ) {
       // select TR element which is parent element of TD element
       // @ts-ignore
       target.parentElement.classList.add('selected');
+      // @ts-ignore
+      deleteBtn.disabled = false;
     }
   });
-  document
-    .querySelector('table.blocked-ip-addresses-table .delete-btn')
-    .addEventListener('click', () => {
-      const selectedTRElement =
-        blockedIPAddressesContainer.querySelector('.selected');
-      // @ts-ignore
-      blockedIPList.removeAt(Number(selectedTRElement.dataset.index));
-      displayBlockedIPs(blockedIPList.createArrayView());
-    });
+  deleteBtn.addEventListener('click', () => {
+    const selectedTRElement =
+      blockedIPAddressesContainer.querySelector('.selected');
+    // @ts-ignore
+    blockedIPList.removeAt(Number(selectedTRElement.dataset.index));
+    try {
+      window.localStorage.setItem(
+        'stringifiedBlockedIPListArrayView',
+        JSON.stringify(blockedIPList.createArrayView())
+      );
+    } catch (err) {
+      console.log(err);
+    }
+    displayBlockedIPs(blockedIPList.createArrayView());
+  });
+
+  const blockThisPeerBtn = document.getElementById('block-this-peer-btn');
+  const askAddThisPeerToBlockedListBox = document.getElementById(
+    'ask-add-this-peer-to-blocked-list'
+  );
+  const askAddThisPeerToBlockedListYesBtn = document.getElementById(
+    'ask-add-this-peer-to-blocked-list-yes-btn'
+  );
+  const askAddThisPeerToBlockedListNoBtn = document.getElementById(
+    'ask-add-this-peer-to-blocked-list-no-btn'
+  );
+  // TODO: localstorage 사용가능한지 디텍트해서 블락킹 사용 못한다고 메시지 띄우기
+  // TODO: 클릭후 정말 추가할거냐는 메시지 띄우고 추가하고 나서는 버튼 비활성화
+  blockThisPeerBtn.addEventListener('click', () => {
+    document.getElementById(
+      'partial-ip-address-of-this-peer-to-be-blocked'
+    ).textContent = channel.peerPartialPublicIP;
+    askAddThisPeerToBlockedListBox.classList.remove('hidden');
+  });
+  askAddThisPeerToBlockedListYesBtn.addEventListener('click', () => {
+    // @ts-ignore
+    blockThisPeerBtn.disabled = true;
+    blockedIPList.add(channel.peerFullPublicIP);
+    try {
+      window.localStorage.setItem(
+        'stringifiedBlockedIPListArrayView',
+        JSON.stringify(blockedIPList.createArrayView())
+      );
+    } catch (err) {
+      console.log(err);
+    }
+    askAddThisPeerToBlockedListBox.classList.add('hidden');
+  });
+  askAddThisPeerToBlockedListNoBtn.addEventListener('click', () => {
+    askAddThisPeerToBlockedListBox.classList.add('hidden');
+  });
 }
 
 /**

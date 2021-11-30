@@ -605,6 +605,11 @@
               리플레이 <span class="no-wrap">저장</span>
             </button>
           </div>
+          <div class="relative-container">
+            <button type="button" id="block-this-peer-btn" class="btn">
+              상대방 <span class="no-wrap">차단</span>
+            </button>
+          </div>
         </div>
         <div class="btn-container right">
           <button type="button" id="exit-btn" class="btn">나가기</button>
@@ -784,6 +789,36 @@
           >
             알겠어요
           </button>
+        </div>
+        <div
+          class="fade-in-box notice hidden"
+          id="ask-add-this-peer-to-blocked-list"
+        >
+          <div>
+            <p id="partial-ip-address-of-this-peer-to-be-blocked"></p>
+            <p>
+              위 IP로 접속하는 상대방을 앞으로 퀵매치에서 차단하려합니다.
+              차단하면 앞으로 위 IP로 접속하는 상대방과 퀵매치에서 만나지
+              않게됩니다. (상대방과 다시 만나기를 원할 경우에는, 퀵매치 차단
+              목록에서 상대방 IP를 삭제하면 됩니다.) 차단할까요?
+            </p>
+          </div>
+          <div class="grid-1-1 center">
+            <button
+              type="button"
+              id="ask-add-this-peer-to-blocked-list-yes-btn"
+              class="btn-in-box"
+            >
+              차단해요
+            </button>
+            <button
+              type="button"
+              id="ask-add-this-peer-to-blocked-list-no-btn"
+              class="btn-in-box"
+            >
+              안해요
+            </button>
+          </div>
         </div>
         <div class="fade-in-box notice hidden" id="notice-disconnected">
           <p>상대방과의 연결이 끊겼습니다.</p>
