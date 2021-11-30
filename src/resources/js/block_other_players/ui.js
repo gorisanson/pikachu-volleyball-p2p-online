@@ -10,10 +10,18 @@ import { getPartialIP } from '../data_channel/parse_candidate';
 const blockedIPAddressesContainer = document.querySelector(
   'table.blocked-ip-addresses-table tbody'
 );
+const deleteBtn = document.querySelector(
+  'table.blocked-ip-addresses-table .delete-btn'
+);
 const blockThisPeerBtn = document.getElementById('block-this-peer-btn');
+
 const isLocalStorageAvailable = getIfLocalStorageIsAvailable();
 
 export function setUpUIForBlockingOtherUsers() {
+  // @ts-ignore
+  deleteBtn.disabled = true;
+  // @ts-ignore
+  blockThisPeerBtn.disabled = true;
   if (!isLocalStorageAvailable) {
     // TODO: do something
     // local storage가 활성화되어 있지 않아 ip 차단 기능 이용이 불가능합니다.
@@ -35,9 +43,6 @@ export function setUpUIForBlockingOtherUsers() {
   }
   displayBlockedIPs(blockedIPList.createArrayView());
 
-  const deleteBtn = document.querySelector(
-    'table.blocked-ip-addresses-table .delete-btn'
-  );
   document.body.addEventListener('click', (event) => {
     Array.from(
       // @ts-ignore
