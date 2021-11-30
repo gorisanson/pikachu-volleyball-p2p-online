@@ -218,7 +218,34 @@
         <button type="button" id="quick-match-btn">퀵 매치 (엔터)</button>
         <button type="button" id="with-your-friend-btn">친구와 함께</button>
       </div>
-      <div class="margin-top">
+      <div id="blocked-ip-addresses-table-container" class="margin-top">
+        <details>
+          <summary>
+            퀵매치 차단 목록 (<span id="number-of-blocked-ip-addresses">0</span
+            >/50)
+          </summary>
+          <table class="blocked-ip-addresses-table">
+            <thead>
+              <tr>
+                <th>IP 주소</th>
+                <th>차단 날짜</th>
+                <th>메모</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3">
+                  <button type="button" class="delete-btn">
+                    목록에서 삭제
+                  </button>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </details>
+      </div>
+      <div id="open-chat-list-container" class="margin-top">
         <div>
           피카츄 배구 팬을 위한 카카오톡 오픈 채팅방들입니다!
           <ul class="open-chat-list">
@@ -583,6 +610,11 @@
               리플레이 <span class="no-wrap">저장</span>
             </button>
           </div>
+          <div class="relative-container">
+            <button type="button" id="block-this-peer-btn" class="btn hidden">
+              상대방 <span class="no-wrap">차단</span>
+            </button>
+          </div>
         </div>
         <div class="btn-container right">
           <button type="button" id="exit-btn" class="btn">나가기</button>
@@ -762,6 +794,61 @@
           >
             알겠어요
           </button>
+        </div>
+        <div
+          class="fade-in-box notice hidden"
+          id="ask-add-this-peer-to-blocked-list"
+        >
+          <div>
+            <p id="partial-ip-address-of-this-peer-to-be-blocked"></p>
+            <p>
+              위 IP로 접속하는 상대방을 앞으로 퀵매치에서 차단하려합니다.
+              차단하면 앞으로 위 IP로 접속하는 상대방과 퀵매치에서 만나지
+              않게됩니다. (상대방과 다시 만나기를 원할 경우에는, 퀵매치 차단
+              목록에서 상대방 IP를 삭제하면 됩니다.) 차단할까요?
+            </p>
+          </div>
+          <div class="grid-1-1 center">
+            <button
+              type="button"
+              id="ask-add-this-peer-to-blocked-list-yes-btn"
+              class="btn-in-box"
+            >
+              차단해요
+            </button>
+            <button
+              type="button"
+              id="ask-add-this-peer-to-blocked-list-no-btn"
+              class="btn-in-box"
+            >
+              안해요
+            </button>
+          </div>
+        </div>
+        <div
+          class="fade-in-box notice hidden"
+          id="notice-adding-this-peer-to-blocked-list-is-completed"
+        >
+          <p>
+            상대방의 IP를 퀵매치 차단 목록에 추가하는 작업을 완료했습니다.
+            게임에서 나갈까요?
+          </p>
+          <div class="grid-1-1 center">
+            <button
+              type="button"
+              id="notice-adding-this-peer-to-blocked-list-is-completed-exit-game-btn"
+              class="btn-in-box"
+            >
+              나갈래요
+            </button>
+            <button
+              type="button"
+              id="notice-adding-this-peer-to-blocked-list-is-completed-do-not-exit-game-btn"
+              class="btn-in-box"
+            >
+              안 나갈래요
+            </button>
+          </div>
         </div>
         <div class="fade-in-box notice hidden" id="notice-disconnected">
           <p>상대방과의 연결이 끊겼습니다.</p>

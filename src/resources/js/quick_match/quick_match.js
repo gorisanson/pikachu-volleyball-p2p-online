@@ -6,6 +6,7 @@
 'use strict';
 import { serverURL } from './quick_match_server_url.js';
 import { createRoom, joinRoom } from '../data_channel/data_channel.js';
+import { blockedIPList } from '../block_other_players/blocked_ip_list.js';
 import {
   printCommunicationCount,
   printQuickMatchState,
@@ -43,7 +44,11 @@ export function startQuickMatch(roomIdToCreateIfNeeded) {
   communicationCount = 0;
   postData(
     serverURL,
-    objectToSendToServer(MESSAGE_TO_SERVER.initial, roomIdToCreate)
+    objectToSendToServer(
+      MESSAGE_TO_SERVER.initial,
+      roomIdToCreate,
+      blockedIPList.createIPArray()
+    )
   ).then(callback);
 }
 
@@ -119,13 +124,12 @@ const callback = (data) => {
   switch (data.message) {
     case MESSAGE_TO_CLIENT.createRoom:
       console.log('Create room!');
-      createRoom(roomIdToCreate);
-      window.setTimeout(() => {
+      createRoom(roomIdToCreate).then(() =>
         postData(
           serverURL,
           objectToSendToServer(MESSAGE_TO_SERVER.roomCreated, roomIdToCreate)
-        ).then(callback);
-      }, 1000);
+        ).then(callback)
+      );
       break;
     case MESSAGE_TO_CLIENT.keepWait:
       console.log('Keep wait!');
@@ -169,10 +173,12 @@ const callback = (data) => {
  * Create an object to send to server by json
  * @param {string} message
  * @param {string} roomIdToCreate
+ * @param {string[]} blockedIPs
  */
-function objectToSendToServer(message, roomIdToCreate) {
+function objectToSendToServer(message, roomIdToCreate, blockedIPs = []) {
   return {
     message: message,
     roomId: roomIdToCreate,
+    blockedIPs: blockedIPs,
   };
 }

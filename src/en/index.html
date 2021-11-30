@@ -175,10 +175,9 @@
           <div>
             <input id="auto-fast-speed-checkbox" type="checkbox" />
             <label for="auto-fast-speed-checkbox"
-              >Automatically ask each peer about changing speed options to
-              "fast". (If you and the peer both check this option, the game
-              speed will be changed to "fast" without any additional
-              messages.)</label
+              >Automatically ask a peer about changing speed options to "fast".
+              (If you and the peer both check this option, the game speed will
+              be changed to "fast" without any additional messages.)</label
             >
           </div>
           <div class="margin-top-a-little">
@@ -224,6 +223,34 @@
         <button type="button" id="with-your-friend-btn">
           With one of your friends
         </button>
+      </div>
+      <div id="blocked-ip-addresses-table-container" class="margin-top">
+        <details>
+          <summary>
+            Quick Match Block List (<span id="number-of-blocked-ip-addresses"
+              >0</span
+            >/50)
+          </summary>
+          <table class="blocked-ip-addresses-table">
+            <thead>
+              <tr>
+                <th>IP Address</th>
+                <th>Date Blocked</th>
+                <th>Remarks</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3">
+                  <button type="button" class="delete-btn">
+                    Delete from the list
+                  </button>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </details>
       </div>
       <div id="about-with-your-friend" class="margin-top limit-width hidden">
         <div>
@@ -563,6 +590,11 @@
               Save replay
             </button>
           </div>
+          <div class="relative-container">
+            <button type="button" id="block-this-peer-btn" class="btn hidden">
+              Block <span class="no-wrap">this peer</span>
+            </button>
+          </div>
         </div>
         <div class="btn-container right">
           <button type="button" id="exit-btn" class="btn">Exit</button>
@@ -743,6 +775,62 @@
           >
             OK
           </button>
+        </div>
+        <div
+          class="fade-in-box notice hidden"
+          id="ask-add-this-peer-to-blocked-list"
+        >
+          <div>
+            <p id="partial-ip-address-of-this-peer-to-be-blocked"></p>
+            <p>
+              You are about to block the peer whose IP address is like above. If
+              you continue to block, you are not going to match against the peer
+              in the quick match. (If you want to be matched against this peer
+              later, you can delete the IP address of the peer from the list.)
+              Do you want to continue to block?
+            </p>
+          </div>
+          <div class="grid-1-1 center">
+            <button
+              type="button"
+              id="ask-add-this-peer-to-blocked-list-yes-btn"
+              class="btn-in-box"
+            >
+              Block
+            </button>
+            <button
+              type="button"
+              id="ask-add-this-peer-to-blocked-list-no-btn"
+              class="btn-in-box"
+            >
+              Do not block
+            </button>
+          </div>
+        </div>
+        <div
+          class="fade-in-box notice hidden"
+          id="notice-adding-this-peer-to-blocked-list-is-completed"
+        >
+          <p>
+            It was completed to add the IP address of the peer to the quick
+            match block list. Do you want to exit from this game?
+          </p>
+          <div class="grid-1-1 center">
+            <button
+              type="button"
+              id="notice-adding-this-peer-to-blocked-list-is-completed-exit-game-btn"
+              class="btn-in-box"
+            >
+              Exit
+            </button>
+            <button
+              type="button"
+              id="notice-adding-this-peer-to-blocked-list-is-completed-do-not-exit-game-btn"
+              class="btn-in-box"
+            >
+              Do not exit
+            </button>
+          </div>
         </div>
         <div class="fade-in-box notice hidden" id="notice-disconnected">
           <p>Disconnected from the peer.</p>

@@ -23,6 +23,7 @@ import {
 } from './quick_match/quick_match.js';
 import { enableChat } from './chat_display.js';
 import { replaySaver } from './replay/replay_saver.js';
+import { showBlockThisPeerBtn } from './block_other_players/ui.js';
 import '../style.css';
 
 /** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */
@@ -367,7 +368,7 @@ export function setUpUI() {
 
   exitRoomBtn.addEventListener('click', () => {
     cleanUpFirestoreRelevants();
-    location.reload();
+    window.setTimeout(() => location.reload(), 0);
   });
 
   const clickJoinBtnByPressingEnter = (event) => {
@@ -397,16 +398,30 @@ export function setUpUI() {
     const aboutWithYourFriend = document.getElementById(
       'about-with-your-friend'
     );
+    const blockedIPAddressesTableContainer = document.getElementById(
+      'blocked-ip-addresses-table-container'
+    );
+    const openChatListContainer = document.getElementById(
+      'open-chat-list-container'
+    );
     if (aboutWithYourFriend.classList.contains('hidden')) {
       aboutWithYourFriend.classList.remove('hidden');
       // @ts-ignore
       quickMatchBtn.disabled = true;
       window.addEventListener('keydown', clickJoinBtnByPressingEnter);
+      blockedIPAddressesTableContainer.classList.add('hidden');
+      if (openChatListContainer) {
+        openChatListContainer.classList.add('hidden');
+      }
     } else {
       aboutWithYourFriend.classList.add('hidden');
       // @ts-ignore
       quickMatchBtn.disabled = false;
       window.removeEventListener('keydown', clickJoinBtnByPressingEnter);
+      blockedIPAddressesTableContainer.classList.remove('hidden');
+      if (openChatListContainer) {
+        openChatListContainer.classList.remove('hidden');
+      }
     }
   });
 
@@ -802,6 +817,9 @@ export function showGameCanvas() {
   }
   if (!beforeConnection.classList.contains('hidden')) {
     beforeConnection.classList.add('hidden');
+  }
+  if (channel.isQuickMatch) {
+    showBlockThisPeerBtn();
   }
   flexContainer.classList.remove('hidden');
   myKeyboard.subscribe();
