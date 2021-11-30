@@ -747,6 +747,9 @@ label[for='fps-input'] {
   margin-top: var(--font-size);
 }
 table.blocked-ip-addresses-table {
+  /* box-sizing below is necessary for Chrome and Safari, not for Firefox.
+     Is it a bug in Chrome and Safari? */
+  box-sizing: border-box;
   border-collapse: collapse;
   border: 2px solid rgb(200, 200, 200);
   width: 100%;
@@ -776,4 +779,16 @@ table.blocked-ip-addresses-table .delete-btn {
   height: 100%;
   width: 100%;
   font-size: var(--font-size);
+}
+details {
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 0;
+}
+summary {
+  /* box-sizing below is necessary for Chrome and Safari, not for Firefox.
+     Is it a bug in Chrome and Safari? */
+  box-sizing: border-box;
+  font-weight: bold;
+  padding: 0.5em;
 }
