@@ -41,6 +41,7 @@ html {
 }
 body {
   color: var(--color-black);
+  margin: 0;
 }
 a,
 a:link,
@@ -74,6 +75,8 @@ a:active {
   align-items: stretch;
   height: auto;
   font-size: var(--font-size);
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: var(--font-size);
   padding-right: var(--font-size);
   overflow: visible;
@@ -496,6 +499,9 @@ button.btn {
 button.btn:disabled {
   background-color: #cccccc;
 }
+button.btn.hidden {
+  display: none;
+}
 .relative-container {
   position: relative;
 }
@@ -743,6 +749,52 @@ label[for='fps-input'] {
 .original-address {
   margin-top: var(--font-size);
 }
+table.blocked-ip-addresses-table {
+  /* box-sizing below is necessary for Chrome and Safari, not for Firefox.
+     Is it a bug in Chrome and Safari? */
+  box-sizing: border-box;
+  border-collapse: collapse;
+  border: 2px solid rgb(200, 200, 200);
+  width: 100%;
+}
+table.blocked-ip-addresses-table th,
+table.blocked-ip-addresses-table td {
+  border: 1px solid rgb(190, 190, 190);
+  padding: 5px;
+  text-align: center;
+}
+table.blocked-ip-addresses-table tbody td {
+  cursor: default;
+}
+table.blocked-ip-addresses-table tfoot td {
+  padding: 0;
+}
+table.blocked-ip-addresses-table tr.selected {
+  background-color: #0a95ff;
+}
+table.blocked-ip-addresses-table input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  font-size: var(--font-size);
+}
+table.blocked-ip-addresses-table .delete-btn {
+  height: 100%;
+  width: 100%;
+  font-size: var(--font-size);
+}
+details {
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 0;
+}
+summary {
+  /* box-sizing below is necessary for Chrome and Safari, not for Firefox.
+     Is it a bug in Chrome and Safari? */
+  box-sizing: border-box;
+  font-weight: bold;
+  padding: 0.5em;
+}
 
 
-/*# sourceMappingURL=main.80f919c4efc8ddd801ee.css.map*/
+/*# sourceMappingURL=main_replay.6cd500d3927b48e3912d.css.map*/
