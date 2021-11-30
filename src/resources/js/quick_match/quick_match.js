@@ -144,12 +144,12 @@ const callback = (data) => {
       console.log('Wait peer connection!');
       break;
     case MESSAGE_TO_CLIENT.connectToPeerAfterAWhile:
-      console.log('Connect To Peer after 5 seconds...');
+      console.log('Connect To Peer after 3 seconds...');
       window.setTimeout(() => {
         console.log('Connect To Peer!');
         printQuickMatchState(MESSAGE_TO_CLIENT.connectToPeer);
         joinRoom(data.roomId);
-      }, 5000);
+      }, 3000);
       break;
     case MESSAGE_TO_CLIENT.connectToPeer:
       console.log('Connect To Peer!');
