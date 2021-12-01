@@ -25,8 +25,6 @@ export function setUpUIForBlockingOtherUsers() {
   // @ts-ignore
   blockThisPeerBtn.disabled = true;
   if (!isLocalStorageAvailable) {
-    // TODO: do something
-    // local storage가 활성화되어 있지 않아 ip 차단 기능 이용이 불가능합니다.
     document
       .getElementById('blocked-ip-addresses-table-container')
       .classList.add('hidden');
@@ -102,8 +100,6 @@ export function setUpUIForBlockingOtherUsers() {
     document.getElementById(
       'notice-adding-this-peer-to-blocked-list-is-completed'
     );
-  // TODO: localstorage 사용가능한지 디텍트해서 블락킹 사용 못한다고 메시지 띄우기
-  // TODO: 클릭후 정말 추가할거냐는 메시지 띄우고 추가하고 나서는 버튼 비활성화
   blockThisPeerBtn.addEventListener('click', () => {
     document.getElementById(
       'partial-ip-address-of-this-peer-to-be-blocked'
