@@ -9,7 +9,7 @@ import { getPartialIP } from '../data_channel/parse_candidate';
 
 const MAX_REMARK_LENGTH = 20;
 
-const blockedIPAddressesContainer = document.querySelector(
+const blockedIPAddressesTableTbody = document.querySelector(
   'table.blocked-ip-addresses-table tbody'
 );
 const deleteBtn = document.querySelector(
@@ -49,7 +49,7 @@ export function setUpUIForBlockingOtherUsers() {
   document.body.addEventListener('click', (event) => {
     Array.from(
       // @ts-ignore
-      blockedIPAddressesContainer.getElementsByTagName('tr')
+      blockedIPAddressesTableTbody.getElementsByTagName('tr')
     ).forEach((elem) => {
       elem.classList.remove('selected');
     });
@@ -58,7 +58,7 @@ export function setUpUIForBlockingOtherUsers() {
     const target = event.target;
     if (
       // @ts-ignore
-      blockedIPAddressesContainer.contains(target) &&
+      blockedIPAddressesTableTbody.contains(target) &&
       // @ts-ignore
       target.tagName === 'TD'
     ) {
@@ -71,7 +71,7 @@ export function setUpUIForBlockingOtherUsers() {
   });
   deleteBtn.addEventListener('click', () => {
     const selectedTRElement =
-      blockedIPAddressesContainer.querySelector('.selected');
+      blockedIPAddressesTableTbody.querySelector('.selected');
     // @ts-ignore
     blockedIPList.removeAt(Number(selectedTRElement.dataset.index));
     try {
@@ -161,9 +161,9 @@ export function showBlockThisPeerBtn() {
  */
 function displayBlockedIPs(blockedIPs) {
   // Clear the current displaying
-  while (blockedIPAddressesContainer.firstChild) {
-    blockedIPAddressesContainer.removeChild(
-      blockedIPAddressesContainer.firstChild
+  while (blockedIPAddressesTableTbody.firstChild) {
+    blockedIPAddressesTableTbody.removeChild(
+      blockedIPAddressesTableTbody.firstChild
     );
   }
   // Display the given list
@@ -195,7 +195,7 @@ function displayBlockedIPs(blockedIPs) {
         console.log(err);
       }
     });
-    blockedIPAddressesContainer.appendChild(trElement);
+    blockedIPAddressesTableTbody.appendChild(trElement);
   });
 }
 
