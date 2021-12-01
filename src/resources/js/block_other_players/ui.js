@@ -1,5 +1,5 @@
 /**
- * Manages UI relavant to blocking other players
+ * Manages UI relevant to blocking other players
  */
 'use strict';
 import { getIfLocalStorageIsAvailable } from '../utils/is_local_storage_available';
