@@ -27,6 +27,9 @@ export function setUpUIForBlockingOtherUsers() {
   if (!isLocalStorageAvailable) {
     // TODO: do something
     // local storage가 활성화되어 있지 않아 ip 차단 기능 이용이 불가능합니다.
+    document
+      .getElementById('blocked-ip-addresses-table-container')
+      .classList.add('hidden');
     return;
   }
 
