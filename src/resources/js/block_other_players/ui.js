@@ -1,5 +1,5 @@
 /**
- * Manages UI relavant to blocking other players
+ * Manages UI relevant to blocking other players
  */
 'use strict';
 import { getIfLocalStorageIsAvailable } from '../utils/is_local_storage_available';
@@ -9,7 +9,7 @@ import { getPartialIP } from '../data_channel/parse_candidate';
 
 const MAX_REMARK_LENGTH = 20;
 
-const blockedIPAddressesContainer = document.querySelector(
+const blockedIPAddressesTableTbody = document.querySelector(
   'table.blocked-ip-addresses-table tbody'
 );
 const deleteBtn = document.querySelector(
@@ -25,8 +25,9 @@ export function setUpUIForBlockingOtherUsers() {
   // @ts-ignore
   blockThisPeerBtn.disabled = true;
   if (!isLocalStorageAvailable) {
-    // TODO: do something
-    // local storage가 활성화되어 있지 않아 ip 차단 기능 이용이 불가능합니다.
+    document
+      .getElementById('blocked-ip-addresses-table-container')
+      .classList.add('hidden');
     return;
   }
 
@@ -49,7 +50,7 @@ export function setUpUIForBlockingOtherUsers() {
   document.body.addEventListener('click', (event) => {
     Array.from(
       // @ts-ignore
-      blockedIPAddressesContainer.getElementsByTagName('tr')
+      blockedIPAddressesTableTbody.getElementsByTagName('tr')
     ).forEach((elem) => {
       elem.classList.remove('selected');
     });
@@ -58,7 +59,7 @@ export function setUpUIForBlockingOtherUsers() {
     const target = event.target;
     if (
       // @ts-ignore
-      blockedIPAddressesContainer.contains(target) &&
+      blockedIPAddressesTableTbody.contains(target) &&
       // @ts-ignore
       target.tagName === 'TD'
     ) {
@@ -71,7 +72,7 @@ export function setUpUIForBlockingOtherUsers() {
   });
   deleteBtn.addEventListener('click', () => {
     const selectedTRElement =
-      blockedIPAddressesContainer.querySelector('.selected');
+      blockedIPAddressesTableTbody.querySelector('.selected');
     // @ts-ignore
     blockedIPList.removeAt(Number(selectedTRElement.dataset.index));
     try {
@@ -99,8 +100,6 @@ export function setUpUIForBlockingOtherUsers() {
     document.getElementById(
       'notice-adding-this-peer-to-blocked-list-is-completed'
     );
-  // TODO: localstorage 사용가능한지 디텍트해서 블락킹 사용 못한다고 메시지 띄우기
-  // TODO: 클릭후 정말 추가할거냐는 메시지 띄우고 추가하고 나서는 버튼 비활성화
   blockThisPeerBtn.addEventListener('click', () => {
     document.getElementById(
       'partial-ip-address-of-this-peer-to-be-blocked'
@@ -161,9 +160,9 @@ export function showBlockThisPeerBtn() {
  */
 function displayBlockedIPs(blockedIPs) {
   // Clear the current displaying
-  while (blockedIPAddressesContainer.firstChild) {
-    blockedIPAddressesContainer.removeChild(
-      blockedIPAddressesContainer.firstChild
+  while (blockedIPAddressesTableTbody.firstChild) {
+    blockedIPAddressesTableTbody.removeChild(
+      blockedIPAddressesTableTbody.firstChild
     );
   }
   // Display the given list
@@ -195,7 +194,7 @@ function displayBlockedIPs(blockedIPs) {
         console.log(err);
       }
     });
-    blockedIPAddressesContainer.appendChild(trElement);
+    blockedIPAddressesTableTbody.appendChild(trElement);
   });
 }
 
