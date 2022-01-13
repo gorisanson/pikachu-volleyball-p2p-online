@@ -549,11 +549,11 @@ div.nicknames-container {
   position: absolute;
   top: 0;
   left: 50%;
-  margin-left: -30%; /* half of width */
+  margin-left: -35%; /* half of width */
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: calc(1.5 * var(--font-size));
-  width: 60%;
+  width: 70%;
   height: calc(4 * var(--font-size));
   z-index: 9;
 }
@@ -797,4 +797,4 @@ summary {
 }
 
 
-/*# sourceMappingURL=main.00ca3808737247692b9b.css.map*/
+/*# sourceMappingURL=main.a5a6b1c0cfd6dbe787ae.css.map*/
