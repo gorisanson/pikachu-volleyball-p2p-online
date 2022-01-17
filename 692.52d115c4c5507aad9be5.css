@@ -9,6 +9,88 @@
   --btn-height: calc(2 * var(--font-size));
   --color-black: #232629;
 }
+:root {
+  --background-color: #ffffff;
+  --background-color-with-alpha: rgba(255, 255, 255, 0.8);
+  --color: #232629;
+  --link-color: #0074cc;
+  --link-hover-color: #0a95ff;
+  --btn-color: #ffffff;
+  --btn-background-color: rgba(50, 50, 50, 1);
+  --btn-background-color-2: rgb(210, 210, 210);
+  --btn-background-image: linear-gradient(
+    rgb(250, 250, 250),
+    rgb(230, 230, 230)
+  );
+  --btn-border-color: rgb(50, 50, 50);
+  --btn-in-dropdown-background-color: rgba(100, 100, 100, 0.9);
+  --btn-in-dropdown-hover-background-color: rgba(50, 50, 50, 0.9);
+  --button-disabled-color: rgb(200, 200, 200);
+  --button-disabled-background-color: #cccccc;
+  --update-fade-in-box-background-color: rgba(226, 230, 36, 0.85);
+  --amount-to-invert-image: 0;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #202124;
+    --background-color-with-alpha: rgba(32, 33, 36, 0.9);
+    --color: #bdc1c6;
+    --link-color: #33a7ff;
+    --link-hover-color: #3dc8ff;
+    --btn-color: #151515;
+    --btn-background-color: rgba(232, 232, 232, 1);
+    --btn-background-color-2: rgb(100, 100, 100);
+    --btn-background-image: linear-gradient(rgb(60, 60, 60), rgb(40, 40, 40));
+    --btn-border-color: rgb(230, 230, 230);
+    --btn-in-dropdown-background-color: rgba(200, 200, 200, 0.8);
+    --btn-in-dropdown-hover-background-color: rgba(232, 232, 232, 0.8);
+    --button-disabled-color: rgb(120, 120, 120);
+    --button-disabled-background-color: #666666;
+    --update-fade-in-box-background-color: rgba(195, 197, 48, 0.85);
+    --amount-to-invert-image: 0.95;
+  }
+}
+/* Copy of the variables in :root above */
+:root[data-color-scheme='light'] {
+  --background-color: #ffffff;
+  --background-color-with-alpha: rgba(255, 255, 255, 0.8);
+  --color: #232629;
+  --link-color: #0074cc;
+  --link-hover-color: #0a95ff;
+  --btn-color: #ffffff;
+  --btn-background-color: rgba(50, 50, 50, 1);
+  --btn-background-color-2: rgb(210, 210, 210);
+  --btn-background-image: linear-gradient(
+    rgb(250, 250, 250),
+    rgb(230, 230, 230)
+  );
+  --btn-border-color: rgb(50, 50, 50);
+  --btn-in-dropdown-background-color: rgba(100, 100, 100, 0.9);
+  --btn-in-dropdown-hover-background-color: rgba(50, 50, 50, 0.9);
+  --button-disabled-color: rgb(200, 200, 200);
+  --button-disabled-background-color: #cccccc;
+  --update-fade-in-box-background-color: rgba(226, 230, 36, 0.85);
+  --amount-to-invert-image: 0;
+}
+/* Copy of the variables in @media (prefers-color-scheme: dark) :root above */
+:root[data-color-scheme='dark'] {
+  --background-color: #202124;
+  --background-color-with-alpha: rgba(32, 33, 36, 0.9);
+  --color: #bdc1c6;
+  --link-color: #33a7ff;
+  --link-hover-color: #3dc8ff;
+  --btn-color: #151515;
+  --btn-background-color: rgba(232, 232, 232, 1);
+  --btn-background-color-2: rgb(100, 100, 100);
+  --btn-background-image: linear-gradient(rgb(60, 60, 60), rgb(40, 40, 40));
+  --btn-border-color: rgb(230, 230, 230);
+  --btn-in-dropdown-background-color: rgba(200, 200, 200, 0.8);
+  --btn-in-dropdown-hover-background-color: rgba(232, 232, 232, 0.8);
+  --button-disabled-color: rgb(120, 120, 120);
+  --button-disabled-background-color: #666666;
+  --update-fade-in-box-background-color: rgba(195, 197, 48, 0.85);
+  --amount-to-invert-image: 0.95;
+}
 /* size of iPad screen is 768px x 1024px in portrait mode */
 @media only screen and (min-width: 768px) and (min-height: 768px) {
   :root {
@@ -40,20 +122,21 @@ html {
   font-family: Arial, Helvetica, sans-serif;
 }
 body {
-  color: var(--color-black);
+  background-color: var(--background-color);
+  color: var(--color);
   margin: 0;
 }
 a,
 a:link,
 a:visited {
-  color: #0074cc;
+  color: var(--link-color);
   text-decoration: none;
 }
 a:hover {
-  color: #0a95ff;
+  color: var(--link-hover-color);
 }
 a:active {
-  color: #0a95ff;
+  color: var(--link-hover-color);
 }
 #flex-container,
 #before-connection,
@@ -228,8 +311,8 @@ canvas {
   width: calc(var(--btn-width) / 1.5);
   height: var(--btn-height);
   background-image: none;
-  background-color: white;
-  color: var(--color-black);
+  background-color: var(--background-color);
+  color: var(--color);
   margin-left: 20px;
   margin-right: 10px;
 }
@@ -322,7 +405,7 @@ span.margin-left-right {
   z-index: 10;
   visibility: visible;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: var(--background-color-with-alpha);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   animation-name: fade-in;
@@ -370,12 +453,12 @@ span.margin-left-right {
 }
 button {
   display: inline-block;
-  border: 2px solid rgb(50, 50, 50);
+  border: 2px solid var(--btn-border-color);
   margin: 0;
   padding: 0;
-  background-color: rbg(210, 210, 210);
-  background-image: linear-gradient(rgb(250, 250, 250), rgb(230, 230, 230));
-  color: var(--color-black);
+  background-color: var(--btn-background-color-2);
+  background-image: var(--btn-background-image);
+  color: var(--color);
   text-align: center;
   text-decoration: none;
   border-radius: 5px;
@@ -385,8 +468,8 @@ input {
 }
 button:disabled,
 input:disabled {
-  border-color: rgb(200, 200, 200);
-  color: rgb(200, 200, 200);
+  border-color: var(--button-disabled-color);
+  color: var(--button-disabled-color);
 }
 button.btn-in-box {
   display: block;
@@ -395,9 +478,9 @@ button.btn-in-box {
   border: none;
   margin: 0 auto;
   padding: 0;
-  background-color: rgb(50, 50, 50);
+  background-color: var(--btn-background-color);
   background-image: none;
-  color: white;
+  color: var(--btn-color);
   font-size: var(--font-size);
   text-align: center;
   text-decoration: none;
@@ -417,6 +500,7 @@ img.screenshot {
 }
 img.controls {
   max-width: 950px;
+  filter: invert(var(--amount-to-invert-image));
 }
 div.hidden,
 span.hidden,
@@ -470,7 +554,7 @@ div.scroll {
   overflow: scroll;
 }
 button:disabled {
-  background-color: #cccccc;
+  background-color: var(--button-disabled-background-color);
 }
 #menu-bar {
   display: grid;
@@ -487,8 +571,8 @@ button.btn {
   border: none;
   border-radius: 10px;
   padding: 0;
-  color: white;
-  background-color: rgba(50, 50, 50, 1);
+  color: var(--btn-color);
+  background-color: var(--btn-background-color);
   background-image: none;
   font-size: var(--font-size);
   text-align: center;
@@ -497,7 +581,7 @@ button.btn {
   margin-right: 5px;
 }
 button.btn:disabled {
-  background-color: #cccccc;
+  background-color: var(--button-disabled-background-color);
 }
 button.btn.hidden {
   display: none;
@@ -519,7 +603,7 @@ button.btn.hidden {
 }
 .dropdown .btn {
   margin-right: 0;
-  background-color: rgba(100, 100, 100, 0.9);
+  background-color: var(--btn-in-dropdown-background-color);
 }
 .submenu > .btn {
   width: calc(1.4 * var(--btn-width));
@@ -527,7 +611,7 @@ button.btn.hidden {
 }
 .dropdown .btn:hover,
 .submenu-btn.open {
-  background-color: rgba(50, 50, 50, 0.9);
+  background-color: var(--btn-in-dropdown-hover-background-color);
 }
 span.check {
   display: none;
@@ -582,7 +666,7 @@ div.nicknames-container {
 /* CSS for replay is below */
 #dropbox {
   border-style: solid;
-  border-color: var(--color-black);
+  border-color: var(--color);
   border-width: 2px;
 }
 .btn-container {
@@ -636,9 +720,9 @@ label.custom-file-upload {
   border: 2px solid rgb(50, 50, 50);
   margin: 0;
   padding: 0;
-  background-color: rbg(210, 210, 210);
-  background-image: linear-gradient(rgb(250, 250, 250), rgb(230, 230, 230));
-  color: var(--color-black);
+  background-color: var(--btn-background-color-2);
+  background-image: var(--btn-background-image);
+  color: var(--color);
   border-radius: 5px;
   width: var(--btn-width);
   height: var(--btn-height);
@@ -739,8 +823,8 @@ label[for='fps-input'] {
 }
 .if-embedded-in-other-website button {
   margin-top: var(--font-size);
-  background-color: white;
-  color: var(--color-black);
+  background-color: var(--background-color);
+  color: var(--color);
   font-size: calc(0.8 * var(--font-size));
   border: 3px solid;
   height: calc(1.6 * var(--font-size));
@@ -770,7 +854,7 @@ table.blocked-ip-addresses-table tfoot td {
   padding: 0;
 }
 table.blocked-ip-addresses-table tr.selected {
-  background-color: #0a95ff;
+  background-color: var(--link-hover-color);
 }
 table.blocked-ip-addresses-table input {
   width: 100%;
@@ -795,6 +879,79 @@ summary {
   font-weight: bold;
   padding: 0.5em;
 }
+div.color-scheme-toggle-switch-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: var(--btn-width);
+  height: var(--btn-height);
+  --toggle-switch-height: calc(1.6 * var(--font-size));
+  --toggle-ball-diameter: calc(1.2 * var(--font-size));
+  --toggle-switch-width: calc(2 * var(--toggle-switch-height));
+  --toggle-ball-top: calc(
+    (var(--toggle-switch-height) - var(--toggle-ball-diameter)) / 2
+  );
+  --toggle-ball-left: calc(
+    (var(--toggle-switch-height) - var(--toggle-ball-diameter)) / 2
+  );
+  --toggle-ball-left-toggled: calc(
+    var(--toggle-switch-width) - var(--toggle-ball-diameter) -
+      var(--toggle-ball-left)
+  );
+}
+/*
+ * Toggle switch using CSS
+ * Reference: https://dev.to/karankmr/how-to-create-a-custom-toggle-switch-using-css-4pmi
+ */
+input.toggle-switch {
+  display: none;
+}
+input.toggle-switch + label {
+  display: inline-block;
+  position: relative;
+  margin: auto;
+  background-color: var(--btn-background-color);
+  height: var(--toggle-switch-height);
+  width: var(--toggle-switch-width);
+  border-radius: calc(var(--toggle-switch-height) / 2);
+  cursor: pointer;
+  transition: background-color 1s;
+}
+input.toggle-switch + label::after {
+  content: '';
+  position: absolute;
+  left: var(--toggle-ball-left);
+  top: var(--toggle-ball-top);
+  height: var(--toggle-ball-diameter);
+  width: var(--toggle-ball-diameter);
+  border-radius: 50%;
+  background-color: var(--btn-color);
+  transition: left 0.5s, background-color 1s;
+}
+input.toggle-switch:checked + label::after {
+  left: var(--toggle-ball-left-toggled);
+}
+/*
+ * The following supplement is for displaying the Sun and Moon unicode characters
+ * inside toggle switch label.
+ */
+input.toggle-switch + label::before {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  color: var(--btn-color);
+  left: var(--toggle-ball-left-toggled);
+  top: var(--toggle-ball-top);
+  height: var(--toggle-ball-diameter);
+  width: var(--toggle-ball-diameter);
+  font-size: var(--toggle-ball-diameter);
+  content: '\2600';
+}
+input.toggle-switch:checked + label::before {
+  left: var(--toggle-ball-left);
+  content: '\263E';
+}
 
 
-/*# sourceMappingURL=main_replay.a5a6b1c0cfd6dbe787ae.css.map*/
+/*# sourceMappingURL=692.52d115c4c5507aad9be5.css.map*/
