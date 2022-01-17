@@ -11,6 +11,8 @@ module.exports = {
     main_replay: './src/resources/js/replay/main_replay.js',
     dark_color_scheme:
       './src/resources/js/offline_version_js/utils/dark_color_scheme.js',
+    is_embedded_in_other_website:
+      './src/resources/js/offline_version_js/utils/is_embedded_in_other_website.js',
   },
   output: {
     filename: '[name].[chunkhash].js',
@@ -52,7 +54,12 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'src/en/index.html',
       filename: 'en/index.html',
-      chunks: ['runtime', 'main', 'dark_color_scheme'],
+      chunks: [
+        'runtime',
+        'main',
+        'dark_color_scheme',
+        'is_embedded_in_other_website',
+      ],
       chunksSortMode: 'manual',
       minify: {
         collapseWhitespace: true,
@@ -62,7 +69,13 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'src/ko/index.html',
       filename: 'ko/index.html',
-      chunks: ['runtime', 'ko', 'main', 'dark_color_scheme'],
+      chunks: [
+        'runtime',
+        'ko',
+        'main',
+        'dark_color_scheme',
+        'is_embedded_in_other_website',
+      ],
       chunksSortMode: 'manual',
       minify: {
         collapseWhitespace: true,
