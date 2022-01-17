@@ -879,3 +879,76 @@ summary {
   font-weight: bold;
   padding: 0.5em;
 }
+div.color-scheme-toggle-switch-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: var(--btn-width);
+  height: var(--btn-height);
+  --toggle-switch-height: calc(1.6 * var(--font-size));
+  --toggle-ball-diameter: calc(1.2 * var(--font-size));
+  --toggle-switch-width: calc(2 * var(--toggle-switch-height));
+  --toggle-ball-top: calc(
+    (var(--toggle-switch-height) - var(--toggle-ball-diameter)) / 2
+  );
+  --toggle-ball-left: calc(
+    (var(--toggle-switch-height) - var(--toggle-ball-diameter)) / 2
+  );
+  --toggle-ball-left-toggled: calc(
+    var(--toggle-switch-width) - var(--toggle-ball-diameter) -
+      var(--toggle-ball-left)
+  );
+}
+/*
+ * Toggle switch using CSS
+ * Reference: https://dev.to/karankmr/how-to-create-a-custom-toggle-switch-using-css-4pmi
+ */
+input.toggle-switch {
+  display: none;
+}
+input.toggle-switch + label {
+  display: inline-block;
+  position: relative;
+  margin: auto;
+  background-color: var(--btn-background-color);
+  height: var(--toggle-switch-height);
+  width: var(--toggle-switch-width);
+  border-radius: calc(var(--toggle-switch-height) / 2);
+  cursor: pointer;
+  transition: background-color 1s;
+}
+input.toggle-switch + label::after {
+  content: '';
+  position: absolute;
+  left: var(--toggle-ball-left);
+  top: var(--toggle-ball-top);
+  height: var(--toggle-ball-diameter);
+  width: var(--toggle-ball-diameter);
+  border-radius: 50%;
+  background-color: var(--btn-color);
+  transition: left 0.5s, background-color 1s;
+}
+input.toggle-switch:checked + label::after {
+  left: var(--toggle-ball-left-toggled);
+}
+/*
+ * The following supplement is for displaying the Sun and Moon unicode characters
+ * inside toggle switch label.
+ */
+input.toggle-switch + label::before {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  color: var(--btn-color);
+  left: var(--toggle-ball-left-toggled);
+  top: var(--toggle-ball-top);
+  height: var(--toggle-ball-diameter);
+  width: var(--toggle-ball-diameter);
+  font-size: var(--toggle-ball-diameter);
+  content: '\2600';
+}
+input.toggle-switch:checked + label::before {
+  left: var(--toggle-ball-left);
+  content: '\263E';
+}
