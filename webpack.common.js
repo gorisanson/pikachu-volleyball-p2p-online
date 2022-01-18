@@ -9,6 +9,8 @@ module.exports = {
     main: './src/resources/js/main_online.js',
     ko: './src/ko/ko.js',
     main_replay: './src/resources/js/replay/main_replay.js',
+    main_update_history:
+      './src/resources/js/update_history/main_update_history.js',
     dark_color_scheme:
       './src/resources/js/offline_version_js/utils/dark_color_scheme.js',
     is_embedded_in_other_website:
@@ -41,10 +43,6 @@ module.exports = {
           from: 'resources/assets/**/*.+(json|png|mp3|wav)',
         },
         { from: 'src/index.html', to: 'index.html' },
-        {
-          from: 'src/resources/style.css',
-          to: 'resources/style.css',
-        },
       ],
     }),
     new MiniCssExtractPlugin({
@@ -105,7 +103,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'src/en/update-history/index.html',
       filename: 'en/update-history/index.html',
-      chunks: ['dark_color_scheme'],
+      chunks: ['main_update_history', 'dark_color_scheme'],
       chunksSortMode: 'manual',
       minify: {
         collapseWhitespace: true,
@@ -115,7 +113,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'src/ko/update-history/index.html',
       filename: 'ko/update-history/index.html',
-      chunks: ['dark_color_scheme'],
+      chunks: ['main_update_history', 'dark_color_scheme'],
       chunksSortMode: 'manual',
       minify: {
         collapseWhitespace: true,
