@@ -592,6 +592,12 @@ button.btn:disabled {
 button.btn.hidden {
   display: none;
 }
+#options-dropdown-btn {
+  margin-left: 0;
+}
+#exit-btn {
+  margin-right: 0;
+}
 .relative-container {
   position: relative;
 }
