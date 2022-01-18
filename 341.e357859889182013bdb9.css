@@ -5,7 +5,10 @@
   --canvas-width: 92vmin;
   --canvas-height: calc(92vmin * var(--inverse-aspect-ratio));
   --font-size: 18px;
-  --btn-width: calc(5 * var(--font-size));
+  --btn-width: min(
+    calc(5 * var(--font-size)),
+    calc((var(--canvas-width) - 30px) / 4)
+  );
   --btn-height: calc(2 * var(--font-size));
   --color-black: #232629;
 }
@@ -95,7 +98,10 @@
 @media only screen and (min-width: 768px) and (min-height: 768px) {
   :root {
     --font-size: 22px;
-    --btn-width: calc(6 * var(--font-size));
+    --btn-width: min(
+      calc(6 * var(--font-size)),
+      calc((var(--canvas-width) - 30px) / 4)
+    );
   }
 }
 @media only screen and (min-aspect-ratio: 432/304) {
@@ -586,6 +592,12 @@ button.btn:disabled {
 button.btn.hidden {
   display: none;
 }
+#options-dropdown-btn {
+  margin-left: 0;
+}
+#exit-btn {
+  margin-right: 0;
+}
 .relative-container {
   position: relative;
 }
@@ -954,4 +966,4 @@ input.toggle-switch:checked + label::before {
 }
 
 
-/*# sourceMappingURL=692.52d115c4c5507aad9be5.css.map*/
+/*# sourceMappingURL=341.e357859889182013bdb9.css.map*/
