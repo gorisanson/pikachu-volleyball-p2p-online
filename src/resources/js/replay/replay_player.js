@@ -179,16 +179,8 @@ class ReplayPlayer {
     this.pikaVolley.audio.sounds.bgm.center.stop();
   }
 
-  pauseBGM() {
-    this.pikaVolley.audio.sounds.bgm.center.pause();
-  }
-
-  resumeBGM() {
-    this.pikaVolley.audio.sounds.bgm.center.resume();
-  }
-
-  playBGMProperlyAfterScrubbbing() {
-    if (this.pikaVolley.fakeAudio.sounds.bgm.playing) {
+  playBGMProperly() {
+    if (this.pikaVolley.isBGMPlaying) {
       this.pikaVolley.audio.sounds.bgm.center.play({
         start: this.pikaVolley.timeBGM,
       });

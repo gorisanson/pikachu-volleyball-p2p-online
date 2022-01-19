@@ -73,13 +73,13 @@ export function setUpUI() {
   scrubberRangeInput.addEventListener('touchend', () => {
     if (!pausedByBtn && !replayPlayer.ticker.started) {
       replayPlayer.ticker.start();
-      replayPlayer.playBGMProperlyAfterScrubbbing();
+      replayPlayer.playBGMProperly();
     }
   });
   scrubberRangeInput.addEventListener('mouseup', () => {
     if (!pausedByBtn && !replayPlayer.ticker.started) {
       replayPlayer.ticker.start();
-      replayPlayer.playBGMProperlyAfterScrubbbing();
+      replayPlayer.playBGMProperly();
     }
   });
   scrubberRangeInput.addEventListener('input', (e) => {
@@ -92,12 +92,12 @@ export function setUpUI() {
   playPauseBtn.addEventListener('click', () => {
     if (replayPlayer.ticker.started) {
       replayPlayer.ticker.stop();
-      replayPlayer.pauseBGM();
+      replayPlayer.stopBGM();
       pausedByBtn = true;
       adjustPlayPauseBtnIcon();
     } else {
       replayPlayer.ticker.start();
-      replayPlayer.resumeBGM();
+      replayPlayer.playBGMProperly();
       pausedByBtn = false;
       adjustPlayPauseBtnIcon();
     }
@@ -107,28 +107,28 @@ export function setUpUI() {
     replayPlayer.seekRelativeTime(-1);
     if (!pausedByBtn && !replayPlayer.ticker.started) {
       replayPlayer.ticker.start();
-      replayPlayer.playBGMProperlyAfterScrubbbing();
+      replayPlayer.playBGMProperly();
     }
   });
   seekForward1Btn.addEventListener('click', () => {
     replayPlayer.seekRelativeTime(1);
     if (!pausedByBtn && !replayPlayer.ticker.started) {
       replayPlayer.ticker.start();
-      replayPlayer.playBGMProperlyAfterScrubbbing();
+      replayPlayer.playBGMProperly();
     }
   });
   seekBackward3Btn.addEventListener('click', () => {
     replayPlayer.seekRelativeTime(-3);
     if (!pausedByBtn && !replayPlayer.ticker.started) {
       replayPlayer.ticker.start();
-      replayPlayer.playBGMProperlyAfterScrubbbing();
+      replayPlayer.playBGMProperly();
     }
   });
   seekForward3Btn.addEventListener('click', () => {
     replayPlayer.seekRelativeTime(3);
     if (!pausedByBtn && !replayPlayer.ticker.started) {
       replayPlayer.ticker.start();
-      replayPlayer.playBGMProperlyAfterScrubbbing();
+      replayPlayer.playBGMProperly();
     }
   });
 
