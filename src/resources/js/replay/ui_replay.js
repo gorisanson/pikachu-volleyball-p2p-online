@@ -268,6 +268,19 @@ export function setUpUI() {
       replayPlayer.pikaVolley.audio.turnBGMVolume(false);
     }
   });
+
+  const turnOnSFXCheckbox = document.getElementById('turn-on-sfx-checkbox');
+  turnOnSFXCheckbox.addEventListener('change', () => {
+    if (replayPlayer.pikaVolley === null) {
+      return;
+    }
+    // @ts-ignore
+    if (turnOnSFXCheckbox.checked) {
+      replayPlayer.pikaVolley.audio.turnSFXVolume(true);
+    } else {
+      replayPlayer.pikaVolley.audio.turnSFXVolume(false);
+    }
+  });
 }
 
 export function adjustFPSInputValue() {
