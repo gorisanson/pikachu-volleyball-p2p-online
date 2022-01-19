@@ -799,6 +799,9 @@ label.custom-file-upload {
 }
 div.show-checkboxes-container {
   font-size: calc(var(--font-size) / 1.2);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 label[for='fps-input'] {
   margin-left: 10px;
@@ -966,4 +969,4 @@ input.toggle-switch:checked + label::before {
 }
 
 
-/*# sourceMappingURL=341.e357859889182013bdb9.css.map*/
+/*# sourceMappingURL=341.56b20dc193723cf3fda3.css.map*/
