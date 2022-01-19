@@ -255,6 +255,19 @@ export function setUpUI() {
       }
     }
   });
+
+  const turnOnBGMCheckbox = document.getElementById('turn-on-bgm-checkbox');
+  turnOnBGMCheckbox.addEventListener('change', () => {
+    if (replayPlayer.pikaVolley === null) {
+      return;
+    }
+    // @ts-ignore
+    if (turnOnBGMCheckbox.checked) {
+      replayPlayer.pikaVolley.audio.turnBGMVolume(true);
+    } else {
+      replayPlayer.pikaVolley.audio.turnBGMVolume(false);
+    }
+  });
 }
 
 export function adjustFPSInputValue() {
