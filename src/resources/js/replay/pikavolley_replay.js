@@ -64,12 +64,14 @@ export class PikachuVolleyballReplay extends PikachuVolleyball {
     };
     const fakeBGM = {
       fake: true,
-      playing: false,
+      center: {
+        isPlaying: false,
+      },
       play: function () {
-        this.playing = true;
+        this.center.isPlaying = true;
       },
       stop: function () {
-        this.playing = false;
+        this.center.isPlaying = false;
       },
     };
     this.fakeAudio = {
@@ -99,6 +101,7 @@ export class PikachuVolleyballReplay extends PikachuVolleyball {
 
     this.timeCurrent = 0; // unit: second
     this.timeBGM = 0;
+    this.isBGMPlaying = false;
     this.replayFrameCounter = 0;
     this.chatCounter = 0;
     this.optionsCounter = 0;
@@ -275,14 +278,12 @@ export class PikachuVolleyballReplay extends PikachuVolleyball {
       options = this.options[this.optionsCounter];
     }
     this.timeCurrent += 1 / this.normalFPS;
-    // @ts-ignore
-    if (this.audio.sounds.bgm.fake) {
-      // @ts-ignore
-      if (this.audio.sounds.bgm.playing) {
-        this.timeBGM = (this.timeBGM + 1 / this.normalFPS) % 83; // 83 is total duration of bgm
-      } else {
-        this.timeBGM = 0;
-      }
+
+    this.isBGMPlaying = this.audio.sounds.bgm.center.isPlaying;
+    if (this.isBGMPlaying) {
+      this.timeBGM = (this.timeBGM + 1 / this.normalFPS) % 83; // 83 is total duration of bgm
+    } else {
+      this.timeBGM = 0;
     }
 
     let chat = this.chats[this.chatCounter];
