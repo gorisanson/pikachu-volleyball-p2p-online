@@ -77,7 +77,6 @@ export const channel = {
   peerNickname: '',
   myPartialPublicIP: '*.*.*.*',
   peerPartialPublicIP: '*.*.*.*',
-  peerFullPublicIP: '',
   willAskFastAutomatically: false,
 
   /** @type {PikaUserInputWithSync[]} */
@@ -872,7 +871,6 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
           const peerPublicIP = parsePublicIPFromCandidate(data.candidate);
           if (peerPublicIP !== null) {
             channel.peerPartialPublicIP = getPartialIP(peerPublicIP);
-            channel.peerFullPublicIP = peerPublicIP;
             console.log(
               "part of the peer's public IP address:",
               channel.peerPartialPublicIP
