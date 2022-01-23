@@ -5,7 +5,6 @@
 import { getIfLocalStorageIsAvailable } from '../utils/is_local_storage_available';
 import { blockedIPList } from './blocked_ip_list';
 import { channel } from '../data_channel/data_channel';
-import { getPartialIP } from '../data_channel/parse_candidate';
 
 const MAX_REMARK_LENGTH = 20;
 
@@ -40,9 +39,16 @@ export function setUpUIForBlockingOtherUsers() {
     console.log(err);
   }
   if (stringifiedBlockedIPListArrayView !== null) {
-    blockedIPList.readArrayViewAndUpdate(
-      JSON.parse(stringifiedBlockedIPListArrayView)
-    );
+    const arrayView = JSON.parse(stringifiedBlockedIPListArrayView);
+    // TODO: Remove the if statement below can after
+    // the previous version localStorage caches of clients
+    // can be considered to be all expired.
+    if (arrayView.length > 0 && arrayView[0].length !== 4) {
+      window.localStorage.removeItem('stringifiedBlockedIPListArrayView');
+      location.reload();
+    } else {
+      blockedIPList.readArrayViewAndUpdate(arrayView);
+    }
   }
   displayBlockedIPs(blockedIPList.createArrayView());
   displayNumberOfBlockedIPAddresses();
@@ -109,7 +115,9 @@ export function setUpUIForBlockingOtherUsers() {
   askAddThisPeerToBlockedListYesBtn.addEventListener('click', () => {
     // @ts-ignore
     blockThisPeerBtn.disabled = true;
-    blockedIPList.add(channel.peerFullPublicIP);
+    blockedIPList.AddStagedPeerHashedIPWithPeerPartialIP(
+      channel.peerPartialPublicIP
+    );
     try {
       window.localStorage.setItem(
         'stringifiedBlockedIPListArrayView',
@@ -148,7 +156,7 @@ export function showBlockThisPeerBtn() {
     return;
   }
   blockThisPeerBtn.classList.remove('hidden');
-  if (channel.peerFullPublicIP && !blockedIPList.isFull()) {
+  if (blockedIPList.isPeerHashedIPStaged() && !blockedIPList.isFull()) {
     // @ts-ignore
     blockThisPeerBtn.disabled = false;
   }
@@ -156,7 +164,7 @@ export function showBlockThisPeerBtn() {
 
 /**
  * Display the given blocked IP list array view.
- * @param {[string, number, string][]} blockedIPs
+ * @param {[string, string, number, string][]} blockedIPs
  */
 function displayBlockedIPs(blockedIPs) {
   // Clear the current displaying
@@ -177,9 +185,9 @@ function displayBlockedIPs(blockedIPs) {
     trElement.appendChild(tdElementForTime);
     trElement.appendChild(tdElementForRemark);
     trElement.dataset.index = String(index);
-    tdElementForIP.textContent = getPartialIP(blockedIP[0]);
-    tdElementForTime.textContent = new Date(blockedIP[1]).toLocaleString();
-    inputElement.value = blockedIP[2];
+    tdElementForIP.textContent = blockedIP[1];
+    tdElementForTime.textContent = new Date(blockedIP[2]).toLocaleString();
+    inputElement.value = blockedIP[3];
     inputElement.addEventListener('input', (event) => {
       // @ts-ignore
       const newRemark = event.target.value.slice(0, MAX_REMARK_LENGTH);

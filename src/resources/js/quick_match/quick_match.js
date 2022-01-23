@@ -47,7 +47,7 @@ export function startQuickMatch(roomIdToCreateIfNeeded) {
     objectToSendToServer(
       MESSAGE_TO_SERVER.initial,
       roomIdToCreate,
-      blockedIPList.createIPArray()
+      blockedIPList.createHashedIPArray()
     )
   ).then(callback);
 }
@@ -142,17 +142,25 @@ const callback = (data) => {
       break;
     case MESSAGE_TO_CLIENT.waitPeerConnection:
       console.log('Wait peer connection!');
+      // If the following line is executed after data channel is opened,
+      // peer hashed ip can be staged too late to enable blocking this peer button,
+      // which checked if peer hashed ip is staged already.
+      // But, since the blocking this peer button is rendered after ping test
+      // which takes about 5 seconds, it will be almost never happened.
+      blockedIPList.stagePeerHashedIP(data.hashedPeerIP);
       break;
     case MESSAGE_TO_CLIENT.connectToPeerAfterAWhile:
       console.log('Connect To Peer after 3 seconds...');
       window.setTimeout(() => {
         console.log('Connect To Peer!');
         printQuickMatchState(MESSAGE_TO_CLIENT.connectToPeer);
+        blockedIPList.stagePeerHashedIP(data.hashedPeerIP);
         joinRoom(data.roomId);
       }, 3000);
       break;
     case MESSAGE_TO_CLIENT.connectToPeer:
       console.log('Connect To Peer!');
+      blockedIPList.stagePeerHashedIP(data.hashedPeerIP);
       joinRoom(data.roomId);
       break;
     case MESSAGE_TO_CLIENT.abandoned:
@@ -173,12 +181,12 @@ const callback = (data) => {
  * Create an object to send to server by json
  * @param {string} message
  * @param {string} roomIdToCreate
- * @param {string[]} blockedIPs
+ * @param {string[]} blockedHashedIPs
  */
-function objectToSendToServer(message, roomIdToCreate, blockedIPs = []) {
+function objectToSendToServer(message, roomIdToCreate, blockedHashedIPs = []) {
   return {
     message: message,
     roomId: roomIdToCreate,
-    blockedIPs: blockedIPs,
+    blockedHashedIPs: blockedHashedIPs,
   };
 }

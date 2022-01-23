@@ -4,12 +4,14 @@
 class BlockedIP {
   /**
    * Create a BlockedIP object
-   * @param {string} ip
+   * @param {string} hashedIP
+   * @param {string} partialIP
    * @param {number} [blockedTime]
    * @param {string} [remark]
    */
-  constructor(ip, blockedTime = Date.now(), remark = '') {
-    this.ip = ip;
+  constructor(hashedIP, partialIP, blockedTime = Date.now(), remark = '') {
+    this.hashedIP = hashedIP;
+    this.partialIP = partialIP;
     this.blockedTime = blockedTime;
     this.remark = remark;
   }
@@ -25,6 +27,7 @@ class BlockedIPList {
    */
   constructor(maxLength) {
     this._blockedIPs = [];
+    this._peerHashedIP = null;
     this.maxLength = maxLength;
   }
 
@@ -41,14 +44,30 @@ class BlockedIPList {
   }
 
   /**
-   * Add to blocked IP list
-   * @param {string} ip
+   * Stage the hashed IP of the peer
+   * @param {string} peerHashedIP
    */
-  add(ip) {
-    if (this.isFull()) {
+  stagePeerHashedIP(peerHashedIP) {
+    this._peerHashedIP = peerHashedIP;
+  }
+
+  /**
+   * Return if a peer hashed IP is staged
+   * @returns {boolean}
+   */
+  isPeerHashedIPStaged() {
+    return this._peerHashedIP !== null;
+  }
+
+  /**
+   * Add the staged peer hashed IP to blocked IP list
+   * @param {string} peerPartialIP
+   */
+  AddStagedPeerHashedIPWithPeerPartialIP(peerPartialIP) {
+    if (!this.isPeerHashedIPStaged() || this.isFull()) {
       return;
     }
-    this._blockedIPs.push(new BlockedIP(ip));
+    this._blockedIPs.push(new BlockedIP(this._peerHashedIP, peerPartialIP));
   }
 
   /**
@@ -71,11 +90,12 @@ class BlockedIPList {
   /**
    * Create a read-only 2D array whose elements have a structure of [ip, blockedTime, remark].
    * And the elements have same indices as in the this._blockedIPs.
-   * @returns {[string, number, string][]}
+   * @returns {[string, string, number, string][]}
    */
   createArrayView() {
     return this._blockedIPs.map((blockedIP) => [
-      blockedIP.ip,
+      blockedIP.hashedIP,
+      blockedIP.partialIP,
       blockedIP.blockedTime,
       blockedIP.remark,
     ]);
@@ -84,22 +104,22 @@ class BlockedIPList {
   /**
    * Read a 2D array which has the same structure of an array created by {@link createArrayView}
    * and update this._blockedIPs from it.
-   * @param {[string, number, string][]} arrayView
+   * @param {[string, string, number, string][]} arrayView
    */
   readArrayViewAndUpdate(arrayView) {
     arrayView.slice(0, this.maxLength);
     this._blockedIPs = arrayView.map(
-      (value) => new BlockedIP(value[0], value[1], value[2])
+      (value) => new BlockedIP(value[0], value[1], value[2], value[3])
     );
   }
 
   /**
-   * Create a read-only 1D array whose elements are blocked IP addresses.
+   * Create a read-only 1D array whose elements are blocked hashed IP addresses.
    * @returns {[string]}
    */
-  createIPArray() {
+  createHashedIPArray() {
     // @ts-ignore
-    return this._blockedIPs.map((blockedIP) => blockedIP.ip);
+    return this._blockedIPs.map((blockedIP) => blockedIP.hashedIP);
   }
 }
 
