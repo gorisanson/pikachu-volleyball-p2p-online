@@ -8,8 +8,19 @@
  * https://webrtc.org/getting-started/data-channels
  */
 'use strict';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
+import {
+  getFirestore,
+  collection,
+  doc,
+  addDoc,
+  setDoc,
+  getDocFromServer,
+  updateDoc,
+  deleteDoc,
+  onSnapshot,
+  serverTimestamp,
+} from 'firebase/firestore';
 import { firebaseConfig } from './firebase_config.js';
 import seedrandom from 'seedrandom';
 import { setCustomRng } from '../offline_version_js/rand.js';
@@ -61,7 +72,7 @@ import { replaySaver } from '../replay/replay_saver.js';
 
 /** @typedef {{speed: string, winningScore: number}} Options */
 
-firebase.initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(firebaseConfig);
 
 // It is set to (1 << 16) since syncCounter is to be sent as Uint16
 // 1 << 16 === 65536 and it corresponds to about 1.5 hours in 30 FPS (fast game speed).
@@ -154,8 +165,8 @@ export async function createRoom(roomIdToCreate) {
   channel.amICreatedRoom = true;
   roomId = roomIdToCreate;
 
-  const db = firebase.firestore();
-  roomRef = db.collection('rooms').doc(roomId);
+  const db = getFirestore(firebaseApp);
+  roomRef = doc(db, 'rooms', roomId);
 
   console.log('Create PeerConnection with configuration: ', rtcConfiguration);
   peerConnection = new RTCPeerConnection(rtcConfiguration);
@@ -196,7 +207,7 @@ export async function createRoom(roomIdToCreate) {
   dataChannel.addEventListener('message', recieveFromPeer);
   dataChannel.addEventListener('close', dataChannelClosed);
 
-  roomSnapshotUnsubscribe = roomRef.onSnapshot(async (snapshot) => {
+  roomSnapshotUnsubscribe = onSnapshot(roomRef, async (snapshot) => {
     console.log('Got updated room:', snapshot.data());
     const data = snapshot.data();
     if (!peerConnection.currentRemoteDescription && data.answer) {
@@ -213,13 +224,13 @@ export async function createRoom(roomIdToCreate) {
   await peerConnection.setLocalDescription(offer);
   console.log('Created offer and set local description:', offer);
   const roomWithOffer = {
-    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    timestamp: serverTimestamp(),
     offer: {
       type: offer.type,
       sdp: offer.sdp,
     },
   };
-  await roomRef.set(roomWithOffer);
+  await setDoc(roomRef, roomWithOffer);
   console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
   printLog('Offer sent');
 }
@@ -236,11 +247,12 @@ export async function joinRoom(roomIdToJoin) {
   }
   console.log('Join room: ', roomId);
 
-  const db = firebase.firestore();
-  const roomRef = db.collection('rooms').doc(`${roomId}`);
-  const roomSnapshot = await roomRef.get();
-  console.log('Got room:', roomSnapshot.exists);
-  if (!roomSnapshot.exists) {
+  const db = getFirestore(firebaseApp);
+  const roomRef = doc(db, 'rooms', `${roomId}`);
+  const roomSnapshot = await getDocFromServer(roomRef);
+  const doesRoomExist = roomSnapshot.exists();
+  console.log('Got room:', doesRoomExist);
+  if (!doesRoomExist) {
     console.log('No room is mathing the ID');
     if (channel.isQuickMatch) {
       printNoRoomMatchingMessageInQuickMatch();
@@ -284,7 +296,7 @@ export async function joinRoom(roomIdToJoin) {
       sdp: answer.sdp,
     },
   };
-  await roomRef.update(roomWithAnswer);
+  await updateDoc(roomRef, roomWithAnswer);
   printLog('Answer sent');
   console.log('joined room!');
 
@@ -307,15 +319,17 @@ export function cleanUpFirestoreRelevants() {
 
   // Delete ice candidates documents
   while (localICECandDocRefs.length > 0) {
-    localICECandDocRefs.pop().delete();
-    console.log('deleted an ICE candidate doc');
+    deleteDoc(localICECandDocRefs.pop()).then(() => {
+      console.log('deleted an ICE candidate doc');
+    });
   }
 
   // Delete the room document
   if (channel.amICreatedRoom && roomRef) {
-    roomRef.delete();
+    deleteDoc(roomRef).then(() => {
+      console.log('deleted the room');
+    });
     roomRef = null;
-    console.log('deleted the room');
   }
 }
 
@@ -832,7 +846,7 @@ function registerPeerConnectionListeners(peerConnection) {
 }
 
 function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
-  const candidatesCollection = roomRef.collection(localName);
+  const candidatesCollection = collection(roomRef, localName);
 
   peerConnection.addEventListener('icecandidate', (event) => {
     if (!event.candidate) {
@@ -840,7 +854,9 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
       return;
     }
     const json = event.candidate.toJSON();
-    candidatesCollection.add(json).then((ref) => localICECandDocRefs.push(ref));
+    addDoc(candidatesCollection, json).then((ref) =>
+      localICECandDocRefs.push(ref)
+    );
 
     console.log('Got candidate: ', event.candidate);
 
@@ -854,10 +870,9 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
       console.log('part of my public IP address:', channel.myPartialPublicIP);
     }
   });
-
-  iceCandOnSnapshotUnsubscribe = roomRef
-    .collection(remoteName)
-    .onSnapshot((snapshot) => {
+  iceCandOnSnapshotUnsubscribe = onSnapshot(
+    collection(roomRef, remoteName),
+    (snapshot) => {
       snapshot.docChanges().forEach(async (change) => {
         if (change.type === 'added') {
           const data = change.doc.data();
@@ -878,5 +893,6 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
           }
         }
       });
-    });
+    }
+  );
 }
