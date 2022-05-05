@@ -27,7 +27,7 @@ import { showBlockThisPeerBtn } from './block_other_players/ui.js';
 import '../style.css';
 
 /** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */
-/** @typedef {import('pixi.js-legacy').Ticker} Ticker */
+/** @typedef {import('@pixi/ticker').Ticker} Ticker */
 /** @typedef {{speed: string, winningScore: number}} Options options communicated with the peer */
 
 /** @type {number} maximum nickname length */
