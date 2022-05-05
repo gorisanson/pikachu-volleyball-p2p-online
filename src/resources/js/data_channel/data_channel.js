@@ -8,8 +8,8 @@
  * https://webrtc.org/getting-started/data-channels
  */
 'use strict';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
 import { firebaseConfig } from './firebase_config.js';
 import seedrandom from 'seedrandom';
 import { setCustomRng } from '../offline_version_js/rand.js';
