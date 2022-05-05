@@ -12,7 +12,7 @@ You can play Pikachu Volleyball P2P online on the website: https://gorisanson.gi
 
 ## Structure
 
-- Offline version: All the offline web version source code files is in the directory [`src/resources/js/offline_version_js/`](src/resources/js/offline_version_js). These are the same as the source code files in https://github.com/gorisanson/pikachu-volleyball/tree/master/src/resources/js. The online version is developed base on these.
+- Offline version: All the offline web version source code files is in the directory [`src/resources/js/offline_version_js/`](src/resources/js/offline_version_js). These are the same as the source code files in https://github.com/gorisanson/pikachu-volleyball/tree/main/src/resources/js. The online version is developed base on these.
 
 - WebRTC data channels: The peer-to-peer online functions utilizing WebRTC data channels are contained in [`src/resources/js/data_channel/data_channel.js`](src/resources/js/data_channel/data_channel.js). ([Firebase Cloud Firestore](https://firebase.google.com/docs/firestore) is used as a mediator for establishing a peer-to-peer communication via WebRTC. The room ID which the room creator sends to the joiner is the ID of a Cloud Firestore document which is shared between them. This method is originally from [Firebase + WebRTC Codelab](https://webrtc.org/getting-started/firebase-rtc-codelab) and [https://github.com/webrtc/FirebaseRTC](https://github.com/webrtc/FirebaseRTC).)
 
