@@ -281,6 +281,19 @@ export function setUpUI() {
       replayPlayer.pikaVolley.audio.turnSFXVolume(false);
     }
   });
+
+  window.addEventListener('keydown', (event) => {
+    if (event.code === 'Space') {
+      event.preventDefault();
+      playPauseBtn.click();
+    } else if (event.code === 'ArrowLeft') {
+      event.preventDefault();
+      seekBackward3Btn.click();
+    } else if (event.code === 'ArrowRight') {
+      event.preventDefault();
+      seekForward3Btn.click();
+    }
+  });
 }
 
 export function adjustFPSInputValue() {
