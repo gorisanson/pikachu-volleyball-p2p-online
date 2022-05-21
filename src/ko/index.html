@@ -477,22 +477,23 @@
       >
         <div>
           이 P2P 온라인 버전을 이용할 수 없습니다. 다음 두 가지 경우 중 하나에
-          해당합니다. 일단 (2)에 해당하는 조치를 취할 수 있습니다.<br /><br />
-          (1) 필요한 server reflexive candidate를 얻을 수 없습니다. UDP 포트들이
+          해당합니다. 일단 (1)에 해당하는 조치를 취할 수 있습니다.<br /><br />
+          (1) 컴퓨터가 공유기를 거치지 않고 벽에 랜선으로 곧바로 연결되어
+          인터넷에 접속해 있는 경우, 파이어폭스(Firefox) 브라우저를 이용하고
+          세부 설정을 변경하여야 플레이가 가능합니다. 자세한 내용은 아래 문서를
+          참조해주세요.<br />
+          <a
+            href="https://docs.google.com/document/d/1PRkAuj10KBvTIhpIDo4MjcPWZ7Usi0cCeiFqZpgvQ9E/edit?usp=sharing"
+            target="_blank"
+            rel="noopener"
+            >컴퓨터가 공유기 없이 벽에 랜선으로 곧바로 연결되어 인터넷에 접속한
+            경우 피카츄 배구 P2P 온라인 플레이 방법</a
+          >
+          <br /><br />
+          (2) 위 (1)의 경우에 해당하지 않는다면, 게임 실행에 필요한 UDP 포트들이
           막혀있는 것이 원인일 가능성이 높습니다. 만약 회사, 학교, 또는
           관공서에서 접속하셨다면 해당 기관의 방화벽이 UDP 포트들을 차단하고
           있는 것일 수 있습니다.<br /><br />
-          (2) 컴퓨터가 (라우터의 중개 없이 인터넷에 접속하여) 공인 IP 주소가
-          할당되어 있는 경우에는 server reflexive candidate가 필요 없습니다.
-          그러나 이 공인 IP 주소가 어떤 이유로인가 사설 IP 주소로 인식되어
-          브라우저에 의해 mDNS로 바뀌게 된 경우일 수 있습니다. 이 경우에는,
-          파이어폭스(Firefox) 브라우저를 이용하면 플레이가 가능합니다.
-          파이어폭스 브라우저에서
-          <a href="about:config" target="_blank" rel="noopener">about:config</a>
-          페이지로 접속해 (주소를 복사 붙여넣기 하면 편리합니다),
-          "media.peerconnection.ice.obfuscate_host_addresses" 설정을 "false"로
-          바꾸어주고나서 브라우저를 재시작하면 이 P2P 온라인 버전의 이용이
-          가능합니다.
         </div>
         <button
           type="button"
