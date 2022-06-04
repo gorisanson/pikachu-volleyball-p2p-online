@@ -55,7 +55,6 @@ export class PikachuVolleyballReplay extends PikachuVolleyball {
       getInput: () => {},
     };
     this.keyboardArray = [this.player1Keyboard, this.player2Keyboard];
-    this.willMoveScrubber = true;
     this.willDisplayChat = true;
 
     const fakeSound = {
@@ -209,11 +208,9 @@ export class PikachuVolleyballReplay extends PikachuVolleyball {
   gameLoopSilent() {
     const audio = this.audio;
     this.willDisplayChat = false;
-    this.willMoveScrubber = false;
     // @ts-ignore
     this.audio = this.fakeAudio;
     this.gameLoop();
-    this.willMoveScrubber = true;
     this.willDisplayChat = true;
     this.audio = audio;
   }
@@ -228,9 +225,7 @@ export class PikachuVolleyballReplay extends PikachuVolleyball {
       return;
     }
 
-    if (this.willMoveScrubber) {
-      moveScrubberTo(this.replayFrameCounter);
-    }
+    moveScrubberTo(this.replayFrameCounter);
 
     const usersInputNumber = this.inputs[this.replayFrameCounter];
     const player1Input = convert5bitNumberToUserInput(usersInputNumber >>> 5);
