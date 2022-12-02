@@ -416,10 +416,12 @@
         src="../resources/assets/sounds/WAVE144_1.wav"
       ></audio>
       <div id="test-passed" class="fade-in-box notice fixed hidden">
-        No issues are detected.<br /><br />
-        (1) The necessary server reflexive candidate can be gotten, or your
-        computer is assigned a public IP address. (UDP ports are open.)<br /><br />
-        (2) Your network is not behind a symmetric NAT.
+        <div class="limit-width">
+          No issues are detected.<br /><br />
+          (1) The necessary server reflexive candidate can be gotten, or your
+          computer is assigned a public IP address. (UDP ports are open.)<br /><br />
+          (2) Your network is not behind a symmetric NAT.
+        </div>
         <button type="button" id="test-passed-ok-btn" class="btn-in-box">
           OK
         </button>
@@ -484,8 +486,10 @@
         </button>
       </div>
       <div id="behind-symmetric-nat" class="fade-in-box notice fixed hidden">
-        This P2P online version is not going to work on your network.<br /><br />
-        Your network is behind a symmetric NAT.
+        <div class="limit-width">
+          This P2P online version is not going to work on your network.<br /><br />
+          Your network is behind a symmetric NAT.
+        </div>
         <button
           type="button"
           id="behind-symmetric-nat-ok-btn"

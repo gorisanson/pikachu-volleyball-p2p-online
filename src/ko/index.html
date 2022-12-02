@@ -436,10 +436,12 @@
         src="../resources/assets/sounds/WAVE144_1.wav"
       ></audio>
       <div id="test-passed" class="fade-in-box notice fixed hidden">
-        발견된 문제점이 없습니다.<br /><br />
-        (1) 필요한 server reflexive candidate를 얻을 수 있거나, 컴퓨터에 공인 IP
-        주소가 할당되어 있습니다. (UDP 포트가 열려 있습니다.)<br /><br />
-        (2) 네트워크가 symmetric NAT 하에 있지 않습니다.
+        <div class="limit-width">
+          발견된 문제점이 없습니다.<br /><br />
+          (1) 필요한 server reflexive candidate를 얻을 수 있거나, 컴퓨터에 공인
+          IP 주소가 할당되어 있습니다. (UDP 포트가 열려 있습니다.)<br /><br />
+          (2) 네트워크가 symmetric NAT 하에 있지 않습니다.
+        </div>
         <button type="button" id="test-passed-ok-btn" class="btn-in-box">
           알겠어요
         </button>
@@ -504,8 +506,10 @@
         </button>
       </div>
       <div id="behind-symmetric-nat" class="fade-in-box notice fixed hidden">
-        이 P2P 온라인 버전을 이용할 수 없습니다.<br /><br />
-        네트워크가 symmetric NAT 하에 있습니다.
+        <div class="limit-width">
+          이 P2P 온라인 버전을 이용할 수 없습니다.<br /><br />
+          네트워크가 symmetric NAT 하에 있습니다.
+        </div>
         <button
           type="button"
           id="behind-symmetric-nat-ok-btn"
