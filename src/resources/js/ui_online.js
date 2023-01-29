@@ -800,7 +800,7 @@ export function printNoRoomMatchingMessageInQuickMatch() {
 
 export function printSomeoneElseAlreadyJoinedRoomMessage() {
   printLog(
-    document.getElementById('someone-esle-already-joined-the-room').textContent
+    document.getElementById('someone-else-already-joined-the-room').textContent
   );
 }
 
@@ -840,7 +840,7 @@ export function printStartsIn(startsIn) {
   document.getElementById('starts-in').textContent = String(startsIn);
 }
 
-export function hideWatingPeerAssetsLoadingBox() {
+export function hideWaitingPeerAssetsLoadingBox() {
   const peerLoadingBox = document.getElementById('peer-loading-box');
   if (!peerLoadingBox.classList.contains('hidden')) {
     peerLoadingBox.classList.add('hidden');
@@ -1126,7 +1126,7 @@ function sendBtnClicked() {
 }
 
 /**
- * Attch event listner to the hide btn
+ * Attach event listener to the hide btn
  * @param {string} btnId
  * @param {string} boxIdToHide
  */

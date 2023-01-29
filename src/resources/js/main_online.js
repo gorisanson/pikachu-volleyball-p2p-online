@@ -21,11 +21,11 @@
  * is set to the same thing on both peers at the data channel open event (handled by the function
  * "dataChannelOpened" in "data_channel.js"), then the user inputs are communicated via the data channel.
  *
- * And expainations for other source files are below.
+ * And explanations for other source files are below.
  *  - "pikavolley_online.js": A wrapper for "offline_version_js/pikavolley.js".
  *  - "keyboard_online.js": A wrapper for offline version "offline_version_js/keyboard.js".
  *                          This module gets user inputs and load them up onto the data channel to the peer.
- *  - "generate_pushid.js": Generate a room ID easilly distinguishable by human eye.
+ *  - "generate_pushid.js": Generate a room ID easily distinguishable by human eye.
  *  - "mod.js": To maintain game sync, sync counter is attached for each user input, and mod is used to
  *              make sync counter cycle in a range [0, 255] which fits in a byte.
  *  - "ui_online.js": For the user interface of the html page and inputs/outputs relevant to html elements.
@@ -35,8 +35,8 @@
  *                                   change the file name to "firebase_config.js".
  *  - "rtc_configuration.js": Contains RTCPeerConnection configuration.
  *  - "quick_match.js": It is for the quick match function. Manages communication with the quick match server.
- *  - "qucik_match_server_url.template.js": Fill this template the url of the quick match server and change
- *                                          the file name to "qucik_match_server_url.js"
+ *  - "quick_match_server_url.template.js": Fill this template the url of the quick match server and change
+ *                                          the file name to "quick_match_server_url.js"
  */
 'use strict';
 import { settings } from '@pixi/settings';
@@ -84,7 +84,7 @@ const renderer = autoDetectRenderer({
   backgroundColor: 0x000000,
   backgroundAlpha: 1,
   // Decided to use only Canvas for compatibility reason. One player had reported that
-  // on theire browser, where pixi chooses to use WebGL renderer, the graphics are not fine.
+  // on their browser, where pixi chooses to use WebGL renderer, the graphics are not fine.
   // And the issue had been fixed by using Canvas renderer. And also for the sake of testing,
   // it is more comfortable just to stick with Canvas renderer so that it is unnecessary to switch
   // between WebGL renderer and Canvas renderer.
@@ -102,7 +102,7 @@ loader.add(ASSETS_PATH.SPRITE_SHEET);
 for (const prop in ASSETS_PATH.SOUNDS) {
   loader.add(ASSETS_PATH.SOUNDS[prop]);
 }
-setUpLoaderProgresBar();
+setUpLoaderProgressBar();
 channel.callbackAfterDataChannelOpened = () => {
   loader.load(setup);
 };
@@ -113,7 +113,7 @@ setUpUIForBlockingOtherUsers();
 /**
  * Set up the loader progress bar.
  */
-function setUpLoaderProgresBar() {
+function setUpLoaderProgressBar() {
   const loadingBox = document.getElementById('loading-box');
   const progressBar = document.getElementById('progress-bar');
 
@@ -137,7 +137,7 @@ function setup() {
 function start(pikaVolley) {
   ticker.maxFPS = pikaVolley.normalFPS;
   ticker.add(() => {
-    // Redering and gameLoop order is the opposite of
+    // Rendering and gameLoop order is the opposite of
     // the offline web version (refer: ./offline_version_js/main.js).
     // It's for the smooth rendering for the online version
     // which gameLoop can not always succeed right on this "ticker.add"ed code

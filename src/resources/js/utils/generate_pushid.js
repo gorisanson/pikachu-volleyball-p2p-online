@@ -2,7 +2,7 @@
  * This code is originated from a gist https://gist.github.com/mikelehen/3596a30bd69384624c11
  * I found the gist link at https://firebase.googleblog.com/2015/02/the-2120-ways-to-ensure-unique_68.html
  *
- * Modified the origianl code somewhat so that the generated id can be easilly distinguishable by human eye
+ * Modified the original code somewhat so that the generated id can be easily distinguishable by human eye
  * and Web Crypto API is used instead of Math.random if available.
  */
 'use strict';

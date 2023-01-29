@@ -1,6 +1,6 @@
 /**
  * Get hashCode for the string.
- * Refered from: https://stackoverflow.com/a/7616484/8581025
+ * Referred to: https://stackoverflow.com/a/7616484/8581025
  * (original source: https://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/)
  *
  * @param {string} s

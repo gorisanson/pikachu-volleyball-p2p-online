@@ -40,7 +40,7 @@ export async function testNetwork(
       if (!gotSrflx && !isHostAddressPublicIP) {
         console.log('did not get srflx');
         if (isHostAddressObfuscated) {
-          console.log('host address is obfuscted');
+          console.log('host address is obfuscated');
           callBackIfDidNotGetSrflxAndHostAddressIsObfuscated();
         } else {
           console.log('host address is not obfuscated');
@@ -68,7 +68,7 @@ export async function testNetwork(
       if (!candidates[cand.relatedPort]) {
         candidates[cand.relatedPort] = [cand.port];
         // this is for the Firefox browser
-        // Firefox brower trigger an event even if a candidiate with
+        // Firefox browser trigger an event even if a candidate with
         // the same port after translation is received from another STUN server.
       } else if (candidates[cand.relatedPort][0] !== cand.port) {
         candidates[cand.relatedPort].push(cand.port);
