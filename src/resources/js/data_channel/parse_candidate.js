@@ -2,7 +2,7 @@
  * This function is from https://github.com/otalk/sdp
  * (permalink: https://github.com/otalk/sdp/blob/3a8d369a9c159a691c5ee67d6a5f26b4887d26dc/sdp.js#L48)
  * (I see this function first from https://webrtchacks.com/symmetric-nat/)
- * The license of the code this fucntion is below (MIT License)
+ * The license of the code this function is below (MIT License)
  *
  ****************************************
  * Copyright (c) 2017 Philipp Hancke

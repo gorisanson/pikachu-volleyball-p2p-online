@@ -8,7 +8,7 @@ import { getCommentText } from './ui_replay.js';
 /** @typedef {{speed: string, winningScore: number}} Options options communicated with the peer */
 
 /**
- * Classs representing replay saver
+ * Class representing replay saver
  */
 class ReplaySaver {
   constructor() {

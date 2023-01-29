@@ -30,7 +30,7 @@ import {
   noticeDisconnected,
   enableChatOpenBtnAndChatDisablingBtn,
   showGameCanvas,
-  hideWatingPeerAssetsLoadingBox,
+  hideWaitingPeerAssetsLoadingBox,
   hidePingBox,
   printAvgPing,
   printStartsIn,
@@ -370,7 +370,7 @@ export function sendInputQueueToPeer(inputQueue) {
 function receiveInputQueueFromPeer(data) {
   if (isFirstInputQueueFromPeer) {
     isFirstInputQueueFromPeer = false;
-    hideWatingPeerAssetsLoadingBox();
+    hideWaitingPeerAssetsLoadingBox();
   }
 
   const dataView = new DataView(data);

@@ -11,7 +11,7 @@ import { PikaUserInput } from './offline_version_js/physics.js';
 /** @typedef GameState @type {function():void} */
 
 /**
- * Class reperesenting Pikachu Volleyball p2p online game
+ * Class representing Pikachu Volleyball p2p online game
  */
 // @ts-ignore
 export class PikachuVolleyballOnline extends PikachuVolleyball {

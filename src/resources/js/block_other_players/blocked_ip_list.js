@@ -18,11 +18,11 @@ class BlockedIP {
 }
 
 /**
- * Class reperesenting a list of blocked IPs
+ * Class representing a list of blocked IPs
  */
 class BlockedIPList {
   /**
-   * Create a BlockedIPLIst obejct
+   * Create a BlockedIPLIst object
    * @param {number} maxLength
    */
   constructor(maxLength) {

@@ -88,7 +88,7 @@ class ReplayPlayer {
     for (const prop in ASSETS_PATH.SOUNDS) {
       this.loader.add(ASSETS_PATH.SOUNDS[prop]);
     }
-    setUpLoaderProgresBar(this.loader);
+    setUpLoaderProgressBar(this.loader);
 
     const reader = new FileReader();
     reader.onload = (event) => {
@@ -148,7 +148,7 @@ class ReplayPlayer {
     this.ticker.stop();
 
     // Cleanup previous pikaVolley
-    this.pikaVolley.initilizeForReplay();
+    this.pikaVolley.initializeForReplay();
 
     if (frameNumber > 0) {
       for (let i = 0; i < frameNumber; i++) {
@@ -226,7 +226,7 @@ export function setTickerMaxFPSAccordingToNormalFPS(normalFPS) {
  * Set up the loader progress bar.
  * @param {Loader} loader
  */
-function setUpLoaderProgresBar(loader) {
+function setUpLoaderProgressBar(loader) {
   const loadingBox = document.getElementById('loading-box');
   const progressBar = document.getElementById('progress-bar');
 

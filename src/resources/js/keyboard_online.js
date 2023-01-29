@@ -17,7 +17,7 @@ import { mod, isInModRange } from './utils/mod.js';
 export const bufferLength = 8;
 
 /**
- * Class respresenting modified version of PikaKeyboard Class
+ * Class representing modified version of PikaKeyboard Class
  */
 class PikaKeyboardModified extends PikaKeyboard {
   /**
@@ -127,7 +127,7 @@ class MyKeyboard {
   }
 
   /**
-   * Subscribe keydown, keyup event listners for the keys of this keyboard
+   * Subscribe keydown, keyup event listeners for the keys of this keyboard
    */
   subscribe() {
     this.keyboard1.subscribe();
@@ -135,7 +135,7 @@ class MyKeyboard {
   }
 
   /**
-   * Unsubscribe keydown, keyup event listners for the keys of this keyboard
+   * Unsubscribe keydown, keyup event listeners for the keys of this keyboard
    */
   unsubscribe() {
     this.keyboard1.unsubscribe();
@@ -184,7 +184,7 @@ class MyKeyboard {
   }
 }
 
-/** This Mykeybord instance is used among the modules */
+/** This MyKeyboard instance is used among the modules */
 export const myKeyboard = new MyKeyboard(
   'KeyD',
   'KeyG',
@@ -217,7 +217,7 @@ export class OnlineKeyboard {
   }
 
   /**
-   * Check whether an input which corrsponds syncConter is on inputQueue
+   * Check whether an input which corresponds syncCounter is on inputQueue
    * @param {number} syncCounter
    * @return {boolean} get input from peer succeed?
    */
@@ -256,8 +256,8 @@ export class OnlineKeyboard {
       return;
     }
     // Keep the history buffers (previous inputs) at the head of queue so that
-    // the history buffers can be resended if lost.
-    // The future buffers (now and upcomming inputs) and the history buffers
+    // the history buffers can be resent if lost.
+    // The future buffers (now and upcoming inputs) and the history buffers
     // should have same length (bufferLength) to keep the sync connection.
     // So the maximum length of this.inputQueue is (2 * bufferLength).
     let input = null;
@@ -296,7 +296,7 @@ export class OnlineKeyboard {
 }
 
 /**
- * Class reperesenting a user input with a corresponding sync counter
+ * Class representing a user input with a corresponding sync counter
  */
 export class PikaUserInputWithSync extends PikaUserInput {
   constructor(syncCounter, xDirection, yDirection, powerHit) {

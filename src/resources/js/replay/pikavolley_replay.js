@@ -19,7 +19,7 @@ import { setTickerMaxFPSAccordingToNormalFPS } from './replay_player.js';
 /** @typedef GameState @type {function():void} */
 
 /**
- * Class reperesenting Pikachu Volleyball Replay
+ * Class representing Pikachu Volleyball Replay
  */
 // @ts-ignore
 export class PikachuVolleyballReplay extends PikachuVolleyball {
@@ -86,13 +86,13 @@ export class PikachuVolleyballReplay extends PikachuVolleyball {
       },
     };
 
-    this.initilizeForReplay();
+    this.initializeForReplay();
   }
 
   /**
-   * This is mainly for reinitilization for reusing the PikachuVolleyballReplay object
+   * This is mainly for reinitialization for reusing the PikachuVolleyballReplay object
    */
-  initilizeForReplay() {
+  initializeForReplay() {
     // Stop if sounds are playing
     for (const prop in this.audio.sounds) {
       this.audio.sounds[prop].stop();
@@ -114,7 +114,7 @@ export class PikachuVolleyballReplay extends PikachuVolleyball {
     const rngForPlayer2Chat = seedrandom.alea(this.roomId.slice(15));
     setChatRngs(rngForPlayer1Chat, rngForPlayer2Chat);
 
-    // Reinitilize things which needs exact RNG
+    // Reinitialize things which needs exact RNG
     this.view.game.cloudArray = [];
     const NUM_OF_CLOUDS = 10;
     for (let i = 0; i < NUM_OF_CLOUDS; i++) {
