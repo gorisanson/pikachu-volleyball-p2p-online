@@ -434,16 +434,7 @@
           This P2P online version is not going to work on your network.<br /><br />
           The necessary server reflexive candidate can't be gotten. Maybe the
           reason is that the necessary UDP ports are blocked. If you connected
-          via a corporate network, maybe the firewall is blocking the UDP
-          ports.<br /><br />
-          If you see this message after following the troubleshooting in the
-          case of your public IP address being obfuscated by the browser,
-          there's no more to do if you are not an administrator of the corporate
-          network. It is recommended that, in your Firefox browser, visit the
-          page
-          <a href="about:config" target="_blank" rel="noopener">about:config</a>
-          (by copying and pasting the address) and turn back the setting of
-          "media.peerconnection.ice.obfuscate_host_addresses" to "true".
+          via a corporate network, maybe the firewall is blocking the UDP ports.
         </div>
         <button
           type="button"
@@ -457,25 +448,47 @@
         id="did-not-get-srflx-candidate-and-host-address-is-obfuscated"
         class="fade-in-box notice fixed hidden"
       >
-        <div class="limit-width">
+        <div class="limit-width text-align-start">
           This P2P online version is not going to work on your network. It is
           one of the following two cases. It is recommended that, first, do the
           troubleshooting on (1).<br /><br />
-          (1) If your computer is plugged directly into the wall (without a
-          router) to access the internet, you should use the Firefox browser
-          after changing a configuration setting to play this game. For more
-          information, please refer to the document below:<br />
-          <a
-            href="https://docs.google.com/document/d/1a_OQTsMnWDZEw1wXmXqxOhrRfBKvj2kWKjgwuksh9Z8/edit?usp=sharing"
-            target="_blank"
-            rel="noopener"
-            >How to play Pikachu Volleyball P2P Online if my computer is
-            directly plugged into the wall to access the internet</a
-          >
-          <br /><br />
-          (2) If (1) above is not your case, it seems that the necessary UDP
-          ports are blocked. If you are connected to the internet via a
-          corporate network, maybe the firewall is blocking the UDP ports.
+          (1) You need to update your browser to the latest version. Make sure
+          your browser is at or above the version specified below:
+          <ul>
+            <li>
+              Chrome (or Chromium-based browsers):
+              <a
+                href="https://chromiumdash.appspot.com/commit/7eea6672285f765599fd883a5737f5cae8d20917"
+                target="_blank"
+                rel="noopener"
+                >110.0</a
+              >
+            </li>
+            <li>
+              Firefox:
+              <a
+                href="https://hg.mozilla.org/mozilla-central/rev/587eb0272431"
+                target="_blank"
+                rel="noopener"
+                >110.0</a
+              >
+            </li>
+            <li>
+              Safari: A version with
+              <a
+                href="https://commits.webkit.org/257481@main"
+                target="_blank"
+                rel="noopener"
+                >this patch</a
+              >
+              needs to be released. Before the release, you need to use latest
+              version of Chrome or Firefox instead.
+            </li>
+          </ul>
+          (2) If your browser is at or above the version specified on (1) above,
+          it seems that the necessary UDP ports are blocked. If you are
+          connected to the internet via a corporate network, maybe the firewall
+          is blocking the UDP ports.
         </div>
         <button
           type="button"

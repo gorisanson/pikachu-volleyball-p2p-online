@@ -675,6 +675,9 @@ div.nicknames-container {
 .partial-ip {
   font-size: calc(0.8 * var(--font-size));
 }
+.text-align-start {
+  text-align: start;
+}
 /* CSS for replay is below */
 #dropbox {
   border-style: solid;
