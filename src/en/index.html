@@ -316,15 +316,51 @@
         id="press-enter-to-quick-match"
         class="fade-in-box notice fixed hidden"
       >
-        <p>
+        <div class="limit-width">
           <span class="thick">Press "Enter" key or "Z" key</span> to start Quick
           Match.<br />
           (It is for preventing devices without a keyboard from doing quick
           match.)
-        </p>
+        </div>
         <button
           type="button"
           id="cancel-quick-match-btn"
+          class="btn-in-box large"
+        >
+          cancel <span class="no-wrap">Quick Match</span>
+        </button>
+      </div>
+      <div id="select-match-group" class="fade-in-box notice fixed hidden">
+        <div class="limit-width">
+          <span class="thick">Select a match group.</span><br />
+          The closer the physical distance between you and your peer, the less
+          lag there is in the game. (You can select by pressing the keyboard
+          shortcut written in the parentheses. For "Global", press "G" key.)
+        </div>
+        <button
+          type="button"
+          id="global-match-group-btn"
+          class="btn-in-box very-large"
+        >
+          Global (G)
+        </button>
+        <button
+          type="button"
+          id="korea-match-group-btn"
+          class="btn-in-box very-large"
+        >
+          Korea (K)
+        </button>
+        <button
+          type="button"
+          id="taiwan-match-group-btn"
+          class="btn-in-box very-large"
+        >
+          Taiwan (T)
+        </button>
+        <button
+          type="button"
+          id="cancel-quick-match-btn-in-select-match-group"
           class="btn-in-box large"
         >
           cancel <span class="no-wrap">Quick Match</span>
@@ -336,8 +372,12 @@
       >
         <div>
           <span class="thick"
-            >Number of matches connected by<br />
-            Quick Match within the last..</span
+            >Number of matches<br />
+            in the match group "<span
+              id="match-group-in-quick-match-notice-box"
+            ></span
+            >"<br />
+            within the last..</span
           >
           <ul>
             <li>24 hours: <span id="within-24-hours"></span></li>

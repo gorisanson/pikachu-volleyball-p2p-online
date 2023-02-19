@@ -25,6 +25,7 @@ import { enableChat } from './chat_display.js';
 import { replaySaver } from './replay/replay_saver.js';
 import { showBlockThisPeerBtn } from './block_other_players/ui.js';
 import '../style.css';
+import { MATCH_GROUP } from './quick_match/match_group.js';
 
 /** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */
 /** @typedef {import('@pixi/ticker').Ticker} Ticker */
@@ -277,19 +278,73 @@ export function setUpUI() {
     if (event.code === 'Enter' || event.code === 'KeyZ') {
       event.preventDefault();
       window.removeEventListener('keydown', startQuickMatchIfPressEnter);
-      const pressEnterToQuickMatch = document.getElementById(
-        'press-enter-to-quick-match'
-      );
-      if (!pressEnterToQuickMatch.classList.contains('hidden')) {
-        pressEnterToQuickMatch.classList.add('hidden');
-      }
+      document
+        .getElementById('press-enter-to-quick-match')
+        .classList.add('hidden');
       const callBackIfPassed = () => {
-        document
-          .getElementById('quick-match-notice-box')
-          .classList.remove('hidden');
+        const globalMatchGroupBtn = document.getElementById(
+          'global-match-group-btn'
+        );
+        const koreaMatchGroupBtn = document.getElementById(
+          'korea-match-group-btn'
+        );
+        const taiwanMatchGroupBtn = document.getElementById(
+          'taiwan-match-group-btn'
+        );
+        const matchGroupInQuickMatchNoticeBox = document.getElementById(
+          'match-group-in-quick-match-notice-box'
+        );
+        const selectMatchGroupByPressingKeyboardShortcut = (event) => {
+          switch (event.code) {
+            case 'KeyG':
+              event.preventDefault();
+              globalMatchGroupBtn.click();
+              break;
+            case 'KeyK':
+              event.preventDefault();
+              koreaMatchGroupBtn.click();
+              break;
+            case 'KeyT':
+              event.preventDefault();
+              taiwanMatchGroupBtn.click();
+              break;
+          }
+        };
+        window.addEventListener(
+          'keydown',
+          selectMatchGroupByPressingKeyboardShortcut
+        );
+        const startQuickMatchWithMatchGroup = (matchGroup) => {
+          window.removeEventListener(
+            'keydown',
+            selectMatchGroupByPressingKeyboardShortcut
+          );
+          document.getElementById('select-match-group').classList.add('hidden');
+          document
+            .getElementById('quick-match-notice-box')
+            .classList.remove('hidden');
+          const roomId = generatePushID();
+          startQuickMatch(roomId, matchGroup);
+        };
+        globalMatchGroupBtn.addEventListener('click', () => {
+          matchGroupInQuickMatchNoticeBox.textContent =
+            globalMatchGroupBtn.textContent;
+          startQuickMatchWithMatchGroup(MATCH_GROUP.GLOBAL);
+        });
+        koreaMatchGroupBtn.addEventListener('click', () => {
+          matchGroupInQuickMatchNoticeBox.textContent =
+            koreaMatchGroupBtn.textContent;
+          startQuickMatchWithMatchGroup(MATCH_GROUP.KR);
+        });
+        taiwanMatchGroupBtn.addEventListener('click', () => {
+          matchGroupInQuickMatchNoticeBox.textContent =
+            taiwanMatchGroupBtn.textContent;
+          startQuickMatchWithMatchGroup(MATCH_GROUP.TW);
+        });
 
-        const roomId = generatePushID();
-        startQuickMatch(roomId);
+        document
+          .getElementById('select-match-group')
+          .classList.remove('hidden');
       };
       const callBackIfDidNotGetSrflx = () => {
         document
@@ -501,13 +556,14 @@ export function setUpUI() {
 
   const cancelQuickMatchBtn = document.getElementById('cancel-quick-match-btn');
   cancelQuickMatchBtn.addEventListener('click', () => {
-    const pressEnterToQuickMatch = document.getElementById(
-      'press-enter-to-quick-match'
-    );
-    if (!pressEnterToQuickMatch.classList.contains('hidden')) {
-      pressEnterToQuickMatch.classList.add('hidden');
-    }
-    enableBtns();
+    location.reload();
+  });
+
+  const cancelQuickMatchBtnInSelectMatchGroup = document.getElementById(
+    'cancel-quick-match-btn-in-select-match-group'
+  );
+  cancelQuickMatchBtnInSelectMatchGroup.addEventListener('click', () => {
+    location.reload();
   });
 
   const cancelQuickMatchBtn2 = document.getElementById(
@@ -530,10 +586,7 @@ export function setUpUI() {
     'ask-one-more-game-yes-btn'
   );
   askOneMoreGameYesBtn.addEventListener('click', () => {
-    const askOneMoreGameBox = document.getElementById('ask-one-more-game');
-    if (!askOneMoreGameBox.classList.contains('hidden')) {
-      askOneMoreGameBox.classList.add('hidden');
-    }
+    document.getElementById('ask-one-more-game').classList.add('hidden');
   });
 
   const askOneMoreGameNoBtn = document.getElementById(

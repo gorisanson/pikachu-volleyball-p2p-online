@@ -7,6 +7,7 @@
 import { serverURL } from './quick_match_server_url.js';
 import { createRoom, joinRoom } from '../data_channel/data_channel.js';
 import { blockedIPList } from '../block_other_players/blocked_ip_list.js';
+import { MATCH_GROUP } from './match_group.js';
 import {
   printCommunicationCount,
   printQuickMatchState,
@@ -16,6 +17,7 @@ import {
 } from '../ui_online.js';
 
 let roomIdToCreate = null;
+let matchGroup = null;
 let communicationCount = null;
 
 const MESSAGE_TO_SERVER = {
@@ -38,15 +40,21 @@ export const MESSAGE_TO_CLIENT = {
 /**
  * Start request/response with quick match server
  * @param {string} roomIdToCreateIfNeeded
+ * @param {string} matchGroupForQuickMatch
  */
-export function startQuickMatch(roomIdToCreateIfNeeded) {
+export function startQuickMatch(
+  roomIdToCreateIfNeeded,
+  matchGroupForQuickMatch
+) {
   roomIdToCreate = roomIdToCreateIfNeeded;
+  matchGroup = matchGroupForQuickMatch;
   communicationCount = 0;
   postData(
     serverURL,
     objectToSendToServer(
       MESSAGE_TO_SERVER.initial,
       roomIdToCreate,
+      matchGroup,
       blockedIPList.createHashedIPArray()
     )
   ).then(callback);
@@ -59,7 +67,11 @@ export function sendQuickMatchSuccessMessageToServer() {
   console.log('Send quick match success message to server');
   postData(
     serverURL,
-    objectToSendToServer(MESSAGE_TO_SERVER.quickMatchSuccess, roomIdToCreate)
+    objectToSendToServer(
+      MESSAGE_TO_SERVER.quickMatchSuccess,
+      roomIdToCreate,
+      matchGroup
+    )
   );
 }
 
@@ -81,7 +93,7 @@ export function sendCancelQuickMatchMessageToServer() {
   console.log('Send cancel quick match message to server');
   postData(
     serverURL,
-    objectToSendToServer(MESSAGE_TO_SERVER.cancel, roomIdToCreate)
+    objectToSendToServer(MESSAGE_TO_SERVER.cancel, roomIdToCreate, matchGroup)
   );
 }
 
@@ -127,7 +139,11 @@ const callback = (data) => {
       createRoom(roomIdToCreate).then(() =>
         postData(
           serverURL,
-          objectToSendToServer(MESSAGE_TO_SERVER.roomCreated, roomIdToCreate)
+          objectToSendToServer(
+            MESSAGE_TO_SERVER.roomCreated,
+            roomIdToCreate,
+            matchGroup
+          )
         ).then(callback)
       );
       break;
@@ -136,7 +152,11 @@ const callback = (data) => {
       window.setTimeout(() => {
         postData(
           serverURL,
-          objectToSendToServer(MESSAGE_TO_SERVER.roomCreated, roomIdToCreate)
+          objectToSendToServer(
+            MESSAGE_TO_SERVER.roomCreated,
+            roomIdToCreate,
+            matchGroup
+          )
         ).then(callback);
       }, 1000);
       break;
@@ -182,11 +202,18 @@ const callback = (data) => {
  * @param {string} message
  * @param {string} roomIdToCreate
  * @param {string[]} blockedHashedIPs
+ * @param {string} matchGroup
  */
-function objectToSendToServer(message, roomIdToCreate, blockedHashedIPs = []) {
+function objectToSendToServer(
+  message,
+  roomIdToCreate,
+  matchGroup = MATCH_GROUP.GLOBAL,
+  blockedHashedIPs = []
+) {
   return {
     message: message,
     roomId: roomIdToCreate,
+    matchGroup: matchGroup,
     blockedHashedIPs: blockedHashedIPs,
   };
 }

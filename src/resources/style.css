@@ -496,6 +496,10 @@ button.large {
   height: calc(3 * var(--font-size));
   width: calc(7 * var(--font-size));
 }
+button.very-large {
+  height: calc(4 * var(--font-size));
+  width: calc(8 * var(--font-size));
+}
 img.screenshot,
 img.controls {
   height: auto;
