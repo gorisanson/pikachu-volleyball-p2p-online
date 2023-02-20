@@ -151,10 +151,7 @@ export function setUpUI() {
   function processSelected(e) {
     unselectSpeedBtns();
     // @ts-ignore
-    if (!e.currentTarget.classList.contains('selected')) {
-      // @ts-ignore
-      e.currentTarget.classList.add('selected');
-    }
+    e.currentTarget.classList.add('selected');
   }
   function unselectSpeedBtns() {
     for (const btn of [
@@ -229,12 +226,8 @@ export function setUpUI() {
       player1NicknameElem.classList.remove('hidden');
       player2NicknameElem.classList.remove('hidden');
     } else {
-      if (!player1NicknameElem.classList.contains('hidden')) {
-        player1NicknameElem.classList.add('hidden');
-      }
-      if (!player2NicknameElem.classList.contains('hidden')) {
-        player2NicknameElem.classList.add('hidden');
-      }
+      player1NicknameElem.classList.add('hidden');
+      player2NicknameElem.classList.add('hidden');
     }
   });
 
@@ -247,12 +240,8 @@ export function setUpUI() {
       player1IPElem.classList.remove('hidden');
       player2IPElem.classList.remove('hidden');
     } else {
-      if (!player1IPElem.classList.contains('hidden')) {
-        player1IPElem.classList.add('hidden');
-      }
-      if (!player2IPElem.classList.contains('hidden')) {
-        player2IPElem.classList.add('hidden');
-      }
+      player1IPElem.classList.add('hidden');
+      player2IPElem.classList.add('hidden');
     }
   });
 
@@ -319,9 +308,7 @@ export function noticeEndOfReplay() {
 
 export function hideNoticeEndOfReplay() {
   const noticeBoxEndOfReplay = document.getElementById('notice-end-of-replay');
-  if (!noticeBoxEndOfReplay.classList.contains('hidden')) {
-    noticeBoxEndOfReplay.classList.add('hidden');
-  }
+  noticeBoxEndOfReplay.classList.add('hidden');
 }
 
 export function noticeFileOpenError() {
@@ -382,9 +369,7 @@ export function showKeyboardInputs(player1Input, player2Input) {
   const rightKey = document.getElementById('right-key');
 
   function pressKeyElm(keyElm) {
-    if (!keyElm.classList.contains('pressed')) {
-      keyElm.classList.add('pressed');
-    }
+    keyElm.classList.add('pressed');
   }
 
   function unpressKeyElm(keyElm) {
