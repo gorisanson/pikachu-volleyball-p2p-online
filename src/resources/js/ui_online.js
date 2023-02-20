@@ -282,30 +282,34 @@ export function setUpUI() {
         .getElementById('press-enter-to-quick-match')
         .classList.add('hidden');
       const callBackIfPassed = () => {
-        const globalMatchGroupBtn = document.getElementById(
-          'global-match-group-btn'
+        const globalMatchGroupBtn = document.querySelector(
+          '#global-match-group-btn .match-group-name'
         );
-        const koreaMatchGroupBtn = document.getElementById(
-          'korea-match-group-btn'
+        const koreaMatchGroupBtn = document.querySelector(
+          '#korea-match-group-btn .match-group-name'
         );
-        const taiwanMatchGroupBtn = document.getElementById(
-          'taiwan-match-group-btn'
+        const taiwanMatchGroupBtn = document.querySelector(
+          '#taiwan-match-group-btn .match-group-name'
         );
         const matchGroupInQuickMatchNoticeBox = document.getElementById(
           'match-group-in-quick-match-notice-box'
         );
         const selectMatchGroupByPressingKeyboardShortcut = (event) => {
           switch (event.code) {
+            case 'Enter':
             case 'KeyG':
               event.preventDefault();
+              // @ts-ignore
               globalMatchGroupBtn.click();
               break;
             case 'KeyK':
               event.preventDefault();
+              // @ts-ignore
               koreaMatchGroupBtn.click();
               break;
             case 'KeyT':
               event.preventDefault();
+              // @ts-ignore
               taiwanMatchGroupBtn.click();
               break;
           }
