@@ -282,30 +282,34 @@ export function setUpUI() {
         .getElementById('press-enter-to-quick-match')
         .classList.add('hidden');
       const callBackIfPassed = () => {
-        const globalMatchGroupBtn = document.getElementById(
-          'global-match-group-btn'
+        const globalMatchGroupBtn = document.querySelector(
+          '#global-match-group-btn .match-group-name'
         );
-        const koreaMatchGroupBtn = document.getElementById(
-          'korea-match-group-btn'
+        const koreaMatchGroupBtn = document.querySelector(
+          '#korea-match-group-btn .match-group-name'
         );
-        const taiwanMatchGroupBtn = document.getElementById(
-          'taiwan-match-group-btn'
+        const taiwanMatchGroupBtn = document.querySelector(
+          '#taiwan-match-group-btn .match-group-name'
         );
         const matchGroupInQuickMatchNoticeBox = document.getElementById(
           'match-group-in-quick-match-notice-box'
         );
         const selectMatchGroupByPressingKeyboardShortcut = (event) => {
           switch (event.code) {
+            case 'Enter':
             case 'KeyG':
               event.preventDefault();
+              // @ts-ignore
               globalMatchGroupBtn.click();
               break;
             case 'KeyK':
               event.preventDefault();
+              // @ts-ignore
               koreaMatchGroupBtn.click();
               break;
             case 'KeyT':
               event.preventDefault();
+              // @ts-ignore
               taiwanMatchGroupBtn.click();
               break;
           }
@@ -865,12 +869,8 @@ export function showGameCanvas() {
   const flexContainer = document.getElementById('flex-container');
   const beforeConnection = document.getElementById('before-connection');
   const quickMatchNoticeBox = document.getElementById('quick-match-notice-box');
-  if (!quickMatchNoticeBox.classList.contains('hidden')) {
-    quickMatchNoticeBox.classList.add('hidden');
-  }
-  if (!beforeConnection.classList.contains('hidden')) {
-    beforeConnection.classList.add('hidden');
-  }
+  quickMatchNoticeBox.classList.add('hidden');
+  beforeConnection.classList.add('hidden');
   if (channel.isQuickMatch) {
     showBlockThisPeerBtn();
   }
@@ -880,9 +880,7 @@ export function showGameCanvas() {
 
 export function hidePingBox() {
   const pingBox = document.getElementById('ping-box');
-  if (!pingBox.classList.contains('hidden')) {
-    pingBox.classList.add('hidden');
-  }
+  pingBox.classList.add('hidden');
 }
 
 export function printAvgPing(avgPing) {
@@ -895,9 +893,7 @@ export function printStartsIn(startsIn) {
 
 export function hideWaitingPeerAssetsLoadingBox() {
   const peerLoadingBox = document.getElementById('peer-loading-box');
-  if (!peerLoadingBox.classList.contains('hidden')) {
-    peerLoadingBox.classList.add('hidden');
-  }
+  peerLoadingBox.classList.add('hidden');
 }
 
 /**
@@ -1153,9 +1149,7 @@ function chatOpenBtnClicked() {
   // @ts-ignore
   sendBtn.disabled = false;
   myKeyboard.unsubscribe();
-  if (!chatOpenBtnAndChatDisablingBtnContainer.classList.contains('hidden')) {
-    chatOpenBtnAndChatDisablingBtnContainer.classList.add('hidden');
-  }
+  chatOpenBtnAndChatDisablingBtnContainer.classList.add('hidden');
   chatInputAndSendBtnContainer.classList.remove('hidden');
   chatInput.focus({ preventScroll: true });
 }
@@ -1163,9 +1157,7 @@ function chatOpenBtnClicked() {
 function sendBtnClicked() {
   disableChatBtns();
   myKeyboard.subscribe();
-  if (!chatInputAndSendBtnContainer.classList.contains('hidden')) {
-    chatInputAndSendBtnContainer.classList.add('hidden');
-  }
+  chatInputAndSendBtnContainer.classList.add('hidden');
   chatOpenBtnAndChatDisablingBtnContainer.classList.remove('hidden');
   // @ts-ignore
   const message = chatInput.value;
@@ -1187,9 +1179,7 @@ function attachEventListenerToHideBtn(btnId, boxIdToHide) {
   const btn = document.getElementById(btnId);
   btn.addEventListener('click', () => {
     const box = document.getElementById(boxIdToHide);
-    if (!box.classList.contains('hidden')) {
-      box.classList.add('hidden');
-    }
+    box.classList.add('hidden');
   });
 }
 
@@ -1505,14 +1495,10 @@ function setUpOptionsAskAndNoticeBoxes() {
   );
   askOptionsChangeSendToPeerBoxYesBtn.addEventListener('click', () => {
     sendOptionsChangeMessageToPeer(pendingOptions.toSend);
-    if (!askOptionsChangeSendToPeerBox.classList.contains('hidden')) {
-      askOptionsChangeSendToPeerBox.classList.add('hidden');
-    }
+    askOptionsChangeSendToPeerBox.classList.add('hidden');
   });
   askOptionsChangeSendToPeerBoxNoBtn.addEventListener('click', () => {
-    if (!askOptionsChangeSendToPeerBox.classList.contains('hidden')) {
-      askOptionsChangeSendToPeerBox.classList.add('hidden');
-    }
+    askOptionsChangeSendToPeerBox.classList.add('hidden');
     enableOptionsBtn();
   });
 
@@ -1526,17 +1512,13 @@ function setUpOptionsAskAndNoticeBoxes() {
     'ask-options-change-received-from-peer-no-btn'
   );
   askOptionsChangeReceivedFromPeerBoxYesBtn.addEventListener('click', () => {
-    if (!askOptionsChangeReceivedFromPeerBox.classList.contains('hidden')) {
-      askOptionsChangeReceivedFromPeerBox.classList.add('hidden');
-    }
+    askOptionsChangeReceivedFromPeerBox.classList.add('hidden');
     sendOptionsChangeAgreeMessageToPeer(true);
     applyOptions(pendingOptions.received);
     enableOptionsBtn();
   });
   askOptionsChangeReceivedFromPeerBoxNoBtn.addEventListener('click', () => {
-    if (!askOptionsChangeReceivedFromPeerBox.classList.contains('hidden')) {
-      askOptionsChangeReceivedFromPeerBox.classList.add('hidden');
-    }
+    askOptionsChangeReceivedFromPeerBox.classList.add('hidden');
     sendOptionsChangeAgreeMessageToPeer(false);
     enableOptionsBtn();
   });
@@ -1546,9 +1528,7 @@ function setUpOptionsAskAndNoticeBoxes() {
     'notice-peer-agreed-ok-btn'
   );
   noticePeerAgreedBoxOKBtn.addEventListener('click', () => {
-    if (!noticePeerAgreedBox.classList.contains('hidden')) {
-      noticePeerAgreedBox.classList.add('hidden');
-    }
+    noticePeerAgreedBox.classList.add('hidden');
     enableOptionsBtn();
   });
   const noticePeerDisagreedBox = document.getElementById(
@@ -1558,9 +1538,7 @@ function setUpOptionsAskAndNoticeBoxes() {
     'notice-peer-disagreed-ok-btn'
   );
   noticePeerDisagreedBoxOKBtn.addEventListener('click', () => {
-    if (!noticePeerDisagreedBox.classList.contains('hidden')) {
-      noticePeerDisagreedBox.classList.add('hidden');
-    }
+    noticePeerDisagreedBox.classList.add('hidden');
     enableOptionsBtn();
   });
 }

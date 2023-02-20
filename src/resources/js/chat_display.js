@@ -55,12 +55,8 @@ export function enableChat(turnOn) {
 }
 
 export function hideChat() {
-  if (!player1ChatBox.classList.contains('hidden')) {
-    player1ChatBox.classList.add('hidden');
-  }
-  if (!player2ChatBox.classList.contains('hidden')) {
-    player2ChatBox.classList.add('hidden');
-  }
+  player1ChatBox.classList.add('hidden');
+  player2ChatBox.classList.add('hidden');
 }
 
 export function displayMyChatMessage(message) {
@@ -109,17 +105,12 @@ export function displayChatMessageAt(message, whichPlayerSide) {
     newChatBox.classList.remove('hidden');
     if (getSpeechBubbleNeeded && !getSpeechBubbleNeeded()) {
       // If speech Bubble is not needed
-
       // @ts-ignore
       newChatBox.classList.remove('in-speech-bubble');
     } else {
       // if speech bubble is not needed
-
       // @ts-ignore
-      if (!newChatBox.classList.contains('in-speech-bubble')) {
-        // @ts-ignore
-        newChatBox.classList.add('in-speech-bubble');
-      }
+      newChatBox.classList.add('in-speech-bubble');
     }
     canvasContainer.replaceChild(newChatBox, player1ChatBox);
     // @ts-ignore
@@ -135,17 +126,12 @@ export function displayChatMessageAt(message, whichPlayerSide) {
     newChatBox.classList.remove('hidden');
     if (getSpeechBubbleNeeded && !getSpeechBubbleNeeded()) {
       // If speech Bubble is not needed
-
       // @ts-ignore
       newChatBox.classList.remove('in-speech-bubble');
     } else {
       // if speech bubble is not needed
-
       // @ts-ignore
-      if (!newChatBox.classList.contains('in-speech-bubble')) {
-        // @ts-ignore
-        newChatBox.classList.add('in-speech-bubble');
-      }
+      newChatBox.classList.add('in-speech-bubble');
     }
     canvasContainer.replaceChild(newChatBox, player2ChatBox);
     // @ts-ignore
