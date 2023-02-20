@@ -682,6 +682,13 @@ div.nicknames-container {
 .text-align-start {
   text-align: start;
 }
+.match-group-btns-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: calc(1 * var(--font-size));
+}
 /* CSS for replay is below */
 #dropbox {
   border-style: solid;
