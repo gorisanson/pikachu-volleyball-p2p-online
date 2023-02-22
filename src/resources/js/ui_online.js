@@ -274,6 +274,93 @@ export function setUpUI() {
     applyOptions({ sfx: sfxSetting });
   }
 
+  let preselectedMatchGroup = null;
+  try {
+    preselectedMatchGroup = window.localStorage.getItem(
+      'preselectedMatchGroup'
+    );
+  } catch (err) {
+    console.log(err);
+  }
+  if (preselectedMatchGroup === null) {
+    preselectedMatchGroup = document.querySelector(
+      'input[name="match-group"]:checked'
+      // @ts-ignore
+    ).value;
+  }
+  const eachTimeRadioBtn = document.getElementById('each-time');
+  const globalRadioBtn = document.getElementById('global');
+  const koreaRadioBtn = document.getElementById('korea');
+  const taiwanRadioBtn = document.getElementById('taiwan');
+  if (Object.values(MATCH_GROUP).includes(preselectedMatchGroup)) {
+    switch (preselectedMatchGroup) {
+      case MATCH_GROUP.GLOBAL:
+        // @ts-ignore
+        globalRadioBtn.checked = true;
+        break;
+      case MATCH_GROUP.KR:
+        // @ts-ignore
+        koreaRadioBtn.checked = true;
+        break;
+      case MATCH_GROUP.TW:
+        // @ts-ignore
+        taiwanRadioBtn.checked = true;
+        break;
+    }
+  } else {
+    // If preselectedMatchGroup is set "EACH-TIME" or other value not enumerated
+    // in MATCH_GROUP, it is converted to null.
+    preselectedMatchGroup = null;
+
+    // @ts-ignore
+    eachTimeRadioBtn.checked = true;
+  }
+
+  const matchGroupPreselectionRadioBtnEventListener = (event) => {
+    const currentTarget = event.currentTarget;
+    // @ts-ignore
+    if (currentTarget.checked) {
+      // @ts-ignore
+      const value = currentTarget.value;
+      if (Object.values(MATCH_GROUP).includes(value)) {
+        preselectedMatchGroup = value;
+        try {
+          window.localStorage.setItem(
+            'preselectedMatchGroup',
+            // @ts-ignore
+            currentTarget.value
+          );
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        // If value is set "EACH-TIME"
+        preselectedMatchGroup = null;
+        try {
+          window.localStorage.removeItem('preselectedMatchGroup');
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    }
+  };
+  eachTimeRadioBtn.addEventListener(
+    'change',
+    matchGroupPreselectionRadioBtnEventListener
+  );
+  globalRadioBtn.addEventListener(
+    'change',
+    matchGroupPreselectionRadioBtnEventListener
+  );
+  koreaRadioBtn.addEventListener(
+    'change',
+    matchGroupPreselectionRadioBtnEventListener
+  );
+  taiwanRadioBtn.addEventListener(
+    'change',
+    matchGroupPreselectionRadioBtnEventListener
+  );
+
   const startQuickMatchIfPressEnter = (event) => {
     if (event.code === 'Enter' || event.code === 'KeyZ') {
       event.preventDefault();
@@ -349,6 +436,23 @@ export function setUpUI() {
         document
           .getElementById('select-match-group')
           .classList.remove('hidden');
+
+        if (preselectedMatchGroup !== null) {
+          switch (preselectedMatchGroup) {
+            case MATCH_GROUP.GLOBAL:
+              // @ts-ignore
+              globalMatchGroupBtn.click();
+              break;
+            case MATCH_GROUP.KR:
+              // @ts-ignore
+              koreaMatchGroupBtn.click();
+              break;
+            case MATCH_GROUP.TW:
+              // @ts-ignore
+              taiwanMatchGroupBtn.click();
+              break;
+          }
+        }
       };
       const callBackIfDidNotGetSrflx = () => {
         document

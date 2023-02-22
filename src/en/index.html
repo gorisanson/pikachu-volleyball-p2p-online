@@ -198,6 +198,53 @@
             >
           </div>
         </div>
+        <div id="quick-match-group">
+          <p class="margin-top">
+            <span class="thick">Quick Match group:</span> Players who have
+            selected the same match group will be matched in the Quick Match.
+            The closer the physical distance between you and your peer, the less
+            lag there will likely be in the game.
+          </p>
+          <div>
+            <input
+              type="radio"
+              id="each-time"
+              name="match-group"
+              value="EACH-TIME"
+              checked
+            /><label for="each-time">Select each time</label>
+          </div>
+          <div class="margin-top-very-little">
+            <!-- For "value", use one of enumerators of MATCH_GROUP
+                 in match_group.js -->
+            <input
+              type="radio"
+              id="global"
+              name="match-group"
+              value="GLOBAL"
+            /><label for="global">Global</label>
+          </div>
+          <div class="margin-top-very-little">
+            <!-- For "value", use one of enumerators of MATCH_GROUP
+                 in match_group.js -->
+            <input
+              type="radio"
+              id="korea"
+              name="match-group"
+              value="KR"
+            /><label for="korea">Korea</label>
+          </div>
+          <div class="margin-top-very-little">
+            <!-- For "value", use one of enumerators of MATCH_GROUP
+                 in match_group.js -->
+            <input
+              type="radio"
+              id="taiwan"
+              name="match-group"
+              value="TW"
+            /><label for="taiwan">Taiwan</label>
+          </div>
+        </div>
         <div>
           <p class="margin-top">
             <span class="thick">Nickname:</span> You can set your nickname

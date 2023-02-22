@@ -194,6 +194,52 @@
             >
           </div>
         </div>
+        <div id="quick-match-group">
+          <p class="margin-top">
+            <span class="thick">퀵 매치 그룹:</span> 동일한 매치 그룹을 선택한
+            플레이어끼리 퀵 매치가 성사됩니다. 상대방과의 물리적 거리가
+            가까울수록 게임 플레이가 더 원활할 가능성이 높습니다.
+          </p>
+          <div>
+            <input
+              type="radio"
+              id="each-time"
+              name="match-group"
+              value="EACH-TIME"
+              checked
+            /><label for="each-time">매번 선택</label>
+          </div>
+          <div class="margin-top-very-little">
+            <!-- For "value", use one of enumerators of MATCH_GROUP
+                 in match_group.js -->
+            <input
+              type="radio"
+              id="global"
+              name="match-group"
+              value="GLOBAL"
+            /><label for="global">전세계</label>
+          </div>
+          <div class="margin-top-very-little">
+            <!-- For "value", use one of enumerators of MATCH_GROUP
+                 in match_group.js -->
+            <input
+              type="radio"
+              id="korea"
+              name="match-group"
+              value="KR"
+            /><label for="korea">한국</label>
+          </div>
+          <div class="margin-top-very-little">
+            <!-- For "value", use one of enumerators of MATCH_GROUP
+                 in match_group.js -->
+            <input
+              type="radio"
+              id="taiwan"
+              name="match-group"
+              value="TW"
+            /><label for="taiwan">대만</label>
+          </div>
+        </div>
         <div>
           <p class="margin-top">
             <span class="thick">닉네임:</span> 아래에서 닉네임을 설정할 수
