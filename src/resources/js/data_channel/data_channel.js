@@ -189,12 +189,13 @@ export async function createRoom(roomIdToCreate) {
   //
   // SYNC_DIVISOR is 1 << 16 === 65536 and it corresponds to about 36 minutes of
   // syncCounter wrap-around time in 30 FPS (fast game speed).
-  // This 36 minutes of wrap-around time is practically assumed to be very safe
+  // This 36 minutes of wrap-around time, I think, is practically very safe
   // since no packet would live hanging around more than 36 minutes in
-  // the network. (Maximum value of IPv4 TTL and IPv6 Hop Limit IP datagram is
-  // 255.) So after a wrap-around has occurred, an old packet with the same
-  // syncCounter value would not survive and hence would not be erroneously
-  // accepted instead of a new packet.
+  // the network. (The maximum possible value for IPv4 TTL (or IPv6 Hop Limit)
+  // field is 255. If we generously assume 1 second per 1 hop, it would be
+  // 255 seconds which is just 4.25 minutes.) So, after a wrap-around has
+  // occurred, an old packet with the same syncCounter value would not survive
+  // and hence would not be erroneously accepted instead of a new packet.
   //
   // references:
   // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/createDataChannel
