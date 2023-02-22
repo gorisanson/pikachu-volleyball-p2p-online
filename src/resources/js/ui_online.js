@@ -283,13 +283,13 @@ export function setUpUI() {
         .classList.add('hidden');
       const callBackIfPassed = () => {
         const globalMatchGroupBtn = document.querySelector(
-          '#global-match-group-btn .match-group-name'
+          '#global-match-group-btn'
         );
         const koreaMatchGroupBtn = document.querySelector(
-          '#korea-match-group-btn .match-group-name'
+          '#korea-match-group-btn'
         );
         const taiwanMatchGroupBtn = document.querySelector(
-          '#taiwan-match-group-btn .match-group-name'
+          '#taiwan-match-group-btn'
         );
         const matchGroupInQuickMatchNoticeBox = document.getElementById(
           'match-group-in-quick-match-notice-box'
@@ -332,17 +332,17 @@ export function setUpUI() {
         };
         globalMatchGroupBtn.addEventListener('click', () => {
           matchGroupInQuickMatchNoticeBox.textContent =
-            globalMatchGroupBtn.textContent;
+            globalMatchGroupBtn.querySelector('.match-group-name').textContent;
           startQuickMatchWithMatchGroup(MATCH_GROUP.GLOBAL);
         });
         koreaMatchGroupBtn.addEventListener('click', () => {
           matchGroupInQuickMatchNoticeBox.textContent =
-            koreaMatchGroupBtn.textContent;
+            koreaMatchGroupBtn.querySelector('.match-group-name').textContent;
           startQuickMatchWithMatchGroup(MATCH_GROUP.KR);
         });
         taiwanMatchGroupBtn.addEventListener('click', () => {
           matchGroupInQuickMatchNoticeBox.textContent =
-            taiwanMatchGroupBtn.textContent;
+            taiwanMatchGroupBtn.querySelector('.match-group-name').textContent;
           startQuickMatchWithMatchGroup(MATCH_GROUP.TW);
         });
 
