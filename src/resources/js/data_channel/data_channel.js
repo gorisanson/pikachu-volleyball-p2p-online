@@ -75,7 +75,8 @@ import { replaySaver } from '../replay/replay_saver.js';
 const firebaseApp = initializeApp(firebaseConfig);
 
 // It is set to (1 << 16) since syncCounter is to be sent as Uint16
-// 1 << 16 === 65536 and it corresponds to about 36 minutes in 30 FPS (fast game speed).
+// 1 << 16 === 65536 and it corresponds to about 36 minutes of syncCounter
+// wrap-around time in 30 FPS (fast game speed).
 export const SYNC_DIVISOR = 1 << 16; // 65536
 
 export const channel = {
@@ -186,8 +187,14 @@ export async function createRoom(roomIdToCreate) {
   // for example, stops the game a while by minimizing the browser window.
   // So, I decided to manage the transmission reliability on the application layer.
   //
-  // SYNC_DIVISOR is 1 << 16 === 65536 and it corresponds to about 36 minutes in 30 FPS (fast game speed).
-  // So ordering is maintained since no packet would live hanging around more than 36 minutes in the network.
+  // SYNC_DIVISOR is 1 << 16 === 65536 and it corresponds to about 36 minutes of
+  // syncCounter wrap-around time in 30 FPS (fast game speed).
+  // This 36 minutes of wrap-around time is practically assumed to be very safe
+  // since no packet would live hanging around more than 36 minutes in
+  // the network. (Maximum value of IPv4 TTL and IPv6 Hop Limit IP datagram is
+  // 255.) So after a wrap-around has occurred, an old packet with the same
+  // syncCounter value would not survive and hence would not be erroneously
+  // accepted instead of a new packet.
   //
   // references:
   // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/createDataChannel
