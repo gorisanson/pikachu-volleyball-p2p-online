@@ -525,6 +525,9 @@ p.margin-top {
 div.margin-top-a-little {
   margin-top: var(--font-size);
 }
+div.margin-top-very-little {
+  margin-top: calc(0.5 * var(--font-size));
+}
 div.limit-width {
   max-width: 864px;
   margin-left: auto;
@@ -983,4 +986,4 @@ input.toggle-switch:checked + label::before {
 }
 
 
-/*# sourceMappingURL=341.109586cf23ea0083ff65.css.map*/
+/*# sourceMappingURL=341.2c3c3bd52e99b1c544eb.css.map*/
