@@ -183,7 +183,7 @@ export async function createRoom(roomIdToCreate) {
   // Create an unreliable and unordered data channel, which is UDP-like channel.
   //
   // An reliable and ordered data channel can be used but,
-  // even if reliable channel is used, the sync brokes somehow after one of the peer,
+  // even if a reliable channel is used, the sync is broken somehow after one of the peer,
   // for example, stops the game a while by minimizing the browser window.
   // So, I decided to manage the transmission reliability on the application layer.
   //
