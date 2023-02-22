@@ -525,6 +525,9 @@ p.margin-top {
 div.margin-top-a-little {
   margin-top: var(--font-size);
 }
+div.margin-top-very-little {
+  margin-top: calc(0.5 * var(--font-size));
+}
 div.limit-width {
   max-width: 864px;
   margin-left: auto;
