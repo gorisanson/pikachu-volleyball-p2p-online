@@ -85,8 +85,7 @@ export async function testNetwork(
       // So I decided to use cand.ip here instead.
       // (For some network environment, a user device is assigned both IPv4
       // address and IPv6 address. And when cand.relatedPort was used,
-      // the network test for the user device resulted to false negative.
-      // The user device was falsely detected to be behind symmetric.
+      // the user device was falsely detected to be behind symmetric.
       // (I get to know about this bug while troubleshooting with
       // a user "sochew" who reported that their device suddenly reported to
       // be behind symmetric nat.) So I fix it by using cand.ip instead.)
