@@ -17,7 +17,7 @@ module.exports = {
       './src/resources/js/offline_version_js/utils/is_embedded_in_other_website.js',
   },
   output: {
-    filename: '[name].[chunkhash].js',
+    filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
   },
   optimization: {
