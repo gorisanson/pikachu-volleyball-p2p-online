@@ -11,14 +11,16 @@ let dataChannel = null;
 export async function testNetwork(
   callBack,
   callBackIfPassed,
-  callBackIfDidNotGetSrflx,
+  callBackIfDidNotGetSrflxAndDidNotGetHost,
   callBackIfDidNotGetSrflxAndHostAddressIsObfuscated,
+  callBackIfDidNotGetSrflxAndHostAddressIsPrivateIPAddress,
   callBackIfBehindSymmetricNat
 ) {
   peerConnection = new RTCPeerConnection(rtcConfiguration);
 
   let isHostAddressObfuscated = false;
   let isHostAddressPublicIP = false;
+  let gotHost = false;
   let gotSrflx = false;
   let isBehindSymmetricNat = false;
   const candidates = [];
@@ -44,13 +46,18 @@ export async function testNetwork(
         console.log(isBehindSymmetricNat ? 'symmetric nat' : 'normal nat');
       }
       if (!gotSrflx && !isHostAddressPublicIP) {
-        console.log('did not get srflx');
-        if (isHostAddressObfuscated) {
+        console.log('did not get srflx candidate');
+        if (!gotHost) {
+          console.log('did not get host candidate');
+          callBackIfDidNotGetSrflxAndDidNotGetHost();
+        } else if (isHostAddressObfuscated) {
           console.log('host address is obfuscated');
           callBackIfDidNotGetSrflxAndHostAddressIsObfuscated();
         } else {
-          console.log('host address is not obfuscated');
-          callBackIfDidNotGetSrflx();
+          console.log(
+            'host address is not obfuscated and is a private ip address'
+          );
+          callBackIfDidNotGetSrflxAndHostAddressIsPrivateIPAddress();
         }
       } else if (isBehindSymmetricNat) {
         console.log('behind symmetric nat');
@@ -98,6 +105,7 @@ export async function testNetwork(
         candidates[cand.ip].push(cand.port);
       }
     } else if (cand.type === 'host') {
+      gotHost = true;
       if (cand.ip.endsWith('.local')) {
         isHostAddressObfuscated = true;
       } else {

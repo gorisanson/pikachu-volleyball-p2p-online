@@ -137,15 +137,24 @@ export function setUpUI() {
     const callBackIfPassed = () => {
       document.getElementById('test-passed').classList.remove('hidden');
     };
-    const callBackIfDidNotGetSrflx = () => {
+    const callBackIfDidNotGetSrflxAndDidNotGetHost = () => {
       document
-        .getElementById('did-not-get-srflx-candidate')
+        .getElementById(
+          'did-not-get-srflx-candidate-and-did-not-get-host-candidate'
+        )
         .classList.remove('hidden');
     };
     const callBackIfDidNotGetSrflxAndHostAddressIsObfuscated = () => {
       document
         .getElementById(
           'did-not-get-srflx-candidate-and-host-address-is-obfuscated'
+        )
+        .classList.remove('hidden');
+    };
+    const callBackIfDidNotGetSrflxAndHostAddressIsPrivateIPAddress = () => {
+      document
+        .getElementById(
+          'did-not-get-srflx-candidate-and-host-address-is-private-ip-address'
         )
         .classList.remove('hidden');
     };
@@ -157,8 +166,9 @@ export function setUpUI() {
     testNetwork(
       enableBtns,
       callBackIfPassed,
-      callBackIfDidNotGetSrflx,
+      callBackIfDidNotGetSrflxAndDidNotGetHost,
       callBackIfDidNotGetSrflxAndHostAddressIsObfuscated,
+      callBackIfDidNotGetSrflxAndHostAddressIsPrivateIPAddress,
       callBackIfBehindSymmetricNat
     );
   });
@@ -454,9 +464,11 @@ export function setUpUI() {
           }
         }
       };
-      const callBackIfDidNotGetSrflx = () => {
+      const callBackIfDidNotGetSrflxAndDidNotGetHost = () => {
         document
-          .getElementById('did-not-get-srflx-candidate')
+          .getElementById(
+            'did-not-get-srflx-candidate-and-did-not-get-host-candidate'
+          )
           .classList.remove('hidden');
         enableBtns();
       };
@@ -464,6 +476,14 @@ export function setUpUI() {
         document
           .getElementById(
             'did-not-get-srflx-candidate-and-host-address-is-obfuscated'
+          )
+          .classList.remove('hidden');
+        enableBtns();
+      };
+      const callBackIfDidNotGetSrflxAndHostAddressIsPrivateIPAddress = () => {
+        document
+          .getElementById(
+            'did-not-get-srflx-candidate-and-host-address-is-private-ip-address'
           )
           .classList.remove('hidden');
         enableBtns();
@@ -478,8 +498,9 @@ export function setUpUI() {
       testNetwork(
         () => {},
         callBackIfPassed,
-        callBackIfDidNotGetSrflx,
+        callBackIfDidNotGetSrflxAndDidNotGetHost,
         callBackIfDidNotGetSrflxAndHostAddressIsObfuscated,
+        callBackIfDidNotGetSrflxAndHostAddressIsPrivateIPAddress,
         callBackIfBehindSymmetricNat
       );
     }
@@ -650,12 +671,16 @@ export function setUpUI() {
 
   attachEventListenerToHideBtn('test-passed-ok-btn', 'test-passed');
   attachEventListenerToHideBtn(
-    'did-not-get-srflx-candidate-ok-btn',
-    'did-not-get-srflx-candidate'
+    'did-not-get-srflx-candidate-and-did-not-get-host-candidate-ok-btn',
+    'did-not-get-srflx-candidate-and-did-not-get-host-candidate'
   );
   attachEventListenerToHideBtn(
     'did-not-get-srflx-candidate-and-host-address-is-obfuscated-ok-btn',
     'did-not-get-srflx-candidate-and-host-address-is-obfuscated'
+  );
+  attachEventListenerToHideBtn(
+    'did-not-get-srflx-candidate-and-host-address-is-private-ip-address-ok-btn',
+    'did-not-get-srflx-candidate-and-host-address-is-private-ip-address'
   );
   attachEventListenerToHideBtn(
     'behind-symmetric-nat-ok-btn',

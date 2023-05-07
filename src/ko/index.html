@@ -129,6 +129,10 @@
           </p>
           <ul>
             <li>
+              WebRTC의 작동을 차단하는 브라우저 확장 프로그램을 사용 중인 경우
+            </li>
+            <li>WebRTC의 작동을 차단하는 VPN 서비스를 사용 중인 경우</li>
+            <li>
               네트워크가 (회사, 학교, 관공서 등의) 방화벽 하에 있어 UDP 포트들이
               막혀있는 경우
             </li>
@@ -536,19 +540,35 @@
         </button>
       </div>
       <div
-        id="did-not-get-srflx-candidate"
+        id="did-not-get-srflx-candidate-and-did-not-get-host-candidate"
         class="fade-in-box notice fixed hidden"
       >
-        <div class="limit-width">
-          이 P2P 온라인 버전을 이용할 수 없습니다.<br /><br />
-          필요한 server reflexive candidate를 얻을 수 없습니다. UDP 포트들이
-          막혀있는 것이 원인일 가능성이 높습니다. 만약 회사, 학교, 또는
-          관공서에서 접속하셨다면 해당 기관의 방화벽이 UDP 포트들을 차단하고
-          있는 것일 수 있습니다.
+        <div class="limit-width text-align-start">
+          이 P2P 온라인 버전을 이용할 수 없습니다. server reflexive candidate를
+          얻을 수 없고 host candidate 또한 얻을 수 없습니다. 이 P2P 온라인
+          버전이 이용하는 기반 기술인 WebRTC가 브라우저에서 작동하지 않는 것으로
+          보입니다. 다음 사항을 확인해주시기 바랍니다.<br /><br />
+          <ul>
+            <li>
+              브라우저를 확인해주세요. 최신 버전의 크롬, 엣지, 파이어폭스 또는
+              사파리 브라우저를 이용하시기 바랍니다.
+            </li>
+            <li>
+              브라우저에 확장 프로그램(또는 플러그인)을 설치했다면, 그 중 일부가
+              WebRTC의 작동을 차단하고 있는 것일 수 있습니다. 확장 프로그램(또는
+              플러그인)을 사용 중지하거나 삭제한 후 다시 시도해보세요.
+            </li>
+            <li>VPN을 사용하고 있다면, VPN을 끈 후에 다시 시도해보세요.</li>
+            <li>
+              위의 제안들을 모두 확인하고 적용했는데도 문제가 해결이 안 된 경우,
+              다른 브라우저를 사용해 보시기 바랍니다. 현재 크롬을 사용하고
+              있다면, 엣지 또는 파이어폭스를 사용해보세요.
+            </li>
+          </ul>
         </div>
         <button
           type="button"
-          id="did-not-get-srflx-candidate-ok-btn"
+          id="did-not-get-srflx-candidate-and-did-not-get-host-candidate-ok-btn"
           class="btn-in-box"
         >
           알겠어요
@@ -565,7 +585,7 @@
           버전이 아래에 표기된 버전 이상이어야 합니다.
           <ul>
             <li>
-              크롬 (또는 크로미움 기반 브라우저):
+              크롬 (또는 크로미움 기반 브라우저 (예: 엣지)):
               <a
                 href="https://chromiumdash.appspot.com/commit/7eea6672285f765599fd883a5737f5cae8d20917"
                 target="_blank"
@@ -590,7 +610,7 @@
                 rel="noopener"
                 >이 패치</a
               >가 포함된 버전이 출시되어야 합니다. 아직 출시되지 않은 경우, 최신
-              버전의 크롬 또는 파이어폭스를 대신 사용해주세요.
+              버전의 크롬, 엣지 또는 파이어폭스를 대신 사용해주세요.
             </li>
           </ul>
           (2) 브라우저가 (1)에 표기된 버전 이상이라면, 게임 실행에 필요한 UDP
@@ -601,6 +621,25 @@
         <button
           type="button"
           id="did-not-get-srflx-candidate-and-host-address-is-obfuscated-ok-btn"
+          class="btn-in-box"
+        >
+          알겠어요
+        </button>
+      </div>
+      <div
+        id="did-not-get-srflx-candidate-and-host-address-is-private-ip-address"
+        class="fade-in-box notice fixed hidden"
+      >
+        <div class="limit-width">
+          이 P2P 온라인 버전을 이용할 수 없습니다.<br /><br />
+          필요한 server reflexive candidate를 얻을 수 없습니다. UDP 포트들이
+          막혀있는 것이 원인일 가능성이 높습니다. 만약 회사, 학교, 또는
+          관공서에서 접속하셨다면 해당 기관의 방화벽이 WebRTC가 작동하는데
+          필요한 UDP 포트들을 차단하고 있는 것일 수 있습니다.
+        </div>
+        <button
+          type="button"
+          id="did-not-get-srflx-candidate-and-host-address-is-private-ip-address-ok-btn"
           class="btn-in-box"
         >
           알겠어요

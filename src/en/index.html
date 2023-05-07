@@ -131,6 +131,8 @@
             connection under the following environment.)
           </p>
           <ul>
+            <li>If you are using some browser extensions blocking WebRTC</li>
+            <li>If you are using some VPN services blocking WebRTC</li>
             <li>
               If you are under a (corporate) firewall which blocks UDP ports
             </li>
@@ -518,18 +520,35 @@
         </button>
       </div>
       <div
-        id="did-not-get-srflx-candidate"
+        id="did-not-get-srflx-candidate-and-did-not-get-host-candidate"
         class="fade-in-box notice fixed hidden"
       >
-        <div class="limit-width">
-          This P2P online version is not going to work on your network.<br /><br />
-          The necessary server reflexive candidate can't be gotten. Maybe the
-          reason is that the necessary UDP ports are blocked. If you connected
-          via a corporate network, maybe the firewall is blocking the UDP ports.
+        <div class="limit-width text-align-start">
+          This P2P online version is not going to work on your network. Both the
+          server reflexive candidate and the host candidate can't be gotten. The
+          WebRTC, which is a technology this P2P online version utilizes, seems
+          to be not working in your browser. Please check the followings.<br /><br />
+          <ul>
+            <li>
+              Check your browser. Use the latest version of Chrome, Edge,
+              Firefox or Safari.
+            </li>
+            <li>
+              If you have installed browser extensions in your browser, maybe
+              some of them are blocking WebRTC. Try after disabling or removing
+              them.
+            </li>
+            <li>If you are using a VPN, try after disabling it.</li>
+            <li>
+              If all the suggestions above does not work, try with other
+              browsers. For example, if you are currently using Chrome, try with
+              Edge or Firefox.
+            </li>
+          </ul>
         </div>
         <button
           type="button"
-          id="did-not-get-srflx-candidate-ok-btn"
+          id="did-not-get-srflx-candidate-and-did-not-get-host-candidate-ok-btn"
           class="btn-in-box"
         >
           OK
@@ -547,7 +566,7 @@
           your browser is at or above the version specified below:
           <ul>
             <li>
-              Chrome (or Chromium-based browsers):
+              Chrome (or Chromium-based browsers like Edge):
               <a
                 href="https://chromiumdash.appspot.com/commit/7eea6672285f765599fd883a5737f5cae8d20917"
                 target="_blank"
@@ -573,7 +592,7 @@
                 >this patch</a
               >
               needs to be released. Before the release, you need to use latest
-              version of Chrome or Firefox instead.
+              version of Chrome, Edge or Firefox instead.
             </li>
           </ul>
           (2) If your browser is at or above the version specified on (1) above,
@@ -584,6 +603,25 @@
         <button
           type="button"
           id="did-not-get-srflx-candidate-and-host-address-is-obfuscated-ok-btn"
+          class="btn-in-box"
+        >
+          OK
+        </button>
+      </div>
+      <div
+        id="did-not-get-srflx-candidate-and-host-address-is-private-ip-address"
+        class="fade-in-box notice fixed hidden"
+      >
+        <div class="limit-width">
+          This P2P online version is not going to work on your network.<br /><br />
+          The necessary server reflexive candidate can't be gotten. Maybe the
+          reason is that the necessary UDP ports are blocked. If you connected
+          via a corporate network, maybe the firewall is blocking the UDP ports
+          needed for WebRTC to work.
+        </div>
+        <button
+          type="button"
+          id="did-not-get-srflx-candidate-and-host-address-is-private-ip-address-ok-btn"
           class="btn-in-box"
         >
           OK
