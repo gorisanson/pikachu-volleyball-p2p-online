@@ -393,7 +393,6 @@ export function setUpUI() {
         );
         const selectMatchGroupByPressingKeyboardShortcut = (event) => {
           switch (event.code) {
-            case 'Enter':
             case 'KeyG':
               event.preventDefault();
               // @ts-ignore
