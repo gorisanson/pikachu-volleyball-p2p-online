@@ -199,6 +199,9 @@ canvas {
   height: var(--canvas-height);
   image-rendering: pixelated;
 }
+canvas.graphic-soft {
+  image-rendering: auto;
+}
 #nicknames-container {
   position: absolute;
 }

@@ -36,9 +36,10 @@ export const MAX_NICKNAME_LENGTH = 8;
 
 /**
  * This is for to enable changing game options event before loading the game assets.
- * @type {{bgm: string, sfx: string, speed: string, winningScore: number}}
+ * @type {{graphic: string, bgm: string, sfx: string, speed: string, winningScore: number}}
  */
 const optionsChangedBeforeLoadingGameAssets = {
+  graphic: 'sharp', // local option i.e. not communicated with the peer
   bgm: 'on', // local option i.e. not communicated with the peer
   sfx: 'stereo', // local option i.e. not communicated with the peer
   speed: 'medium',
@@ -48,6 +49,9 @@ const optionsChangedBeforeLoadingGameAssets = {
 // This function is changed after the game assets are loaded
 let applyOptions = (options) => {
   setSelectedOptionsBtn(options);
+  if (options.graphic) {
+    optionsChangedBeforeLoadingGameAssets.graphic = options.graphic;
+  }
   if (options.bgm) {
     optionsChangedBeforeLoadingGameAssets.bgm = options.bgm;
   }
@@ -263,6 +267,16 @@ export function setUpUI() {
       console.log(err);
     }
   });
+
+  let graphicSetting = null;
+  try {
+    graphicSetting = window.localStorage.getItem('graphic');
+  } catch (err) {
+    console.log(err);
+  }
+  if (graphicSetting !== null) {
+    applyOptions({ graphic: graphicSetting });
+  }
 
   let bgmSetting = null;
   try {
@@ -774,6 +788,25 @@ export function setUpUIAfterLoadingGameAssets(pikaVolley, ticker) {
   applyOptions = (options) => {
     setSelectedOptionsBtn(options);
     replaySaver.recordOptions(options);
+    if (options.graphic) {
+      switch (options.graphic) {
+        case 'sharp':
+          document
+            .querySelector('#game-canvas-container>canvas')
+            .classList.remove('graphic-soft');
+          break;
+        case 'soft':
+          document
+            .querySelector('#game-canvas-container>canvas')
+            .classList.add('graphic-soft');
+          break;
+      }
+      try {
+        window.localStorage.setItem('graphic', options.graphic);
+      } catch (err) {
+        console.log(err);
+      }
+    }
     if (options.bgm) {
       switch (options.bgm) {
         case 'on':
@@ -1315,6 +1348,15 @@ function attachEventListenerToHideBtn(btnId, boxIdToHide) {
  * Set up event listeners for options button
  */
 function setUpOptionsBtn() {
+  const graphicSharpBtn = document.getElementById('graphic-sharp-btn');
+  const graphicSoftBtn = document.getElementById('graphic-soft-btn');
+  graphicSharpBtn.addEventListener('click', () => {
+    applyOptions({ graphic: 'sharp' });
+  });
+  graphicSoftBtn.addEventListener('click', () => {
+    applyOptions({ graphic: 'soft' });
+  });
+
   const bgmOnBtn = document.getElementById('bgm-on-btn');
   const bgmOffBtn = document.getElementById('bgm-off-btn');
   bgmOnBtn.addEventListener('click', () => {
@@ -1483,6 +1525,11 @@ function setUpToShowDropdownsAndSubmenus() {
 
   // set up to show submenus on mouseover event
   document
+    .getElementById('graphic-submenu-btn')
+    .addEventListener('mouseover', () => {
+      showSubmenu('graphic-submenu-btn', 'graphic-submenu');
+    });
+  document
     .getElementById('bgm-submenu-btn')
     .addEventListener('mouseover', () => {
       showSubmenu('bgm-submenu-btn', 'bgm-submenu');
@@ -1523,9 +1570,23 @@ function setUpToShowDropdownsAndSubmenus() {
 
 /**
  * Set selected (checked) options btn fit to options
- * @param {{bgm: string, sfx: string, speed: string, winningScore: number}} options
+ * @param {{graphic: string, bgm: string, sfx: string, speed: string, winningScore: number}} options
  */
 function setSelectedOptionsBtn(options) {
+  if (options.graphic) {
+    const graphicSharpBtn = document.getElementById('graphic-sharp-btn');
+    const graphicSoftBtn = document.getElementById('graphic-soft-btn');
+    switch (options.graphic) {
+      case 'sharp':
+        graphicSoftBtn.classList.remove('selected');
+        graphicSharpBtn.classList.add('selected');
+        break;
+      case 'soft':
+        graphicSharpBtn.classList.remove('selected');
+        graphicSoftBtn.classList.add('selected');
+        break;
+    }
+  }
   if (options.bgm) {
     const bgmOnBtn = document.getElementById('bgm-on-btn');
     const bgmOffBtn = document.getElementById('bgm-off-btn');
