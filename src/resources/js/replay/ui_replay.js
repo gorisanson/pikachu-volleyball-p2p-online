@@ -271,6 +271,25 @@ export function setUpUI() {
     }
   });
 
+  const graphicSharpCheckbox = document.getElementById(
+    'graphic-sharp-checkbox'
+  );
+  graphicSharpCheckbox.addEventListener('change', () => {
+    if (replayPlayer.pikaVolley === null) {
+      return;
+    }
+    // @ts-ignore
+    if (graphicSharpCheckbox.checked) {
+      document
+        .querySelector('#game-canvas-container>canvas')
+        .classList.remove('graphic-soft');
+    } else {
+      document
+        .querySelector('#game-canvas-container>canvas')
+        .classList.add('graphic-soft');
+    }
+  });
+
   window.addEventListener('keydown', (event) => {
     if (event.code === 'Space') {
       event.preventDefault();
