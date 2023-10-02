@@ -199,6 +199,9 @@ canvas {
   height: var(--canvas-height);
   image-rendering: pixelated;
 }
+canvas.graphic-soft {
+  image-rendering: auto;
+}
 #nicknames-container {
   position: absolute;
 }
@@ -987,4 +990,4 @@ input.toggle-switch:checked + label::before {
 }
 
 
-/*# sourceMappingURL=341.4c48f09be7a6fbbf8f4e.css.map*/
+/*# sourceMappingURL=341.041ab3fc19182407205d.css.map*/
