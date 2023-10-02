@@ -39,7 +39,7 @@ class ReplayPlayer {
     CanvasRenderer.registerPlugin('prepare', CanvasPrepare);
     CanvasRenderer.registerPlugin('sprite', CanvasSpriteRenderer);
     Loader.registerPlugin(SpritesheetLoader);
-    settings.RESOLUTION = 3;
+    settings.RESOLUTION = 2;
     settings.SCALE_MODE = SCALE_MODES.NEAREST;
     settings.ROUND_PIXELS = true;
 
