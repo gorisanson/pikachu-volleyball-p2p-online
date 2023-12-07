@@ -496,6 +496,9 @@ button.btn-in-box {
   text-decoration: none;
   border-radius: 10px;
 }
+#ask-one-more-game button.btn-in-box {
+  width: calc(7 * var(--font-size));
+}
 button.large {
   height: calc(3 * var(--font-size));
   width: calc(7 * var(--font-size));

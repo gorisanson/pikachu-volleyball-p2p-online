@@ -86,6 +86,19 @@ const chatInputAndSendBtnContainer = document.getElementById(
 );
 const chatInput = document.getElementById('chat-input');
 const sendBtn = document.getElementById('send-btn');
+const askOneMoreGameYesBtn = document.getElementById(
+  'ask-one-more-game-yes-btn'
+);
+const askOneMoreGameNoBtn = document.getElementById('ask-one-more-game-no-btn');
+const clickAskOneMoreGameYesOrNoBtnByPressingYOrN = (event) => {
+  if (event.code === 'KeyY') {
+    event.preventDefault();
+    askOneMoreGameYesBtn.click();
+  } else if (event.code === 'KeyN') {
+    event.preventDefault();
+    askOneMoreGameNoBtn.click();
+  }
+};
 
 export function setUpUI() {
   // game keyboard input needs to be unsubscribe for typing join room ID
@@ -728,17 +741,18 @@ export function setUpUI() {
     window.setTimeout(() => location.reload(), 0);
   });
 
-  const askOneMoreGameYesBtn = document.getElementById(
-    'ask-one-more-game-yes-btn'
-  );
   askOneMoreGameYesBtn.addEventListener('click', () => {
+    window.removeEventListener(
+      'keydown',
+      clickAskOneMoreGameYesOrNoBtnByPressingYOrN
+    );
     document.getElementById('ask-one-more-game').classList.add('hidden');
   });
-
-  const askOneMoreGameNoBtn = document.getElementById(
-    'ask-one-more-game-no-btn'
-  );
   askOneMoreGameNoBtn.addEventListener('click', () => {
+    window.removeEventListener(
+      'keydown',
+      clickAskOneMoreGameYesOrNoBtnByPressingYOrN
+    );
     window.setTimeout(() => location.reload(), 0);
   });
 
@@ -1216,6 +1230,10 @@ export function noticeDisconnected() {
 
 export function askOneMoreGame() {
   document.getElementById('ask-one-more-game').classList.remove('hidden');
+  window.addEventListener(
+    'keydown',
+    clickAskOneMoreGameYesOrNoBtnByPressingYOrN
+  );
 }
 
 export function enableChatOpenBtnAndChatDisablingBtn() {
