@@ -91,6 +91,10 @@ const askOneMoreGameYesBtn = document.getElementById(
 );
 const askOneMoreGameNoBtn = document.getElementById('ask-one-more-game-no-btn');
 const clickAskOneMoreGameYesOrNoBtnByPressingYOrN = (event) => {
+  // @ts-ignore
+  if (!chatInput.disabled) {
+    return;
+  }
   if (event.code === 'KeyY') {
     event.preventDefault();
     askOneMoreGameYesBtn.click();
@@ -749,10 +753,6 @@ export function setUpUI() {
     document.getElementById('ask-one-more-game').classList.add('hidden');
   });
   askOneMoreGameNoBtn.addEventListener('click', () => {
-    window.removeEventListener(
-      'keydown',
-      clickAskOneMoreGameYesOrNoBtnByPressingYOrN
-    );
     window.setTimeout(() => location.reload(), 0);
   });
 
