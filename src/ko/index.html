@@ -154,6 +154,17 @@
           </p>
           <button type="button" id="network-test-btn">네트워크 검사하기</button>
         </div>
+        <p class="margin-top">
+          <button type="button" id="webrtc-settings-btn">고급 webrtc 설정</button>
+        </p>
+        <div id="webrtc-settings-container" class="hidden">
+          <label for="ice-server-url-input">추가 Ice Server url</label>
+          <input type="text" id="ice-server-url-input" autocapitalize="none" autocomplete="off" autocorrect="off" value="" />
+          <label for="ice-server-user-input">추가 Ice Server user</label>
+          <input type="text" id="ice-server-user-input" autocapitalize="none" autocomplete="off" autocorrect="off" value="" />
+          <label for="ice-server-pass-input">추가 Ice Server pass</label>
+          <input type="text" id="ice-server-pass-input" autocapitalize="none" autocomplete="off" autocorrect="off" value="" />
+        </div>
         <div>
           <p class="margin-top">
             <span class="thick">조작법:</span> 다음 중 편한 쪽을 사용하면

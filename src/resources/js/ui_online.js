@@ -223,6 +223,43 @@ export function setUpUI() {
     }
   });
 
+  const webrtcSettingsBtn = document.getElementById('webrtc-settings-btn');
+  webrtcSettingsBtn.addEventListener('click', () => {
+    const webrtcSettingsContainer = document.getElementById(
+      'webrtc-settings-container'
+    );
+    if (webrtcSettingsContainer.classList.contains('hidden')) {
+      webrtcSettingsContainer.classList.remove('hidden');
+    } else {
+      webrtcSettingsContainer.classList.add('hidden');
+    }
+  });
+
+  const iceServerInputUrlElem = document.getElementById('ice-server-url-input');
+  iceServerInputUrlElem.addEventListener('input', (event) => {
+    // @ts-ignore
+    channel.additionalIceServerUrl = event.target.value
+      .trim();
+    // @ts-ignore
+    iceServerInputUrlElem.value = channel.additionalIceServerUrl;
+  });
+  const iceServerInputUserElem = document.getElementById('ice-server-user-input');
+  iceServerInputUserElem.addEventListener('input', (event) => {
+    // @ts-ignore
+    channel.additionalIceServerUser = event.target.value
+      .trim();
+    // @ts-ignore
+    iceServerInputUserElem.value = channel.additionalIceServerUser;
+  });
+  const iceServerInputPassElem = document.getElementById('ice-server-pass-input');
+  iceServerInputPassElem.addEventListener('input', (event) => {
+    // @ts-ignore
+    channel.additionalIceServerPass = event.target.value
+      .trim();
+    // @ts-ignore
+    iceServerInputPassElem.value = channel.additionalIceServerPass;
+  });
+
   // For auto-fast-speed-checkbox
   const autoFastSpeedCheckboxElem = document.getElementById(
     'auto-fast-speed-checkbox'

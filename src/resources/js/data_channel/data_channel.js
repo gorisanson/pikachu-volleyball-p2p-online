@@ -86,6 +86,9 @@ export const channel = {
   amIPlayer2: null, // set from pikavolley_online.js
   isQuickMatch: null, // set from ui_online.js
   myNickname: '', // set from ui_online.js
+  additionalIceServerUrl: null, // set from ui_online.js
+  additionalIceServerUser: null, // set from ui_online.js
+  additionalIceServerPass: null, // set from ui_online.js
   peerNickname: '',
   myPartialPublicIP: '*.*.*.*',
   peerPartialPublicIP: '*.*.*.*',
@@ -168,6 +171,10 @@ export async function createRoom(roomIdToCreate) {
 
   const db = getFirestore(firebaseApp);
   roomRef = doc(db, 'rooms', roomId);
+
+  if (channel.additionalIceServerUrl != null) {
+    rtcConfiguration.iceServers.push({ urls: [channel.additionalIceServerUrl], username: channel.additionalIceServerUser, credential: channel.additionalIceServerPass })
+  }
 
   console.log('Create PeerConnection with configuration: ', rtcConfiguration);
   peerConnection = new RTCPeerConnection(rtcConfiguration);
@@ -275,6 +282,10 @@ export async function joinRoom(roomIdToJoin) {
     console.log('The room is already joined by someone else');
     printSomeoneElseAlreadyJoinedRoomMessage();
     return false;
+  }
+
+  if (channel.additionalIceServer != null) {
+    rtcConfiguration.iceServers.push({ urls: [channel.additionalIceServerUrl], username: channel.additionalIceServerUser, credential: channel.additionalIceServerPass })
   }
 
   console.log('Create PeerConnection with configuration: ', rtcConfiguration);
@@ -701,9 +712,9 @@ function respondToPingTest(data) {
   } else if (dataView.getInt8(0) === -2) {
     pingTestManager.pingMesurementArray.push(
       Date.now() -
-        pingTestManager.pingSentTimeArray[
-          pingTestManager.receivedPingResponseNumber
-        ]
+      pingTestManager.pingSentTimeArray[
+      pingTestManager.receivedPingResponseNumber
+      ]
     );
     pingTestManager.receivedPingResponseNumber++;
   }
