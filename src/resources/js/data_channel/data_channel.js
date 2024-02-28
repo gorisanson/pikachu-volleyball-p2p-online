@@ -712,9 +712,9 @@ function respondToPingTest(data) {
   } else if (dataView.getInt8(0) === -2) {
     pingTestManager.pingMesurementArray.push(
       Date.now() -
-      pingTestManager.pingSentTimeArray[
-      pingTestManager.receivedPingResponseNumber
-      ]
+        pingTestManager.pingSentTimeArray[
+          pingTestManager.receivedPingResponseNumber
+        ]
     );
     pingTestManager.receivedPingResponseNumber++;
   }
