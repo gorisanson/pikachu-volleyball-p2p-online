@@ -18,6 +18,7 @@
       href="../resources/assets/images/IDI_PIKAICON-0.png"
     />
   </head>
+
   <body>
     <div id="before-connection" class="limit-width">
       <div id="about-box-head">
@@ -155,15 +156,42 @@
           <button type="button" id="network-test-btn">네트워크 검사하기</button>
         </div>
         <p class="margin-top">
-          <button type="button" id="webrtc-settings-btn">고급 webrtc 설정</button>
+          <button type="button" id="webrtc-settings-btn">
+            고급 webrtc 설정
+          </button>
         </p>
         <div id="webrtc-settings-container" class="hidden">
           <label for="ice-server-url-input">추가 Ice Server url</label>
-          <input type="text" id="ice-server-url-input" autocapitalize="none" autocomplete="off" autocorrect="off" value="" />
-          <label for="ice-server-user-input">추가 Ice Server user</label>
-          <input type="text" id="ice-server-user-input" autocapitalize="none" autocomplete="off" autocorrect="off" value="" />
-          <label for="ice-server-pass-input">추가 Ice Server pass</label>
-          <input type="text" id="ice-server-pass-input" autocapitalize="none" autocomplete="off" autocorrect="off" value="" />
+          <input
+            type="text"
+            id="ice-server-url-input"
+            autocapitalize="none"
+            autocomplete="off"
+            autocorrect="off"
+            value=""
+          />
+          <label for="ice-server-username-input"
+            >추가 Ice Server username</label
+          >
+          <input
+            type="text"
+            id="ice-server-username-input"
+            autocapitalize="none"
+            autocomplete="off"
+            autocorrect="off"
+            value=""
+          />
+          <label for="ice-server-credential-input"
+            >추가 Ice Server credential</label
+          >
+          <input
+            type="text"
+            id="ice-server-credential-input"
+            autocapitalize="none"
+            autocomplete="off"
+            autocorrect="off"
+            value=""
+          />
         </div>
         <div>
           <p class="margin-top">

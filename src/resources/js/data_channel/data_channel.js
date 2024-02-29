@@ -173,7 +173,11 @@ export async function createRoom(roomIdToCreate) {
   roomRef = doc(db, 'rooms', roomId);
 
   if (channel.additionalIceServerUrl != null) {
-    rtcConfiguration.iceServers.push({ urls: [channel.additionalIceServerUrl], username: channel.additionalIceServerUser, credential: channel.additionalIceServerPass })
+    rtcConfiguration.iceServers.push({
+      urls: [channel.additionalIceServerUrl],
+      username: channel.additionalIceServerUser,
+      credential: channel.additionalIceServerPass,
+    });
   }
 
   console.log('Create PeerConnection with configuration: ', rtcConfiguration);
@@ -285,7 +289,11 @@ export async function joinRoom(roomIdToJoin) {
   }
 
   if (channel.additionalIceServer != null) {
-    rtcConfiguration.iceServers.push({ urls: [channel.additionalIceServerUrl], username: channel.additionalIceServerUser, credential: channel.additionalIceServerPass })
+    rtcConfiguration.iceServers.push({
+      urls: [channel.additionalIceServerUrl],
+      username: channel.additionalIceServerUser,
+      credential: channel.additionalIceServerPass,
+    });
   }
 
   console.log('Create PeerConnection with configuration: ', rtcConfiguration);
