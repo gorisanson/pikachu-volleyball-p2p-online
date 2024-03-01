@@ -238,25 +238,24 @@ export function setUpUI() {
   const iceServerInputUrlElem = document.getElementById('ice-server-url-input');
   iceServerInputUrlElem.addEventListener('input', (event) => {
     // @ts-ignore
-    channel.additionalIceServerUrl = event.target.value.trim();
+    channel.additionalIceServerUrl = event.target.value
+      .trim();
     // @ts-ignore
     iceServerInputUrlElem.value = channel.additionalIceServerUrl;
   });
-  const iceServerInputUserElem = document.getElementById(
-    'ice-server-username-input'
-  );
+  const iceServerInputUserElem = document.getElementById('ice-server-user-input');
   iceServerInputUserElem.addEventListener('input', (event) => {
     // @ts-ignore
-    channel.additionalIceServerUser = event.target.value.trim();
+    channel.additionalIceServerUser = event.target.value
+      .trim();
     // @ts-ignore
     iceServerInputUserElem.value = channel.additionalIceServerUser;
   });
-  const iceServerInputPassElem = document.getElementById(
-    'ice-server-credential-input'
-  );
+  const iceServerInputPassElem = document.getElementById('ice-server-pass-input');
   iceServerInputPassElem.addEventListener('input', (event) => {
     // @ts-ignore
-    channel.additionalIceServerPass = event.target.value.trim();
+    channel.additionalIceServerPass = event.target.value
+      .trim();
     // @ts-ignore
     iceServerInputPassElem.value = channel.additionalIceServerPass;
   });
