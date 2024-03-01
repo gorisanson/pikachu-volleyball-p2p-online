@@ -313,10 +313,6 @@ canvas.graphic-soft {
 #exit-room-btn,
 #join-room-id-input,
 #nickname-input,
-#webrtc-settings-btn,
-#ice-server-url-input,
-#ice-server-user-input,
-#ice-server-pass-input,
 #join-btn {
   width: 100%;
   height: var(--btn-height);
@@ -347,9 +343,6 @@ canvas.graphic-soft {
 #created-room-id-container,
 #join-room-id-input,
 #nickname-input,
-#ice-server-url-input,
-#ice-server-user-input,
-#ice-server-pass-input,
 #chat-input {
   font-size: var(--font-size);
 }
