@@ -87,8 +87,8 @@ export const channel = {
   isQuickMatch: null, // set from ui_online.js
   myNickname: '', // set from ui_online.js
   additionalIceServerUrl: null, // set from ui_online.js
-  additionalIceServerUser: null, // set from ui_online.js
-  additionalIceServerPass: null, // set from ui_online.js
+  additionalIceServerUsername: null, // set from ui_online.js
+  additionalIceServerCredential: null, // set from ui_online.js
   peerNickname: '',
   myPartialPublicIP: '*.*.*.*',
   peerPartialPublicIP: '*.*.*.*',
@@ -175,8 +175,8 @@ export async function createRoom(roomIdToCreate) {
   if (channel.additionalIceServerUrl != null) {
     rtcConfiguration.iceServers.push({
       urls: [channel.additionalIceServerUrl],
-      username: channel.additionalIceServerUser,
-      credential: channel.additionalIceServerPass,
+      username: channel.additionalIceServerUsername,
+      credential: channel.additionalIceServerCredential,
     });
   }
 
@@ -291,8 +291,8 @@ export async function joinRoom(roomIdToJoin) {
   if (channel.additionalIceServer != null) {
     rtcConfiguration.iceServers.push({
       urls: [channel.additionalIceServerUrl],
-      username: channel.additionalIceServerUser,
-      credential: channel.additionalIceServerPass,
+      username: channel.additionalIceServerUsername,
+      credential: channel.additionalIceServerCredential,
     });
   }
 

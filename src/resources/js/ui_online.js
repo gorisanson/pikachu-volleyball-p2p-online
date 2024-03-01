@@ -242,23 +242,23 @@ export function setUpUI() {
     // @ts-ignore
     iceServerInputUrlElem.value = channel.additionalIceServerUrl;
   });
-  const iceServerInputUserElem = document.getElementById(
-    'ice-server-user-input'
+  const iceServerInputUsernameElem = document.getElementById(
+    'ice-server-username-input'
   );
-  iceServerInputUserElem.addEventListener('input', (event) => {
+  iceServerInputUsernameElem.addEventListener('input', (event) => {
     // @ts-ignore
-    channel.additionalIceServerUser = event.target.value.trim();
+    channel.additionalIceServerUsername = event.target.value.trim();
     // @ts-ignore
-    iceServerInputUserElem.value = channel.additionalIceServerUser;
+    iceServerInputUsernameElem.value = channel.additionalIceServerUsername;
   });
-  const iceServerInputPassElem = document.getElementById(
-    'ice-server-pass-input'
+  const iceServerInputCredentialElem = document.getElementById(
+    'ice-server-credential-input'
   );
-  iceServerInputPassElem.addEventListener('input', (event) => {
+  iceServerInputCredentialElem.addEventListener('input', (event) => {
     // @ts-ignore
-    channel.additionalIceServerPass = event.target.value.trim();
+    channel.additionalIceServerCredential = event.target.value.trim();
     // @ts-ignore
-    iceServerInputPassElem.value = channel.additionalIceServerPass;
+    iceServerInputCredentialElem.value = channel.additionalIceServerCredential;
   });
 
   // For auto-fast-speed-checkbox
