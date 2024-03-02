@@ -9,3 +9,6 @@ export const rtcConfiguration = {
     },
   ],
 };
+
+//@ts-ignore
+window.rtcConfiguration = rtcConfiguration;
