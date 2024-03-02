@@ -2,10 +2,13 @@
 export const rtcConfiguration = {
   iceServers: [
     {
-      urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],
+      urls: ['stun:stun1.l.google.com:19302'],
     },
-    // {
-    //   urls: ['stun:stun.stunprotocol.org'],
-    // },
+    {
+      urls: ['stun:stun2.l.google.com:19302'],
+    },
   ],
 };
+
+//@ts-ignore
+window.rtcConfiguration = rtcConfiguration;
