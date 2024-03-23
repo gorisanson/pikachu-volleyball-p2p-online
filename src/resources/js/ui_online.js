@@ -74,6 +74,7 @@ const pendingOptions = {
 
 let pikaVolleyOnline = null; // it is set after loading the game assets
 let willSaveReplayAutomatically = null;
+let willNotifyBySound = null;
 let alreadySaved = false;
 
 const chatOpenBtnAndChatDisablingBtnContainer = document.getElementById(
@@ -284,6 +285,55 @@ export function setUpUI() {
       console.log(err);
     }
   });
+
+  // For notify-by-sound on/off radio buttons
+  const notifyBySoundOnRadioBtn = document.getElementById('notify-by-sound-on');
+  const notifyBySoundOffRadioBtn = document.getElementById(
+    'notify-by-sound-off'
+  );
+  try {
+    const item = window.localStorage.getItem('willNotifyBySound');
+    if (item !== null) {
+      willNotifyBySound = 'true' === item;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  if (willNotifyBySound !== null) {
+    // @ts-ignore
+    notifyBySoundOnRadioBtn.checked = willNotifyBySound;
+    // @ts-ignore
+    notifyBySoundOffRadioBtn.checked = !willNotifyBySound;
+  } else {
+    // @ts-ignore
+    willNotifyBySound = notifyBySoundOnRadioBtn.checked;
+  }
+  const notifyBySoundRadioBtnEventListener = (event) => {
+    const currentTarget = event.currentTarget;
+    // @ts-ignore
+    if (currentTarget.checked) {
+      // @ts-ignore
+      const value = currentTarget.value;
+      willNotifyBySound = currentTarget.value === 'on' ? true : false;
+      try {
+        window.localStorage.setItem(
+          'willNotifyBySound',
+          // @ts-ignore
+          String(willNotifyBySound)
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+  notifyBySoundOnRadioBtn.addEventListener(
+    'change',
+    notifyBySoundRadioBtnEventListener
+  );
+  notifyBySoundOffRadioBtn.addEventListener(
+    'change',
+    notifyBySoundRadioBtnEventListener
+  );
 
   let graphicSetting = null;
   try {
@@ -1274,6 +1324,9 @@ export function displayPartialIPFor(partialIP, isForPlayer2) {
 }
 
 export function notifyBySound() {
+  if (willNotifyBySound === false) {
+    return;
+  }
   const pikachuSound = document.getElementById('audio-pikachu-sound');
   // @ts-ignore
   pikachuSound.play();
