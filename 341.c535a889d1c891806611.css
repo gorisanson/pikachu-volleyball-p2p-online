@@ -496,7 +496,8 @@ button.btn-in-box {
   text-decoration: none;
   border-radius: 10px;
 }
-#ask-one-more-game button.btn-in-box {
+button.btn-in-box.key-y,
+button.btn-in-box.key-n  {
   width: calc(7 * var(--font-size));
 }
 button.large {
@@ -993,4 +994,4 @@ input.toggle-switch:checked + label::before {
 }
 
 
-/*# sourceMappingURL=341.2913bfde01ed9c5ebd84.css.map*/
+/*# sourceMappingURL=341.c535a889d1c891806611.css.map*/
