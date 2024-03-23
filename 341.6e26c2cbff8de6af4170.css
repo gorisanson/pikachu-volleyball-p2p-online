@@ -498,7 +498,7 @@ button.btn-in-box {
 }
 button.btn-in-box.key-y,
 button.btn-in-box.key-n  {
-  width: calc(7 * var(--font-size));
+  width: calc(8 * var(--font-size));
 }
 button.large {
   height: calc(3 * var(--font-size));
@@ -994,4 +994,4 @@ input.toggle-switch:checked + label::before {
 }
 
 
-/*# sourceMappingURL=341.c535a889d1c891806611.css.map*/
+/*# sourceMappingURL=341.6e26c2cbff8de6af4170.css.map*/
