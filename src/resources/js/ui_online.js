@@ -74,6 +74,7 @@ const pendingOptions = {
 
 let pikaVolleyOnline = null; // it is set after loading the game assets
 let willSaveReplayAutomatically = null;
+let willNotifyBySound = null;
 let alreadySaved = false;
 
 const chatOpenBtnAndChatDisablingBtnContainer = document.getElementById(
@@ -86,23 +87,6 @@ const chatInputAndSendBtnContainer = document.getElementById(
 );
 const chatInput = document.getElementById('chat-input');
 const sendBtn = document.getElementById('send-btn');
-const askOneMoreGameYesBtn = document.getElementById(
-  'ask-one-more-game-yes-btn'
-);
-const askOneMoreGameNoBtn = document.getElementById('ask-one-more-game-no-btn');
-const clickAskOneMoreGameYesOrNoBtnByPressingYOrN = (event) => {
-  // @ts-ignore
-  if (!chatInput.disabled) {
-    return;
-  }
-  if (event.code === 'KeyY') {
-    event.preventDefault();
-    askOneMoreGameYesBtn.click();
-  } else if (event.code === 'KeyN') {
-    event.preventDefault();
-    askOneMoreGameNoBtn.click();
-  }
-};
 
 export function setUpUI() {
   // game keyboard input needs to be unsubscribe for typing join room ID
@@ -284,6 +268,55 @@ export function setUpUI() {
       console.log(err);
     }
   });
+
+  // For notify-by-sound on/off radio buttons
+  const notifyBySoundOnRadioBtn = document.getElementById('notify-by-sound-on');
+  const notifyBySoundOffRadioBtn = document.getElementById(
+    'notify-by-sound-off'
+  );
+  try {
+    const item = window.localStorage.getItem('willNotifyBySound');
+    if (item !== null) {
+      willNotifyBySound = 'true' === item;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  if (willNotifyBySound !== null) {
+    // @ts-ignore
+    notifyBySoundOnRadioBtn.checked = willNotifyBySound;
+    // @ts-ignore
+    notifyBySoundOffRadioBtn.checked = !willNotifyBySound;
+  } else {
+    // @ts-ignore
+    willNotifyBySound = notifyBySoundOnRadioBtn.checked;
+  }
+  const notifyBySoundRadioBtnEventListener = (event) => {
+    const currentTarget = event.currentTarget;
+    // @ts-ignore
+    if (currentTarget.checked) {
+      // @ts-ignore
+      const value = currentTarget.value;
+      willNotifyBySound = currentTarget.value === 'on' ? true : false;
+      try {
+        window.localStorage.setItem(
+          'willNotifyBySound',
+          // @ts-ignore
+          String(willNotifyBySound)
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+  notifyBySoundOnRadioBtn.addEventListener(
+    'change',
+    notifyBySoundRadioBtnEventListener
+  );
+  notifyBySoundOffRadioBtn.addEventListener(
+    'change',
+    notifyBySoundRadioBtnEventListener
+  );
 
   let graphicSetting = null;
   try {
@@ -745,16 +778,48 @@ export function setUpUI() {
     window.setTimeout(() => location.reload(), 0);
   });
 
+  const askOneMoreGameYesBtn = document.getElementById(
+    'ask-one-more-game-yes-btn'
+  );
   askOneMoreGameYesBtn.addEventListener('click', () => {
-    window.removeEventListener(
-      'keydown',
-      clickAskOneMoreGameYesOrNoBtnByPressingYOrN
-    );
     document.getElementById('ask-one-more-game').classList.add('hidden');
   });
+
+  const askOneMoreGameNoBtn = document.getElementById(
+    'ask-one-more-game-no-btn'
+  );
   askOneMoreGameNoBtn.addEventListener('click', () => {
     window.setTimeout(() => location.reload(), 0);
   });
+
+  const clickProperBtnByPressingYOrN = (event) => {
+    // @ts-ignore
+    if (!chatInput.disabled) {
+      return;
+    }
+    if (event.code === 'KeyY') {
+      event.preventDefault();
+      // @ts-ignore
+      const btnForKeyY = document.querySelector(
+        'div.fade-in-box:not(.hidden) button.key-y'
+      );
+      if (btnForKeyY !== null) {
+        // @ts-ignore
+        btnForKeyY.click();
+      }
+    } else if (event.code === 'KeyN') {
+      event.preventDefault();
+      // @ts-ignore
+      const btnForKeyN = document.querySelector(
+        'div.fade-in-box:not(.hidden) button.key-n'
+      );
+      if (btnForKeyN !== null) {
+        // @ts-ignore
+        btnForKeyN.click();
+      }
+    }
+  };
+  window.addEventListener('keydown', clickProperBtnByPressingYOrN);
 
   window.addEventListener('unload', closeConnection);
 
@@ -1230,10 +1295,6 @@ export function noticeDisconnected() {
 
 export function askOneMoreGame() {
   document.getElementById('ask-one-more-game').classList.remove('hidden');
-  window.addEventListener(
-    'keydown',
-    clickAskOneMoreGameYesOrNoBtnByPressingYOrN
-  );
 }
 
 export function enableChatOpenBtnAndChatDisablingBtn() {
@@ -1274,6 +1335,9 @@ export function displayPartialIPFor(partialIP, isForPlayer2) {
 }
 
 export function notifyBySound() {
+  if (willNotifyBySound === false) {
+    return;
+  }
   const pikachuSound = document.getElementById('audio-pikachu-sound');
   // @ts-ignore
   pikachuSound.play();

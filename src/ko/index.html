@@ -198,6 +198,29 @@
             >
           </div>
         </div>
+        <div>
+          <p class="margin-top">
+            <span class="thick">알림 소리:</span>
+            상대방과 연결 성공/실패 시, "피카츄~"
+          </p>
+          <div>
+            <input
+              type="radio"
+              id="notify-by-sound-on"
+              name="notify-by-sound"
+              value="on"
+              checked
+            /><label for="notify-by-sound-on">켜기</label>
+          </div>
+          <div class="margin-top-very-little">
+            <input
+              type="radio"
+              id="notify-by-sound-off"
+              name="notify-by-sound"
+              value="off"
+            /><label for="notify-by-sound-off">끄기</label>
+          </div>
+        </div>
         <div id="quick-match-group">
           <p class="margin-top">
             <span class="thick">퀵 매치 그룹:</span> 동일한 매치 그룹을 선택한
@@ -874,16 +897,16 @@
             <button
               type="button"
               id="ask-options-change-send-to-peer-yes-btn"
-              class="btn-in-box"
+              class="btn-in-box key-y"
             >
-              진행해요
+              진행해요 (Y)
             </button>
             <button
               type="button"
               id="ask-options-change-send-to-peer-no-btn"
-              class="btn-in-box"
+              class="btn-in-box key-n"
             >
-              아니요
+              아니요 (N)
             </button>
           </div>
         </div>
@@ -902,30 +925,30 @@
             <button
               type="button"
               id="ask-options-change-received-from-peer-yes-btn"
-              class="btn-in-box"
+              class="btn-in-box key-y"
             >
-              동의해요
+              동의해요 (Y)
             </button>
             <button
               type="button"
               id="ask-options-change-received-from-peer-no-btn"
-              class="btn-in-box"
+              class="btn-in-box key-n"
             >
-              아니요
+              아니요 (N)
             </button>
           </div>
         </div>
         <div class="fade-in-box notice hidden" id="notice-peer-agreed">
           <p>
             상대방이 게임 설정 변경에 동의했습니다.<br />
-            게임 설정을 변경을 완료했습니다.
+            게임 설정 변경을 완료했습니다.
           </p>
           <button
             type="button"
             id="notice-peer-agreed-ok-btn"
-            class="btn-in-box"
+            class="btn-in-box key-y"
           >
-            알겠어요
+            알겠어요 (Y)
           </button>
         </div>
         <div class="fade-in-box notice hidden" id="notice-peer-disagreed">
@@ -933,9 +956,9 @@
           <button
             type="button"
             id="notice-peer-disagreed-ok-btn"
-            class="btn-in-box"
+            class="btn-in-box key-y"
           >
-            알겠어요
+            알겠어요 (Y)
           </button>
         </div>
         <div
@@ -949,9 +972,9 @@
           <button
             type="button"
             id="notice-speed-options-cannot-changed-if-game-in-progress-ok-btn"
-            class="btn-in-box"
+            class="btn-in-box key-y"
           >
-            알겠어요
+            알겠어요 (Y)
           </button>
         </div>
         <div
@@ -965,9 +988,9 @@
           <button
             type="button"
             id="notice-winning-score-options-cannot-changed-if-game-in-progress-ok-btn"
-            class="btn-in-box"
+            class="btn-in-box key-y"
           >
-            알겠어요
+            알겠어요 (Y)
           </button>
         </div>
         <div class="fade-in-box notice hidden" id="ask-one-more-game">
@@ -976,14 +999,14 @@
             <button
               type="button"
               id="ask-one-more-game-yes-btn"
-              class="btn-in-box"
+              class="btn-in-box key-y"
             >
               한 판 더! (Y)
             </button>
             <button
               type="button"
               id="ask-one-more-game-no-btn"
-              class="btn-in-box"
+              class="btn-in-box key-n"
             >
               아니요 (N)
             </button>
@@ -994,9 +1017,9 @@
           <button
             type="button"
             id="notice-disconnected-ok-btn"
-            class="btn-in-box"
+            class="btn-in-box key-y"
           >
-            알겠어요
+            알겠어요 (Y)
           </button>
         </div>
         <div
@@ -1016,16 +1039,16 @@
             <button
               type="button"
               id="ask-add-this-peer-to-blocked-list-yes-btn"
-              class="btn-in-box"
+              class="btn-in-box key-y"
             >
-              차단해요
+              차단해요 (Y)
             </button>
             <button
               type="button"
               id="ask-add-this-peer-to-blocked-list-no-btn"
-              class="btn-in-box"
+              class="btn-in-box key-n"
             >
-              안해요
+              안해요 (N)
             </button>
           </div>
         </div>
@@ -1041,16 +1064,16 @@
             <button
               type="button"
               id="notice-adding-this-peer-to-blocked-list-is-completed-exit-game-btn"
-              class="btn-in-box"
+              class="btn-in-box key-y"
             >
-              나갈래요
+              나갈래요 (Y)
             </button>
             <button
               type="button"
               id="notice-adding-this-peer-to-blocked-list-is-completed-do-not-exit-game-btn"
-              class="btn-in-box"
+              class="btn-in-box key-n"
             >
-              안 나갈래요
+              안 나갈래요 (N)
             </button>
           </div>
         </div>
