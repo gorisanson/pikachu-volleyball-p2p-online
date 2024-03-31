@@ -29,7 +29,6 @@ import { bufferLength, PikaUserInputWithSync } from '../keyboard_online.js';
 import {
   noticeDisconnected,
   enableChatOpenBtnAndChatDisablingBtn,
-  showGameCanvas,
   hideWaitingPeerAssetsLoadingBox,
   hidePingBox,
   printAvgPing,
@@ -660,8 +659,6 @@ function startGameAfterPingTest() {
       );
       channel.callbackAfterDataChannelOpened();
       channel.callbackAfterDataChannelOpenedForUI();
-      showGameCanvas();
-      enableChatOpenBtnAndChatDisablingBtn();
 
       printAvgPing(avg);
 
