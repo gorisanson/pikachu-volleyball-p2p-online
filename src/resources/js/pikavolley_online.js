@@ -7,6 +7,7 @@ import { askOneMoreGame } from './ui_online.js';
 import { displayPartialIPFor, displayNicknameFor } from './nickname_display.js';
 import { replaySaver } from './replay/replay_saver.js';
 import { PikaUserInput } from './offline_version_js/physics.js';
+import { displayMyAndPeerChatEnabledOrDisabled } from './chat_display.js';
 
 /** @typedef GameState @type {function():void} */
 
@@ -99,6 +100,7 @@ export class PikachuVolleyballOnline extends PikachuVolleyball {
       displayNicknameFor(channel.peerNickname, !this.amIPlayer2);
       displayPartialIPFor(channel.myPartialPublicIP, this.amIPlayer2);
       displayPartialIPFor(channel.peerPartialPublicIP, !this.amIPlayer2);
+      displayMyAndPeerChatEnabledOrDisabled();
     }
   }
 
