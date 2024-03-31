@@ -6,7 +6,10 @@
  * It is achieved by setting the same RNG (random number generator) for each player's chat box.
  */
 'use strict';
-import { channel } from './data_channel/data_channel.js';
+import {
+  channel,
+  sendChatEnabledMessageToPeer,
+} from './data_channel/data_channel.js';
 import { replaySaver } from './replay/replay_saver.js';
 
 /** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */
@@ -15,8 +18,6 @@ let getSpeechBubbleNeeded = null; // it is assigned a function after the game as
 
 let player1ChatRng = null;
 let player2ChatRng = null;
-
-let isChatEnabled = true;
 
 const canvasContainer = document.getElementById('game-canvas-container');
 let player1ChatBox = document.getElementById('player1-chat-box');
@@ -51,7 +52,37 @@ export function setChatRngs(rngForPlayer1Chat, rngForPlayer2Chat) {
  * @param {boolean} turnOn
  */
 export function enableChat(turnOn) {
-  isChatEnabled = turnOn;
+  channel.myChatEnabled = turnOn;
+  displayMyAndPeerChatEnabledOrDisabled();
+  sendChatEnabledMessageToPeer(channel.myChatEnabled);
+}
+
+export function displayMyAndPeerChatEnabledOrDisabled() {
+  const elem1 = document.getElementById('player1-chat-disabled');
+  const elem2 = document.getElementById('player2-chat-disabled');
+  const displayEnabled = (isChatEnabled, elem) => {
+    if (isChatEnabled) {
+      elem.classList.add('hidden');
+    } else {
+      elem.classList.remove('hidden');
+    }
+  };
+
+  if (channel.amIPlayer2 === null) {
+    if (channel.amICreatedRoom) {
+      displayEnabled(channel.myChatEnabled, elem1);
+      displayEnabled(channel.peerChatEnabled, elem2);
+    } else {
+      displayEnabled(channel.myChatEnabled, elem2);
+      displayEnabled(channel.peerChatEnabled, elem1);
+    }
+  } else if (channel.amIPlayer2 === false) {
+    displayEnabled(channel.myChatEnabled, elem1);
+    displayEnabled(channel.peerChatEnabled, elem2);
+  } else if (channel.amIPlayer2 === true) {
+    displayEnabled(channel.myChatEnabled, elem2);
+    displayEnabled(channel.peerChatEnabled, elem1);
+  }
 }
 
 export function hideChat() {
@@ -88,7 +119,7 @@ export function displayPeerChatMessage(message) {
 }
 
 export function displayChatMessageAt(message, whichPlayerSide) {
-  if (!isChatEnabled) {
+  if (!channel.myChatEnabled) {
     return;
   }
 

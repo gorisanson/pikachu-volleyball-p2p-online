@@ -293,15 +293,11 @@ export function setUpUI() {
   }
   const notifyBySoundRadioBtnEventListener = (event) => {
     const currentTarget = event.currentTarget;
-    // @ts-ignore
     if (currentTarget.checked) {
-      // @ts-ignore
-      const value = currentTarget.value;
       willNotifyBySound = currentTarget.value === 'on' ? true : false;
       try {
         window.localStorage.setItem(
           'willNotifyBySound',
-          // @ts-ignore
           String(willNotifyBySound)
         );
       } catch (err) {
@@ -687,28 +683,6 @@ export function setUpUI() {
 
   chatOpenBtn.addEventListener('click', chatOpenBtnClicked);
   sendBtn.addEventListener('click', sendBtnClicked);
-  channel.callbackAfterDataChannelOpenedForUI = () => {
-    window.addEventListener('keydown', (event) => {
-      if (event.code === 'Space') {
-        if (
-          !chatOpenBtnAndChatDisablingBtnContainer.classList.contains('hidden')
-        ) {
-          event.preventDefault();
-          chatOpenBtn.click();
-        }
-      } else if (event.code === 'Enter') {
-        event.preventDefault();
-      }
-    });
-    window.addEventListener('keyup', (event) => {
-      if (event.code === 'Enter') {
-        if (!chatInputAndSendBtnContainer.classList.contains('hidden')) {
-          window.setTimeout(() => sendBtn.click(), 0);
-        }
-      }
-    });
-  };
-
   chatDisablingBtn.addEventListener('click', () => {
     // @ts-ignore
     if (!chatOpenBtn.disabled) {
@@ -730,7 +704,50 @@ export function setUpUI() {
         document.getElementById('text-disable-chat').textContent;
       chatDisablingBtn.blur();
     }
+    try {
+      window.localStorage.setItem(
+        'isChatEnabled',
+        // @ts-ignore
+        String(!chatOpenBtn.disabled)
+      );
+    } catch (err) {
+      console.log(err);
+    }
   });
+
+  let isChatEnabled = true;
+  try {
+    isChatEnabled = 'false' !== window.localStorage.getItem('isChatEnabled');
+  } catch (err) {
+    console.log(err);
+  }
+
+  channel.callbackAfterDataChannelOpenedForUI = () => {
+    window.addEventListener('keydown', (event) => {
+      if (event.code === 'Space') {
+        if (
+          !chatOpenBtnAndChatDisablingBtnContainer.classList.contains('hidden')
+        ) {
+          event.preventDefault();
+          chatOpenBtn.click();
+        }
+      } else if (event.code === 'Enter') {
+        event.preventDefault();
+      }
+    });
+    window.addEventListener('keyup', (event) => {
+      if (event.code === 'Enter') {
+        if (!chatInputAndSendBtnContainer.classList.contains('hidden')) {
+          window.setTimeout(() => sendBtn.click(), 0);
+        }
+      }
+    });
+    showGameCanvas();
+    enableChatOpenBtnAndChatDisablingBtn();
+    if (!isChatEnabled) {
+      chatDisablingBtn.click();
+    }
+  };
 
   attachEventListenerToHideBtn('test-passed-ok-btn', 'test-passed');
   attachEventListenerToHideBtn(

@@ -29,7 +29,6 @@ import { bufferLength, PikaUserInputWithSync } from '../keyboard_online.js';
 import {
   noticeDisconnected,
   enableChatOpenBtnAndChatDisablingBtn,
-  showGameCanvas,
   hideWaitingPeerAssetsLoadingBox,
   hidePingBox,
   printAvgPing,
@@ -57,6 +56,7 @@ import {
   setChatRngs,
   displayMyChatMessage,
   displayPeerChatMessage,
+  displayMyAndPeerChatEnabledOrDisabled,
 } from '../chat_display.js';
 import { rtcConfiguration } from './rtc_configuration.js';
 import { parsePublicIPFromCandidate, getPartialIP } from './parse_candidate.js';
@@ -89,6 +89,8 @@ export const channel = {
   peerNickname: '',
   myPartialPublicIP: '*.*.*.*',
   peerPartialPublicIP: '*.*.*.*',
+  myChatEnabled: true,
+  peerChatEnabled: true,
   willAskFastAutomatically: false,
 
   /** @type {PikaUserInputWithSync[]} */
@@ -143,6 +145,7 @@ function createMessageSyncManager(offset) {
 const chatManager = createMessageSyncManager(0); // use 0, 1 for syncCounter
 const optionsChangeManager = createMessageSyncManager(2); // use 2, 3 for syncCounter
 const optionsChangeAgreeManager = createMessageSyncManager(4); // use 4, 5 for syncCounter
+const chatEnabledManager = createMessageSyncManager(6); // use 6, 7 for syncCounter
 
 let peerConnection = null;
 let dataChannel = null;
@@ -633,6 +636,65 @@ function receiveOptionsChangeAgreeMessageFromPeer(optionsChangeAgreeMessage) {
 }
 
 /**
+ * Send chat enabled/disabled message to peer
+ * @param {boolean} enabled true or false
+ */
+export function sendChatEnabledMessageToPeer(enabled) {
+  let enabledMessageToPeer = String(enabled);
+  enabledMessageToPeer += String(chatEnabledManager.syncCounter);
+  dataChannel.send(enabledMessageToPeer);
+  chatEnabledManager.resendIntervalID = setInterval(
+    () => dataChannel.send(enabledMessageToPeer),
+    1000
+  );
+  return;
+}
+
+/**
+ * Receive chat enabled/disabled message ACK(acknowledgment) array buffer from peer.
+ * @param {ArrayBuffer} data array buffer with length 1
+ */
+function receiveChatEnabledMessageAckFromPeer(data) {
+  const dataView = new DataView(data);
+  const syncCounter = dataView.getInt8(0);
+  if (syncCounter === chatEnabledManager.syncCounter) {
+    chatEnabledManager.syncCounter++;
+    clearInterval(chatEnabledManager.resendIntervalID);
+  }
+}
+
+/**
+ * Receive hat enabled/disabled meesage from the peer
+ * @param {string} chatEnabledMessage
+ */
+function receiveChatEnabledMessageFromPeer(chatEnabledMessage) {
+  // Read syncCounter at the end of chat enabled/disabled message
+  const peerSyncCounter = Number(chatEnabledMessage.slice(-1));
+  if (peerSyncCounter === chatEnabledManager.peerSyncCounter) {
+    // if peer resend prevMessage since peer did not recieve
+    // the message ACK(acknowledgment) array buffer with length 1
+    console.log(
+      'arraybuffer with length 1 for chat enabled/disabled message ACK resent'
+    );
+  } else if (peerSyncCounter === chatEnabledManager.nextPeerSyncCounter) {
+    // if peer send new message
+    chatEnabledManager.peerSyncCounter++;
+    const chatEnabled = chatEnabledMessage.slice(0, -1) === 'true';
+    channel.peerChatEnabled = chatEnabled;
+    displayMyAndPeerChatEnabledOrDisabled();
+  } else {
+    console.log('invalid chat enabled/disabled message received.');
+    return;
+  }
+
+  // Send the message ACK array buffer with length 1.
+  const buffer = new ArrayBuffer(1);
+  const dataView = new DataView(buffer);
+  dataView.setInt8(0, peerSyncCounter);
+  dataChannel.send(buffer);
+}
+
+/**
  * Test average ping by sending ping test arraybuffers, then start the game
  */
 function startGameAfterPingTest() {
@@ -660,8 +722,6 @@ function startGameAfterPingTest() {
       );
       channel.callbackAfterDataChannelOpened();
       channel.callbackAfterDataChannelOpenedForUI();
-      showGameCanvas();
-      enableChatOpenBtnAndChatDisablingBtn();
 
       printAvgPing(avg);
 
@@ -726,7 +786,9 @@ function recieveFromPeer(event) {
     } else if (data.byteLength === 1) {
       const view = new DataView(data);
       const value = view.getInt8(0);
-      if (value >= 4) {
+      if (value >= 6) {
+        receiveChatEnabledMessageAckFromPeer(data);
+      } else if (value >= 4) {
         receiveOptionsChangeAgreeMessageAckFromPeer(data);
       } else if (value >= 2) {
         receiveOptionsChangeMessageAckFromPeer(data);
@@ -738,7 +800,9 @@ function recieveFromPeer(event) {
     }
   } else if (typeof data === 'string') {
     const syncCounter = Number(data.slice(-1));
-    if (syncCounter >= 4) {
+    if (syncCounter >= 6) {
+      receiveChatEnabledMessageFromPeer(data);
+    } else if (syncCounter >= 4) {
       receiveOptionsChangeAgreeMessageFromPeer(data);
     } else if (syncCounter >= 2) {
       receiveOptionsChangeMessageFromPeer(data);

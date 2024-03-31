@@ -681,7 +681,8 @@ div.nicknames-container {
   align-items: flex-start;
 }
 .nickname,
-.partial-ip {
+.partial-ip,
+.chat-disabled {
   color: white;
 }
 .nickname {
@@ -689,6 +690,9 @@ div.nicknames-container {
 }
 .partial-ip {
   font-size: calc(0.8 * var(--font-size));
+}
+.chat-disabled {
+  font-size: calc(0.7 * var(--font-size));
 }
 .text-align-start {
   text-align: start;
