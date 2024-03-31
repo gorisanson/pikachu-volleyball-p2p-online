@@ -293,15 +293,11 @@ export function setUpUI() {
   }
   const notifyBySoundRadioBtnEventListener = (event) => {
     const currentTarget = event.currentTarget;
-    // @ts-ignore
     if (currentTarget.checked) {
-      // @ts-ignore
-      const value = currentTarget.value;
       willNotifyBySound = currentTarget.value === 'on' ? true : false;
       try {
         window.localStorage.setItem(
           'willNotifyBySound',
-          // @ts-ignore
           String(willNotifyBySound)
         );
       } catch (err) {
