@@ -25,50 +25,66 @@ export async function testNetwork(
   let isBehindSymmetricNat = false;
   const candidates = [];
 
-  peerConnection.addEventListener('icecandidate', (event) => {
-    if (!event.candidate) {
+  let isinternalCallBackIfGotFinalCandidateCalled = false;
+  const internalCallBackIfGotFinalCandidate = (gotFinalCandidate = false) => {
+    if (isinternalCallBackIfGotFinalCandidateCalled) {
+      return;
+    }
+    isinternalCallBackIfGotFinalCandidateCalled = true;
+    if (gotFinalCandidate) {
       console.log('Got final candidate!');
-      if (dataChannel) {
-        dataChannel.close();
-      }
-      if (peerConnection) {
-        peerConnection.close();
-      }
-      if (Object.keys(candidates).length >= 1) {
-        isBehindSymmetricNat = true;
-        for (const ip in candidates) {
-          var ports = candidates[ip];
-          if (ports.length === 1) {
-            isBehindSymmetricNat = false;
-            break;
-          }
+    } else {
+      console.log('Timed out so just proceed as if got final candidate...');
+    }
+    if (dataChannel) {
+      dataChannel.close();
+    }
+    if (peerConnection) {
+      peerConnection.close();
+    }
+    if (Object.keys(candidates).length >= 1) {
+      isBehindSymmetricNat = true;
+      for (const ip in candidates) {
+        var ports = candidates[ip];
+        if (ports.length === 1) {
+          isBehindSymmetricNat = false;
+          break;
         }
-        console.log(isBehindSymmetricNat ? 'symmetric nat' : 'normal nat');
       }
-      if (!gotSrflx && !isHostAddressPublicIP) {
-        console.log('did not get srflx candidate');
-        if (!gotHost) {
-          console.log('did not get host candidate');
-          callBackIfDidNotGetSrflxAndDidNotGetHost();
-        } else if (isHostAddressObfuscated) {
-          console.log('host address is obfuscated');
-          callBackIfDidNotGetSrflxAndHostAddressIsObfuscated();
-        } else {
-          console.log(
-            'host address is not obfuscated and is a private ip address'
-          );
-          callBackIfDidNotGetSrflxAndHostAddressIsPrivateIPAddress();
-        }
-      } else if (isBehindSymmetricNat) {
-        console.log('behind symmetric nat');
-        callBackIfBehindSymmetricNat();
-      } else if (isHostAddressPublicIP || (gotSrflx && !isBehindSymmetricNat)) {
+      console.log(isBehindSymmetricNat ? 'symmetric nat' : 'normal nat');
+    }
+    if (!gotSrflx && !isHostAddressPublicIP) {
+      console.log('did not get srflx candidate');
+      if (!gotHost) {
+        console.log('did not get host candidate');
+        callBackIfDidNotGetSrflxAndDidNotGetHost();
+      } else if (isHostAddressObfuscated) {
+        console.log('host address is obfuscated');
+        callBackIfDidNotGetSrflxAndHostAddressIsObfuscated();
+      } else {
         console.log(
-          '"host address is public IP" or "got srflx, not behind symmetric nat"'
+          'host address is not obfuscated and is a private ip address'
         );
-        callBackIfPassed();
+        callBackIfDidNotGetSrflxAndHostAddressIsPrivateIPAddress();
       }
-      callBack();
+    } else if (isBehindSymmetricNat) {
+      console.log('behind symmetric nat');
+      callBackIfBehindSymmetricNat();
+    } else if (isHostAddressPublicIP || (gotSrflx && !isBehindSymmetricNat)) {
+      console.log(
+        '"host address is public IP" or "got srflx, not behind symmetric nat"'
+      );
+      callBackIfPassed();
+    }
+    callBack();
+    return;
+  };
+
+  peerConnection.addEventListener('icecandidate', (event) => {
+    // ICE gathering completion is indicated when `event.candidate === null`:
+    // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/icecandidate_event#indicating_that_ice_gathering_is_complete
+    if (!event.candidate) {
+      internalCallBackIfGotFinalCandidate(true);
       return;
     }
     if (event.candidate.candidate === '') {
@@ -104,6 +120,7 @@ export async function testNetwork(
       } else if (candidates[cand.ip][0] !== cand.port) {
         candidates[cand.ip].push(cand.port);
       }
+      setTimeout(internalCallBackIfGotFinalCandidate, 1500);
     } else if (cand.type === 'host') {
       gotHost = true;
       if (cand.ip.endsWith('.local')) {
@@ -116,6 +133,7 @@ export async function testNetwork(
           isHostAddressPublicIP = true;
         }
       }
+      setTimeout(internalCallBackIfGotFinalCandidate, 3000);
     }
     console.log('Got candidate: ', event.candidate);
   });
@@ -126,4 +144,8 @@ export async function testNetwork(
   });
   const offer = await peerConnection.createOffer();
   await peerConnection.setLocalDescription(offer);
+  // Chrome Version 123.0.6312.105 (Official Build) (64-bit) in Unbuntu
+  // has an issue where ICE gathering completion is indicated too late.
+  // The following line and similar `setTimeout` lines above are a workaround for the issue.
+  setTimeout(internalCallBackIfGotFinalCandidate, 5000);
 }
