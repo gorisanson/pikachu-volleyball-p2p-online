@@ -144,7 +144,7 @@ export async function testNetwork(
   });
   const offer = await peerConnection.createOffer();
   await peerConnection.setLocalDescription(offer);
-  // Chrome Version 123.0.6312.105 (Official Build) (64-bit) in Unbuntu
+  // Chrome Version 123.0.6312.105 (Official Build) (64-bit) in Ubuntu
   // has an issue where ICE gathering completion is indicated too late.
   // The following line and similar `setTimeout` lines above are a workaround for the issue.
   setTimeout(internalCallBackIfGotFinalCandidate, 5000);
