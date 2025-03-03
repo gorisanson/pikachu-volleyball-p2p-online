@@ -832,6 +832,11 @@
           <div class="nickname-and-partial-ip left">
             <span id="player1-nickname" class="nickname"></span>
             <span id="player1-partial-ip" class="partial-ip"></span>
+            <span
+              id="player1-hiding-peer-nickname"
+              class="hiding-peer-nickname hidden"
+              >not seeing peer's nickname</span
+            >
             <span id="player1-chat-disabled" class="chat-disabled hidden"
               >chat disabled</span
             >
@@ -839,6 +844,11 @@
           <div class="nickname-and-partial-ip right">
             <span id="player2-nickname" class="nickname"></span>
             <span id="player2-partial-ip" class="partial-ip"></span>
+            <span
+              id="player2-hiding-peer-nickname"
+              class="hiding-peer-nickname hidden"
+              >not seeing peer's nickname</span
+            >
             <span id="player2-chat-disabled" class="chat-disabled hidden"
               >chat disabled</span
             >
@@ -1093,6 +1103,9 @@
           <button type="button" id="chat-disabling-btn">Disable chat</button>
           <div id="text-disable-chat" class="hidden">Disable chat</div>
           <div id="text-enable-chat" class="hidden">Enable chat</div>
+          <button type="button" id="nickname-hide-btn">Hide nickname</button>
+          <div id="text-hide-nickname" class="hidden">Hide nickname</div>
+          <div id="text-show-nickname" class="hidden">Show nickname</div>
         </div>
       </div>
     </div>

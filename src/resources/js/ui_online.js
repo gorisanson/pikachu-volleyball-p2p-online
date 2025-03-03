@@ -12,6 +12,7 @@ import {
   closeConnection,
   sendOptionsChangeMessageToPeer,
   sendOptionsChangeAgreeMessageToPeer,
+  sendPeerNicknameShownMessageToPeer,
 } from './data_channel/data_channel.js';
 import { generatePushID } from './utils/generate_pushid.js';
 import { myKeyboard } from './keyboard_online.js';
@@ -26,6 +27,10 @@ import { replaySaver } from './replay/replay_saver.js';
 import { showBlockThisPeerBtn } from './block_other_players/ui.js';
 import '../style.css';
 import { MATCH_GROUP } from './quick_match/match_group.js';
+import {
+  displayNicknameFor,
+  displayMyAndPeerNicknameShownOrHidden,
+} from './nickname_display.js';
 
 /** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */
 /** @typedef {import('@pixi/ticker').Ticker} Ticker */
@@ -82,6 +87,7 @@ const chatOpenBtnAndChatDisablingBtnContainer = document.getElementById(
 );
 const chatOpenBtn = document.getElementById('chat-open-btn');
 const chatDisablingBtn = document.getElementById('chat-disabling-btn');
+const nicknameHideBtn = document.getElementById('nickname-hide-btn');
 const chatInputAndSendBtnContainer = document.getElementById(
   'chat-input-and-send-btn-container'
 );
@@ -695,20 +701,52 @@ export function setUpUI() {
       sendBtn.disabled = true;
       chatDisablingBtn.textContent =
         document.getElementById('text-enable-chat').textContent;
-      chatDisablingBtn.blur();
     } else {
       enableChat(true);
       // @ts-ignore
       chatOpenBtn.disabled = false;
       chatDisablingBtn.textContent =
         document.getElementById('text-disable-chat').textContent;
-      chatDisablingBtn.blur();
     }
+    chatDisablingBtn.blur();
     try {
       window.localStorage.setItem(
         'isChatEnabled',
         // @ts-ignore
         String(!chatOpenBtn.disabled)
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  });
+  nicknameHideBtn.addEventListener('click', () => {
+    if (channel.myIsPeerNicknameVisible) {
+      channel.myIsPeerNicknameVisible = false;
+      nicknameHideBtn.textContent =
+        document.getElementById('text-show-nickname').textContent;
+    } else {
+      channel.myIsPeerNicknameVisible = true;
+      nicknameHideBtn.textContent =
+        document.getElementById('text-hide-nickname').textContent;
+    }
+    nicknameHideBtn.blur();
+    if (channel.amIPlayer2 === null) {
+      displayNicknameFor(channel.peerNickname, channel.amICreatedRoom);
+    } else {
+      displayNicknameFor(channel.peerNickname, !channel.amIPlayer2);
+    }
+    if (channel.amICreatedRoom) {
+      replaySaver.recordNicknames(channel.myNickname, channel.peerNickname);
+    } else {
+      replaySaver.recordNicknames(channel.peerNickname, channel.myNickname);
+    }
+    displayMyAndPeerNicknameShownOrHidden();
+    sendPeerNicknameShownMessageToPeer(channel.myIsPeerNicknameVisible);
+    try {
+      window.localStorage.setItem(
+        'isPeerNicknameVisible',
+        // @ts-ignore
+        String(channel.myIsPeerNicknameVisible)
       );
     } catch (err) {
       console.log(err);
@@ -722,6 +760,13 @@ export function setUpUI() {
     console.log(err);
   }
 
+  let isPeerNicknameVisible = true;
+  try {
+    isPeerNicknameVisible =
+      'false' !== window.localStorage.getItem('isPeerNicknameVisible');
+  } catch (err) {
+    console.log(err);
+  }
   channel.callbackAfterDataChannelOpenedForUI = () => {
     window.addEventListener('keydown', (event) => {
       if (event.code === 'Space') {
@@ -746,6 +791,9 @@ export function setUpUI() {
     enableChatOpenBtnAndChatDisablingBtn();
     if (!isChatEnabled) {
       chatDisablingBtn.click();
+    }
+    if (!isPeerNicknameVisible) {
+      nicknameHideBtn.click();
     }
   };
 
@@ -1319,36 +1367,6 @@ export function enableChatOpenBtnAndChatDisablingBtn() {
   chatOpenBtn.disabled = false;
   // @ts-ignore
   chatDisablingBtn.disabled = false;
-}
-
-/**
- * Display nickname for the player
- * @param {boolean} isForPlayer2
- * @param {string} nickname
- */
-export function displayNicknameFor(nickname, isForPlayer2) {
-  let nicknameElm = null;
-  if (!isForPlayer2) {
-    nicknameElm = document.getElementById('player1-nickname');
-  } else {
-    nicknameElm = document.getElementById('player2-nickname');
-  }
-  nicknameElm.textContent = nickname;
-}
-
-/**
- * Display partial ip for the player
- * @param {boolean} isForPlayer2
- * @param {string} partialIP
- */
-export function displayPartialIPFor(partialIP, isForPlayer2) {
-  let partialIPElm = null;
-  if (!isForPlayer2) {
-    partialIPElm = document.getElementById('player1-partial-ip');
-  } else {
-    partialIPElm = document.getElementById('player2-partial-ip');
-  }
-  partialIPElm.textContent = partialIP;
 }
 
 export function notifyBySound() {

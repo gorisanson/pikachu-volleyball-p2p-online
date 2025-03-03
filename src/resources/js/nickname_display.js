@@ -1,3 +1,5 @@
+import { channel } from './data_channel/data_channel';
+
 /**
  * Display nickname for the player
  * @param {boolean} isForPlayer2
@@ -26,4 +28,32 @@ export function displayPartialIPFor(partialIP, isForPlayer2) {
     partialIPElm = document.getElementById('player2-partial-ip');
   }
   partialIPElm.textContent = partialIP;
+}
+
+export function displayMyAndPeerNicknameShownOrHidden() {
+  const elem1 = document.getElementById('player1-hiding-peer-nickname');
+  const elem2 = document.getElementById('player2-hiding-peer-nickname');
+  const displayShown = (isNicknameShown, elem) => {
+    if (isNicknameShown) {
+      elem.classList.add('hidden');
+    } else {
+      elem.classList.remove('hidden');
+    }
+  };
+
+  if (channel.amIPlayer2 === null) {
+    if (channel.amICreatedRoom) {
+      displayShown(channel.myIsPeerNicknameVisible, elem1);
+      displayShown(channel.peerIsPeerNicknameVisible, elem2);
+    } else {
+      displayShown(channel.myIsPeerNicknameVisible, elem2);
+      displayShown(channel.peerIsPeerNicknameVisible, elem1);
+    }
+  } else if (channel.amIPlayer2 === false) {
+    displayShown(channel.myIsPeerNicknameVisible, elem1);
+    displayShown(channel.peerIsPeerNicknameVisible, elem2);
+  } else if (channel.amIPlayer2 === true) {
+    displayShown(channel.myIsPeerNicknameVisible, elem2);
+    displayShown(channel.peerIsPeerNicknameVisible, elem1);
+  }
 }
