@@ -49,6 +49,7 @@ import {
   MAX_NICKNAME_LENGTH,
 } from '../ui_online.js';
 import {
+  displayMyAndPeerNicknameShownOrHidden,
   displayNicknameFor,
   displayPartialIPFor,
 } from '../nickname_display.js';
@@ -86,12 +87,21 @@ export const channel = {
   amIPlayer2: null, // set from pikavolley_online.js
   isQuickMatch: null, // set from ui_online.js
   myNickname: '', // set from ui_online.js
-  peerNickname: '',
+  _peerNickname: '',
   myPartialPublicIP: '*.*.*.*',
   peerPartialPublicIP: '*.*.*.*',
   myChatEnabled: true,
   peerChatEnabled: true,
+  myIsPeerNicknameVisible: true, // For nicknameHideBtn
+  peerIsPeerNicknameVisible: true,
   willAskFastAutomatically: false,
+
+  get peerNickname() {
+    return this.myIsPeerNicknameVisible ? this._peerNickname : '';
+  },
+  set peerNickname(nickname) {
+    this._peerNickname = nickname;
+  },
 
   /** @type {PikaUserInputWithSync[]} */
   peerInputQueue: [],
@@ -146,6 +156,7 @@ const chatManager = createMessageSyncManager(0); // use 0, 1 for syncCounter
 const optionsChangeManager = createMessageSyncManager(2); // use 2, 3 for syncCounter
 const optionsChangeAgreeManager = createMessageSyncManager(4); // use 4, 5 for syncCounter
 const chatEnabledManager = createMessageSyncManager(6); // use 6, 7 for syncCounter
+const peerNicknameShownManager = createMessageSyncManager(8); // use 8, 9 for syncCounter
 
 let peerConnection = null;
 let dataChannel = null;
@@ -695,6 +706,65 @@ function receiveChatEnabledMessageFromPeer(chatEnabledMessage) {
 }
 
 /**
+ * Send peer nickname shown/hidden message to peer
+ * @param {boolean} shown true or false
+ */
+export function sendPeerNicknameShownMessageToPeer(shown) {
+  let shownMessageToPeer = String(shown);
+  shownMessageToPeer += String(peerNicknameShownManager.syncCounter);
+  dataChannel.send(shownMessageToPeer);
+  peerNicknameShownManager.resendIntervalID = setInterval(
+    () => dataChannel.send(shownMessageToPeer),
+    1000
+  );
+  return;
+}
+
+/**
+ * Receive peer nickname shown/hidden ACK(acknowledgment) array buffer from peer.
+ * @param {ArrayBuffer} data array buffer with length 1
+ */
+function receivePeerNicknameShownMessageAckFromPeer(data) {
+  const dataView = new DataView(data);
+  const syncCounter = dataView.getInt8(0);
+  if (syncCounter === peerNicknameShownManager.syncCounter) {
+    peerNicknameShownManager.syncCounter++;
+    clearInterval(peerNicknameShownManager.resendIntervalID);
+  }
+}
+
+/**
+ * Receive peer nickname shown/hidden meesage from the peer
+ * @param {string} peerNicknameShownMessage
+ */
+function receivePeerNicknameShownMessageFromPeer(peerNicknameShownMessage) {
+  // Read syncCounter at the end of peer nickname shown/hidden message
+  const peerSyncCounter = Number(peerNicknameShownMessage.slice(-1));
+  if (peerSyncCounter === peerNicknameShownManager.peerSyncCounter) {
+    // if peer resend prevMessage since peer did not recieve
+    // the message ACK(acknowledgment) array buffer with length 1
+    console.log(
+      'arraybuffer with length 1 for peer nickname shown/hidden message ACK resent'
+    );
+  } else if (peerSyncCounter === peerNicknameShownManager.nextPeerSyncCounter) {
+    // if peer send new message
+    peerNicknameShownManager.peerSyncCounter++;
+    const PeerNicknameShown = peerNicknameShownMessage.slice(0, -1) === 'true';
+    channel.peerIsPeerNicknameVisible = PeerNicknameShown;
+    displayMyAndPeerNicknameShownOrHidden();
+  } else {
+    console.log('invalid peer nickname shown/hidden message received.');
+    return;
+  }
+
+  // Send the message ACK array buffer with length 1.
+  const buffer = new ArrayBuffer(1);
+  const dataView = new DataView(buffer);
+  dataView.setInt8(0, peerSyncCounter);
+  dataChannel.send(buffer);
+}
+
+/**
  * Test average ping by sending ping test arraybuffers, then start the game
  */
 function startGameAfterPingTest() {
@@ -786,7 +856,9 @@ function recieveFromPeer(event) {
     } else if (data.byteLength === 1) {
       const view = new DataView(data);
       const value = view.getInt8(0);
-      if (value >= 6) {
+      if (value >= 8) {
+        receivePeerNicknameShownMessageAckFromPeer(data);
+      } else if (value >= 6) {
         receiveChatEnabledMessageAckFromPeer(data);
       } else if (value >= 4) {
         receiveOptionsChangeAgreeMessageAckFromPeer(data);
@@ -800,7 +872,9 @@ function recieveFromPeer(event) {
     }
   } else if (typeof data === 'string') {
     const syncCounter = Number(data.slice(-1));
-    if (syncCounter >= 6) {
+    if (syncCounter >= 8) {
+      receivePeerNicknameShownMessageFromPeer(data);
+    } else if (syncCounter >= 6) {
       receiveChatEnabledMessageFromPeer(data);
     } else if (syncCounter >= 4) {
       receiveOptionsChangeAgreeMessageFromPeer(data);
