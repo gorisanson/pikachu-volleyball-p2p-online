@@ -701,15 +701,14 @@ export function setUpUI() {
       sendBtn.disabled = true;
       chatDisablingBtn.textContent =
         document.getElementById('text-enable-chat').textContent;
-      chatDisablingBtn.blur();
     } else {
       enableChat(true);
       // @ts-ignore
       chatOpenBtn.disabled = false;
       chatDisablingBtn.textContent =
         document.getElementById('text-disable-chat').textContent;
-      chatDisablingBtn.blur();
     }
+    chatDisablingBtn.blur();
     try {
       window.localStorage.setItem(
         'isChatEnabled',
