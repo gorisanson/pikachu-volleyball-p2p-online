@@ -675,7 +675,7 @@ function receiveChatEnabledMessageAckFromPeer(data) {
 }
 
 /**
- * Receive hat enabled/disabled meesage from the peer
+ * Receive chat enabled/disabled meesage from the peer
  * @param {string} chatEnabledMessage
  */
 function receiveChatEnabledMessageFromPeer(chatEnabledMessage) {
