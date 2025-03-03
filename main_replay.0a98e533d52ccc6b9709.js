@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkpikachu_volleyball_p2p_online=self.webpackChunkpikachu_volleyball_p2p_online||[]).push([[62],{9043:(l,n,S)=>{var e=S(6090),p=S(34);!function(){e.I.SPRITE_SHEET="../"+e.I.SPRITE_SHEET;for(const l in e.I.SOUNDS)e.I.SOUNDS[l]="../"+e.I.SOUNDS[l]}(),(0,p.aW)()}},l=>{l.O(0,[244,415,476],(()=>l(l.s=9043))),l.O()}]);
+//# sourceMappingURL=main_replay.0a98e533d52ccc6b9709.js.map

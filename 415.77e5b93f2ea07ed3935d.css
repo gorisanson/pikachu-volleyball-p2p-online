@@ -264,6 +264,11 @@ canvas.graphic-soft {
   grid-template-columns: auto var(--btn-width);
   align-items: center;
 }
+#chat-open-btn-and-chat-disabling-btn-container {
+  grid-template-columns: auto calc(var(--btn-width) / 2) calc(
+      var(--btn-width) / 2
+    );
+}
 #create-btn-with-created-room-id {
   grid-template-columns: var(--btn-width) auto var(--btn-width);
 }
@@ -275,6 +280,7 @@ canvas.graphic-soft {
 #chat-open-btn,
 #chat-input,
 #chat-disabling-btn,
+#nickname-hide-btn,
 #send-btn {
   width: 100%;
   height: 100%;
@@ -283,10 +289,14 @@ canvas.graphic-soft {
   grid-column-start: 1;
 }
 #chat-disabling-btn,
+#nickname-hide-btn,
 #send-btn {
   grid-column-start: 2;
   border-radius: 0;
   border-width: 1px;
+}
+#nickname-hide-btn {
+  grid-column-start: 3;
 }
 #chat-open-btn {
   text-align: center;
@@ -334,11 +344,15 @@ canvas.graphic-soft {
 #create-btn,
 #exit-room-btn,
 #join-btn,
-#chat-disabling-btn,
 #send-btn,
 #chat-open-btn,
 #copy-btn {
   font-size: calc(0.8 * var(--font-size));
+}
+#chat-disabling-btn,
+#nickname-hide-btn {
+  font-size: calc(0.6 * var(--font-size));
+  word-break: keep-all;
 }
 #created-room-id-container,
 #join-room-id-input,
@@ -497,7 +511,7 @@ button.btn-in-box {
   border-radius: 10px;
 }
 button.btn-in-box.key-y,
-button.btn-in-box.key-n  {
+button.btn-in-box.key-n {
   width: calc(8 * var(--font-size));
 }
 button.large {
@@ -682,7 +696,8 @@ div.nicknames-container {
 }
 .nickname,
 .partial-ip,
-.chat-disabled {
+.chat-disabled,
+.hiding-peer-nickname {
   color: white;
 }
 .nickname {
@@ -691,7 +706,8 @@ div.nicknames-container {
 .partial-ip {
   font-size: calc(0.8 * var(--font-size));
 }
-.chat-disabled {
+.chat-disabled,
+.hiding-peer-nickname {
   font-size: calc(0.7 * var(--font-size));
 }
 .text-align-start {
@@ -998,4 +1014,4 @@ input.toggle-switch:checked + label::before {
 }
 
 
-/*# sourceMappingURL=341.7479a20b49ae5f3be7b5.css.map*/
+/*# sourceMappingURL=415.77e5b93f2ea07ed3935d.css.map*/
