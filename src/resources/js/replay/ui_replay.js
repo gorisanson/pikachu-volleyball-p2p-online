@@ -1,5 +1,5 @@
 import { replayPlayer } from './replay_player.js';
-import { enableChat, hideChat } from '../chat_display';
+import { enableChat, hideChat } from '../chat_display.js';
 import '../../style.css';
 
 /** @typedef {import('../offline_version_js/physics.js').PikaUserInput} PikaUserInput */

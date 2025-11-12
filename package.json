@@ -6,11 +6,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack serve --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js"
+    "build": "webpack --config webpack.prod.js",
+    "deploy": "npm run build && gh-pages -d dist"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gorisanson/pikachu-volleyball-p2p-online.git"
+    "url": "git+https://github.com/uzaramen108/pikachu-volleyball-p2p-online-spectator-ver.git"
   },
   "keywords": [
     "game"
@@ -18,9 +19,9 @@
   "author": "Kyutae Lee",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/gorisanson/pikachu-volleyball-p2p-online/issues"
+    "url": "https://github.com/uzaramen108/pikachu-volleyball-p2p-online-spectator-ver/issues"
   },
-  "homepage": "https://github.com/gorisanson/pikachu-volleyball-p2p-online#readme",
+  "homepage": "https://github.com/uzaramen108/pikachu-volleyball-p2p-online-spectator-ver#readme",
   "devDependencies": {
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^11.0.0",

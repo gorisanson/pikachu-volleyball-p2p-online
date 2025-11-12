@@ -199,6 +199,14 @@
               is recommended to turn it off.)</label
             >
           </div>
+          <div class="margin-top-a-little">
+            <input id="basic-chat-filter-checkbox" type="checkbox" checked="checked"/>
+            <label for="basic-chat-filter-checkbox"
+              >Use the default profanity filter (pre-defined banned words will be censored
+               in chat with your partner. Additional banned words can be added under the 
+               Quick Match block list.)</label
+            >
+          </div>
         </div>
         <div>
           <p class="margin-top">
@@ -304,6 +312,7 @@
         <button type="button" id="with-your-friend-btn">
           With one of your friends
         </button>
+        <button type="button" id="show-list-for-spectator">watching other's</button>
       </div>
       <div id="blocked-ip-addresses-table-container" class="margin-top">
         <details>
@@ -324,6 +333,47 @@
             <tfoot>
               <tr>
                 <td colspan="3">
+                  <button type="button" class="delete-btn">
+                    Delete from the list
+                  </button>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </details>
+      </div>
+      <div id="blocked-bad-words-table-container" class="margin-top">
+        <details>
+          <summary>
+            List of additional Banned words (<span id="number-of-bad-words-addresses">0</span>/50)
+          </summary>
+          <table class="blocked-bad-words-table">
+            <thead>
+              <tr>
+                <th>Banned word content</th>
+                <th>Creation date</th>
+              </tr>
+            </thead>
+            <tbody>
+              </tbody>
+            <tfoot>
+              <tr>
+                <td>
+                  <input
+                    type="text"
+                    id="new-custom-word-input"
+                    placeholder="Banned words to add"
+                    style="width: 95%;"
+                  />
+                </td>
+                <td>
+                  <button type="button" id="add-custom-word-btn" style="width: 100%;">
+                    Registration
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
                   <button type="button" class="delete-btn">
                     Delete from the list
                   </button>
@@ -662,6 +712,27 @@
           OK
         </button>
       </div>
+    </div>
+    <div
+      id="spectator-room-list-box"
+      class="fade-in-box notice fixed hidden"
+    >
+      <p class="thick">List of players at now</p>
+      <div id="spectator-room-list-content">
+        <div id="Loading-room-list">
+          <p>Searching for the rooms...</p>
+        </div>
+        <div id="No-room-list" class="hidden">
+          <p>There are no rooms available here right now.</p>
+        </div>
+      </div>
+      <button
+        type="button"
+        id="cancel-spectate-btn"
+        class="btn-in-box large"
+      >
+        <span class="no-wrap">Exit</span>
+      </button>
     </div>
     <div id="flex-container" class="hidden">
       <div id="menu-bar">

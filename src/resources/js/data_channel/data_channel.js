@@ -51,6 +51,7 @@ import {
 import {
   displayMyAndPeerNicknameShownOrHidden,
   displayNicknameFor,
+  displayPeerNicknameFor,
   displayPartialIPFor,
 } from '../nickname_display.js';
 import {
@@ -70,10 +71,13 @@ import {
   sendWithFriendSuccessMessageToServer,
 } from '../quick_match/quick_match.js';
 import { replaySaver } from '../replay/replay_saver.js';
+import { relayChannel } from '../spectate/relay_channel.js';
 
 /** @typedef {{speed: string, winningScore: number}} Options */
 
 const firebaseApp = initializeApp(firebaseConfig);
+const RELAY_SERVER_URL = "wss://pikavolley-relay-server.onrender.com"; 
+let spectatorSocket = null;
 
 // It is set to (1 << 16) since syncCounter is to be sent as Uint16
 // 1 << 16 === 65536 and it corresponds to about 36 minutes of syncCounter
@@ -345,14 +349,6 @@ export function cleanUpFirestoreRelevants() {
       console.log('deleted an ICE candidate doc');
     });
   }
-
-  // Delete the room document
-  if (channel.amICreatedRoom && roomRef) {
-    deleteDoc(roomRef).then(() => {
-      console.log('deleted the room');
-    });
-    roomRef = null;
-  }
 }
 
 export function closeConnection() {
@@ -361,6 +357,14 @@ export function closeConnection() {
   }
   if (peerConnection) {
     peerConnection.close();
+  }
+
+  // Delete the room document
+  if (channel.amICreatedRoom && roomRef) {
+    deleteDoc(roomRef).then(() => {
+      console.log('deleted the room');
+    });
+    roomRef = null;
   }
   console.log('Did close data channel and peer connection');
 }
@@ -480,7 +484,8 @@ function receiveChatMessageFromPeer(chatMessage) {
         .slice(0, -1)
         .trim()
         .slice(0, MAX_NICKNAME_LENGTH);
-      displayNicknameFor(channel.peerNickname, channel.amICreatedRoom);
+      displayPeerNicknameFor(channel.peerNickname, channel.amICreatedRoom); 
+      // Replaced function for filtering peer's nickname
       displayNicknameFor(channel.myNickname, !channel.amICreatedRoom);
       displayPartialIPFor(channel.peerPartialPublicIP, channel.amICreatedRoom);
       displayPartialIPFor(channel.myPartialPublicIP, !channel.amICreatedRoom);
@@ -890,16 +895,16 @@ function recieveFromPeer(event) {
  * Data channel open event listener
  */
 function dataChannelOpened() {
+  channel.isOpen = true;
   printLog('data channel opened!');
   console.log('data channel opened!');
   console.log(`dataChannel.ordered: ${dataChannel.ordered}`);
   console.log(`dataChannel.maxRetransmits: ${dataChannel.maxRetransmits}`);
   dataChannel.binaryType = 'arraybuffer';
-  channel.isOpen = true;
   isDataChannelEverOpened = true;
 
   notifyBySound();
-  cleanUpFirestoreRelevants();
+  //cleanUpFirestoreRelevants();
 
   if (channel.isQuickMatch) {
     disableCancelQuickMatchBtn();
@@ -915,6 +920,11 @@ function dataChannelOpened() {
 
   // record roomId for RNG in replay
   replaySaver.recordRoomID(roomId);
+
+  // start broadcasting
+  if (channel.amICreatedRoom) {
+    connectAsHostRelay();
+  }
 
   // Set the same RNG (used for the game) for both peers
   const customRng = seedrandom.alea(roomId.slice(10));
@@ -933,7 +943,13 @@ function dataChannelOpened() {
  */
 function dataChannelClosed() {
   console.log('data channel closed');
+  relayChannel.send({
+    type: "inputs",
+    value: -1 // Value that norices the game is over
+  });
+  relayChannel.ws.onclose
   channel.isOpen = false;
+  cleanUpFirestoreRelevants(); // 플레이어와의 접속 종료 시 id 파기
   noticeDisconnected();
 }
 
@@ -1041,4 +1057,39 @@ function collectIceCandidates(roomRef, peerConnection, localName, remoteName) {
       });
     }
   );
+}
+
+/**
+ * [신규] '호스트(P1)'가 릴레이 서버에 '방송'을 시작하기 위해 호출
+ */
+function connectAsHostRelay() {
+  if (spectatorSocket) {
+    return; // 이미 연결됨
+  }
+  
+  console.log("[Host Relay] Connecting to relay server...");
+  try {
+    // 'roomId'는 data_channel.js의 전역 변수일 테니 그대로 쓰네
+    const wsUrl = `${RELAY_SERVER_URL}/${roomId}`; 
+    spectatorSocket = new WebSocket(wsUrl);
+
+    spectatorSocket.onopen = () => {
+      console.log("[Host Relay] Broadcasting connection open.");
+      // [중요] 서버에 "내가 이 방의 호스트(방송국)다"라고 알려주네
+      spectatorSocket.send(JSON.stringify({ 
+        type: "identify_host", 
+      }));
+    };
+    spectatorSocket.onerror = (err) => {
+      console.error("[Host Relay] Socket error:", err);
+      spectatorSocket = null;
+    };
+    spectatorSocket.onclose = () => {
+      console.log("[Host Relay] Broadcasting closed.");
+      spectatorSocket = null;
+    }
+  } catch (err) {
+    console.error("[Host Relay] Failed to connect:", err);
+    spectatorSocket = null;
+  }
 }

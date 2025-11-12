@@ -1,4 +1,5 @@
 import { channel } from './data_channel/data_channel';
+import { filterBadWords } from './bad_words_censorship/chat_filter.js';
 
 /**
  * Display nickname for the player
@@ -13,6 +14,22 @@ export function displayNicknameFor(nickname, isForPlayer2) {
     nicknameElm = document.getElementById('player2-nickname');
   }
   nicknameElm.textContent = nickname;
+}
+
+/**
+ * Display peer's nickname for the player
+ * Added for filtering nickname
+ * @param {boolean} isForPlayer2
+ * @param {string} nickname
+ */
+export function displayPeerNicknameFor(nickname, isForPlayer2) {
+  let nicknameElm = null;
+  if (!isForPlayer2) {
+    nicknameElm = document.getElementById('player1-nickname');
+  } else {
+    nicknameElm = document.getElementById('player2-nickname');
+  }
+  nicknameElm.textContent = filterBadWords(nickname);
 }
 
 /**

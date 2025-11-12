@@ -585,6 +585,10 @@ div.fixed {
   grid-column-start: 2;
   font-size: var(--font-size);
 }
+#show-list-for-spectator {
+  grid-column-start: 3;
+  font-size: var(--font-size);
+}
 div.scroll {
   overflow: scroll;
 }
@@ -927,6 +931,59 @@ table.blocked-ip-addresses-table .delete-btn {
   width: 100%;
   font-size: var(--font-size);
 }
+table.blocked-bad-words-table {
+  /* box-sizing below is necessary for Chrome and Safari, not for Firefox.
+     Is it a bug in Chrome and Safari? */
+  box-sizing: border-box;
+  border-collapse: collapse;
+  border: 2px solid rgb(200, 200, 200);
+  width: 100%;
+}
+table.blocked-bad-words-table th,
+table.blocked-bad-words-table td {
+  border: 1px solid rgb(190, 190, 190);
+  padding: 5px;
+  text-align: center;
+}
+table.blocked-bad-words-table tbody td {
+  cursor: default;
+}
+table.blocked-bad-words-table tfoot td {
+  padding: 0;
+}
+table.blocked-bad-words-table tr.selected {
+  background-color: var(--link-hover-color);
+}
+table.blocked-bad-words-table input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  font-size: var(--font-size);
+  background-color: transparent;
+  color: inherit;
+  padding: 10px;
+  box-sizing: border-box;
+  text-align: center;
+}
+#add-custom-word-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  border: none;
+  font-size: inherit;
+  background-color: transparent;
+  color: inherit;
+  padding: 10px;
+  box-sizing: border-box;
+  cursor: pointer;
+  text-align: center;
+}
+table.blocked-bad-words-table .delete-btn {
+  height: 100%;
+  width: 100%;
+  font-size: var(--font-size);
+}
 details {
   border: 1px solid #aaa;
   border-radius: 4px;
@@ -1011,4 +1068,28 @@ input.toggle-switch + label::before {
 input.toggle-switch:checked + label::before {
   left: var(--toggle-ball-left);
   content: '\263E';
+}
+.spectator-room-row {
+  cursor: pointer;
+  transition: background-color 0.2s;
+  background-color: #002e4d;
+}
+.spectator-room-row:hover {
+  background-color: #0078ab;
+}
+/*
+#spectator-room-list-content {
+  height: 150%;
+}
+*/
+#spectator-room-list-table {
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+#spectator-room-list-table td {
+  text-align: center;
+  width: 200px;
+}
+#spectator-room-list-table tr {
+  height: 40px;
 }

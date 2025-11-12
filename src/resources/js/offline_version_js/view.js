@@ -454,7 +454,7 @@ export class GameView {
     }
   }
 
-  /** @typedef {import("./physics").PikaPhysics} PikaPhysics */
+  /** @typedef {import("./physics.js").PikaPhysics} PikaPhysics */
   /**
    * Draw players and ball in the given physics object
    * @param {PikaPhysics} physics PikaPhysics object to draw

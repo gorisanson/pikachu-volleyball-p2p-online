@@ -11,6 +11,8 @@ import {
   sendChatEnabledMessageToPeer,
 } from './data_channel/data_channel.js';
 import { replaySaver } from './replay/replay_saver.js';
+import { filterBadWords } from './bad_words_censorship/chat_filter.js'
+import { InputSaverForSpectator } from './spectate/spectate_saver.js';
 
 /** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */
 
@@ -105,6 +107,7 @@ export function displayMyChatMessage(message) {
 }
 
 export function displayPeerChatMessage(message) {
+  message = filterBadWords(message) // add chat_filter code only peer's chat
   if (channel.amIPlayer2 === null) {
     if (channel.amICreatedRoom) {
       displayChatMessageAt(message, 2);
@@ -124,6 +127,7 @@ export function displayChatMessageAt(message, whichPlayerSide) {
   }
 
   replaySaver.recordChats(message, whichPlayerSide);
+  InputSaverForSpectator.recordChats(message, whichPlayerSide);
 
   if (whichPlayerSide === 1) {
     const newChatBox = player1ChatBox.cloneNode();
