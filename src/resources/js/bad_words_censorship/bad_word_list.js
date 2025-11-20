@@ -94,7 +94,7 @@ class BadWordList {
       const arrayView = JSON.parse(stringifiedList);
       if (arrayView.length > 0 && arrayView[0].length !== 2) {
         window.localStorage.removeItem(STORAGE_KEY_CUSTOM_LIST);
-        // location.reload();
+        location.reload();
       } else {
         this.readArrayViewAndUpdate(arrayView);
       }

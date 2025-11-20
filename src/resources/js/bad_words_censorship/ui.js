@@ -31,12 +31,8 @@ const isLocalStorageAvailable = getIfLocalStorageIsAvailable();
 
 export function setUpUIForManagingBadWords() {
   if (!isLocalStorageAvailable) {
-    if (defaultFilterToggle) {
-      defaultFilterToggle.parentElement.classList.add('hidden');
-    }
-    if (customBadWordsTableContainer) {
-      customBadWordsTableContainer.classList.add('hidden');
-    }
+    defaultFilterToggle.parentElement.classList.add('hidden');
+    customBadWordsTableContainer.classList.add('hidden');
     return;
   }
 
@@ -78,17 +74,6 @@ function setUpDefaultFilterToggle() {
  * Set up table of bad words(delete, register)
  */
 function setUpCustomFilterManagement() {
-  if (
-    !customBadWordsTableContainer ||
-    !deleteCustomWordBtn ||
-    !customBadWordsTableTbody ||
-    !customBadWordsCountSpan ||
-    !addCustomWordBtn ||
-    !newCustomWordInput
-  ) {
-    return;
-  }
-
   // @ts-ignore
   deleteCustomWordBtn.disabled = true;
 

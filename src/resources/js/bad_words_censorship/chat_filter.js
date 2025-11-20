@@ -30,17 +30,16 @@ export function filterBadWords(message) {
   const cleaned = cleanedChars.join('');
   const pattern = new RegExp(filteredBadWords.join('|'), 'gi');
   const matches = [...cleaned.matchAll(pattern)];
-  const result = messageChars;
 
   for (const m of matches) {
     const start = m.index;
     const end = start + m[0].length;
     for (let i = start; i < end; i++) {
-      const origIndex = mapToOriginal[i];
-      result[origIndex] = '*';
+      const origIndex = mapToOriginal[i]; 
       // Only replace bad words to * except for blank / number / special character
+      messageChars[origIndex] = '*';
     }
   }
 
-  return result.join('');
+  return messageChars.join('');
 }
