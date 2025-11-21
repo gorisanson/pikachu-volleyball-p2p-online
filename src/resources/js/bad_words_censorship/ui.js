@@ -5,6 +5,8 @@
 
 import { getIfLocalStorageIsAvailable } from '../utils/is_local_storage_available';
 import { customBadWordList } from './bad_word_list.js';
+const STORAGE_KEY_CUSTOM_LIST = 'stringifiedCustomBadWordListArrayView';
+const isLocalStorageAvailable = getIfLocalStorageIsAvailable();
 
 const STORAGE_KEY_DEFAULT_FILTER_TOGGLE = 'isDefaultBadWordFilterEnabled';
 
@@ -26,8 +28,6 @@ const customBadWordsCountSpan = document.getElementById(
 
 const addCustomWordBtn = document.getElementById('add-custom-word-btn');
 const newCustomWordInput = document.getElementById('new-custom-word-input');
-
-const isLocalStorageAvailable = getIfLocalStorageIsAvailable();
 
 export function setUpUIForManagingBadWords() {
   if (!isLocalStorageAvailable) {
@@ -76,6 +76,26 @@ function setUpDefaultFilterToggle() {
 function setUpCustomFilterManagement() {
   // @ts-ignore
   deleteCustomWordBtn.disabled = true;
+  if (!isLocalStorageAvailable) {
+    return;
+  }
+
+  let stringifiedList = null;
+  try {
+    stringifiedList = window.localStorage.getItem(STORAGE_KEY_CUSTOM_LIST);
+  } catch (err) {
+    console.log(err);
+  }
+
+  if (stringifiedList !== null) {
+    const arrayView = JSON.parse(stringifiedList);
+    if (arrayView.length > 0 && arrayView[0].length !== 2) {
+      window.localStorage.removeItem(STORAGE_KEY_CUSTOM_LIST);
+      location.reload();
+    } else {
+      customBadWordList.readArrayViewAndUpdate(arrayView);
+    }
+  }
 
   displayCustomBadWords(customBadWordList.createArrayView());
   displayNumberOfCustomBadWords();
@@ -103,30 +123,43 @@ function setUpCustomFilterManagement() {
     }
   });
   deleteCustomWordBtn.addEventListener('click', () => {
-    // @ts-ignore
     const selectedTRElement =
       customBadWordsTableTbody.querySelector('.selected');
-    if (!selectedTRElement) {
-      return;
-    }
     // @ts-ignore
     customBadWordList.removeAt(Number(selectedTRElement.dataset.index));
+    try {
+      window.localStorage.setItem(
+        'stringifiedCustomBadWordListArrayView',
+        JSON.stringify(customBadWordList.createArrayView())
+      );
+    } catch (err) {
+      console.log(err);
+    }
     displayCustomBadWords(customBadWordList.createArrayView());
     displayNumberOfCustomBadWords();
   });
   addCustomWordBtn.addEventListener('click', () => {
     // @ts-ignore
-    const newWord = newCustomWordInput.value;
-
-    // customBadWordList.add returns true when it succeeds
-    if (customBadWordList.add(newWord)) {
-      displayCustomBadWords(customBadWordList.createArrayView());
-      displayNumberOfCustomBadWords();
-      // @ts-ignore
-      newCustomWordInput.value = '';
-    } else {
-      console.log('Custom bad word add failed (duplicate, empty, or full).');
+    const cleanWord = newCustomWordInput.value.toLowerCase().replace(/[^\p{L}\p{Emoji}]/gu, ''); // Words or emojis will be saved
+    if (!cleanWord || customBadWordList.isFull()) {
+      return ;
     }
+    if (customBadWordList._badWords.some((bw) => bw.word === cleanWord)) {
+      return ; // Duplicate Check, if already exists, do nothing.
+    }
+    customBadWordList.AddBadWords(cleanWord);
+    try {
+      window.localStorage.setItem(
+        STORAGE_KEY_CUSTOM_LIST,
+        JSON.stringify(customBadWordList.createArrayView())
+      );
+    } catch (err) {
+      console.log(err);
+    }
+    displayCustomBadWords(customBadWordList.createArrayView());
+    displayNumberOfCustomBadWords();
+    // @ts-ignore
+    newCustomWordInput.value = '';
   });
 }
 
