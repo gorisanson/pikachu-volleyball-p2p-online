@@ -1,4 +1,4 @@
-import { customBadWordList } from "./bad_word_list";
+import { customBadWordList } from './bad_word_list';
 
 /**
  * @param {string} message
@@ -14,21 +14,30 @@ export function filterBadWords(message) {
   let originalLength = resultChars.length;
   let hasChanges = true; // Variable for detecting 'Is filtering ended?'
 
-  const pattern = new RegExp(filteredBadWords.join("|"), "gi");
+  const pattern = new RegExp(filteredBadWords.join('|'), 'gi');
 
   const channels = [
-    { name: "Original", chars: resultChars, map: Array.from({ length: originalLength }, (_, i) => i), regex: /\p{L}|\p{Emoji}|\p{N}/u }, // 모든 글자 (최소한의 특수문자만 제거)
-    { name: "Korean", regex: /\p{Script=Hangul}/u },  // Only korean
-    { name: "English", regex: /\p{Script=Latin}/u },  // Only English
-    { name: "Emoji", regex: /\p{Emoji}/u },             // Only Emoji
+    {
+      name: 'Original',
+      chars: resultChars,
+      map: Array.from({ length: originalLength }, (_, i) => i),
+      regex: /\p{L}|\p{Emoji}|\p{N}/u,
+    },
+    { name: 'Korean', regex: /\p{Script=Hangul}/u }, // Only korean
+    { name: 'English', regex: /\p{Script=Latin}/u }, // Only English
+    { name: 'Emoji', regex: /\p{Emoji}/u }, // Only Emoji
   ];
 
-  while (hasChanges) { // Repeat filtering while target doesn't exist
+  while (hasChanges) {
+    // Repeat filtering while target doesn't exist
     hasChanges = false;
     let currentResult = Array.from(resultChars);
-    
+
     for (const channel of channels) {
-      const { cleaned, mapToOriginal } = cleanMessage(currentResult.join(""), channel.regex);
+      const { cleaned, mapToOriginal } = cleanMessage(
+        currentResult.join(''),
+        channel.regex
+      );
       const matches = [...cleaned.matchAll(pattern)];
 
       for (const m of matches) {
@@ -47,12 +56,12 @@ export function filterBadWords(message) {
         }
       }
     }
-    
+
     if (hasChanges) {
-        resultChars = currentResult;
+      resultChars = currentResult;
     }
   } // End of while loop
-  return resultChars.join("");
+  return resultChars.join('');
 }
 
 /**
@@ -62,21 +71,21 @@ export function filterBadWords(message) {
  * @returns {{cleaned: string, mapToOriginal: number[]}}
  */
 function cleanMessage(message, filterRegex) {
-    const cleanedChars = [];
-    const mapToOriginal = []; 
-    const messageChars = Array.from(message);
-    
-    for (let i = 0; i < messageChars.length; i++) {
-        const ch = messageChars[i];
-        
-        if (filterRegex.test(ch)) { 
-            mapToOriginal.push(i);
-            cleanedChars.push(ch.toLowerCase());
-        }
+  const cleanedChars = [];
+  const mapToOriginal = [];
+  const messageChars = Array.from(message);
+
+  for (let i = 0; i < messageChars.length; i++) {
+    const ch = messageChars[i];
+
+    if (filterRegex.test(ch)) {
+      mapToOriginal.push(i);
+      cleanedChars.push(ch.toLowerCase());
     }
-    
-    return {
-        cleaned: cleanedChars.join(""),
-        mapToOriginal: mapToOriginal
-    };
+  }
+
+  return {
+    cleaned: cleanedChars.join(''),
+    mapToOriginal: mapToOriginal,
+  };
 }

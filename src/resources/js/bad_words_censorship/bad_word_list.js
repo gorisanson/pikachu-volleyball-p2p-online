@@ -72,7 +72,7 @@ class CustomBadWordList {
     }
   }
 
- get length() {
+  get length() {
     return this._badWords.length;
   }
 
@@ -108,10 +108,7 @@ class CustomBadWordList {
    * @returns {[string, number][]}
    */
   createArrayView() {
-    return this._badWords.map((badWord) => [
-      badWord.word,
-      badWord.addedTime,
-    ]);
+    return this._badWords.map((badWord) => [badWord.word, badWord.addedTime]);
   }
 
   /**
@@ -119,7 +116,7 @@ class CustomBadWordList {
    * @param {[string, number, string][]} arrayView
    */
   readArrayViewAndUpdate(arrayView) {
-    this._badWords = []; 
+    this._badWords = [];
     arrayView.slice(0, this.maxLength);
     this._badWords = arrayView.map(
       (value) => new CustomBadWord(value[0], value[1])
@@ -138,4 +135,3 @@ class CustomBadWordList {
 }
 
 export const customBadWordList = new CustomBadWordList(50); // Limit of the number of bad words
-

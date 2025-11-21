@@ -140,12 +140,14 @@ function setUpCustomFilterManagement() {
   });
   addCustomWordBtn.addEventListener('click', () => {
     // @ts-ignore
-    const cleanWord = newCustomWordInput.value.toLowerCase().replace(/[^\p{L}\p{Emoji}]/gu, ''); // Words or emojis will be saved
+    const cleanWord = newCustomWordInput.value
+      .toLowerCase()
+      .replace(/[^\p{L}\p{Emoji}]/gu, ''); // Words or emojis will be saved
     if (!cleanWord || customBadWordList.isFull()) {
-      return ;
+      return;
     }
     if (customBadWordList._badWords.some((bw) => bw.word === cleanWord)) {
-      return ; // Duplicate Check, if already exists, do nothing.
+      return; // Duplicate Check, if already exists, do nothing.
     }
     customBadWordList.AddBadWords(cleanWord);
     try {
