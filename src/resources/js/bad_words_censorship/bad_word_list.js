@@ -24,6 +24,52 @@ class CustomBadWordList {
   constructor(maxLength) {
     this._badWords = [];
     this.maxLength = maxLength;
+    const storedToggleState = window.localStorage.getItem(
+      'isDefaultBadWordFilterEnabled'
+    );
+    if (storedToggleState === 'false') {
+      // Use list of basic bad words?
+      this.basic_badWords = [];
+    } else {
+      this.basic_badWords = [
+        'fuck',
+        'fuckyou',
+        'shit',
+        'bitch',
+        'asshole',
+        'nigger',
+        'faggot',
+        '개새',
+        '느금',
+        'ㄴㄱㅁ',
+        'ㄴ금마',
+        '니애미',
+        'ㄴㅇㅁ',
+        '느그',
+        '병신',
+        '병ㅅ',
+        'ㅂㅅ',
+        'ㅂ신',
+        'ㅅㅂ',
+        '새끼',
+        'ㅅㄲ',
+        '시발',
+        '씨발',
+        'ㅅ발',
+        '애미',
+        '애비',
+        '어머니',
+        '엄마',
+        '아버지',
+        '좆',
+        'ㅈ까',
+        'ㅈ밥',
+        'ㅈㅂ',
+        'ㅈ이',
+        'ㅄ',
+        '씹',
+      ];
+    }
   }
 
  get length() {
@@ -85,8 +131,11 @@ class CustomBadWordList {
    * @returns {string[]}
    */
   createWordArray() {
-    return this._badWords.map((badWord) => badWord.word);
+    return this.basic_badWords.concat(
+      this._badWords.map((badWord) => badWord.word)
+    );
   }
 }
 
 export const customBadWordList = new CustomBadWordList(50); // Limit of the number of bad words
+

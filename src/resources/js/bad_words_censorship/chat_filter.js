@@ -1,4 +1,4 @@
-import { customBadWordList } from './bad_word_list';
+import { customBadWordList } from "./bad_word_list";
 
 /**
  * @param {string} message
@@ -10,36 +10,73 @@ export function filterBadWords(message) {
     (word) => word.length > 0
   );
 
-  if (filteredBadWords.length === 0) {
-    // if bad word is blank, do nothing.
-    return message;
-  }
+  let resultChars = Array.from(message); // Original message not yet filtered
+  let originalLength = resultChars.length;
+  let hasChanges = true; // Variable for detecting 'Is filtering ended?'
 
-  const cleanedChars = [];
-  const mapToOriginal = []; // List for remembering what kind of, where was a blank / number / special character
-  const messageChars = Array.from(message);
+  const pattern = new RegExp(filteredBadWords.join("|"), "gi");
 
-  for (let i = 0; i < messageChars.length; i++) {
-    const ch = messageChars[i];
-    if (/\p{L}|\p{Emoji}/u.test(ch)) {
-      mapToOriginal.push(i);
-      cleanedChars.push(ch.toLowerCase());
+  const channels = [
+    { name: "Original", chars: resultChars, map: Array.from({ length: originalLength }, (_, i) => i), regex: /\p{L}|\p{Emoji}|\p{N}/u }, // 모든 글자 (최소한의 특수문자만 제거)
+    { name: "Korean", regex: /\p{Script=Hangul}/u },  // Only korean
+    { name: "English", regex: /\p{Script=Latin}/u },  // Only English
+    { name: "Emoji", regex: /\p{Emoji}/u },             // Only Emoji
+  ];
+
+  while (hasChanges) { // Repeat filtering while target doesn't exist
+    hasChanges = false;
+    let currentResult = Array.from(resultChars);
+    
+    for (const channel of channels) {
+      const { cleaned, mapToOriginal } = cleanMessage(currentResult.join(""), channel.regex);
+      const matches = [...cleaned.matchAll(pattern)];
+
+      for (const m of matches) {
+        const matchLength = m[0].length;
+
+        // Substitute bad-words to '*' by index
+        for (let i = 0; i < matchLength; i++) {
+          const cleanedIndex = m.index + i;
+          const origIndex = mapToOriginal[cleanedIndex];
+
+          // Prevent re-filtering
+          if (currentResult[origIndex] !== '*') {
+            currentResult[origIndex] = '*';
+            hasChanges = true;
+          }
+        }
+      }
     }
-  }
-
-  const cleaned = cleanedChars.join('');
-  const pattern = new RegExp(filteredBadWords.join('|'), 'gi');
-  const matches = [...cleaned.matchAll(pattern)];
-
-  for (const m of matches) {
-    const start = m.index;
-    const end = start + m[0].length;
-    for (let i = start; i < end; i++) {
-      const origIndex = mapToOriginal[i]; 
-      // Only replace bad words to * except for blank / number / special character
-      messageChars[origIndex] = '*';
+    
+    if (hasChanges) {
+        resultChars = currentResult;
     }
-  }
+  } // End of while loop
+  return resultChars.join("");
+}
 
-  return messageChars.join('');
+/**
+ * Remove characters that don't match the user's specific name
+ * @param {string} message
+ * @param {RegExp} filterRegex - character which is wanted to remain
+ * @returns {{cleaned: string, mapToOriginal: number[]}}
+ */
+function cleanMessage(message, filterRegex) {
+    const cleanedChars = [];
+    const mapToOriginal = []; 
+    const messageChars = Array.from(message);
+    
+    for (let i = 0; i < messageChars.length; i++) {
+        const ch = messageChars[i];
+        
+        if (filterRegex.test(ch)) { 
+            mapToOriginal.push(i);
+            cleanedChars.push(ch.toLowerCase());
+        }
+    }
+    
+    return {
+        cleaned: cleanedChars.join(""),
+        mapToOriginal: mapToOriginal
+    };
 }
