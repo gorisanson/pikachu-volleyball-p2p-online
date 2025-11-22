@@ -38,7 +38,7 @@ export function filterBadWords(message) {
       const matches = [...cleaned.matchAll(pattern)];
 
       for (const m of matches) {
-        const matchLength = [...m[0]].length; // for dealing emoji as 1 length
+        const matchLength = [...m[0]].length; // Count emojis as length 1
         const prefix = cleaned.slice(0, m.index);
         const arrayIndex = [...prefix].length;
 
