@@ -482,7 +482,6 @@ function receiveChatMessageFromPeer(chatMessage) {
         .trim()
         .slice(0, MAX_NICKNAME_LENGTH);
       displayPeerNicknameFor(channel.peerNickname, channel.amICreatedRoom);
-      // Replaced function for filtering peer's nickname
       displayNicknameFor(channel.myNickname, !channel.amICreatedRoom);
       displayPartialIPFor(channel.peerPartialPublicIP, channel.amICreatedRoom);
       displayPartialIPFor(channel.myPartialPublicIP, !channel.amICreatedRoom);

@@ -11,14 +11,13 @@ export function filterBadWords(message) {
   );
 
   let resultChars = Array.from(message); // Original message not yet filtered
-  let originalLength = resultChars.length;
   let hasChanges = true; // Variable for detecting 'Is filtering ended?'
 
   const pattern = new RegExp(filteredBadWords.join('|'), 'gi');
 
   const characterViews = [
-    { name: 'Original', regex: /\p{L}|\p{Emoji}|\p{N}/u },
-    // For filtering words contain more than two regex with blank, number, special characters
+    { name: 'Letter+Emoji', regex: /\p{L}|\p{Emoji}/u }, // Only letter and emoji
+    { name: 'Letter', regex: /\p{L}/u }, // Only letter
     { name: 'Korean', regex: /\p{Script=Hangul}/u }, // Only korean
     { name: 'English', regex: /\p{Script=Latin}/u }, // Only English
     { name: "Kanji", regex: /\p{Script=Han}/u }, // Only kanji

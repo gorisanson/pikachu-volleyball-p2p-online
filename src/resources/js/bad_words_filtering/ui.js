@@ -63,7 +63,7 @@ function setUpDefaultFilterToggle() {
       window.localStorage.setItem(
         STORAGE_KEY_DEFAULT_FILTER_TOGGLE,
         // @ts-ignore
-        JSON.String(defaultFilterToggle.checked)
+        String(defaultFilterToggle.checked)
       );
     } catch (err) {
       console.log(err);
