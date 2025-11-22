@@ -16,9 +16,9 @@ class CustomBadWord {
 /**
  * Class representing a list of custom bad words
  */
-class CustomBadWordList {
+class BadWordList {
   /**
-   * Create a CustomBadWordList object
+   * Create a BadWordList object
    * @param {number} maxLength
    */
   constructor(maxLength) {
@@ -67,7 +67,6 @@ class CustomBadWordList {
         'isDefaultBadWordFilterEnabled'
       );
       if (storedToggleState === 'false') {
-        // Use list of basic bad words?
         this.basic_badWords = [];
       };
     } catch (err) {
@@ -92,7 +91,7 @@ class CustomBadWordList {
    * @param {string} bad_Words
    */
   AddBadWords(bad_Words) {
-    if (this.isFull()) {
+    if (this.isFull() || this._badWords.some((bw) => bw.word === bad_Words)) {
       return;
     }
     this._badWords.push(new CustomBadWord(bad_Words));
@@ -116,7 +115,7 @@ class CustomBadWordList {
 
   /**
    * Read a 2D array and update this._badWords from it.
-   * @param {[string, number, string][]} arrayView
+   * @param {[string, number][]} arrayView
    */
   readArrayViewAndUpdate(arrayView) {
     this._badWords = [];
@@ -137,4 +136,4 @@ class CustomBadWordList {
   }
 }
 
-export const customBadWordList = new CustomBadWordList(50); // Limit of the number of bad words
+export const badWordList = new BadWordList(50); // Limit of the number of bad words

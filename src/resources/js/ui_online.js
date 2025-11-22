@@ -732,9 +732,9 @@ export function setUpUI() {
     }
     nicknameHideBtn.blur();
     if (channel.amIPlayer2 === null) {
-      displayPeerNicknameFor(channel.peerNickname, channel.amICreatedRoom); // Replaced function for filtering peer's nickname
+      displayPeerNicknameFor(channel.peerNickname, channel.amICreatedRoom);
     } else {
-      displayPeerNicknameFor(channel.peerNickname, !channel.amIPlayer2); // Replaced function for filtering peer's nickname
+      displayPeerNicknameFor(channel.peerNickname, !channel.amIPlayer2);
     }
     if (channel.amICreatedRoom) {
       replaySaver.recordNicknames(channel.myNickname, channel.peerNickname);

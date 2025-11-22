@@ -1,11 +1,11 @@
-import { customBadWordList } from './bad_word_list';
+import { badWordList } from './bad_word_list';
 
 /**
  * @param {string} message
  * @returns {string}
  */
 export function filterBadWords(message) {
-  const badWords = customBadWordList.createWordArray(); // Sum of basic bad words and additional bad words
+  const badWords = badWordList.createWordArray(); // Sum of basic bad words and additional bad words
   const filteredBadWords = [...new Set(badWords)].filter(
     (word) => word.length > 0
   );
@@ -16,13 +16,9 @@ export function filterBadWords(message) {
 
   const pattern = new RegExp(filteredBadWords.join('|'), 'gi');
 
-  const channels = [
-    {
-      name: 'Original',
-      chars: resultChars,
-      map: Array.from({ length: originalLength }, (_, i) => i),
-      regex: /\p{L}|\p{Emoji}|\p{N}/u,
-    },
+  const characterViews = [
+    { name: 'Original', regex: /\p{L}|\p{Emoji}|\p{N}/u },
+    // For filtering words contain more than two regex with blank, number, special characters
     { name: 'Korean', regex: /\p{Script=Hangul}/u }, // Only korean
     { name: 'English', regex: /\p{Script=Latin}/u }, // Only English
     { name: "Kanji", regex: /\p{Script=Han}/u }, // Only kanji
@@ -34,10 +30,10 @@ export function filterBadWords(message) {
     hasChanges = false;
     let currentResult = Array.from(resultChars);
 
-    for (const channel of channels) {
+    for (const characterView of characterViews) {
       const { cleaned, mapToOriginal } = cleanMessage(
         currentResult.join(''),
-        channel.regex
+        characterView.regex
       );
       const matches = [...cleaned.matchAll(pattern)];
 
@@ -66,7 +62,7 @@ export function filterBadWords(message) {
 }
 
 /**
- * Remove characters that don't match the user's specific name
+ * Remove characters not matching 'filterRegex'
  * @param {string} message
  * @param {RegExp} filterRegex - character which is wanted to remain
  * @returns {{cleaned: string, mapToOriginal: number[]}}

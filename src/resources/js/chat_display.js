@@ -11,7 +11,7 @@ import {
   sendChatEnabledMessageToPeer,
 } from './data_channel/data_channel.js';
 import { replaySaver } from './replay/replay_saver.js';
-import { filterBadWords } from './bad_words_censorship/chat_filter.js';
+import { filterBadWords } from './bad_words_filtering/chat_filter.js';
 
 /** @typedef {import('./pikavolley_online.js').PikachuVolleyballOnline} PikachuVolleyballOnline */
 

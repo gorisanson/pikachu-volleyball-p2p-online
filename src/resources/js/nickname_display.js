@@ -1,5 +1,5 @@
 import { channel } from './data_channel/data_channel';
-import { filterBadWords } from './bad_words_censorship/chat_filter.js';
+import { filterBadWords } from './bad_words_filtering/chat_filter.js';
 
 /**
  * Display nickname for the player

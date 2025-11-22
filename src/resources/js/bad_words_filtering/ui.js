@@ -4,8 +4,8 @@
 'use strict';
 
 import { getIfLocalStorageIsAvailable } from '../utils/is_local_storage_available';
-import { customBadWordList } from './bad_word_list.js';
-const STORAGE_KEY_CUSTOM_LIST = 'stringifiedCustomBadWordListArrayView';
+import { badWordList } from './bad_word_list.js';
+const STORAGE_KEY_CUSTOM_LIST = 'stringifiedbadWordListArrayView';
 const isLocalStorageAvailable = getIfLocalStorageIsAvailable();
 
 const STORAGE_KEY_DEFAULT_FILTER_TOGGLE = 'isDefaultBadWordFilterEnabled';
@@ -44,16 +44,17 @@ export function setUpUIForManagingBadWords() {
  * Set up toggle for using list of basic bad words at chat_filter.js
  */
 function setUpDefaultFilterToggle() {
-  if (!defaultFilterToggle) {
-    return;
-  }
   let isEnabled = true;
-  const storedToggleState = window.localStorage.getItem(
-    STORAGE_KEY_DEFAULT_FILTER_TOGGLE
-  );
-  if (storedToggleState !== null) {
-    isEnabled = JSON.parse(storedToggleState);
-  }
+  try {
+    const storedToggleState = window.localStorage.getItem(
+      STORAGE_KEY_DEFAULT_FILTER_TOGGLE
+    );
+    if (storedToggleState !== null) {
+      isEnabled = (storedToggleState === 'true');
+    }
+  } catch(err) {
+    console.log(err);
+  };
   // @ts-ignore
   defaultFilterToggle.checked = isEnabled;
   defaultFilterToggle.addEventListener('change', () => {
@@ -62,7 +63,7 @@ function setUpDefaultFilterToggle() {
       window.localStorage.setItem(
         STORAGE_KEY_DEFAULT_FILTER_TOGGLE,
         // @ts-ignore
-        JSON.stringify(defaultFilterToggle.checked)
+        JSON.String(defaultFilterToggle.checked)
       );
     } catch (err) {
       console.log(err);
@@ -93,11 +94,11 @@ function setUpCustomFilterManagement() {
       window.localStorage.removeItem(STORAGE_KEY_CUSTOM_LIST);
       location.reload();
     } else {
-      customBadWordList.readArrayViewAndUpdate(arrayView);
+      badWordList.readArrayViewAndUpdate(arrayView);
     }
   }
 
-  displayCustomBadWords(customBadWordList.createArrayView());
+  displayCustomBadWords(badWordList.createArrayView());
   displayNumberOfCustomBadWords();
 
   document.body.addEventListener('click', (event) => {
@@ -126,16 +127,16 @@ function setUpCustomFilterManagement() {
     const selectedTRElement =
       customBadWordsTableTbody.querySelector('.selected');
     // @ts-ignore
-    customBadWordList.removeAt(Number(selectedTRElement.dataset.index));
+    badWordList.removeAt(Number(selectedTRElement.dataset.index));
     try {
       window.localStorage.setItem(
-        'stringifiedCustomBadWordListArrayView',
-        JSON.stringify(customBadWordList.createArrayView())
+        'stringifiedbadWordListArrayView',
+        JSON.stringify(badWordList.createArrayView())
       );
     } catch (err) {
       console.log(err);
     }
-    displayCustomBadWords(customBadWordList.createArrayView());
+    displayCustomBadWords(badWordList.createArrayView());
     displayNumberOfCustomBadWords();
   });
   addCustomWordBtn.addEventListener('click', () => {
@@ -143,22 +144,19 @@ function setUpCustomFilterManagement() {
     const cleanWord = newCustomWordInput.value
       .toLowerCase()
       .replace(/[^\p{L}\p{Emoji}]/gu, ''); // Words or emojis will be saved
-    if (!cleanWord || customBadWordList.isFull()) {
+    if (!cleanWord || badWordList.isFull()) {
       return;
     }
-    if (customBadWordList._badWords.some((bw) => bw.word === cleanWord)) {
-      return; // Duplicate Check, if already exists, do nothing.
-    }
-    customBadWordList.AddBadWords(cleanWord);
+    badWordList.AddBadWords(cleanWord);
     try {
       window.localStorage.setItem(
         STORAGE_KEY_CUSTOM_LIST,
-        JSON.stringify(customBadWordList.createArrayView())
+        JSON.stringify(badWordList.createArrayView())
       );
     } catch (err) {
       console.log(err);
     }
-    displayCustomBadWords(customBadWordList.createArrayView());
+    displayCustomBadWords(badWordList.createArrayView());
     displayNumberOfCustomBadWords();
     // @ts-ignore
     newCustomWordInput.value = '';
@@ -170,9 +168,6 @@ function setUpCustomFilterManagement() {
  * @param {[string, number][]} badWords
  */
 function displayCustomBadWords(badWords) {
-  if (!customBadWordsTableTbody) {
-    return;
-  }
   while (customBadWordsTableTbody.firstChild) {
     customBadWordsTableTbody.removeChild(customBadWordsTableTbody.firstChild);
   }
@@ -194,7 +189,5 @@ function displayCustomBadWords(badWords) {
  * Display the number of bad words in the list
  */
 function displayNumberOfCustomBadWords() {
-  if (customBadWordsCountSpan) {
-    customBadWordsCountSpan.textContent = String(customBadWordList.length);
-  }
+  customBadWordsCountSpan.textContent = String(badWordList.length);
 }
