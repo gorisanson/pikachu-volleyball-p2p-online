@@ -38,11 +38,13 @@ export function filterBadWords(message) {
       const matches = [...cleaned.matchAll(pattern)];
 
       for (const m of matches) {
-        const matchLength = m[0].length;
+        const matchLength = [...m[0]].length; // for dealing emoji as 1 length
+        const prefix = cleaned.slice(0, m.index);
+        const arrayIndex = [...prefix].length;
 
         // Substitute bad-words to '*' by index
         for (let i = 0; i < matchLength; i++) {
-          const cleanedIndex = m.index + i;
+          const cleanedIndex = arrayIndex + i;
           const origIndex = mapToOriginal[cleanedIndex];
 
           // Prevent re-filtering
