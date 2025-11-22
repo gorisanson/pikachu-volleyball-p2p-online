@@ -20,7 +20,7 @@ export function filterBadWords(message) {
     { name: 'Letter', regex: /\p{L}/u }, // Only letter
     { name: 'Korean', regex: /\p{Script=Hangul}/u }, // Only korean
     { name: 'English', regex: /\p{Script=Latin}/u }, // Only English
-    { name: "Kanji", regex: /\p{Script=Han}/u }, // Only kanji
+    { name: 'Kanji', regex: /\p{Script=Han}/u }, // Only kanji
     { name: 'Emoji', regex: /\p{Emoji}/u }, // Only Emoji
   ];
 
@@ -37,9 +37,9 @@ export function filterBadWords(message) {
       const matches = [...cleaned.matchAll(pattern)];
 
       for (const m of matches) {
-        const matchLength = [...m[0]].length; // Count emojis as length 1
+        const matchLength = Array.from(m[0]).length; // Count emojis as length 1
         const prefix = cleaned.slice(0, m.index);
-        const arrayIndex = [...prefix].length;
+        const arrayIndex = Array.from(prefix).length;
 
         // Substitute bad-words to '*' by index
         for (let i = 0; i < matchLength; i++) {

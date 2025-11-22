@@ -50,11 +50,12 @@ function setUpDefaultFilterToggle() {
       STORAGE_KEY_DEFAULT_FILTER_TOGGLE
     );
     if (storedToggleState !== null) {
-      isEnabled = (storedToggleState === 'true');
+      isEnabled = storedToggleState === 'true';
+      badWordList.willUseBasicBadWords = true;
     }
-  } catch(err) {
+  } catch (err) {
     console.log(err);
-  };
+  }
   // @ts-ignore
   defaultFilterToggle.checked = isEnabled;
   defaultFilterToggle.addEventListener('change', () => {

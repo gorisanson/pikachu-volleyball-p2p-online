@@ -24,7 +24,8 @@ class BadWordList {
   constructor(maxLength) {
     this._badWords = [];
     this.maxLength = maxLength;
-    this.basic_badWords = [
+    this.willUseBasicBadWords = false;
+    this.basicBadWords = [
       'fuck',
       'fuckyou',
       'shit',
@@ -62,17 +63,7 @@ class BadWordList {
       'ㅄ',
       '씹',
     ];
-    try {
-      const storedToggleState = window.localStorage.getItem(
-        'isDefaultBadWordFilterEnabled'
-      );
-      if (storedToggleState === 'false') {
-        this.basic_badWords = [];
-      };
-    } catch (err) {
-      console.log(err);
-    };
-  };
+  }
 
   get length() {
     return this._badWords.length;
@@ -130,9 +121,13 @@ class BadWordList {
    * @returns {string[]}
    */
   createWordArray() {
-    return this.basic_badWords.concat(
-      this._badWords.map((badWord) => badWord.word)
-    );
+    if (this.willUseBasicBadWords) {
+      return this.basicBadWords.concat(
+        this._badWords.map((badWord) => badWord.word)
+      );
+    } else {
+      return this._badWords.map((badWord) => badWord.word);
+    }
   }
 }
 

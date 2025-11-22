@@ -651,6 +651,9 @@ export function setUpUI() {
     const blockedIPAddressesTableContainer = document.getElementById(
       'blocked-ip-addresses-table-container'
     );
+    const blockedBadWordsTableContainer = document.getElementById(
+      'blocked-bad-words-table-container'
+    );
     const openChatListContainer = document.getElementById(
       'open-chat-list-container'
     );
@@ -660,6 +663,7 @@ export function setUpUI() {
       quickMatchBtn.disabled = true;
       window.addEventListener('keydown', clickJoinBtnByPressingEnter);
       blockedIPAddressesTableContainer.classList.add('hidden');
+      blockedBadWordsTableContainer.classList.add('hidden');
       if (openChatListContainer) {
         openChatListContainer.classList.add('hidden');
       }
@@ -669,6 +673,7 @@ export function setUpUI() {
       quickMatchBtn.disabled = false;
       window.removeEventListener('keydown', clickJoinBtnByPressingEnter);
       blockedIPAddressesTableContainer.classList.remove('hidden');
+      blockedBadWordsTableContainer.classList.remove('hidden');
       if (openChatListContainer) {
         openChatListContainer.classList.remove('hidden');
       }
