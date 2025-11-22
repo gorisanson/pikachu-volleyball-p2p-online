@@ -51,13 +51,13 @@ function setUpDefaultFilterToggle() {
     );
     if (storedToggleState !== null) {
       isEnabled = storedToggleState === 'true';
-      badWordList.willUseBasicBadWords = true;
     }
   } catch (err) {
     console.log(err);
   }
   // @ts-ignore
   defaultFilterToggle.checked = isEnabled;
+  badWordList.willUseBasicBadWords = isEnabled;
   defaultFilterToggle.addEventListener('change', () => {
     try {
       // @ts-ignore
