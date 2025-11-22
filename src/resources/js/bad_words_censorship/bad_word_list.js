@@ -69,11 +69,11 @@ class CustomBadWordList {
       if (storedToggleState === 'false') {
         // Use list of basic bad words?
         this.basic_badWords = [];
-      }
+      };
     } catch (err) {
       console.log(err);
-    }
-  }
+    };
+  };
 
   get length() {
     return this._badWords.length;
