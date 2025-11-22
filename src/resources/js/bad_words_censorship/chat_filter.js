@@ -25,6 +25,7 @@ export function filterBadWords(message) {
     },
     { name: 'Korean', regex: /\p{Script=Hangul}/u }, // Only korean
     { name: 'English', regex: /\p{Script=Latin}/u }, // Only English
+    { name: "Kanji", regex: /\p{Script=Han}/u }, // Only kanji
     { name: 'Emoji', regex: /\p{Emoji}/u }, // Only Emoji
   ];
 
