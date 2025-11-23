@@ -107,7 +107,7 @@ class BlockedIPList {
    * @param {[string, string, number, string][]} arrayView
    */
   readArrayViewAndUpdate(arrayView) {
-    arrayView.slice(0, this.maxLength);
+    arrayView = arrayView.slice(0, this.maxLength);
     this._blockedIPs = arrayView.map(
       (value) => new BlockedIP(value[0], value[1], value[2], value[3])
     );

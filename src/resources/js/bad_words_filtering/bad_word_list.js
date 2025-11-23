@@ -110,7 +110,7 @@ class BadWordList {
    */
   readArrayViewAndUpdate(arrayView) {
     this._badWords = [];
-    arrayView.slice(0, this.maxLength);
+    arrayView = arrayView.slice(0, this.maxLength);
     this._badWords = arrayView.map(
       (value) => new CustomBadWord(value[0], value[1])
     );
