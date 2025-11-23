@@ -927,6 +927,59 @@ table.blocked-ip-addresses-table .delete-btn {
   width: 100%;
   font-size: var(--font-size);
 }
+table.blocked-bad-words-table {
+  /* box-sizing below is necessary for Chrome and Safari, not for Firefox.
+     Is it a bug in Chrome and Safari? */
+  box-sizing: border-box;
+  border-collapse: collapse;
+  border: 2px solid rgb(200, 200, 200);
+  width: 100%;
+}
+table.blocked-bad-words-table th,
+table.blocked-bad-words-table td {
+  border: 1px solid rgb(190, 190, 190);
+  padding: 5px;
+  text-align: center;
+}
+table.blocked-bad-words-table tbody td {
+  cursor: default;
+}
+table.blocked-bad-words-table tfoot td {
+  padding: 0;
+}
+table.blocked-bad-words-table tr.selected {
+  background-color: var(--link-hover-color);
+}
+table.blocked-bad-words-table input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  font-size: var(--font-size);
+  background-color: transparent;
+  color: inherit;
+  padding: 10px;
+  box-sizing: border-box;
+  text-align: center;
+}
+#add-custom-word-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  border: none;
+  font-size: inherit;
+  background-color: transparent;
+  color: inherit;
+  padding: 10px;
+  box-sizing: border-box;
+  cursor: pointer;
+  text-align: center;
+}
+table.blocked-bad-words-table .delete-btn {
+  height: 100%;
+  width: 100%;
+  font-size: var(--font-size);
+}
 details {
   border: 1px solid #aaa;
   border-radius: 4px;
@@ -1014,4 +1067,4 @@ input.toggle-switch:checked + label::before {
 }
 
 
-/*# sourceMappingURL=415.77e5b93f2ea07ed3935d.css.map*/
+/*# sourceMappingURL=415.42110e153a6ec48cd0df.css.map*/
