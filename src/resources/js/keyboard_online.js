@@ -186,10 +186,10 @@ class MyKeyboard {
 
 /** This MyKeyboard instance is used among the modules */
 export const myKeyboard = new MyKeyboard(
+  'KeyA',
   'KeyD',
-  'KeyG',
-  'KeyR',
-  'KeyV',
+  'KeyW',
+  'KeyS',
   'KeyZ',
   'KeyF',
   'ArrowLeft',
